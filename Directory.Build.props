@@ -3,21 +3,38 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+
     <Deterministic>true</Deterministic>
+    <DebugType>portable</DebugType>
+
+    <VersionPrefix>0.1.0</VersionPrefix>
+    <VersionSuffix>preview.1</VersionSuffix>
 
     <Authors>Fotbiler</Authors>
     <Company>Fotbiler</Company>
     <Product>Fotbiler RuleGate</Product>
-    <Copyright>Copyright © Fotbiler</Copyright>
+    <Copyright>Copyright © 2026 Fotbiler</Copyright>
 
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/fotbiler-lab/rulegate</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/fotbiler-lab/rulegate</PackageProjectUrl>
+
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
 
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+
+    <PackageTags>authorization;rbac;policy;security;access-control;rulegate</PackageTags>
+    <PackageReleaseNotes>Initial preview of the RuleGate authorization core, policy engine, and YAML manifest compiler.</PackageReleaseNotes>
 
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+
+    <EnablePackageValidation>true</EnablePackageValidation>
+
+    <PackageOutputPath>$(MSBuildThisFileDirectory)artifacts/packages</PackageOutputPath>
 
     <ContinuousIntegrationBuild
       Condition="'$(CI)' == 'true'">true</ContinuousIntegrationBuild>

@@ -1,9 +1,20 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+
+    <PackageId>Fotbiler.RuleGate.Abstractions</PackageId>
+    <Title>Fotbiler RuleGate Abstractions</Title>
+    <Description>Public authorization contracts, policy definitions, requests, decisions, and requirement evaluation abstractions for Fotbiler RuleGate.</Description>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\README.md"
+          Pack="true"
+          PackagePath="\"
+          Visible="false" />
+  </ItemGroup>
 
 </Project>

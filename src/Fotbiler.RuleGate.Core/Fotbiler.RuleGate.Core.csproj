@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
     <ProjectReference Include="..\Fotbiler.RuleGate.Abstractions\Fotbiler.RuleGate.Abstractions.csproj" />
@@ -8,6 +8,17 @@
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+
+    <PackageId>Fotbiler.RuleGate.Core</PackageId>
+    <Title>Fotbiler RuleGate Core</Title>
+    <Description>Fail-closed policy authorization engine, requirement evaluators, dispatcher, and in-memory policy provider for Fotbiler RuleGate.</Description>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\README.md"
+          Pack="true"
+          PackagePath="\"
+          Visible="false" />
+  </ItemGroup>
 
 </Project>
