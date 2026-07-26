@@ -339,7 +339,7 @@ printf '\n== Verify normal CI does not publish ==\n'
 
 if grep -RInE \
   'dotnet nuget push|NUGET_API_KEY|packages: write|contents: write|gh release create' \
-  .github/workflows
+  .github/workflows/ci.yml
 then
   echo "ERROR: Release or publishing configuration exists in the normal CI workflow."
   exit 1

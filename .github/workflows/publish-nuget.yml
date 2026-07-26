@@ -1,0 +1,155 @@
+name: Publish NuGet
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing release tag to publish
+        required: true
+        default: v0.1.0-preview.1
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: publish-nuget-${{ inputs.tag }}
+  cancel-in-progress: false
+
+env:
+  DOTNET_NOLOGO: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+
+jobs:
+  publish:
+    name: Publish NuGet packages
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    environment: nuget-production
+
+    permissions:
+      contents: read
+      id-token: write
+
+    env:
+      EXPECTED_TAG: v0.1.0-preview.1
+      NUGET_SOURCE: https://api.nuget.org/v3/index.json
+
+    steps:
+      - name: Check out release tag
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ inputs.tag }}
+          fetch-depth: 0
+
+      - name: Verify release tag
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          requested_tag='${{ inputs.tag }}'
+
+          if [[ "$requested_tag" != "$EXPECTED_TAG" ]]
+          then
+            echo "ERROR: Unexpected release tag."
+            echo "Expected: $EXPECTED_TAG"
+            echo "Actual:   $requested_tag"
+            exit 1
+          fi
+
+          if [[ "$(
+            git cat-file \
+              -t \
+              "$EXPECTED_TAG"
+          )" != "tag" ]]
+          then
+            echo "ERROR: Release tag is not an annotated tag."
+            exit 1
+          fi
+
+          tag_commit="$(
+            git rev-parse \
+              "$EXPECTED_TAG^{commit}"
+          )"
+
+          head_commit="$(
+            git rev-parse \
+              HEAD
+          )"
+
+          printf 'Tag commit:  %s\n' "$tag_commit"
+          printf 'HEAD commit: %s\n' "$head_commit"
+
+          if [[ "$tag_commit" != "$head_commit" ]]
+          then
+            echo "ERROR: Checkout does not match the release tag."
+            exit 1
+          fi
+
+          if [[ -n "$(git status --porcelain)" ]]
+          then
+            echo "ERROR: Working tree is not clean."
+            git status --short
+            exit 1
+          fi
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          global-json-file: global.json
+
+      - name: Verify release packages
+        run: |
+          ./scripts/verify-preview-release.sh
+
+      - name: Upload verified release packages
+        uses: actions/upload-artifact@v6
+        with:
+          name: rulegate-${{ inputs.tag }}-packages
+          path: |
+            artifacts/packages/*.nupkg
+            artifacts/packages/*.snupkg
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: NuGet login
+        id: login
+        uses: NuGet/login@v1
+        with:
+          user: fotbiler
+
+      - name: Publish NuGet packages
+        shell: bash
+        env:
+          NUGET_API_KEY: ${{ steps.login.outputs.NUGET_API_KEY }}
+        run: |
+          set -euo pipefail
+
+          version="0.1.0-preview.1"
+
+          package_ids=(
+            "Fotbiler.RuleGate.Abstractions"
+            "Fotbiler.RuleGate.Core"
+            "Fotbiler.RuleGate.Manifest"
+          )
+
+          for package_id in "${package_ids[@]}"
+          do
+            package_path="artifacts/packages/$package_id.$version.nupkg"
+
+            printf '\n== Publish %s ==\n' "$package_id"
+
+            dotnet nuget push \
+              "$package_path" \
+              --api-key "$NUGET_API_KEY" \
+              --source "$NUGET_SOURCE" \
+              --symbol-api-key "$NUGET_API_KEY" \
+              --symbol-source "$NUGET_SOURCE" \
+              --timeout 600
+          done
+
+          echo
+          echo "All RuleGate packages were submitted to NuGet.org."
