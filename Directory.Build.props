@@ -11,7 +11,7 @@
     <Copyright>Copyright © Fotbiler</Copyright>
 
     <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>https://github.com/fotbiler/rulegate</RepositoryUrl>
+    <RepositoryUrl>https://github.com/fotbiler-lab/rulegate</RepositoryUrl>
 
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
