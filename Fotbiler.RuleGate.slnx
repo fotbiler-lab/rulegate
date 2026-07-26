@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Fotbiler.RuleGate.Abstractions/Fotbiler.RuleGate.Abstractions.csproj" />
+    <Project Path="src/Fotbiler.RuleGate.Core/Fotbiler.RuleGate.Core.csproj" />
+    <Project Path="src/Fotbiler.RuleGate.Manifest/Fotbiler.RuleGate.Manifest.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Fotbiler.RuleGate.Core.Tests/Fotbiler.RuleGate.Core.Tests.csproj" />
+    <Project Path="tests/Fotbiler.RuleGate.Manifest.Tests/Fotbiler.RuleGate.Manifest.Tests.csproj" />
+  </Folder>
+</Solution>

@@ -1,0 +1,5 @@
+schemaVersion: 1
+
+application:
+  id: rulegate-example
+  name: RuleGate Example

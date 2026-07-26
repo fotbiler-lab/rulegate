@@ -1,0 +1,35 @@
+# .NET
+bin/
+obj/
+artifacts/
+TestResults/
+*.user
+*.suo
+*.nupkg
+*.snupkg
+
+# Node and frontend
+node_modules/
+dist/
+coverage/
+.angular/
+.nx/
+*.tgz
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# Operating systems
+.DS_Store
+Thumbs.db
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+secrets.json
+
+# Local RuleGate configuration
+rulegate.local.yaml
