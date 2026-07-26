@@ -134,6 +134,7 @@ jobs:
             "Fotbiler.RuleGate.Abstractions"
             "Fotbiler.RuleGate.Core"
             "Fotbiler.RuleGate.Manifest"
+            "Fotbiler.RuleGate.AspNetCore"
           )
 
           for package_id in "${package_ids[@]}"

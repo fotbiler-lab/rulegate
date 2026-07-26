@@ -10,7 +10,7 @@
 
   <ItemGroup>
     <PackageReference
-      Include="Fotbiler.RuleGate.Core"
+      Include="Fotbiler.RuleGate.AspNetCore"
       Version="0.2.0-preview.1" />
 
     <PackageReference
