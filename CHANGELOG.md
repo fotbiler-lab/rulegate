@@ -6,6 +6,8 @@ The project follows Semantic Versioning. Preview releases may introduce breaking
 
 ## [Unreleased]
 
+## [0.2.0-preview.1] - 2026-07-26
+
 ### Added
 
 - `Fotbiler.RuleGate.AspNetCore` package.
@@ -28,6 +30,17 @@ The project follows Semantic Versioning. Preview releases may introduce breaking
 - Fail-closed subject and resource mapping behavior.
 - Testable evaluation timestamps through `TimeProvider`.
 - Package-consumer verification of allowed and denied handler flows.
+
+### Known limitations
+
+- The preview targets .NET 10.
+- Dynamic authorization policy providers and policy-name parsing are not included.
+- Authorization attributes, endpoint helpers, and automatic HTTP result mapping are not included.
+- The default ASP.NET Core resource factory accepts only `AuthorizationResource` instances.
+- Subject, resource, and context attribute extraction is not included.
+- Advanced ABAC and CBAC evaluators are not included.
+- CLI, Angular, and provider-specific identity integrations are not included.
+- Public APIs may change before the first stable release.
 
 ## [0.1.0-preview.1] - 2026-07-26
 
@@ -74,5 +87,6 @@ The project follows Semantic Versioning. Preview releases may introduce breaking
 - CLI, Angular, and Keycloak integration packages are not yet included.
 - Public APIs may change before the first stable release.
 
-[Unreleased]: https://github.com/fotbiler-lab/rulegate/compare/v0.1.0-preview.1...HEAD
+[Unreleased]: https://github.com/fotbiler-lab/rulegate/compare/v0.2.0-preview.1...HEAD
+[0.2.0-preview.1]: https://github.com/fotbiler-lab/rulegate/releases/tag/v0.2.0-preview.1
 [0.1.0-preview.1]: https://github.com/fotbiler-lab/rulegate/releases/tag/v0.1.0-preview.1
