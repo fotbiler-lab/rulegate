@@ -1,0 +1,37 @@
+schemaVersion: 1
+
+application:
+  id: rulegate-integration-tests
+  name: RuleGate Integration Tests
+
+policies:
+  - id: sample-read
+    resourceType: sample-resource
+    action: read
+    requirement:
+      id: required-permission
+      permission: sample.read
+
+  - id: sample-update
+    resourceType: sample-resource
+    action: update
+    requirement:
+      id: required-role
+      role: sample.editor
+
+  - id: secure-manage
+    resourceType: secure-resource
+    action: manage
+    requirement:
+      id: manage-requirements
+      all:
+        - id: manage-permission
+          permission: secure.manage
+        - id: role-or-not-blocked
+          any:
+            - id: administrator-role
+              role: sample.administrator
+            - id: not-blocked
+              not:
+                id: blocked-role
+                role: sample.blocked
