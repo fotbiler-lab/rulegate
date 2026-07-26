@@ -14,5 +14,23 @@ public sealed class RuleGateAuthorizationRequirement
         Action = action;
     }
 
+    public RuleGateAuthorizationRequirement(
+        string resourceType,
+        string action)
+    {
+        var policyName =
+            new RuleGatePolicyName(
+                resourceType,
+                action);
+
+        ResourceType =
+            policyName.ResourceType;
+
+        Action =
+            policyName.Action;
+    }
+
+    public string? ResourceType { get; }
+
     public string Action { get; }
 }

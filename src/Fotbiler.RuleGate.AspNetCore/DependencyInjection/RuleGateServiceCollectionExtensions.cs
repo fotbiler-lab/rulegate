@@ -31,6 +31,11 @@ public static class RuleGateServiceCollectionExtensions
             TimeProvider>(
                 TimeProvider.System);
 
+        services.Replace(
+            ServiceDescriptor.Singleton<
+                IAuthorizationPolicyProvider,
+                RuleGateAuthorizationPolicyProvider>());
+
         services.TryAddSingleton<
             IRuleGateAuthorizationResourceFactory,
             RuleGateAuthorizationResourceFactory>();

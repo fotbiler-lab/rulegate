@@ -163,6 +163,51 @@ public sealed class RuleGateAuthorizationHandlerTests
 
     [Fact]
     public async Task
+        HandleAsync_FailsWhenResourceTypeDoesNotMatch()
+    {
+        var engineCalled = false;
+
+        var subject =
+            new AuthorizationSubject(
+                "user-1");
+
+        var resource =
+            new AuthorizationResource(
+                "invoice",
+                "invoice-1");
+
+        var requirement =
+            new RuleGateAuthorizationRequirement(
+                resourceType: "document",
+                action: "read");
+
+        var handler =
+            CreateHandler(
+                evaluate:
+                    _ =>
+                    {
+                        engineCalled = true;
+
+                        return AuthorizationDecision
+                            .Allow();
+                    },
+                createSubject: _ => subject,
+                createResource: _ => resource);
+
+        var context =
+            CreateContext(
+                requirement,
+                resource);
+
+        await handler.HandleAsync(context);
+
+        Assert.True(context.HasFailed);
+        Assert.False(context.HasSucceeded);
+        Assert.False(engineCalled);
+    }
+
+    [Fact]
+    public async Task
         HandleAsync_CreatesExpectedRequest()
     {
         var evaluationTime =
