@@ -22,6 +22,22 @@ PACKAGE_DIRECTORY="$REPOSITORY_ROOT/artifacts/packages"
 
 PACKAGE_VERSION="0.1.0-preview.1"
 
+PACKAGES_READY="false"
+
+case "${1:-}" in
+  "")
+    ;;
+
+  --packages-ready)
+    PACKAGES_READY="true"
+    ;;
+
+  *)
+    echo "Usage: $0 [--packages-ready]"
+    exit 2
+    ;;
+esac
+
 printf '\n== Verify package-only consumer ==\n'
 
 if grep -q '<ProjectReference' "$SMOKE_PROJECT"
@@ -32,38 +48,46 @@ fi
 
 echo "No ProjectReference found."
 
-printf '\n== Clean previous outputs ==\n'
+printf '\n== Clean consumer outputs ==\n'
 
 rm -rf \
-  "$PACKAGE_DIRECTORY" \
   "$SMOKE_DIRECTORY/bin" \
   "$SMOKE_DIRECTORY/obj"
 
-printf '\n== Restore solution ==\n'
+if [[ "$PACKAGES_READY" == "false" ]]
+then
+  printf '\n== Clean previous packages ==\n'
 
-dotnet restore \
-  "$SOLUTION"
+  rm -rf "$PACKAGE_DIRECTORY"
 
-printf '\n== Build solution ==\n'
+  printf '\n== Restore solution ==\n'
 
-dotnet build \
-  "$SOLUTION" \
-  --configuration Release \
-  --no-restore
+  dotnet restore \
+    "$SOLUTION"
 
-printf '\n== Test solution ==\n'
+  printf '\n== Build solution ==\n'
 
-dotnet test \
-  "$SOLUTION" \
-  --configuration Release \
-  --no-build
+  dotnet build \
+    "$SOLUTION" \
+    --configuration Release \
+    --no-restore
 
-printf '\n== Pack production projects ==\n'
+  printf '\n== Test solution ==\n'
 
-dotnet pack \
-  "$SOLUTION" \
-  --configuration Release \
-  --no-build
+  dotnet test \
+    "$SOLUTION" \
+    --configuration Release \
+    --no-build
+
+  printf '\n== Pack production projects ==\n'
+
+  dotnet pack \
+    "$SOLUTION" \
+    --configuration Release \
+    --no-build
+else
+  printf '\n== Use packages produced by the current pipeline ==\n'
+fi
 
 printf '\n== Verify local packages ==\n'
 
