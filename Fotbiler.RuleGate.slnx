@@ -7,6 +7,7 @@
   <Folder Name="/tests/">
     <Project Path="tests/Fotbiler.RuleGate.Abstractions.Tests/Fotbiler.RuleGate.Abstractions.Tests.csproj" />
     <Project Path="tests/Fotbiler.RuleGate.Core.Tests/Fotbiler.RuleGate.Core.Tests.csproj" />
+    <Project Path="tests/Fotbiler.RuleGate.Integration.Tests/Fotbiler.RuleGate.Integration.Tests.csproj" />
     <Project Path="tests/Fotbiler.RuleGate.Manifest.Tests/Fotbiler.RuleGate.Manifest.Tests.csproj" />
   </Folder>
 </Solution>
