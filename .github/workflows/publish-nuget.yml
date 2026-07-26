@@ -6,7 +6,7 @@ on:
       tag:
         description: Existing release tag to publish
         required: true
-        default: v0.1.0-preview.1
+        default: v0.2.0-preview.1
         type: string
 
 permissions:
@@ -35,7 +35,7 @@ jobs:
       id-token: write
 
     env:
-      EXPECTED_TAG: v0.1.0-preview.1
+      EXPECTED_TAG: v0.2.0-preview.1
       NUGET_SOURCE: https://api.nuget.org/v3/index.json
 
     steps:
@@ -128,7 +128,7 @@ jobs:
         run: |
           set -euo pipefail
 
-          version="0.1.0-preview.1"
+          version="0.2.0-preview.1"
 
           package_ids=(
             "Fotbiler.RuleGate.Abstractions"

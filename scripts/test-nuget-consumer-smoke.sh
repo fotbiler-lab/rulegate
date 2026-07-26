@@ -20,7 +20,7 @@ SMOKE_PROJECT="$SMOKE_DIRECTORY/Fotbiler.RuleGate.PackageConsumer.Smoke.csproj"
 
 PACKAGE_DIRECTORY="$REPOSITORY_ROOT/artifacts/packages"
 
-PACKAGE_VERSION="0.1.0-preview.1"
+PACKAGE_VERSION="0.2.0-preview.1"
 
 PACKAGES_READY="false"
 
