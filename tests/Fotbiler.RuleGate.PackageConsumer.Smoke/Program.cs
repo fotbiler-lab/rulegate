@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.DependencyInjection;
 
 const string PolicyName =
-    "package-resource-read";
+    "RuleGate:package-resource:read";
 
 const string yaml = """
     schemaVersion: 1
@@ -44,18 +44,7 @@ var services =
 
 services.AddLogging();
 
-services.AddAuthorizationCore(
-    options =>
-    {
-        options.AddPolicy(
-            PolicyName,
-            policy =>
-            {
-                policy.AddRequirements(
-                    new RuleGateAuthorizationRequirement(
-                        action: "read"));
-            });
-    });
+services.AddAuthorizationCore();
 
 services
     .AddRuleGate()
@@ -156,6 +145,20 @@ if (!frameworkAllowedResult.Succeeded)
 {
     throw new InvalidOperationException(
         "The ASP.NET Core authorization handler did not allow the valid request.");
+}
+
+var mismatchedResourceResult =
+    await authorizationService.AuthorizeAsync(
+        allowedPrincipal,
+        new AuthorizationResource(
+            type: "invoice",
+            id: "invoice-1"),
+        PolicyName);
+
+if (mismatchedResourceResult.Succeeded)
+{
+    throw new InvalidOperationException(
+        "The dynamic RuleGate policy accepted a mismatched resource type.");
 }
 
 var deniedPrincipal =

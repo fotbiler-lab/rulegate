@@ -11,7 +11,7 @@ Fotbiler RuleGate is a local-first, provider-independent, and policy-driven auth
 | `Fotbiler.RuleGate.Abstractions` | Authorization contracts, policy definitions, requests, decisions, and evaluation abstractions |
 | `Fotbiler.RuleGate.Core` | Policy engine, built-in requirement evaluators, dispatcher, and in-memory policy provider |
 | `Fotbiler.RuleGate.Manifest` | YAML manifest loading, validation, compilation, and domain mapping |
-| `Fotbiler.RuleGate.AspNetCore` | ASP.NET Core dependency injection registration and RuleGate configuration builder |
+| `Fotbiler.RuleGate.AspNetCore` | ASP.NET Core dependency injection, claims mapping, dynamic policy resolution, and resource-based authorization |
 
 The current preview targets .NET 10.
 
@@ -32,6 +32,10 @@ The current preview targets .NET 10.
 - Fluent registration of policies and custom requirement evaluators
 - `ClaimsPrincipal` to `AuthorizationSubject` mapping
 - Configurable subject identifier, role, and permission claim types
+- Resource-based ASP.NET Core authorization handler
+- Dynamic ASP.NET Core policy names using `RuleGate:<resource-type>:<action>`
+- Fallback-compatible standard ASP.NET Core policies
+- Fail-closed resource-type enforcement
 
 ## Installation
 
@@ -166,45 +170,58 @@ builder.Services
 
 Claim type and value matching is ordinal and case-sensitive. Blank role and permission values are ignored, and exact duplicates are removed. Mapping fails when the configured subject identifier is missing or contains multiple distinct values.
 
-## Use the ASP.NET Core authorization handler
+## Use dynamic ASP.NET Core policies
 
-Register an ASP.NET Core policy containing a RuleGate requirement:
+Register ASP.NET Core authorization together with RuleGate:
 
 ```csharp
-using Fotbiler.RuleGate.AspNetCore.Authorization;
 using Fotbiler.RuleGate.AspNetCore.DependencyInjection;
 
-builder.Services.AddAuthorization(
-    options =>
-    {
-        options.AddPolicy(
-            "documents.read",
-            policy =>
-            {
-                policy.AddRequirements(
-                    new RuleGateAuthorizationRequirement(
-                        action: "read"));
-            });
-    });
+builder.Services.AddAuthorization();
 
 builder.Services
     .AddRuleGate()
     .AddPolicies(compilation.Policies);
 ```
 
+RuleGate dynamically resolves policy names with this format:
+
+```text
+RuleGate:<resource-type>:<action>
+```
+
+For example:
+
+```text
+RuleGate:document:read
+RuleGate:document:update
+RuleGate:invoice:approve
+```
+
+Policy names, resource types, and actions use ordinal and case-sensitive matching. Each segment must be non-empty and cannot contain whitespace or the `:` separator.
+
 Authorize a RuleGate resource through `IAuthorizationService`:
 
 ```csharp
+using Fotbiler.RuleGate.Abstractions.Authorization;
+using Fotbiler.RuleGate.AspNetCore.Authorization;
+
 var resource =
     new AuthorizationResource(
         type: "document",
         id: documentId);
 
+var policyName =
+    new RuleGatePolicyName(
+        resourceType: "document",
+        action: "read")
+        .ToString();
+
 var result =
     await authorizationService.AuthorizeAsync(
         httpContext.User,
         resource,
-        "documents.read");
+        policyName);
 
 if (!result.Succeeded)
 {
@@ -212,11 +229,19 @@ if (!result.Succeeded)
 }
 ```
 
+The dynamic policy provider creates an authenticated-user requirement together with a `RuleGateAuthorizationRequirement` for the resource type and action encoded in the policy name.
+
+Policy names not owned by RuleGate are delegated to the standard ASP.NET Core policy provider. Applications may therefore continue registering ordinary named policies through `AddAuthorization`.
+
+Malformed names beginning with `RuleGate:` do not fall back to an ordinary policy. They remain unresolved and authorization fails closed.
+
 The default resource factory accepts an `AuthorizationResource` instance. Applications can replace `IRuleGateAuthorizationResourceFactory` to map domain-specific resource objects.
 
-A RuleGate deny decision, a missing or ambiguous subject identifier, or an unsupported resource causes ASP.NET Core authorization to fail closed. Unexpected authorization-engine failures are propagated instead of being converted into a denial.
+The resource type carried by the dynamic policy must match the mapped `AuthorizationResource.Type`. A mismatch fails before the RuleGate engine is evaluated.
 
-This foundation supports resource-based `IAuthorizationService.AuthorizeAsync` calls. Automatic endpoint metadata, authorization attributes, dynamic policy names, and HTTP result mapping are outside the current scope.
+A RuleGate deny decision, a missing or ambiguous subject identifier, an unsupported resource, or a resource-type mismatch causes ASP.NET Core authorization to fail closed. Unexpected authorization-engine failures are propagated instead of being converted into a denial.
+
+This integration supports resource-based `IAuthorizationService.AuthorizeAsync` calls. Authorization attributes, endpoint helpers, automatic domain-resource mapping, and automatic HTTP result mapping remain outside the current scope.
 
 ## Create the authorization engine manually
 
@@ -415,15 +440,16 @@ RuleGate follows these principles:
 
 ## Project status
 
-The current preview contains the authorization core and YAML manifest foundation.
+The current preview contains the authorization core, YAML manifest compilation, ASP.NET Core dependency injection, claims mapping, resource-based authorization handling, and dynamic named-policy resolution.
 
 Planned future modules include:
 
-- ASP.NET Core integration
-- Dependency injection registration
+- Authorization attributes and endpoint helpers
+- Automatic HTTP authorization-result mapping
+- Domain-specific resource mapping helpers
+- Subject, resource, and context attribute extraction
 - Attribute-based authorization
 - Context-based authorization
-- Resource-based authorization
 - Decision diagnostics and explanations
 - CLI validation and code generation
 - Angular integration

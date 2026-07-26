@@ -84,6 +84,16 @@ public sealed class RuleGateAuthorizationHandler
             return;
         }
 
+        if (requirement.ResourceType is not null
+            && !string.Equals(
+                requirement.ResourceType,
+                resource.Type,
+                StringComparison.Ordinal))
+        {
+            context.Fail();
+            return;
+        }
+
         var request =
             new AuthorizationRequest(
                 subject: subject,

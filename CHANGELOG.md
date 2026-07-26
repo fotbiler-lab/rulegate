@@ -6,6 +6,26 @@ The project follows Semantic Versioning. Preview releases may introduce breaking
 
 ## [Unreleased]
 
+### Added
+
+- Dynamic ASP.NET Core authorization policy resolution through `RuleGateAuthorizationPolicyProvider`.
+- Structured policy names using `RuleGate:<resource-type>:<action>`.
+- Public `RuleGatePolicyName` construction, formatting, and parsing.
+- Resource type and action propagation into `RuleGateAuthorizationRequirement`.
+- Fallback delegation for standard ASP.NET Core named policies.
+- Default and fallback authorization-policy preservation.
+- Dynamic-policy caching support.
+- Dependency injection registration of the RuleGate policy provider.
+- Package-consumer verification without manual `AuthorizationOptions.AddPolicy` registration.
+- Resource-type mismatch verification in the authorization handler and package consumer.
+
+### Security
+
+- Malformed policy names owned by the `RuleGate:` prefix do not fall back to ordinary ASP.NET Core policies.
+- Dynamic policies require an authenticated principal.
+- Policy-name parsing uses ordinal and case-sensitive matching.
+- A policy/resource type mismatch fails closed before the RuleGate authorization engine is evaluated.
+
 ## [0.2.0-preview.1] - 2026-07-26
 
 ### Added
