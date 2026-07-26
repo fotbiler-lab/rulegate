@@ -17,6 +17,11 @@ The project follows Semantic Versioning. Preview releases may introduce breaking
 - ASP.NET Core dependency injection tests.
 - Package-only consumer verification using the ASP.NET Core integration package.
 - Four-package release verification and Trusted Publishing support.
+- `ClaimsPrincipal` to `AuthorizationSubject` mapping.
+- Configurable subject identifier, role, and permission claim types.
+- Fail-closed handling for missing or ambiguous subject identifiers.
+- Ordinal, case-sensitive claim mapping with duplicate removal.
+- Claims principal mapping tests and package-consumer verification.
 
 ## [0.1.0-preview.1] - 2026-07-26
 

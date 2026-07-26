@@ -1,5 +1,6 @@
 using Fotbiler.RuleGate.Abstractions.Evaluation;
 using Fotbiler.RuleGate.Abstractions.Policies;
+using Fotbiler.RuleGate.AspNetCore.Subjects;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
@@ -39,6 +40,19 @@ public static class RuleGateBuilderExtensions
         {
             builder.Services.AddSingleton(policy);
         }
+
+        return builder;
+    }
+
+    public static RuleGateBuilder ConfigureSubjectMapping(
+        this RuleGateBuilder builder,
+        Action<RuleGateSubjectOptions> configure)
+    {
+        ArgumentNullException.ThrowIfNull(builder);
+        ArgumentNullException.ThrowIfNull(configure);
+
+        builder.Services.Configure<
+            RuleGateSubjectOptions>(configure);
 
         return builder;
     }
