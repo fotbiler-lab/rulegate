@@ -1,7 +1,7 @@
 using Fotbiler.RuleGate.Abstractions.Attributes;
 using Fotbiler.RuleGate.Abstractions.Authorization;
 
-namespace Fotbiler.RuleGate.Core.Tests;
+namespace Fotbiler.RuleGate.Abstractions.Tests;
 
 public sealed class AuthorizationPrimitivesTests
 {

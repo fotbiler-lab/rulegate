@@ -35,6 +35,6 @@ public sealed class AuthorizationDecision
 
         return new AuthorizationDecision(
             isAllowed: false,
-            failures: failures.ToArray());
+            failures: Array.AsReadOnly(failures.ToArray()));
     }
 }
