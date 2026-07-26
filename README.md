@@ -11,6 +11,7 @@ Fotbiler RuleGate is a local-first, provider-independent, and policy-driven auth
 | `Fotbiler.RuleGate.Abstractions` | Authorization contracts, policy definitions, requests, decisions, and evaluation abstractions |
 | `Fotbiler.RuleGate.Core` | Policy engine, built-in requirement evaluators, dispatcher, and in-memory policy provider |
 | `Fotbiler.RuleGate.Manifest` | YAML manifest loading, validation, compilation, and domain mapping |
+| `Fotbiler.RuleGate.AspNetCore` | ASP.NET Core dependency injection registration and RuleGate configuration builder |
 
 The current preview targets .NET 10.
 
@@ -27,17 +28,19 @@ The current preview targets .NET 10.
 - Default-deny authorization
 - Fail-closed requirement evaluation
 - Requirement-level failure identifiers
+- ASP.NET Core dependency injection integration
+- Fluent registration of policies and custom requirement evaluators
 
 ## Installation
 
 Install the packages required by your application:
 
 ```bash
-dotnet add package Fotbiler.RuleGate.Core --prerelease
+dotnet add package Fotbiler.RuleGate.AspNetCore --prerelease
 dotnet add package Fotbiler.RuleGate.Manifest --prerelease
 ```
 
-`Fotbiler.RuleGate.Core` and `Fotbiler.RuleGate.Manifest` automatically reference the required abstractions package.
+`Fotbiler.RuleGate.AspNetCore` automatically references the core engine and abstractions packages. `Fotbiler.RuleGate.Manifest` automatically references the abstractions package.
 
 The abstractions package may also be referenced directly:
 
@@ -99,7 +102,24 @@ if (!compilation.IsSuccess)
 }
 ```
 
-## Create the authorization engine
+## Register RuleGate with ASP.NET Core
+
+Register the built-in engine, policy provider, dispatcher, and requirement evaluators:
+
+```csharp
+using Fotbiler.RuleGate.AspNetCore.DependencyInjection;
+
+var builder =
+    WebApplication.CreateBuilder(args);
+
+builder.Services
+    .AddRuleGate()
+    .AddPolicies(compilation.Policies);
+```
+
+Application services may then receive `IAuthorizationEngine` through dependency injection.
+
+## Create the authorization engine manually
 
 ```csharp
 using Fotbiler.RuleGate.Core.Engine;

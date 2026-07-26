@@ -94,7 +94,8 @@ printf '\n== Verify local packages ==\n'
 for package_id in \
   Fotbiler.RuleGate.Abstractions \
   Fotbiler.RuleGate.Core \
-  Fotbiler.RuleGate.Manifest
+  Fotbiler.RuleGate.Manifest \
+  Fotbiler.RuleGate.AspNetCore
 do
   package_path="$PACKAGE_DIRECTORY/$package_id.$PACKAGE_VERSION.nupkg"
 
@@ -125,6 +126,7 @@ for dependency in \
   "Fotbiler.RuleGate.Abstractions/$PACKAGE_VERSION" \
   "Fotbiler.RuleGate.Core/$PACKAGE_VERSION" \
   "Fotbiler.RuleGate.Manifest/$PACKAGE_VERSION" \
+  "Fotbiler.RuleGate.AspNetCore/$PACKAGE_VERSION" \
   "YamlDotNet/18.1.0"
 do
   if ! grep -F "\"$dependency\"" \

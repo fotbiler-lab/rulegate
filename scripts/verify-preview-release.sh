@@ -45,7 +45,10 @@ PACKAGE_IDS=(
   "Fotbiler.RuleGate.Abstractions"
   "Fotbiler.RuleGate.Core"
   "Fotbiler.RuleGate.Manifest"
+  "Fotbiler.RuleGate.AspNetCore"
 )
+
+EXPECTED_PACKAGE_COUNT="${#PACKAGE_IDS[@]}"
 
 read_property()
 {
@@ -189,15 +192,15 @@ SNUPKG_COUNT="$(
 printf 'nupkg:  %s\n' "$NUPKG_COUNT"
 printf 'snupkg: %s\n' "$SNUPKG_COUNT"
 
-if [[ "$NUPKG_COUNT" -ne 3 ]]
+if [[ "$NUPKG_COUNT" -ne "$EXPECTED_PACKAGE_COUNT" ]]
 then
-  echo "ERROR: Expected exactly three nupkg files."
+  echo "ERROR: Expected exactly $EXPECTED_PACKAGE_COUNT nupkg files."
   exit 1
 fi
 
-if [[ "$SNUPKG_COUNT" -ne 3 ]]
+if [[ "$SNUPKG_COUNT" -ne "$EXPECTED_PACKAGE_COUNT" ]]
 then
-  echo "ERROR: Expected exactly three snupkg files."
+  echo "ERROR: Expected exactly $EXPECTED_PACKAGE_COUNT snupkg files."
   exit 1
 fi
 
@@ -325,6 +328,33 @@ do
         "<dependency id=\"YamlDotNet\" version=\"18.1.0\"" \
         "Manifest does not depend on YamlDotNet 18.1.0."
       ;;
+
+    Fotbiler.RuleGate.AspNetCore)
+      assert_contains \
+        "$nuspec_content" \
+        "<dependency id=\"Fotbiler.RuleGate.Abstractions\" version=\"$EXPECTED_VERSION\"" \
+        "AspNetCore does not depend on the expected Abstractions version."
+
+      assert_contains \
+        "$nuspec_content" \
+        "<dependency id=\"Fotbiler.RuleGate.Core\" version=\"$EXPECTED_VERSION\"" \
+        "AspNetCore does not depend on the expected Core version."
+
+      assert_contains \
+        "$nuspec_content" \
+        "<frameworkReference name=\"Microsoft.AspNetCore.App\"" \
+        "AspNetCore does not reference Microsoft.AspNetCore.App."
+
+      assert_contains \
+        "$nuspec_content" \
+        "<readme>README.md</readme>" \
+        "AspNetCore does not declare its package README."
+
+      assert_contains \
+        "$package_files" \
+        "README.md" \
+        "AspNetCore package does not contain README.md."
+      ;;
   esac
 
   echo "Verified: $package_id"
@@ -351,6 +381,8 @@ printf '\n== Release verification succeeded ==\n'
 
 printf 'Version: %s\n' "$EXPECTED_VERSION"
 printf 'Commit:  %s\n' "$HEAD_COMMIT"
-printf 'Packages: 3 nupkg + 3 snupkg\n'
+printf 'Packages: %s nupkg + %s snupkg\n' \
+  "$EXPECTED_PACKAGE_COUNT" \
+  "$EXPECTED_PACKAGE_COUNT"
 printf 'Tests:    completed successfully\n'
 printf 'Consumer: completed successfully\n'

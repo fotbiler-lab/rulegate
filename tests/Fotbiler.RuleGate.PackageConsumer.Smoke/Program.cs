@@ -1,10 +1,8 @@
 using Fotbiler.RuleGate.Abstractions.Authorization;
 using Fotbiler.RuleGate.Abstractions.Constants;
-using Fotbiler.RuleGate.Core.Engine;
-using Fotbiler.RuleGate.Core.Evaluation;
-using Fotbiler.RuleGate.Core.Evaluation.Evaluators;
-using Fotbiler.RuleGate.Core.Policies;
+using Fotbiler.RuleGate.AspNetCore.DependencyInjection;
 using Fotbiler.RuleGate.Manifest.Compilation;
+using Microsoft.Extensions.DependencyInjection;
 
 const string yaml = """
     schemaVersion: 1
@@ -34,24 +32,37 @@ if (!compilation.IsSuccess)
         "The package consumer manifest could not be compiled.");
 }
 
-var dispatcher =
-    new RequirementEvaluationDispatcher(
-    [
-        new PermissionRequirementEvaluator(),
-        new RoleRequirementEvaluator(),
-        new AllRequirementEvaluator(),
-        new AnyRequirementEvaluator(),
-        new NotRequirementEvaluator()
-    ]);
+var services =
+    new ServiceCollection();
 
-var engine =
-    new PolicyAuthorizationEngine(
-        new InMemoryPolicyProvider(
-            compilation.Policies),
-        dispatcher);
+services
+    .AddRuleGate()
+    .AddPolicies(compilation.Policies);
+
+using var serviceProvider =
+    services.BuildServiceProvider(
+        new ServiceProviderOptions
+        {
+            ValidateOnBuild = true,
+            ValidateScopes = true,
+        });
+
+var firstEngine =
+    serviceProvider.GetRequiredService<
+        IAuthorizationEngine>();
+
+var secondEngine =
+    serviceProvider.GetRequiredService<
+        IAuthorizationEngine>();
+
+if (!ReferenceEquals(firstEngine, secondEngine))
+{
+    throw new InvalidOperationException(
+        "The authorization engine was not registered as a singleton.");
+}
 
 var allowedDecision =
-    await engine.EvaluateAsync(
+    await firstEngine.EvaluateAsync(
         CreateRequest(
             permissions:
             [
@@ -62,17 +73,17 @@ if (!allowedDecision.IsAllowed ||
     allowedDecision.Failures.Count != 0)
 {
     throw new InvalidOperationException(
-        "The package-based authorization engine did not allow the valid request.");
+        "The DI-based authorization engine did not allow the valid request.");
 }
 
 var deniedDecision =
-    await engine.EvaluateAsync(
+    await firstEngine.EvaluateAsync(
         CreateRequest());
 
 if (deniedDecision.IsAllowed)
 {
     throw new InvalidOperationException(
-        "The package-based authorization engine allowed an invalid request.");
+        "The DI-based authorization engine allowed an invalid request.");
 }
 
 var failure =

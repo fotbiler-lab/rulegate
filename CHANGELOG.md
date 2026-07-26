@@ -6,6 +6,18 @@ The project follows Semantic Versioning. Preview releases may introduce breaking
 
 ## [Unreleased]
 
+### Added
+
+- `Fotbiler.RuleGate.AspNetCore` package.
+- ASP.NET Core dependency injection registration through `AddRuleGate`.
+- `RuleGateBuilder` for fluent RuleGate configuration.
+- Policy registration through `AddPolicy` and `AddPolicies`.
+- Custom requirement evaluator registration through `AddRequirementEvaluator`.
+- Default singleton registrations for the policy engine, policy provider, requirement dispatcher, and built-in evaluators.
+- ASP.NET Core dependency injection tests.
+- Package-only consumer verification using the ASP.NET Core integration package.
+- Four-package release verification and Trusted Publishing support.
+
 ## [0.1.0-preview.1] - 2026-07-26
 
 ### Added
