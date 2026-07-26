@@ -166,6 +166,58 @@ builder.Services
 
 Claim type and value matching is ordinal and case-sensitive. Blank role and permission values are ignored, and exact duplicates are removed. Mapping fails when the configured subject identifier is missing or contains multiple distinct values.
 
+## Use the ASP.NET Core authorization handler
+
+Register an ASP.NET Core policy containing a RuleGate requirement:
+
+```csharp
+using Fotbiler.RuleGate.AspNetCore.Authorization;
+using Fotbiler.RuleGate.AspNetCore.DependencyInjection;
+
+builder.Services.AddAuthorization(
+    options =>
+    {
+        options.AddPolicy(
+            "documents.read",
+            policy =>
+            {
+                policy.AddRequirements(
+                    new RuleGateAuthorizationRequirement(
+                        action: "read"));
+            });
+    });
+
+builder.Services
+    .AddRuleGate()
+    .AddPolicies(compilation.Policies);
+```
+
+Authorize a RuleGate resource through `IAuthorizationService`:
+
+```csharp
+var resource =
+    new AuthorizationResource(
+        type: "document",
+        id: documentId);
+
+var result =
+    await authorizationService.AuthorizeAsync(
+        httpContext.User,
+        resource,
+        "documents.read");
+
+if (!result.Succeeded)
+{
+    return Results.Forbid();
+}
+```
+
+The default resource factory accepts an `AuthorizationResource` instance. Applications can replace `IRuleGateAuthorizationResourceFactory` to map domain-specific resource objects.
+
+A RuleGate deny decision, a missing or ambiguous subject identifier, or an unsupported resource causes ASP.NET Core authorization to fail closed. Unexpected authorization-engine failures are propagated instead of being converted into a denial.
+
+This foundation supports resource-based `IAuthorizationService.AuthorizeAsync` calls. Automatic endpoint metadata, authorization attributes, dynamic policy names, and HTTP result mapping are outside the current scope.
+
 ## Create the authorization engine manually
 
 ```csharp
