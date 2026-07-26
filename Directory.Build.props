@@ -8,7 +8,7 @@
     <DebugType>portable</DebugType>
 
     <VersionPrefix>0.2.0</VersionPrefix>
-    <VersionSuffix>preview.1</VersionSuffix>
+    <VersionSuffix>preview.2</VersionSuffix>
 
     <Authors>Fotbiler</Authors>
     <Company>Fotbiler</Company>
@@ -27,7 +27,7 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
 
     <PackageTags>authorization;rbac;policy;security;access-control;rulegate</PackageTags>
-    <PackageReleaseNotes>Adds ASP.NET Core dependency injection, ClaimsPrincipal mapping, resource-based authorization handler integration, package-only consumer verification, and Trusted Publishing support.</PackageReleaseNotes>
+    <PackageReleaseNotes>Development preview for dynamic ASP.NET Core policy integration and policy-name support.</PackageReleaseNotes>
 
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
