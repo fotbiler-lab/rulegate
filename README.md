@@ -30,6 +30,8 @@ The current preview targets .NET 10.
 - Requirement-level failure identifiers
 - ASP.NET Core dependency injection integration
 - Fluent registration of policies and custom requirement evaluators
+- `ClaimsPrincipal` to `AuthorizationSubject` mapping
+- Configurable subject identifier, role, and permission claim types
 
 ## Installation
 
@@ -118,6 +120,51 @@ builder.Services
 ```
 
 Application services may then receive `IAuthorizationEngine` through dependency injection.
+
+## Map a ClaimsPrincipal
+
+The default subject mapping reads:
+
+- Subject identifier from `ClaimTypes.NameIdentifier`
+- Roles from `ClaimTypes.Role`
+- Permissions from the `permission` claim type
+
+Resolve the registered factory and map the current principal:
+
+```csharp
+using Fotbiler.RuleGate.AspNetCore.Subjects;
+
+var subjectFactory =
+    serviceProvider.GetRequiredService<
+        IRuleGateSubjectFactory>();
+
+var subject =
+    subjectFactory.Create(
+        httpContext.User);
+```
+
+Claim types can be changed during registration:
+
+```csharp
+builder.Services
+    .AddRuleGate()
+    .ConfigureSubjectMapping(
+        options =>
+        {
+            options.SubjectIdClaimType =
+                "sub";
+
+            options.RoleClaimTypes.Clear();
+            options.RoleClaimTypes.Add(
+                "application-role");
+
+            options.PermissionClaimTypes.Clear();
+            options.PermissionClaimTypes.Add(
+                "application-permission");
+        });
+```
+
+Claim type and value matching is ordinal and case-sensitive. Blank role and permission values are ignored, and exact duplicates are removed. Mapping fails when the configured subject identifier is missing or contains multiple distinct values.
 
 ## Create the authorization engine manually
 

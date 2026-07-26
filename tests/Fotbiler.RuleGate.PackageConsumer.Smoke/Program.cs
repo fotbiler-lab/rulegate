@@ -1,6 +1,8 @@
+using System.Security.Claims;
 using Fotbiler.RuleGate.Abstractions.Authorization;
 using Fotbiler.RuleGate.Abstractions.Constants;
 using Fotbiler.RuleGate.AspNetCore.DependencyInjection;
+using Fotbiler.RuleGate.AspNetCore.Subjects;
 using Fotbiler.RuleGate.Manifest.Compilation;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -61,13 +63,47 @@ if (!ReferenceEquals(firstEngine, secondEngine))
         "The authorization engine was not registered as a singleton.");
 }
 
-var allowedDecision =
-    await firstEngine.EvaluateAsync(
-        CreateRequest(
+var firstSubjectFactory =
+    serviceProvider.GetRequiredService<
+        IRuleGateSubjectFactory>();
+
+var secondSubjectFactory =
+    serviceProvider.GetRequiredService<
+        IRuleGateSubjectFactory>();
+
+if (!ReferenceEquals(
+        firstSubjectFactory,
+        secondSubjectFactory))
+{
+    throw new InvalidOperationException(
+        "The RuleGate subject factory was not registered as a singleton.");
+}
+
+var allowedSubject =
+    firstSubjectFactory.Create(
+        CreatePrincipal(
+            roles:
+            [
+                "package.reader",
+            ],
             permissions:
             [
-                "package.read"
+                "package.read",
             ]));
+
+if (allowedSubject.Id != "package-user" ||
+    !allowedSubject.Roles.Contains(
+        "package.reader") ||
+    !allowedSubject.Permissions.Contains(
+        "package.read"))
+{
+    throw new InvalidOperationException(
+        "The claims principal was not mapped to the expected authorization subject.");
+}
+
+var allowedDecision =
+    await firstEngine.EvaluateAsync(
+        CreateRequest(allowedSubject));
 
 if (!allowedDecision.IsAllowed ||
     allowedDecision.Failures.Count != 0)
@@ -76,9 +112,13 @@ if (!allowedDecision.IsAllowed ||
         "The DI-based authorization engine did not allow the valid request.");
 }
 
+var deniedSubject =
+    firstSubjectFactory.Create(
+        CreatePrincipal());
+
 var deniedDecision =
     await firstEngine.EvaluateAsync(
-        CreateRequest());
+        CreateRequest(deniedSubject));
 
 if (deniedDecision.IsAllowed)
 {
@@ -101,14 +141,47 @@ if (failure.Code !=
 Console.WriteLine(
     "RULEGATE_PACKAGE_CONSUMER_SMOKE_OK");
 
-static AuthorizationRequest CreateRequest(
+static ClaimsPrincipal CreatePrincipal(
+    IEnumerable<string>? roles = null,
     IEnumerable<string>? permissions = null)
 {
+    var claims =
+        new List<Claim>
+        {
+            new(
+                ClaimTypes.NameIdentifier,
+                "package-user"),
+        };
+
+    foreach (var role in roles ?? [])
+    {
+        claims.Add(
+            new Claim(
+                ClaimTypes.Role,
+                role));
+    }
+
+    foreach (var permission in permissions ?? [])
+    {
+        claims.Add(
+            new Claim(
+                RuleGateSubjectOptions
+                    .DefaultPermissionClaimType,
+                permission));
+    }
+
+    return new ClaimsPrincipal(
+        new ClaimsIdentity(
+            claims,
+            authenticationType:
+                "PackageConsumer"));
+}
+
+static AuthorizationRequest CreateRequest(
+    AuthorizationSubject subject)
+{
     return new AuthorizationRequest(
-        subject:
-            new AuthorizationSubject(
-                id: "package-user",
-                permissions: permissions),
+        subject: subject,
         resource:
             new AuthorizationResource(
                 type: "package-resource",

@@ -20,6 +20,8 @@ SMOKE_PROJECT="$SMOKE_DIRECTORY/Fotbiler.RuleGate.PackageConsumer.Smoke.csproj"
 
 PACKAGE_DIRECTORY="$REPOSITORY_ROOT/artifacts/packages"
 
+CONSUMER_PACKAGE_CACHE="$REPOSITORY_ROOT/artifacts/package-consumer-global-packages"
+
 PACKAGE_VERSION="0.2.0-preview.1"
 
 PACKAGES_READY="false"
@@ -52,7 +54,8 @@ printf '\n== Clean consumer outputs ==\n'
 
 rm -rf \
   "$SMOKE_DIRECTORY/bin" \
-  "$SMOKE_DIRECTORY/obj"
+  "$SMOKE_DIRECTORY/obj" \
+  "$CONSUMER_PACKAGE_CACHE"
 
 if [[ "$PACKAGES_READY" == "false" ]]
 then
@@ -110,6 +113,11 @@ do
 done
 
 printf '\n== Restore consumer from local packages ==\n'
+
+export NUGET_PACKAGES="$CONSUMER_PACKAGE_CACHE"
+
+printf 'Consumer package cache: %s\n' \
+  "$NUGET_PACKAGES"
 
 dotnet restore \
   "$SMOKE_PROJECT" \

@@ -1,6 +1,7 @@
 using Fotbiler.RuleGate.Abstractions.Authorization;
 using Fotbiler.RuleGate.Abstractions.Evaluation;
 using Fotbiler.RuleGate.Abstractions.Policies;
+using Fotbiler.RuleGate.AspNetCore.Subjects;
 using Fotbiler.RuleGate.Core.Engine;
 using Fotbiler.RuleGate.Core.Evaluation;
 using Fotbiler.RuleGate.Core.Evaluation.Evaluators;
@@ -16,6 +17,13 @@ public static class RuleGateServiceCollectionExtensions
         this IServiceCollection services)
     {
         ArgumentNullException.ThrowIfNull(services);
+
+        services.AddOptions<
+            RuleGateSubjectOptions>();
+
+        services.TryAddSingleton<
+            IRuleGateSubjectFactory,
+            ClaimsPrincipalRuleGateSubjectFactory>();
 
         services.TryAddEnumerable(
             ServiceDescriptor.Singleton<
