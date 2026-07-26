@@ -1,11 +1,13 @@
 using Fotbiler.RuleGate.Abstractions.Authorization;
 using Fotbiler.RuleGate.Abstractions.Evaluation;
 using Fotbiler.RuleGate.Abstractions.Policies;
+using Fotbiler.RuleGate.AspNetCore.Authorization;
 using Fotbiler.RuleGate.AspNetCore.Subjects;
 using Fotbiler.RuleGate.Core.Engine;
 using Fotbiler.RuleGate.Core.Evaluation;
 using Fotbiler.RuleGate.Core.Evaluation.Evaluators;
 using Fotbiler.RuleGate.Core.Policies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
@@ -24,6 +26,19 @@ public static class RuleGateServiceCollectionExtensions
         services.TryAddSingleton<
             IRuleGateSubjectFactory,
             ClaimsPrincipalRuleGateSubjectFactory>();
+
+        services.TryAddSingleton<
+            TimeProvider>(
+                TimeProvider.System);
+
+        services.TryAddSingleton<
+            IRuleGateAuthorizationResourceFactory,
+            RuleGateAuthorizationResourceFactory>();
+
+        services.TryAddEnumerable(
+            ServiceDescriptor.Singleton<
+                IAuthorizationHandler,
+                RuleGateAuthorizationHandler>());
 
         services.TryAddEnumerable(
             ServiceDescriptor.Singleton<

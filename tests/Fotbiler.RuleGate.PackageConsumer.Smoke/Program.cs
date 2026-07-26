@@ -1,10 +1,15 @@
 using System.Security.Claims;
 using Fotbiler.RuleGate.Abstractions.Authorization;
 using Fotbiler.RuleGate.Abstractions.Constants;
+using Fotbiler.RuleGate.AspNetCore.Authorization;
 using Fotbiler.RuleGate.AspNetCore.DependencyInjection;
 using Fotbiler.RuleGate.AspNetCore.Subjects;
 using Fotbiler.RuleGate.Manifest.Compilation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.DependencyInjection;
+
+const string PolicyName =
+    "package-resource-read";
 
 const string yaml = """
     schemaVersion: 1
@@ -36,6 +41,21 @@ if (!compilation.IsSuccess)
 
 var services =
     new ServiceCollection();
+
+services.AddLogging();
+
+services.AddAuthorizationCore(
+    options =>
+    {
+        options.AddPolicy(
+            PolicyName,
+            policy =>
+            {
+                policy.AddRequirements(
+                    new RuleGateAuthorizationRequirement(
+                        action: "read"));
+            });
+    });
 
 services
     .AddRuleGate()
@@ -79,17 +99,29 @@ if (!ReferenceEquals(
         "The RuleGate subject factory was not registered as a singleton.");
 }
 
+var authorizationService =
+    serviceProvider.GetRequiredService<
+        IAuthorizationService>();
+
+var resource =
+    new AuthorizationResource(
+        type: "package-resource",
+        id: "package-resource-1");
+
+var allowedPrincipal =
+    CreatePrincipal(
+        roles:
+        [
+            "package.reader",
+        ],
+        permissions:
+        [
+            "package.read",
+        ]);
+
 var allowedSubject =
     firstSubjectFactory.Create(
-        CreatePrincipal(
-            roles:
-            [
-                "package.reader",
-            ],
-            permissions:
-            [
-                "package.read",
-            ]));
+        allowedPrincipal);
 
 if (allowedSubject.Id != "package-user" ||
     !allowedSubject.Roles.Contains(
@@ -101,33 +133,52 @@ if (allowedSubject.Id != "package-user" ||
         "The claims principal was not mapped to the expected authorization subject.");
 }
 
-var allowedDecision =
+var directAllowedDecision =
     await firstEngine.EvaluateAsync(
-        CreateRequest(allowedSubject));
+        CreateRequest(
+            allowedSubject,
+            resource));
 
-if (!allowedDecision.IsAllowed ||
-    allowedDecision.Failures.Count != 0)
+if (!directAllowedDecision.IsAllowed ||
+    directAllowedDecision.Failures.Count != 0)
 {
     throw new InvalidOperationException(
-        "The DI-based authorization engine did not allow the valid request.");
+        "The RuleGate engine did not allow the valid direct request.");
 }
+
+var frameworkAllowedResult =
+    await authorizationService.AuthorizeAsync(
+        allowedPrincipal,
+        resource,
+        PolicyName);
+
+if (!frameworkAllowedResult.Succeeded)
+{
+    throw new InvalidOperationException(
+        "The ASP.NET Core authorization handler did not allow the valid request.");
+}
+
+var deniedPrincipal =
+    CreatePrincipal();
 
 var deniedSubject =
     firstSubjectFactory.Create(
-        CreatePrincipal());
+        deniedPrincipal);
 
-var deniedDecision =
+var directDeniedDecision =
     await firstEngine.EvaluateAsync(
-        CreateRequest(deniedSubject));
+        CreateRequest(
+            deniedSubject,
+            resource));
 
-if (deniedDecision.IsAllowed)
+if (directDeniedDecision.IsAllowed)
 {
     throw new InvalidOperationException(
-        "The DI-based authorization engine allowed an invalid request.");
+        "The RuleGate engine allowed the invalid direct request.");
 }
 
 var failure =
-    deniedDecision.Failures.Single();
+    directDeniedDecision.Failures.Single();
 
 if (failure.Code !=
         AuthorizationFailureCodes.MissingPermission ||
@@ -136,6 +187,45 @@ if (failure.Code !=
 {
     throw new InvalidOperationException(
         "The denied decision did not contain the expected authorization failure.");
+}
+
+var frameworkDeniedResult =
+    await authorizationService.AuthorizeAsync(
+        deniedPrincipal,
+        resource,
+        PolicyName);
+
+if (frameworkDeniedResult.Succeeded)
+{
+    throw new InvalidOperationException(
+        "The ASP.NET Core authorization handler allowed the invalid request.");
+}
+
+var unsupportedResourceResult =
+    await authorizationService.AuthorizeAsync(
+        allowedPrincipal,
+        new object(),
+        PolicyName);
+
+if (unsupportedResourceResult.Succeeded)
+{
+    throw new InvalidOperationException(
+        "The ASP.NET Core authorization handler accepted an unsupported resource.");
+}
+
+var missingSubjectResult =
+    await authorizationService.AuthorizeAsync(
+        new ClaimsPrincipal(
+            new ClaimsIdentity(
+                authenticationType:
+                    "PackageConsumer")),
+        resource,
+        PolicyName);
+
+if (missingSubjectResult.Succeeded)
+{
+    throw new InvalidOperationException(
+        "The ASP.NET Core authorization handler accepted a principal without a subject identifier.");
 }
 
 Console.WriteLine(
@@ -178,14 +268,12 @@ static ClaimsPrincipal CreatePrincipal(
 }
 
 static AuthorizationRequest CreateRequest(
-    AuthorizationSubject subject)
+    AuthorizationSubject subject,
+    AuthorizationResource resource)
 {
     return new AuthorizationRequest(
         subject: subject,
-        resource:
-            new AuthorizationResource(
-                type: "package-resource",
-                id: "package-resource-1"),
+        resource: resource,
         action: "read",
         context:
             new AuthorizationContext(

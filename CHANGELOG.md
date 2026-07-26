@@ -22,6 +22,12 @@ The project follows Semantic Versioning. Preview releases may introduce breaking
 - Fail-closed handling for missing or ambiguous subject identifiers.
 - Ordinal, case-sensitive claim mapping with duplicate removal.
 - Claims principal mapping tests and package-consumer verification.
+- ASP.NET Core `IAuthorizationRequirement` and authorization handler foundation.
+- Resource-based RuleGate authorization through `IAuthorizationService`.
+- Replaceable ASP.NET Core authorization-resource factory.
+- Fail-closed subject and resource mapping behavior.
+- Testable evaluation timestamps through `TimeProvider`.
+- Package-consumer verification of allowed and denied handler flows.
 
 ## [0.1.0-preview.1] - 2026-07-26
 
