@@ -3,3 +3,15 @@ schemaVersion: 1
 application:
   id: rulegate-example
   name: RuleGate Example
+
+policies:
+  - id: sample-resource-read
+    resourceType: sample-resource
+    action: read
+    requirement:
+      all:
+        - id: required-permission
+          permission: sample.read
+        - any:
+            - role: sample.editor
+            - role: sample.administrator
