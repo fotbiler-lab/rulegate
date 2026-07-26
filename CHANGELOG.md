@@ -6,14 +6,12 @@ The project follows Semantic Versioning. Preview releases may introduce breaking
 
 ## [Unreleased]
 
+## [0.1.0-preview.1] - 2026-07-26
+
 ### Added
 
 - Preview release verification script.
 - Preview release checklist and manual publishing procedure.
-
-## [0.1.0-preview.1] - Unreleased
-
-### Added
 
 - Authorization subjects, resources, contexts, requests, decisions, and failures.
 - Permission-based and role-based authorization requirements.
