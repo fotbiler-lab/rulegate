@@ -27,7 +27,7 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
 
     <PackageTags>authorization;rbac;policy;security;access-control;rulegate</PackageTags>
-    <PackageReleaseNotes>Initial preview of the RuleGate authorization core, policy engine, and YAML manifest compiler.</PackageReleaseNotes>
+    <PackageReleaseNotes>Adds ASP.NET Core dependency injection, ClaimsPrincipal mapping, resource-based authorization handler integration, package-only consumer verification, and Trusted Publishing support.</PackageReleaseNotes>
 
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
