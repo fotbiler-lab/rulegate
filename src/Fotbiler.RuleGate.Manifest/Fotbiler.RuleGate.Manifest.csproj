@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
     <ProjectReference Include="..\Fotbiler.RuleGate.Abstractions\Fotbiler.RuleGate.Abstractions.csproj" />
@@ -12,6 +12,17 @@
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+
+    <PackageId>Fotbiler.RuleGate.Manifest</PackageId>
+    <Title>Fotbiler RuleGate Manifest</Title>
+    <Description>YAML manifest loading, validation, compilation, and policy domain mapping for Fotbiler RuleGate.</Description>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\README.md"
+          Pack="true"
+          PackagePath="\"
+          Visible="false" />
+  </ItemGroup>
 
 </Project>
