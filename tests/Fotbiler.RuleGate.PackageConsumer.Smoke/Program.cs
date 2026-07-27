@@ -9,6 +9,7 @@ using Fotbiler.RuleGate.AspNetCore.Endpoints;
 using Fotbiler.RuleGate.AspNetCore.Subjects;
 using Fotbiler.RuleGate.Manifest.Compilation;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization.Policy;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -65,6 +66,7 @@ services.AddAuthorizationCore();
 services
     .AddRuleGate()
     .AddLoggingDiagnostics()
+    .AddHttpAuthorizationResultMapping()
     .AddPolicies(compilation.Policies);
 
 using var serviceProvider =
@@ -74,6 +76,17 @@ using var serviceProvider =
             ValidateOnBuild = true,
             ValidateScopes = true,
         });
+
+var authorizationResultHandler =
+    serviceProvider.GetRequiredService<
+        IAuthorizationMiddlewareResultHandler>();
+
+if (authorizationResultHandler.GetType().Name !=
+    "RuleGateAuthorizationMiddlewareResultHandler")
+{
+    throw new InvalidOperationException(
+        "The packaged HTTP authorization result mapping was not registered.");
+}
 
 var firstEngine =
     serviceProvider.GetRequiredService<

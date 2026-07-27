@@ -655,6 +655,9 @@ public sealed class
         Response.StatusCode =
             StatusCodes.Status401Unauthorized;
 
+        Response.Headers["WWW-Authenticate"] =
+            $"{SchemeName} realm=\"rulegate-tests\"";
+
         return Task.CompletedTask;
     }
 
@@ -664,6 +667,10 @@ public sealed class
     {
         Response.StatusCode =
             StatusCodes.Status403Forbidden;
+
+        Response.Headers[
+            "X-RuleGate-Test-Forbid"] =
+                "true";
 
         return Task.CompletedTask;
     }

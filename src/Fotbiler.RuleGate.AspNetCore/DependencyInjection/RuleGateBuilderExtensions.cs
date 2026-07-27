@@ -1,8 +1,11 @@
 using Fotbiler.RuleGate.Abstractions.Diagnostics;
 using Fotbiler.RuleGate.Abstractions.Evaluation;
 using Fotbiler.RuleGate.Abstractions.Policies;
+using Fotbiler.RuleGate.AspNetCore.Authorization;
 using Fotbiler.RuleGate.AspNetCore.Diagnostics;
 using Fotbiler.RuleGate.AspNetCore.Subjects;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization.Policy;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
@@ -90,4 +93,43 @@ public static class RuleGateBuilderExtensions
         return builder;
     }
 
+    public static RuleGateBuilder
+        AddHttpAuthorizationResultMapping(
+            this RuleGateBuilder builder)
+    {
+        ArgumentNullException.ThrowIfNull(builder);
+
+        var handlerDescriptors =
+            builder.Services
+                .Where(
+                    descriptor =>
+                        descriptor.ServiceType ==
+                        typeof(
+                            IAuthorizationMiddlewareResultHandler))
+                .ToArray();
+
+        var hasCustomHandler =
+            handlerDescriptors.Any(
+                static descriptor =>
+                    descriptor.ImplementationType !=
+                        typeof(
+                            AuthorizationMiddlewareResultHandler) &&
+                    descriptor.ImplementationType !=
+                        typeof(
+                            RuleGateAuthorizationMiddlewareResultHandler));
+
+        if (hasCustomHandler)
+        {
+            return builder;
+        }
+
+        builder.Services.RemoveAll<
+            IAuthorizationMiddlewareResultHandler>();
+
+        builder.Services.AddSingleton<
+            IAuthorizationMiddlewareResultHandler,
+            RuleGateAuthorizationMiddlewareResultHandler>();
+
+        return builder;
+    }
 }

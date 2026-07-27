@@ -21,6 +21,13 @@ The project follows Semantic Versioning. Preview releases may introduce breaking
 - Backward-compatible requirement-aware authorization-resource factory extension.
 - Live HTTP pipeline tests for Minimal API and controller authorization.
 - Standard ASP.NET Core challenge and forbid behavior verification.
+- Opt-in HTTP authorization-result mapping through `AddHttpAuthorizationResultMapping`.
+- Generic `application/problem+json` responses for RuleGate `401` challenge and `403` forbid results.
+- Public RuleGate HTTP authorization problem type and problem code constants.
+- Authentication challenge and forbid header preservation during RuleGate problem-response mapping.
+- Standard ASP.NET Core policies remain delegated to the framework's default result handler.
+- Minimal API and controller pipeline verification for RuleGate problem responses.
+- Package-only consumer verification of the HTTP authorization-result mapping registration API.
 - Typed scalar authorization attribute values with numeric normalization.
 - Subject, resource, and context attribute requirement definitions.
 - Equality, inequality, numeric ordering, and `DateTimeOffset` ordering operators.
@@ -58,6 +65,8 @@ The project follows Semantic Versioning. Preview releases may introduce breaking
 - Missing endpoints and missing or empty required route values fail closed.
 - Conflicting endpoint metadata for the same RuleGate policy fails closed.
 - Endpoint authorization does not evaluate the RuleGate engine until a valid resource has been constructed.
+- Default HTTP authorization problem responses do not expose RuleGate failure codes, requirement identifiers, policy details, claims, roles, permissions, subject identifiers, resource identifiers, or route values.
+- Existing custom `IAuthorizationMiddlewareResultHandler` registrations are not replaced by the opt-in RuleGate mapping.
 - Missing attributes fail as not satisfied.
 - Attribute type mismatches, unsupported runtime types, and unsupported operator/type combinations fail as indeterminate.
 - Attribute comparison is ordinal, case-sensitive, and does not perform implicit string or numeric coercion.
