@@ -139,6 +139,8 @@ Every RuleGate NuGet package includes framework-specific assemblies for all thre
 
 - [Getting started](docs/getting-started.md) — build and evaluate your first
   complete RuleGate policy.
+- [Authorization model](docs/authorization-model.md) — understand subjects,
+  resources, actions, policies, requirements, and decisions.
 - [Documentation index](docs/README.md) — find guides and maintainer
   documentation.
 - [Roadmap](docs/roadmap.md) — review published previews and planned

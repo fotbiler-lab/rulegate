@@ -11,6 +11,7 @@ resource-based authorization through one composable policy model.
 | Goal | Document |
 |---|---|
 | Make your first authorization decision | [Getting started](getting-started.md) |
+| Understand subjects, resources, actions, policies, and requirements | [Authorization model](authorization-model.md) |
 | Understand current and planned capabilities | [Roadmap](roadmap.md) |
 | Prepare and verify a preview release | [Preview release checklist](releases/preview-release-checklist.md) |
 
@@ -29,9 +30,12 @@ That guide introduces the smallest complete RuleGate flow:
 6. Evaluate an allowed decision.
 7. Observe fail-closed denial behavior.
 
-After completing that guide, use the root
-[README](../README.md) for the currently available ASP.NET Core integration,
-diagnostics, requirement types, and security behavior.
+After completing that guide:
+
+1. Read the [authorization model](authorization-model.md) to understand the
+   concepts behind each decision.
+2. Use the root [README](../README.md) for the currently available ASP.NET Core
+   integration, diagnostics, requirement types, and security behavior.
 
 ## Documentation principles
 
