@@ -31,6 +31,12 @@ The project follows Semantic Versioning. Preview releases may introduce breaking
 - Manifest conversion of boolean, decimal, null, string, and `DateTimeOffset` values.
 - Nested attribute requirements inside `all`, `any`, and `not` logical requirements.
 - End-to-end YAML compilation and authorization-engine verification for attribute policies.
+- Public authorization and requirement diagnostics contracts.
+- Opt-in `IAuthorizationDiagnosticsSink` integration with a disabled fast path.
+- Nested requirement evaluation traces with parent-child identifiers, outcomes, failure codes, and durations.
+- Policy-level diagnostics for successful, denied, and unmatched-policy decisions.
+- ASP.NET Core structured logging diagnostics through `AddLoggingDiagnostics`.
+- Package-only consumer verification of the logging diagnostics registration API.
 
 - Multi-targeted package assets for .NET 8, .NET 9, and .NET 10.
 - Full test-suite execution across all supported target frameworks.
@@ -57,7 +63,9 @@ The project follows Semantic Versioning. Preview releases may introduce breaking
 - Attribute comparison is ordinal, case-sensitive, and does not perform implicit string or numeric coercion.
 - Manifest `dateTimeOffset` values require an explicit UTC marker or numeric offset.
 - The `nullValue` type token avoids ambiguity with YAML's native null scalar.
-
+- Authorization diagnostics are disabled by default and do not contain attribute values.
+- The built-in logging diagnostics sink omits attribute names, subject and resource identifiers, claims, role and permission values, and raw requests.
+- Diagnostics sink failures are isolated and cannot alter authorization decisions.
 
 ## [0.2.0-preview.1] - 2026-07-26
 

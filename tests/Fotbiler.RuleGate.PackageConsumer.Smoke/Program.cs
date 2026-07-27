@@ -64,6 +64,7 @@ services.AddAuthorizationCore();
 
 services
     .AddRuleGate()
+    .AddLoggingDiagnostics()
     .AddPolicies(compilation.Policies);
 
 using var serviceProvider =
