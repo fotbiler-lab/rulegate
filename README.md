@@ -1,8 +1,83 @@
-# Fotbiler RuleGate
+<p align="center">
+  <strong>FOTBILER</strong>
+</p>
 
-Fotbiler RuleGate is a local-first, provider-independent, and policy-driven authorization framework for .NET.
+<h1 align="center">RuleGate</h1>
 
-> RuleGate is currently in preview and is not yet recommended for production use.
+<p align="center">
+  <strong>Local-first, provider-independent authorization for .NET</strong>
+</p>
+
+<p align="center">
+  RBAC · ABAC · CBAC · Resource-based authorization · ASP.NET Core · YAML manifests
+</p>
+
+<p align="center">
+  <a href="https://github.com/fotbiler-lab/rulegate/actions/workflows/ci.yml">
+    <img
+      alt="CI"
+      src="https://img.shields.io/github/actions/workflow/status/fotbiler-lab/rulegate/ci.yml?branch=main&amp;style=flat-square&amp;label=CI">
+  </a>
+  <a href="https://www.nuget.org/packages/Fotbiler.RuleGate.AspNetCore">
+    <img
+      alt="NuGet"
+      src="https://img.shields.io/nuget/vpre/Fotbiler.RuleGate.AspNetCore?style=flat-square&amp;logo=nuget&amp;label=NuGet">
+  </a>
+  <a href="https://www.nuget.org/packages/Fotbiler.RuleGate.AspNetCore">
+    <img
+      alt="NuGet downloads"
+      src="https://img.shields.io/nuget/dt/Fotbiler.RuleGate.AspNetCore?style=flat-square&amp;logo=nuget&amp;label=downloads">
+  </a>
+  <a href="https://github.com/fotbiler-lab/rulegate/releases">
+    <img
+      alt="GitHub release"
+      src="https://img.shields.io/github/v/release/fotbiler-lab/rulegate?include_prereleases&amp;sort=semver&amp;style=flat-square&amp;label=release">
+  </a>
+  <a href="https://dotnet.microsoft.com/">
+    <img
+      alt=".NET 8, 9, and 10"
+      src="https://img.shields.io/badge/.NET-8%20%7C%209%20%7C%2010-512BD4?style=flat-square&amp;logo=dotnet">
+  </a>
+  <a href="LICENSE">
+    <img
+      alt="License"
+      src="https://img.shields.io/github/license/fotbiler-lab/rulegate?style=flat-square&amp;label=license">
+  </a>
+</p>
+
+<p align="center">
+  <a href="#installation">Getting started</a>
+  ·
+  <a href="#packages">Packages</a>
+  ·
+  <a href="docs/roadmap.md">Roadmap</a>
+  ·
+  <a href="#security-behavior">Security</a>
+  ·
+  <a href="https://github.com/fotbiler-lab/rulegate/releases">Releases</a>
+</p>
+
+> [!WARNING]
+> RuleGate is currently in preview. Public APIs may change before the first
+> stable release, and the packages are not yet recommended for production use.
+
+## Why RuleGate?
+
+RuleGate provides a unified authorization model for applications that need
+more than framework-level roles or ad hoc permission checks.
+
+- **Local-first:** Policy evaluation happens inside the application process.
+- **Provider-independent:** The authorization engine is not coupled to an
+  identity provider, database, or remote policy service.
+- **Policy-driven:** Permissions, roles, attributes, resources, and contextual
+  rules use one composable requirement model.
+- **Fail-closed:** Missing, malformed, unsupported, and indeterminate
+  authorization inputs deny access.
+- **Framework-ready:** ASP.NET Core applications can use dynamic policies,
+  endpoint helpers, controller attributes, diagnostics, and safe HTTP result
+  mapping.
+- **Manifest-enabled:** YAML policies can be loaded, validated, and compiled
+  into immutable runtime policy definitions.
 
 ## Packages
 
