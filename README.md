@@ -46,7 +46,7 @@
 </p>
 
 <p align="center">
-  <a href="#installation">Getting started</a>
+  <a href="docs/getting-started.md">Getting started</a>
   ·
   <a href="#packages">Packages</a>
   ·
@@ -134,6 +134,15 @@ Every RuleGate NuGet package includes framework-specific assemblies for all thre
 - Fallback-compatible standard ASP.NET Core policies
 - Fail-closed resource-type enforcement
 - Multi-targeted .NET 8, .NET 9, and .NET 10 packages
+
+## Documentation
+
+- [Getting started](docs/getting-started.md) — build and evaluate your first
+  complete RuleGate policy.
+- [Documentation index](docs/README.md) — find guides and maintainer
+  documentation.
+- [Roadmap](docs/roadmap.md) — review published previews and planned
+  milestones.
 
 ## Installation
 
