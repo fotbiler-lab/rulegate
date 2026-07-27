@@ -24,6 +24,12 @@ CONSUMER_PACKAGE_CACHE="$REPOSITORY_ROOT/artifacts/package-consumer-global-packa
 
 PACKAGE_VERSION="0.2.0-preview.2"
 
+EXPECTED_FRAMEWORKS=(
+  "net8.0"
+  "net9.0"
+  "net10.0"
+)
+
 PACKAGES_READY="false"
 
 case "${1:-}" in
@@ -128,6 +134,22 @@ dotnet restore \
 
 ASSETS_FILE="$SMOKE_DIRECTORY/obj/project.assets.json"
 
+printf '\n== Verify restored target frameworks ==\n'
+
+for framework in "${EXPECTED_FRAMEWORKS[@]}"
+do
+  if ! grep -F \
+    "\"$framework\":" \
+    "$ASSETS_FILE" \
+    >/dev/null
+  then
+    echo "ERROR: Consumer assets do not contain $framework."
+    exit 1
+  fi
+
+  echo "Restored: $framework"
+done
+
 printf '\n== Verify resolved package graph ==\n'
 
 for dependency in \
@@ -157,9 +179,15 @@ dotnet list \
 
 printf '\n== Run package consumer ==\n'
 
-dotnet run \
-  --project "$SMOKE_PROJECT" \
-  --configuration Release \
-  --no-restore
+for framework in "${EXPECTED_FRAMEWORKS[@]}"
+do
+  printf '\nFRAMEWORK: %s\n' "$framework"
 
-printf '\nNuGet package consumer smoke test passed.\n'
+  dotnet run \
+    --project "$SMOKE_PROJECT" \
+    --configuration Release \
+    --framework "$framework" \
+    --no-restore
+done
+
+printf '\nNuGet package consumer smoke tests passed on all frameworks.\n'

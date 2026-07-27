@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
+    <TargetFrameworks>$(RuleGateTargetFrameworks)</TargetFrameworks>
 
     <PackageId>Fotbiler.RuleGate.AspNetCore</PackageId>
     <Description>ASP.NET Core dependency injection, ClaimsPrincipal mapping, dynamic policy resolution, authorization-service extensions, and resource-based authorization for Fotbiler RuleGate.</Description>
