@@ -15,7 +15,7 @@
     <TargetFrameworks>$(RuleGateTargetFrameworks)</TargetFrameworks>
 
     <PackageId>Fotbiler.RuleGate.AspNetCore</PackageId>
-    <Description>ASP.NET Core dependency injection, ClaimsPrincipal mapping, dynamic policy resolution, authorization-service extensions, and resource-based authorization for Fotbiler RuleGate.</Description>
+    <Description>ASP.NET Core dependency injection, ClaimsPrincipal mapping, dynamic policies, authorization-service extensions, Minimal API endpoint helpers, controller/action attributes, and resource-based authorization for Fotbiler RuleGate.</Description>
   </PropertyGroup>
 
   <ItemGroup>
