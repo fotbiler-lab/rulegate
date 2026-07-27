@@ -54,6 +54,8 @@ Every RuleGate NuGet package includes framework-specific assemblies for all thre
 - Controller and action authorization through `[RuleGateAuthorize]`
 - Route-value mapping into `AuthorizationResource.Id`
 - Standard ASP.NET Core `401 Challenge` and `403 Forbid` behavior
+- Opt-in RuleGate `401` and `403` `application/problem+json` mapping
+- Authentication challenge and forbid header preservation
 - Fallback-compatible standard ASP.NET Core policies
 - Fail-closed resource-type enforcement
 - Multi-targeted .NET 8, .NET 9, and .NET 10 packages
@@ -358,6 +360,50 @@ public sealed class DocumentsController
 
 Both integrations use the standard ASP.NET Core authentication and authorization middleware. Anonymous requests are challenged, denied authenticated requests are forbidden, and allowed requests proceed to the endpoint or controller action.
 
+### Map RuleGate HTTP authorization results
+
+HTTP authorization-result mapping is disabled by default. Enable it explicitly during RuleGate registration:
+
+```csharp
+builder.Services
+    .AddRuleGate()
+    .AddHttpAuthorizationResultMapping()
+    .AddPolicies(compilation.Policies);
+```
+
+The mapping applies only to authorization policies containing a `RuleGateAuthorizationRequirement`:
+
+- Anonymous RuleGate requests produce a `401` `application/problem+json` response.
+- Denied authenticated RuleGate requests produce a `403` `application/problem+json` response.
+- Successful RuleGate requests continue to the endpoint normally.
+- Ordinary ASP.NET Core policies retain the framework's default challenge and forbid behavior.
+
+The configured authentication scheme still performs its normal challenge or forbid operation first. Authentication headers such as `WWW-Authenticate`, together with any other scheme-generated headers, are preserved. When an authentication handler has already started the response, RuleGate does not replace its response body.
+
+A denied response has this general shape:
+
+```json
+{
+  "type": "urn:fotbiler:rulegate:authorization:access-forbidden",
+  "title": "Access is forbidden.",
+  "status": 403,
+  "detail": "The authenticated identity is not authorized to access this resource.",
+  "code": "RULEGATE_ACCESS_FORBIDDEN",
+  "traceId": "..."
+}
+```
+
+The public problem identifiers are available through:
+
+- `RuleGateHttpAuthorizationProblemTypes.AuthenticationRequired`
+- `RuleGateHttpAuthorizationProblemTypes.AccessForbidden`
+- `RuleGateHttpAuthorizationProblemCodes.AuthenticationRequired`
+- `RuleGateHttpAuthorizationProblemCodes.AccessForbidden`
+
+The default response intentionally excludes RuleGate engine failure codes, requirement identifiers, policy details, claims, roles, permissions, subject identifiers, resource identifiers, and route values.
+
+`AddHttpAuthorizationResultMapping` does not replace a custom `IAuthorizationMiddlewareResultHandler` that was already registered by the application.
+
 Applications can replace `IRuleGateAuthorizationResourceFactory` to map domain-specific resource objects. Existing implementations of its original `Create(object?)` method remain compatible.
 
 The resource type carried by the dynamic policy must match the mapped `AuthorizationResource.Type`. A mismatch fails before the RuleGate engine is evaluated.
@@ -366,7 +412,7 @@ A RuleGate deny decision, a missing or ambiguous subject identifier, an unsuppor
 
 The imperative authorization-service extensions, Minimal API endpoint helper, and controller/action attribute all use the same dynamic policy provider and RuleGate authorization handler. Missing endpoints, missing required route values, empty route values, conflicting metadata, unsupported resources, and resource-type mismatches fail closed before the RuleGate engine is allowed to grant access.
 
-Automatic loading of domain entities from route identifiers and custom HTTP authorization-result payloads remain outside the current scope.
+Automatic loading of domain entities from route identifiers remains outside the current scope.
 
 ## Create the authorization engine manually
 
@@ -631,11 +677,10 @@ Diagnostics are disabled by default. Diagnostic models never contain attribute v
 
 ## Project status
 
-The current preview contains the authorization core, typed subject/resource/context attribute requirements, YAML manifest compilation, opt-in authorization diagnostics, safe ASP.NET Core structured logging, dependency injection, claims mapping, resource-based authorization handling, dynamic named-policy resolution, Minimal API endpoint authorization, and controller/action authorization attributes.
+The current preview contains the authorization core, typed subject/resource/context attribute requirements, YAML manifest compilation, opt-in authorization diagnostics, safe ASP.NET Core structured logging, dependency injection, claims mapping, resource-based authorization handling, dynamic named-policy resolution, Minimal API endpoint authorization, controller/action authorization attributes, and opt-in HTTP authorization problem-details mapping.
 
 Planned future modules include:
 
-- Automatic HTTP authorization-result mapping
 - Domain-specific resource mapping helpers
 - Subject, resource, and context attribute extraction
 - Context-based authorization
