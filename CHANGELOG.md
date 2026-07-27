@@ -21,6 +21,11 @@ The project follows Semantic Versioning. Preview releases may introduce breaking
 - Backward-compatible requirement-aware authorization-resource factory extension.
 - Live HTTP pipeline tests for Minimal API and controller authorization.
 - Standard ASP.NET Core challenge and forbid behavior verification.
+- Typed scalar authorization attribute values with numeric normalization.
+- Subject, resource, and context attribute requirement definitions.
+- Equality, inequality, numeric ordering, and `DateTimeOffset` ordering operators.
+- Built-in fail-closed attribute requirement evaluator and default dependency-injection registration.
+- Attribute policy verification through the package-only consumer.
 
 - Multi-targeted package assets for .NET 8, .NET 9, and .NET 10.
 - Full test-suite execution across all supported target frameworks.
@@ -42,6 +47,9 @@ The project follows Semantic Versioning. Preview releases may introduce breaking
 - Missing endpoints and missing or empty required route values fail closed.
 - Conflicting endpoint metadata for the same RuleGate policy fails closed.
 - Endpoint authorization does not evaluate the RuleGate engine until a valid resource has been constructed.
+- Missing attributes fail as not satisfied.
+- Attribute type mismatches, unsupported runtime types, and unsupported operator/type combinations fail as indeterminate.
+- Attribute comparison is ordinal, case-sensitive, and does not perform implicit string or numeric coercion.
 
 
 ## [0.2.0-preview.1] - 2026-07-26

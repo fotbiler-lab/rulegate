@@ -1,6 +1,8 @@
 using System.Security.Claims;
+using Fotbiler.RuleGate.Abstractions.Attributes;
 using Fotbiler.RuleGate.Abstractions.Authorization;
 using Fotbiler.RuleGate.Abstractions.Constants;
+using Fotbiler.RuleGate.Abstractions.Policies;
 using Fotbiler.RuleGate.AspNetCore.Authorization;
 using Fotbiler.RuleGate.AspNetCore.DependencyInjection;
 using Fotbiler.RuleGate.AspNetCore.Endpoints;
@@ -50,7 +52,23 @@ services.AddAuthorizationCore();
 
 services
     .AddRuleGate()
-    .AddPolicies(compilation.Policies);
+    .AddPolicies(compilation.Policies)
+    .AddPolicy(
+        new PolicyDefinition(
+            id: "attribute-resource-read",
+            resourceType: "attribute-resource",
+            action: "read",
+            requirement:
+                new AttributeRequirementDefinition(
+                    source:
+                        AuthorizationAttributeSource
+                            .Subject,
+                    name: "department",
+                    @operator:
+                        AuthorizationAttributeOperator
+                            .Equal,
+                    value: "finance",
+                    id: "finance-department")));
 
 using var serviceProvider =
     services.BuildServiceProvider(
@@ -233,6 +251,60 @@ if (missingSubjectResult.Succeeded)
 {
     throw new InvalidOperationException(
         "The ASP.NET Core authorization handler accepted a principal without a subject identifier.");
+}
+
+var attributeResource =
+    new AuthorizationResource(
+        type: "attribute-resource",
+        id: "attribute-resource-1");
+
+var matchingAttributeSubject =
+    new AuthorizationSubject(
+        id: "attribute-user",
+        attributes:
+            new AuthorizationAttributes(
+            [
+                new KeyValuePair<string, object?>(
+                    "department",
+                    "finance")
+            ]));
+
+var attributeAllowedDecision =
+    await firstEngine.EvaluateAsync(
+        CreateRequest(
+            matchingAttributeSubject,
+            attributeResource));
+
+if (!attributeAllowedDecision.IsAllowed ||
+    attributeAllowedDecision.Failures.Count != 0)
+{
+    throw new InvalidOperationException(
+        "The packaged attribute evaluator did not allow the matching subject attribute.");
+}
+
+var attributeDeniedDecision =
+    await firstEngine.EvaluateAsync(
+        CreateRequest(
+            new AuthorizationSubject(
+                id: "attribute-user"),
+            attributeResource));
+
+if (attributeDeniedDecision.IsAllowed)
+{
+    throw new InvalidOperationException(
+        "The packaged attribute evaluator allowed a subject without the required attribute.");
+}
+
+var attributeFailure =
+    attributeDeniedDecision.Failures.Single();
+
+if (attributeFailure.Code !=
+        AuthorizationFailureCodes.AttributeNotFound ||
+    attributeFailure.RequirementId !=
+        "finance-department")
+{
+    throw new InvalidOperationException(
+        "The packaged attribute evaluator did not return the expected failure.");
 }
 
 var ruleGateAttribute =

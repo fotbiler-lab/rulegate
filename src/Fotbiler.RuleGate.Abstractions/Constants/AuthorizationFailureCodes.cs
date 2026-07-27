@@ -16,4 +16,19 @@ public static class AuthorizationFailureCodes
 
     public const string NegatedRequirementSatisfied =
         "RULEGATE_NEGATED_REQUIREMENT_SATISFIED";
+
+    public const string AttributeNotFound =
+        "RULEGATE_ATTRIBUTE_NOT_FOUND";
+
+    public const string AttributeComparisonNotSatisfied =
+        "RULEGATE_ATTRIBUTE_COMPARISON_NOT_SATISFIED";
+
+    public const string AttributeTypeMismatch =
+        "RULEGATE_ATTRIBUTE_TYPE_MISMATCH";
+
+    public const string AttributeTypeNotSupported =
+        "RULEGATE_ATTRIBUTE_TYPE_NOT_SUPPORTED";
+
+    public const string AttributeOperatorNotSupported =
+        "RULEGATE_ATTRIBUTE_OPERATOR_NOT_SUPPORTED";
 }
