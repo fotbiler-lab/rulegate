@@ -14,6 +14,7 @@ resource-based authorization through one composable policy model.
 | Understand subjects, resources, actions, policies, and requirements | [Authorization model](authorization-model.md) |
 | Define and validate `rulegate.yaml` policies | [Manifest guide](manifests.md) |
 | Integrate RuleGate with ASP.NET Core | [ASP.NET Core integration](aspnetcore.md) |
+| Operate authorization diagnostics safely | [Diagnostics](diagnostics.md) |
 | Understand current and planned capabilities | [Roadmap](roadmap.md) |
 | Prepare and verify a preview release | [Preview release checklist](releases/preview-release-checklist.md) |
 
@@ -39,7 +40,9 @@ After completing that guide:
 2. Use the [manifest guide](manifests.md) to define and validate policies.
 3. Follow the [ASP.NET Core integration](aspnetcore.md) guide to protect HTTP
    endpoints and map authenticated identities.
-4. Use the root [README](../README.md) for the repository overview and current
+4. Use the [diagnostics guide](diagnostics.md) to configure logging and custom
+   observability safely.
+5. Use the root [README](../README.md) for the repository overview and current
    package status.
 
 ## Documentation principles

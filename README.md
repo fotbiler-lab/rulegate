@@ -144,7 +144,9 @@ Every RuleGate NuGet package includes framework-specific assemblies for all thre
 - [Manifest guide](docs/manifests.md) — define, validate, and compile
   `rulegate.yaml` policies.
 - [ASP.NET Core integration](docs/aspnetcore.md) — configure claims mapping,
-  dynamic policies, endpoints, controllers, diagnostics, and HTTP results.
+  dynamic policies, endpoints, controllers, and HTTP results.
+- [Diagnostics](docs/diagnostics.md) — operate structured logging, requirement
+  traces, and custom diagnostic sinks safely.
 - [Documentation index](docs/README.md) — find guides and maintainer
   documentation.
 - [Roadmap](docs/roadmap.md) — review published previews and planned
@@ -240,7 +242,9 @@ Application services may then receive `IAuthorizationEngine` through dependency 
 
 ## Enable authorization diagnostics
 
-Authorization diagnostics are disabled by default. Enable the built-in ASP.NET Core logging sink explicitly:
+Authorization diagnostics are disabled by default.
+
+Enable the built-in structured logging sink explicitly:
 
 ```csharp
 builder.Services
@@ -249,30 +253,12 @@ builder.Services
     .AddPolicies(compilation.Policies);
 ```
 
-The logging sink emits:
+The sink emits authorization event `2000` at Information level and requirement
+event `2001` at Debug level. Diagnostic publication is best-effort and cannot
+change the authorization decision.
 
-- Event `2000` at `Information` level for the completed authorization decision
-- Event `2001` at `Debug` level for every evaluated requirement
-
-The authorization-level entry includes the evaluation identifier, policy identifier, allow/deny result, elapsed duration, failure codes, and requirement count.
-
-Requirement entries include evaluation and parent identifiers, requirement identifier and kind, outcome, elapsed duration, failure codes, and the attribute source when applicable. This preserves the complete `all`, `any`, and `not` evaluation tree.
-
-Diagnostic models never contain attribute values. The built-in logging sink additionally omits attribute names, subject identifiers, resource identifiers, claims, roles, permissions, and raw authorization requests.
-
-Applications can provide a custom sink:
-
-```csharp
-using Fotbiler.RuleGate.Abstractions.Diagnostics;
-
-builder.Services.AddSingleton<
-    IAuthorizationDiagnosticsSink,
-    ApplicationAuthorizationDiagnosticsSink>();
-
-builder.Services.AddRuleGate();
-```
-
-A custom sink participates only when its `IsEnabled` property returns `true`. Sink failures are isolated and cannot change an authorization decision or make authorization unavailable.
+See [Diagnostics](docs/diagnostics.md) for event fields, trace relationships,
+custom sinks, cancellation behavior, and sensitive-data boundaries.
 
 ## Map a ClaimsPrincipal
 

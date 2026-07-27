@@ -973,11 +973,11 @@ trace identifier.
 Detailed authorization diagnostics belong in trusted server-side
 observability systems.
 
-## Enable logging diagnostics
+## Authorization diagnostics
 
 Diagnostics are disabled by default.
 
-Enable the built-in structured logging sink:
+Enable the built-in structured logging sink explicitly:
 
 ```csharp
 builder.Services
@@ -986,56 +986,13 @@ builder.Services
     .AddPolicies(compilation.Policies);
 ```
 
-At Information level, the sink records authorization-evaluation information
-such as:
+RuleGate emits authorization-level Information events and requirement-level
+Debug events. A custom `IAuthorizationDiagnosticsSink` can replace the
+built-in sink.
 
-- Evaluation ID
-- Policy ID
-- Allowed result
-- Duration
-- Failure codes
-- Requirement count
-
-At Debug level, it also records requirement-level information such as:
-
-- Requirement evaluation ID
-- Parent evaluation ID
-- Requirement ID
-- Requirement kind
-- Outcome
-- Duration
-- Failure codes
-- Attribute source
-
-The built-in sink does not log:
-
-- Attribute names
-- Attribute values
-- Subject identifiers
-- Resource identifiers
-- Raw claims
-- Role values
-- Permission values
-- Raw authorization requests
-
-Policy IDs, requirement IDs, and failure codes may still be security-sensitive
-in some environments. Logs must remain inside a trusted operational boundary.
-
-## Custom diagnostics sink
-
-Applications may register a custom `IAuthorizationDiagnosticsSink` before
-enabling logging diagnostics.
-
-RuleGate preserves an existing custom sink.
-
-A custom sink should:
-
-- Avoid raw identity or resource data
-- Avoid attribute values
-- Respect cancellation
-- Use structured fields
-- Protect log retention and access
-- Preserve diagnostic parent-child relationships
+See the dedicated [diagnostics guide](diagnostics.md) for event IDs, diagnostic
+models, parent-child traces, custom sink behavior, cancellation semantics, and
+sensitive-data boundaries.
 
 ## Custom requirement evaluators
 
