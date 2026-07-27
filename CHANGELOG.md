@@ -6,6 +6,8 @@ The project follows Semantic Versioning. Preview releases may introduce breaking
 
 ## [Unreleased]
 
+## [0.2.0-preview.2] - 2026-07-27
+
 ### Added
 
 - Dynamic ASP.NET Core authorization policy resolution through `RuleGateAuthorizationPolicyProvider`.
@@ -157,6 +159,7 @@ The project follows Semantic Versioning. Preview releases may introduce breaking
 - CLI, Angular, and Keycloak integration packages are not yet included.
 - Public APIs may change before the first stable release.
 
-[Unreleased]: https://github.com/fotbiler-lab/rulegate/compare/v0.2.0-preview.1...HEAD
+[Unreleased]: https://github.com/fotbiler-lab/rulegate/compare/v0.2.0-preview.2...HEAD
+[0.2.0-preview.2]: https://github.com/fotbiler-lab/rulegate/compare/v0.2.0-preview.1...v0.2.0-preview.2
 [0.2.0-preview.1]: https://github.com/fotbiler-lab/rulegate/releases/tag/v0.2.0-preview.1
 [0.1.0-preview.1]: https://github.com/fotbiler-lab/rulegate/releases/tag/v0.1.0-preview.1
