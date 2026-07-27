@@ -19,10 +19,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="..\..\README.md"
-          Pack="true"
-          PackagePath="\"
-          Visible="false" />
+    <None
+      Include="$(MSBuildThisFileDirectory)../../packaging/nuget/Fotbiler.RuleGate.Manifest/README.md"
+      Pack="true"
+      PackagePath="\"
+      Link="README.md"
+      Visible="false" />
   </ItemGroup>
 
 </Project>

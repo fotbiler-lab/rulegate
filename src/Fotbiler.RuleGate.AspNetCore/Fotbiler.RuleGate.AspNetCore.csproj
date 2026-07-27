@@ -20,10 +20,11 @@
 
   <ItemGroup>
     <None
-      Include="$(MSBuildThisFileDirectory)../../README.md"
+      Include="$(MSBuildThisFileDirectory)../../packaging/nuget/Fotbiler.RuleGate.AspNetCore/README.md"
       Pack="true"
       PackagePath="\"
-      Link="README.md" />
+      Link="README.md"
+      Visible="false" />
   </ItemGroup>
 
 </Project>
