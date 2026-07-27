@@ -141,6 +141,8 @@ Every RuleGate NuGet package includes framework-specific assemblies for all thre
   complete RuleGate policy.
 - [Authorization model](docs/authorization-model.md) — understand subjects,
   resources, actions, policies, requirements, and decisions.
+- [Manifest guide](docs/manifests.md) — define, validate, and compile
+  `rulegate.yaml` policies.
 - [Documentation index](docs/README.md) — find guides and maintainer
   documentation.
 - [Roadmap](docs/roadmap.md) — review published previews and planned
