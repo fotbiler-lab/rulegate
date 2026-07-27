@@ -1,5 +1,7 @@
+using Fotbiler.RuleGate.Abstractions.Diagnostics;
 using Fotbiler.RuleGate.Abstractions.Evaluation;
 using Fotbiler.RuleGate.Abstractions.Policies;
+using Fotbiler.RuleGate.AspNetCore.Diagnostics;
 using Fotbiler.RuleGate.AspNetCore.Subjects;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -73,4 +75,19 @@ public static class RuleGateBuilderExtensions
 
         return builder;
     }
+
+    public static RuleGateBuilder AddLoggingDiagnostics(
+        this RuleGateBuilder builder)
+    {
+        ArgumentNullException.ThrowIfNull(builder);
+
+        builder.Services.AddLogging();
+
+        builder.Services.TryAddSingleton<
+            IAuthorizationDiagnosticsSink,
+            LoggingAuthorizationDiagnosticsSink>();
+
+        return builder;
+    }
+
 }

@@ -41,6 +41,9 @@ Every RuleGate NuGet package includes framework-specific assemblies for all thre
 - Strict scalar attribute comparison with typed normalization
 - YAML attribute requirements with explicit scalar value types
 - Requirement-level failure identifiers
+- Opt-in authorization decision diagnostics
+- Nested requirement evaluation traces with parent-child identifiers and durations
+- Safe ASP.NET Core structured logging diagnostics
 - ASP.NET Core dependency injection integration
 - Fluent registration of policies and custom requirement evaluators
 - `ClaimsPrincipal` to `AuthorizationSubject` mapping
@@ -142,6 +145,42 @@ builder.Services
 ```
 
 Application services may then receive `IAuthorizationEngine` through dependency injection.
+
+## Enable authorization diagnostics
+
+Authorization diagnostics are disabled by default. Enable the built-in ASP.NET Core logging sink explicitly:
+
+```csharp
+builder.Services
+    .AddRuleGate()
+    .AddLoggingDiagnostics()
+    .AddPolicies(compilation.Policies);
+```
+
+The logging sink emits:
+
+- Event `2000` at `Information` level for the completed authorization decision
+- Event `2001` at `Debug` level for every evaluated requirement
+
+The authorization-level entry includes the evaluation identifier, policy identifier, allow/deny result, elapsed duration, failure codes, and requirement count.
+
+Requirement entries include evaluation and parent identifiers, requirement identifier and kind, outcome, elapsed duration, failure codes, and the attribute source when applicable. This preserves the complete `all`, `any`, and `not` evaluation tree.
+
+Diagnostic models never contain attribute values. The built-in logging sink additionally omits attribute names, subject identifiers, resource identifiers, claims, roles, permissions, and raw authorization requests.
+
+Applications can provide a custom sink:
+
+```csharp
+using Fotbiler.RuleGate.Abstractions.Diagnostics;
+
+builder.Services.AddSingleton<
+    IAuthorizationDiagnosticsSink,
+    ApplicationAuthorizationDiagnosticsSink>();
+
+builder.Services.AddRuleGate();
+```
+
+A custom sink participates only when its `IsEnabled` property returns `true`. Sink failures are isolated and cannot change an authorization decision or make authorization unavailable.
 
 ## Map a ClaimsPrincipal
 
@@ -588,9 +627,11 @@ RuleGate follows these principles:
 - Backend authorization remains the security boundary.
 - Policy manifests do not execute arbitrary scripts.
 
+Diagnostics are disabled by default. Diagnostic models never contain attribute values. The built-in logging sink also omits attribute names, subject and resource identifiers, claims, role and permission values, and raw authorization requests. Diagnostics sink failures are isolated from authorization decisions.
+
 ## Project status
 
-The current preview contains the authorization core, typed subject/resource/context attribute requirements, YAML manifest compilation, ASP.NET Core dependency injection, claims mapping, resource-based authorization handling, dynamic named-policy resolution, Minimal API endpoint authorization, and controller/action authorization attributes.
+The current preview contains the authorization core, typed subject/resource/context attribute requirements, YAML manifest compilation, opt-in authorization diagnostics, safe ASP.NET Core structured logging, dependency injection, claims mapping, resource-based authorization handling, dynamic named-policy resolution, Minimal API endpoint authorization, and controller/action authorization attributes.
 
 Planned future modules include:
 
@@ -598,7 +639,7 @@ Planned future modules include:
 - Domain-specific resource mapping helpers
 - Subject, resource, and context attribute extraction
 - Context-based authorization
-- Decision diagnostics and explanations
+- Higher-level decision explanation and visualization tooling
 - CLI validation and code generation
 - Angular integration
 - Keycloak helpers
