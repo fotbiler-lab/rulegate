@@ -200,7 +200,7 @@ RuleGate:invoice:approve
 
 Policy names, resource types, and actions use ordinal and case-sensitive matching. Each segment must be non-empty and cannot contain whitespace or the `:` separator.
 
-Authorize a RuleGate resource through `IAuthorizationService`:
+Authorize an `AuthorizationResource` through the RuleGate authorization-service extension:
 
 ```csharp
 using Fotbiler.RuleGate.Abstractions.Authorization;
@@ -211,23 +211,32 @@ var resource =
         type: "document",
         id: documentId);
 
-var policyName =
-    new RuleGatePolicyName(
-        resourceType: "document",
-        action: "read")
-        .ToString();
-
 var result =
-    await authorizationService.AuthorizeAsync(
+    await authorizationService.AuthorizeRuleGateAsync(
         httpContext.User,
         resource,
-        policyName);
+        action: "read");
 
 if (!result.Succeeded)
 {
     return Results.Forbid();
 }
 ```
+
+This overload derives the policy resource type from `AuthorizationResource.Type` and constructs the structured RuleGate policy name automatically.
+
+Applications using a custom `IRuleGateAuthorizationResourceFactory` may authorize a domain object by supplying its RuleGate resource type explicitly:
+
+```csharp
+var result =
+    await authorizationService.AuthorizeRuleGateAsync(
+        httpContext.User,
+        document,
+        resourceType: "document",
+        action: "read");
+```
+
+Direct `IAuthorizationService.AuthorizeAsync` calls together with `RuleGatePolicyName` remain available as the lower-level API.
 
 The dynamic policy provider creates an authenticated-user requirement together with a `RuleGateAuthorizationRequirement` for the resource type and action encoded in the policy name.
 

@@ -8,9 +8,6 @@ using Fotbiler.RuleGate.Manifest.Compilation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.DependencyInjection;
 
-const string PolicyName =
-    "RuleGate:package-resource:read";
-
 const string yaml = """
     schemaVersion: 1
 
@@ -136,10 +133,10 @@ if (!directAllowedDecision.IsAllowed ||
 }
 
 var frameworkAllowedResult =
-    await authorizationService.AuthorizeAsync(
+    await authorizationService.AuthorizeRuleGateAsync(
         allowedPrincipal,
         resource,
-        PolicyName);
+        action: "read");
 
 if (!frameworkAllowedResult.Succeeded)
 {
@@ -148,12 +145,13 @@ if (!frameworkAllowedResult.Succeeded)
 }
 
 var mismatchedResourceResult =
-    await authorizationService.AuthorizeAsync(
+    await authorizationService.AuthorizeRuleGateAsync(
         allowedPrincipal,
         new AuthorizationResource(
             type: "invoice",
             id: "invoice-1"),
-        PolicyName);
+        resourceType: "package-resource",
+        action: "read");
 
 if (mismatchedResourceResult.Succeeded)
 {
@@ -193,10 +191,10 @@ if (failure.Code !=
 }
 
 var frameworkDeniedResult =
-    await authorizationService.AuthorizeAsync(
+    await authorizationService.AuthorizeRuleGateAsync(
         deniedPrincipal,
         resource,
-        PolicyName);
+        action: "read");
 
 if (frameworkDeniedResult.Succeeded)
 {
@@ -205,10 +203,11 @@ if (frameworkDeniedResult.Succeeded)
 }
 
 var unsupportedResourceResult =
-    await authorizationService.AuthorizeAsync(
+    await authorizationService.AuthorizeRuleGateAsync(
         allowedPrincipal,
         new object(),
-        PolicyName);
+        resourceType: "package-resource",
+        action: "read");
 
 if (unsupportedResourceResult.Succeeded)
 {
@@ -217,13 +216,13 @@ if (unsupportedResourceResult.Succeeded)
 }
 
 var missingSubjectResult =
-    await authorizationService.AuthorizeAsync(
+    await authorizationService.AuthorizeRuleGateAsync(
         new ClaimsPrincipal(
             new ClaimsIdentity(
                 authenticationType:
                     "PackageConsumer")),
         resource,
-        PolicyName);
+        action: "read");
 
 if (missingSubjectResult.Succeeded)
 {
