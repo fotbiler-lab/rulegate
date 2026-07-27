@@ -143,6 +143,8 @@ Every RuleGate NuGet package includes framework-specific assemblies for all thre
   resources, actions, policies, requirements, and decisions.
 - [Manifest guide](docs/manifests.md) — define, validate, and compile
   `rulegate.yaml` policies.
+- [ASP.NET Core integration](docs/aspnetcore.md) — configure claims mapping,
+  dynamic policies, endpoints, controllers, diagnostics, and HTTP results.
 - [Documentation index](docs/README.md) — find guides and maintainer
   documentation.
 - [Roadmap](docs/roadmap.md) — review published previews and planned
