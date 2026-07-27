@@ -39,6 +39,7 @@ Every RuleGate NuGet package includes framework-specific assemblies for all thre
 - Fail-closed requirement evaluation
 - Subject, resource, and context attribute requirements
 - Strict scalar attribute comparison with typed normalization
+- YAML attribute requirements with explicit scalar value types
 - Requirement-level failure identifiers
 - ASP.NET Core dependency injection integration
 - Fluent registration of policies and custom requirement evaluators
@@ -485,13 +486,64 @@ requirement:
 
 `AttributeRequirementDefinition` compares a named attribute from the subject, resource, or authorization context.
 
-Supported scalar values are null, strings, booleans, integral numeric values, decimal values, and `DateTimeOffset`. Integral numeric values are normalized to decimal before comparison.
+Attribute requirements can be created through the code API or declared in `rulegate.yaml`:
 
-The `Equal` and `NotEqual` operators support every scalar value kind. Ordering operators support numeric and `DateTimeOffset` values. String comparisons are ordinal and case-sensitive.
+```yaml
+requirement:
+  id: finance-department
+  attribute:
+    source: subject
+    name: department
+    operator: equal
+    valueType: string
+    value: finance
+```
 
-A missing attribute produces a not-satisfied result. Type mismatches, unsupported runtime values, and unsupported operator/type combinations produce an indeterminate result. Both outcomes deny authorization through the fail-closed policy engine.
+Supported sources are:
 
-Attribute requirements are currently defined through the code API. YAML manifest syntax for attribute requirements will be added separately.
+- `subject`
+- `resource`
+- `context`
+
+Supported operators are:
+
+- `equal`
+- `notEqual`
+- `greaterThan`
+- `greaterThanOrEqual`
+- `lessThan`
+- `lessThanOrEqual`
+
+Supported `valueType` tokens are:
+
+- `nullValue`
+- `string`
+- `boolean`
+- `number`
+- `dateTimeOffset`
+
+The `value` member is always required, including explicit null comparisons:
+
+```yaml
+attribute:
+  source: resource
+  name: parentId
+  operator: equal
+  valueType: nullValue
+  value: null
+```
+
+`nullValue` is used instead of `null` because an unquoted YAML `null` token is deserialized as an absent scalar value.
+
+Integral and decimal YAML numbers are parsed as invariant-culture decimal values. Scientific notation and implicit string-to-number coercion are not supported.
+
+Boolean values accept the canonical lowercase `true` and `false` tokens.
+
+`dateTimeOffset` values must include an explicit UTC marker or numeric offset, such as `2026-07-27T07:30:00Z` or `2026-07-27T10:30:00+03:00`. Local date-time values without an offset are rejected.
+
+The `equal` and `notEqual` operators support every scalar value kind. Ordering operators support only `number` and `dateTimeOffset`.
+
+A missing runtime attribute produces a not-satisfied result. Type mismatches, unsupported runtime values, and unsupported operator/type combinations produce an indeterminate result. Both outcomes deny authorization through the fail-closed policy engine.
 
 ### All
 
@@ -542,7 +594,6 @@ The current preview contains the authorization core, typed subject/resource/cont
 
 Planned future modules include:
 
-- Manifest syntax and validation for attribute requirements
 - Automatic HTTP authorization-result mapping
 - Domain-specific resource mapping helpers
 - Subject, resource, and context attribute extraction

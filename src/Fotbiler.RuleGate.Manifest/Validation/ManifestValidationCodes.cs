@@ -50,6 +50,36 @@ public static class ManifestValidationCodes
     public const string RoleRequired =
         "MANIFEST_ROLE_REQUIRED";
 
+    public const string AttributeSourceRequired =
+        "MANIFEST_ATTRIBUTE_SOURCE_REQUIRED";
+
+    public const string AttributeSourceInvalid =
+        "MANIFEST_ATTRIBUTE_SOURCE_INVALID";
+
+    public const string AttributeNameRequired =
+        "MANIFEST_ATTRIBUTE_NAME_REQUIRED";
+
+    public const string AttributeOperatorRequired =
+        "MANIFEST_ATTRIBUTE_OPERATOR_REQUIRED";
+
+    public const string AttributeOperatorInvalid =
+        "MANIFEST_ATTRIBUTE_OPERATOR_INVALID";
+
+    public const string AttributeValueTypeRequired =
+        "MANIFEST_ATTRIBUTE_VALUE_TYPE_REQUIRED";
+
+    public const string AttributeValueTypeInvalid =
+        "MANIFEST_ATTRIBUTE_VALUE_TYPE_INVALID";
+
+    public const string AttributeValueRequired =
+        "MANIFEST_ATTRIBUTE_VALUE_REQUIRED";
+
+    public const string AttributeValueInvalid =
+        "MANIFEST_ATTRIBUTE_VALUE_INVALID";
+
+    public const string AttributeOperatorValueTypeInvalid =
+        "MANIFEST_ATTRIBUTE_OPERATOR_VALUE_TYPE_INVALID";
+
     public const string RequirementChildrenRequired =
         "MANIFEST_REQUIREMENT_CHILDREN_REQUIRED";
 

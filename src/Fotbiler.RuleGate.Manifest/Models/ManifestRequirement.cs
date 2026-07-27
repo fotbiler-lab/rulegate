@@ -8,6 +8,12 @@ public sealed class ManifestRequirement
 
     public string? Role { get; set; }
 
+    public ManifestAttributeRequirement? Attribute
+    {
+        get;
+        set;
+    }
+
     public List<ManifestRequirement?>? All { get; set; }
 
     public List<ManifestRequirement?>? Any { get; set; }
