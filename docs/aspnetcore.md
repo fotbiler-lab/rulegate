@@ -21,6 +21,9 @@ For the authorization concepts behind these APIs, read the
 For the complete YAML format, read the
 [manifest guide](manifests.md).
 
+Before production deployment, review the
+[security model](security.md).
+
 ## Supported frameworks
 
 The current RuleGate preview supports:

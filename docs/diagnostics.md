@@ -16,6 +16,9 @@ Diagnostics do not change whether access is allowed or denied.
 For ASP.NET Core registration and endpoint integration, read the
 [ASP.NET Core integration guide](aspnetcore.md).
 
+For the wider runtime trust model, read the
+[security model](security.md).
+
 ## Diagnostics are disabled by default
 
 Calling `AddRuleGate()` alone does not enable diagnostics:

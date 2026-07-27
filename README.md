@@ -147,6 +147,8 @@ Every RuleGate NuGet package includes framework-specific assemblies for all thre
   dynamic policies, endpoints, controllers, and HTTP results.
 - [Diagnostics](docs/diagnostics.md) — operate structured logging, requirement
   traces, and custom diagnostic sinks safely.
+- [Security model](docs/security.md) — understand fail-closed behavior, trust
+  boundaries, safe responses, and production controls.
 - [Documentation index](docs/README.md) — find guides and maintainer
   documentation.
 - [Roadmap](docs/roadmap.md) — review published previews and planned
@@ -740,16 +742,15 @@ requirement:
 
 ## Security behavior
 
-RuleGate follows these principles:
+RuleGate defaults to deny and treats missing, malformed, unsupported, and
+indeterminate authorization input as non-successful.
 
-- Authorization defaults to deny.
-- Missing policies produce denied decisions.
-- Unsupported requirement types fail closed.
-- Indeterminate requirement results produce denied decisions.
-- Backend authorization remains the security boundary.
-- Policy manifests do not execute arbitrary scripts.
+The backend remains the security boundary. Identity, resource, and context
+mapping must use trusted server-side data.
 
-Diagnostics are disabled by default. Diagnostic models never contain attribute values. The built-in logging sink also omits attribute names, subject and resource identifiers, claims, role and permission values, and raw authorization requests. Diagnostics sink failures are isolated from authorization decisions.
+See the [security model](docs/security.md) for requirement outcomes, trust
+boundaries, manifest hardening, safe HTTP responses, exception behavior,
+diagnostics privacy, and the production checklist.
 
 ## Project status
 

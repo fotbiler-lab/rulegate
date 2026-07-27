@@ -975,23 +975,16 @@ value: 2026-12-31T23:59:59Z
 
 ## Security guidance
 
-Treat manifest files as security-sensitive configuration.
+Treat manifests as security-sensitive configuration.
 
-Recommended practices:
+Validate and compile the complete document before registration. Do not
+continue with partial policies when loading or validation fails.
 
-- Review policy changes through source control.
-- Validate manifests before application startup.
-- Fail deployment when compilation fails.
-- Do not continue with stale or partial policies.
-- Keep identifiers stable and case-consistent.
-- Avoid constructing manifest content from untrusted runtime input.
-- Restrict write access to deployed manifest files.
-- Record manifest version and deployment provenance.
-- Test both allowed and denied scenarios.
-- Test missing and malformed input behavior.
+Protect manifest provenance, deployment access, and identifier consistency.
 
-The backend authorization engine remains the security boundary. Frontend
-policy checks cannot replace server-side evaluation.
+See the [security model](security.md) for parser hardening, all-or-nothing
+compilation, deployment controls, stale-policy risks, and the production
+checklist.
 
 ## Current boundaries
 
