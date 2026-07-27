@@ -1,0 +1,84 @@
+# Fotbiler.RuleGate.AspNetCore
+
+ASP.NET Core integration for the Fotbiler RuleGate authorization framework.
+
+This package provides dependency injection, configurable claims mapping,
+dynamic policies, Minimal API endpoint helpers, controller and action
+attributes, imperative authorization extensions, resource mapping, structured
+diagnostics, and opt-in safe HTTP authorization results.
+
+RuleGate is currently in preview. Public APIs may change before the first
+stable release.
+
+## Installation
+
+    dotnet add package Fotbiler.RuleGate.AspNetCore --prerelease
+
+Install the manifest package as well when policies are defined in YAML:
+
+    dotnet add package Fotbiler.RuleGate.Manifest --prerelease
+
+## Register RuleGate
+
+    using Fotbiler.RuleGate.AspNetCore.DependencyInjection;
+
+    builder.Services
+        .AddRuleGate()
+        .AddPolicies(compilation.Policies);
+
+The application must configure ASP.NET Core authentication and authorization
+using its trusted identity provider and claim model.
+
+## Protect a Minimal API endpoint
+
+    using Fotbiler.RuleGate.AspNetCore.Endpoints;
+
+    app.MapGet(
+            "/documents/{id}",
+            (string id) =>
+            {
+                return Results.Ok(
+                    new
+                    {
+                        id,
+                    });
+            })
+        .RequireRuleGate(
+            resourceType: "document",
+            action: "read",
+            resourceIdRouteValue: "id");
+
+Dynamic policy names use this form:
+
+    RuleGate:<resource-type>:<action>
+
+## RuleGate packages
+
+| Package | Purpose |
+|---|---|
+| [Fotbiler.RuleGate.Abstractions](https://www.nuget.org/packages/Fotbiler.RuleGate.Abstractions) | Public authorization contracts and extension abstractions |
+| [Fotbiler.RuleGate.Core](https://www.nuget.org/packages/Fotbiler.RuleGate.Core) | Local fail-closed authorization engine and built-in evaluators |
+| [Fotbiler.RuleGate.Manifest](https://www.nuget.org/packages/Fotbiler.RuleGate.Manifest) | YAML manifest loading, validation, and compilation |
+| [Fotbiler.RuleGate.AspNetCore](https://www.nuget.org/packages/Fotbiler.RuleGate.AspNetCore) | ASP.NET Core integration |
+
+## Documentation
+
+- [ASP.NET Core integration](https://github.com/fotbiler-lab/rulegate/blob/main/docs/aspnetcore.md)
+- [Getting started](https://github.com/fotbiler-lab/rulegate/blob/main/docs/getting-started.md)
+- [Diagnostics](https://github.com/fotbiler-lab/rulegate/blob/main/docs/diagnostics.md)
+- [Security model](https://github.com/fotbiler-lab/rulegate/blob/main/docs/security.md)
+- [Documentation index](https://github.com/fotbiler-lab/rulegate/blob/main/docs/README.md)
+
+## Security
+
+Authentication establishes identity; RuleGate evaluates authorization. Claims,
+resource identifiers, and context attributes must be mapped from trusted
+server-side sources.
+
+Report suspected vulnerabilities through the
+[private security reporting process](https://github.com/fotbiler-lab/rulegate/security/policy).
+
+## License
+
+Fotbiler RuleGate is licensed under the
+[Apache License 2.0](https://github.com/fotbiler-lab/rulegate/blob/main/LICENSE).

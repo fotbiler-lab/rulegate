@@ -1,0 +1,67 @@
+name: Documentation issue
+description: Report missing, unclear, outdated, or incorrect documentation
+title: "[Docs]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for helping improve RuleGate documentation.
+
+        Do not include credentials, tokens, private policy data, personal
+        information, or security vulnerabilities in this public form.
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Documentation area
+      options:
+        - README
+        - Getting started
+        - Authorization model
+        - Manifest guide
+        - ASP.NET Core integration
+        - Diagnostics and logging
+        - Security model
+        - Roadmap
+        - Package metadata
+        - Community documentation
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: location
+    attributes:
+      label: Document or section
+      placeholder: docs/aspnetcore.md — HTTP authorization results
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: Relevant RuleGate version
+      description: Leave blank when the issue applies to the current documentation generally.
+      placeholder: For example, 0.2.0-preview.2
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: Explain what is missing, unclear, outdated, or incorrect.
+    validations:
+      required: true
+
+  - type: textarea
+    id: suggestion
+    attributes:
+      label: Suggested improvement
+      description: Describe the information, correction, or example that should be added.
+
+  - type: checkboxes
+    id: conduct
+    attributes:
+      label: Code of Conduct
+      options:
+        - label: I agree to follow the project's Code of Conduct.
+          required: true
