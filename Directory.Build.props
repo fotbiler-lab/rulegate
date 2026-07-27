@@ -27,7 +27,7 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
 
     <PackageTags>authorization;rbac;policy;security;access-control;rulegate</PackageTags>
-    <PackageReleaseNotes>Adds dynamic ASP.NET Core policy names, fallback-compatible policy resolution, and fail-closed resource-type enforcement.</PackageReleaseNotes>
+    <PackageReleaseNotes>Adds dynamic ASP.NET Core policy names, authorization-service extensions, fallback-compatible policy resolution, and fail-closed resource-type enforcement.</PackageReleaseNotes>
 
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
