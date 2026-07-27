@@ -102,78 +102,66 @@ Every RuleGate NuGet package includes framework-specific assemblies for all thre
 
 ## Current capabilities
 
-- Permission-based authorization
-- Role-based authorization
-- Logical `all`, `any`, and `not` requirements
-- YAML policy manifests
-- Structured YAML loading errors
-- Structured manifest validation errors
-- Immutable in-memory policy provider
-- Ordinal and case-sensitive matching
-- Default-deny authorization
-- Fail-closed requirement evaluation
+RuleGate currently provides:
+
+- Permission- and role-based authorization
 - Subject, resource, and context attribute requirements
-- Strict scalar attribute comparison with typed normalization
-- YAML attribute requirements with explicit scalar value types
-- Requirement-level failure identifiers
-- Opt-in authorization decision diagnostics
-- Nested requirement evaluation traces with parent-child identifiers and durations
-- Safe ASP.NET Core structured logging diagnostics
-- ASP.NET Core dependency injection integration
-- Fluent registration of policies and custom requirement evaluators
-- `ClaimsPrincipal` to `AuthorizationSubject` mapping
-- Configurable subject identifier, role, and permission claim types
-- Resource-based ASP.NET Core authorization handler
-- Dynamic ASP.NET Core policy names using `RuleGate:<resource-type>:<action>`
-- Minimal API endpoint authorization through `RequireRuleGate`
-- Controller and action authorization through `[RuleGateAuthorize]`
-- Route-value mapping into `AuthorizationResource.Id`
-- Standard ASP.NET Core `401 Challenge` and `403 Forbid` behavior
-- Opt-in RuleGate `401` and `403` `application/problem+json` mapping
-- Authentication challenge and forbid header preservation
-- Fallback-compatible standard ASP.NET Core policies
-- Fail-closed resource-type enforcement
-- Multi-targeted .NET 8, .NET 9, and .NET 10 packages
+- Composable `all`, `any`, and `not` requirements
+- Default-deny and fail-closed evaluation
+- Exact, ordinal, case-sensitive matching
+- Immutable in-memory policy registration
+- YAML manifest loading, validation, and compilation
+- ASP.NET Core dependency injection and dynamic policies
+- Minimal API and controller authorization
+- Configurable claims-to-subject mapping
+- Resource-based authorization
+- Opt-in safe HTTP authorization results
+- Opt-in structured authorization diagnostics
+- .NET 8, .NET 9, and .NET 10 packages
+
+See the [roadmap](docs/roadmap.md) for published milestones and planned
+modules.
 
 ## Documentation
 
-- [Getting started](docs/getting-started.md) — build and evaluate your first
-  complete RuleGate policy.
-- [Authorization model](docs/authorization-model.md) — understand subjects,
-  resources, actions, policies, requirements, and decisions.
-- [Manifest guide](docs/manifests.md) — define, validate, and compile
-  `rulegate.yaml` policies.
-- [ASP.NET Core integration](docs/aspnetcore.md) — configure claims mapping,
-  dynamic policies, endpoints, controllers, and HTTP results.
-- [Diagnostics](docs/diagnostics.md) — operate structured logging, requirement
-  traces, and custom diagnostic sinks safely.
-- [Security model](docs/security.md) — understand fail-closed behavior, trust
-  boundaries, safe responses, and production controls.
-- [Documentation index](docs/README.md) — find guides and maintainer
-  documentation.
-- [Roadmap](docs/roadmap.md) — review published previews and planned
-  milestones.
+| Goal | Guide |
+|---|---|
+| Make the first authorization decision | [Getting started](docs/getting-started.md) |
+| Understand the authorization model | [Authorization model](docs/authorization-model.md) |
+| Define `rulegate.yaml` policies | [Manifest guide](docs/manifests.md) |
+| Protect ASP.NET Core applications | [ASP.NET Core integration](docs/aspnetcore.md) |
+| Configure logs and diagnostic sinks | [Diagnostics](docs/diagnostics.md) |
+| Review trust boundaries and production controls | [Security model](docs/security.md) |
+| Browse all documentation | [Documentation index](docs/README.md) |
+| Review current and planned capabilities | [Roadmap](docs/roadmap.md) |
 
 ## Installation
 
-Install the packages required by your application:
+Install the ASP.NET Core and manifest packages:
 
 ```bash
 dotnet add package Fotbiler.RuleGate.AspNetCore --prerelease
 dotnet add package Fotbiler.RuleGate.Manifest --prerelease
 ```
 
-`Fotbiler.RuleGate.AspNetCore` automatically references the core engine and abstractions packages. `Fotbiler.RuleGate.Manifest` automatically references the abstractions package.
+`Fotbiler.RuleGate.AspNetCore` references the core engine and abstractions
+packages.
 
-The abstractions package may also be referenced directly:
+Applications using only RuleGate contracts may reference the abstractions
+package directly:
 
 ```bash
 dotnet add package Fotbiler.RuleGate.Abstractions --prerelease
 ```
 
-## Example manifest
+## Quick start
 
-Create a `rulegate.yaml` file:
+The following example compiles a manifest, registers RuleGate, and evaluates
+an authorization request.
+
+### 1. Define a policy
+
+Create `rulegate.yaml`:
 
 ```yaml
 schemaVersion: 1
@@ -190,18 +178,20 @@ policies:
       all:
         - id: required-permission
           permission: sample.read
+
         - id: accepted-role
           any:
             - role: sample.editor
             - role: sample.administrator
 ```
 
-## Compile a manifest
+### 2. Compile the complete manifest
 
 ```csharp
 using Fotbiler.RuleGate.Manifest.Compilation;
 
-var compiler = new RuleGateManifestCompiler();
+var compiler =
+    new RuleGateManifestCompiler();
 
 var compilation =
     await compiler.CompileFromFileAsync(
@@ -209,564 +199,150 @@ var compilation =
 
 if (!compilation.IsSuccess)
 {
-    foreach (var error in compilation.LoadErrors)
-    {
-        Console.WriteLine(
-            $"Load error: {error.Code} - {error.Message}");
-    }
-
-    foreach (var error in compilation.ValidationErrors)
-    {
-        Console.WriteLine(
-            $"Validation error: {error.Code} at {error.Path} - {error.Message}");
-    }
-
-    return;
+    throw new InvalidOperationException(
+        "RuleGate manifest compilation failed.");
 }
 ```
 
-## Register RuleGate with ASP.NET Core
+A failed compilation returns no partial policy collection.
 
-Register the built-in engine, policy provider, dispatcher, and requirement evaluators:
+The [manifest guide](docs/manifests.md) documents structured load and
+validation errors.
 
-```csharp
-using Fotbiler.RuleGate.AspNetCore.DependencyInjection;
-
-var builder =
-    WebApplication.CreateBuilder(args);
-
-builder.Services
-    .AddRuleGate()
-    .AddPolicies(compilation.Policies);
-```
-
-Application services may then receive `IAuthorizationEngine` through dependency injection.
-
-## Enable authorization diagnostics
-
-Authorization diagnostics are disabled by default.
-
-Enable the built-in structured logging sink explicitly:
-
-```csharp
-builder.Services
-    .AddRuleGate()
-    .AddLoggingDiagnostics()
-    .AddPolicies(compilation.Policies);
-```
-
-The sink emits authorization event `2000` at Information level and requirement
-event `2001` at Debug level. Diagnostic publication is best-effort and cannot
-change the authorization decision.
-
-See [Diagnostics](docs/diagnostics.md) for event fields, trace relationships,
-custom sinks, cancellation behavior, and sensitive-data boundaries.
-
-## Map a ClaimsPrincipal
-
-The default subject mapping reads:
-
-- Subject identifier from `ClaimTypes.NameIdentifier`
-- Roles from `ClaimTypes.Role`
-- Permissions from the `permission` claim type
-
-Resolve the registered factory and map the current principal:
-
-```csharp
-using Fotbiler.RuleGate.AspNetCore.Subjects;
-
-var subjectFactory =
-    serviceProvider.GetRequiredService<
-        IRuleGateSubjectFactory>();
-
-var subject =
-    subjectFactory.Create(
-        httpContext.User);
-```
-
-Claim types can be changed during registration:
-
-```csharp
-builder.Services
-    .AddRuleGate()
-    .ConfigureSubjectMapping(
-        options =>
-        {
-            options.SubjectIdClaimType =
-                "sub";
-
-            options.RoleClaimTypes.Clear();
-            options.RoleClaimTypes.Add(
-                "application-role");
-
-            options.PermissionClaimTypes.Clear();
-            options.PermissionClaimTypes.Add(
-                "application-permission");
-        });
-```
-
-Claim type and value matching is ordinal and case-sensitive. Blank role and permission values are ignored, and exact duplicates are removed. Mapping fails when the configured subject identifier is missing or contains multiple distinct values.
-
-## Use dynamic ASP.NET Core policies
-
-Register ASP.NET Core authorization together with RuleGate:
+### 3. Register RuleGate
 
 ```csharp
 using Fotbiler.RuleGate.AspNetCore.DependencyInjection;
 
-builder.Services.AddAuthorization();
-
 builder.Services
     .AddRuleGate()
     .AddPolicies(compilation.Policies);
 ```
 
-RuleGate dynamically resolves policy names with this format:
-
-```text
-RuleGate:<resource-type>:<action>
-```
-
-For example:
-
-```text
-RuleGate:document:read
-RuleGate:document:update
-RuleGate:invoice:approve
-```
-
-Policy names, resource types, and actions use ordinal and case-sensitive matching. Each segment must be non-empty and cannot contain whitespace or the `:` separator.
-
-Authorize an `AuthorizationResource` through the RuleGate authorization-service extension:
+### 4. Evaluate a request
 
 ```csharp
 using Fotbiler.RuleGate.Abstractions.Authorization;
-using Fotbiler.RuleGate.AspNetCore.Authorization;
+using Fotbiler.RuleGate.Abstractions.Evaluation;
 
-var resource =
-    new AuthorizationResource(
-        type: "document",
-        id: documentId);
+var engine =
+    app.Services.GetRequiredService<
+        IAuthorizationEngine>();
 
-var result =
-    await authorizationService.AuthorizeRuleGateAsync(
-        httpContext.User,
-        resource,
-        action: "read");
+var request =
+    new AuthorizationRequest(
+        new AuthorizationSubject(
+            "user-42",
+            roles:
+            [
+                "sample.editor"
+            ],
+            permissions:
+            [
+                "sample.read"
+            ]),
 
-if (!result.Succeeded)
+        new AuthorizationResource(
+            "sample-resource",
+            "resource-42"),
+
+        "read",
+
+        new AuthorizationContext(
+            DateTimeOffset.UtcNow));
+
+var decision =
+    await engine.EvaluateAsync(
+        request);
+
+if (!decision.IsAllowed)
 {
     return Results.Forbid();
 }
 ```
 
-This overload derives the policy resource type from `AuthorizationResource.Type` and constructs the structured RuleGate policy name automatically.
+RuleGate grants access only when a matching policy exists and the root
+requirement is satisfied.
 
-Applications using a custom `IRuleGateAuthorizationResourceFactory` may authorize a domain object by supplying its RuleGate resource type explicitly:
+## Protect ASP.NET Core endpoints
 
-```csharp
-var result =
-    await authorizationService.AuthorizeRuleGateAsync(
-        httpContext.User,
-        document,
-        resourceType: "document",
-        action: "read");
-```
-
-Direct `IAuthorizationService.AuthorizeAsync` calls together with `RuleGatePolicyName` remain available as the lower-level API.
-
-The dynamic policy provider creates an authenticated-user requirement together with a `RuleGateAuthorizationRequirement` for the resource type and action encoded in the policy name.
-
-Policy names not owned by RuleGate are delegated to the standard ASP.NET Core policy provider. Applications may therefore continue registering ordinary named policies through `AddAuthorization`.
-
-Malformed names beginning with `RuleGate:` do not fall back to an ordinary policy. They remain unresolved and authorization fails closed.
-
-The default resource factory accepts an `AuthorizationResource` instance for imperative authorization. For HTTP endpoint authorization, it also maps the current `HttpContext` into an `AuthorizationResource` by reading matching RuleGate endpoint metadata and an optional route-value name.
-
-### Protect Minimal API endpoints
-
-Use `RequireRuleGate` to attach RuleGate metadata and the corresponding dynamic authorization policy:
+After configuring ASP.NET Core authentication and authorization, protect a
+Minimal API endpoint:
 
 ```csharp
 using Fotbiler.RuleGate.AspNetCore.Endpoints;
 
-app.MapPost(
-        "/documents/{id}/approve",
-        ApproveDocumentAsync)
+app.MapGet(
+        "/sample-resources/{id}",
+        (string id) =>
+        {
+            return Results.Ok(
+                new
+                {
+                    id,
+                });
+        })
     .RequireRuleGate(
-        resourceType: "document",
-        action: "approve",
+        resourceType: "sample-resource",
+        action: "read",
         resourceIdRouteValue: "id");
 ```
 
-The `id` route value is mapped into `AuthorizationResource.Id`. For collection-level operations such as creating a resource, omit `resourceIdRouteValue`:
-
-```csharp
-app.MapPost(
-        "/documents",
-        CreateDocumentAsync)
-    .RequireRuleGate(
-        resourceType: "document",
-        action: "create");
-```
-
-### Protect controllers and actions
-
-Use `RuleGateAuthorizeAttribute` on a controller or action:
+Protect a controller or action:
 
 ```csharp
 using Fotbiler.RuleGate.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
 
-[ApiController]
-[Route("documents")]
-public sealed class DocumentsController
-    : ControllerBase
+[RuleGateAuthorize(
+    "sample-resource",
+    "read",
+    "id")]
+public IActionResult Get(
+    string id)
 {
-    [HttpPost("{id}/approve")]
-    [RuleGateAuthorize(
-        resourceType: "document",
-        action: "approve",
-        resourceIdRouteValue: "id")]
-    public IActionResult Approve(
-        string id)
-    {
-        return Ok();
-    }
+    return Ok(
+        new
+        {
+            id,
+        });
 }
 ```
 
-Both integrations use the standard ASP.NET Core authentication and authorization middleware. Anonymous requests are challenged, denied authenticated requests are forbidden, and allowed requests proceed to the endpoint or controller action.
-
-### Map RuleGate HTTP authorization results
-
-HTTP authorization-result mapping is disabled by default. Enable it explicitly during RuleGate registration:
-
-```csharp
-builder.Services
-    .AddRuleGate()
-    .AddHttpAuthorizationResultMapping()
-    .AddPolicies(compilation.Policies);
-```
-
-The mapping applies only to authorization policies containing a `RuleGateAuthorizationRequirement`:
-
-- Anonymous RuleGate requests produce a `401` `application/problem+json` response.
-- Denied authenticated RuleGate requests produce a `403` `application/problem+json` response.
-- Successful RuleGate requests continue to the endpoint normally.
-- Ordinary ASP.NET Core policies retain the framework's default challenge and forbid behavior.
-
-The configured authentication scheme still performs its normal challenge or forbid operation first. Authentication headers such as `WWW-Authenticate`, together with any other scheme-generated headers, are preserved. When an authentication handler has already started the response, RuleGate does not replace its response body.
-
-A denied response has this general shape:
-
-```json
-{
-  "type": "urn:fotbiler:rulegate:authorization:access-forbidden",
-  "title": "Access is forbidden.",
-  "status": 403,
-  "detail": "The authenticated identity is not authorized to access this resource.",
-  "code": "RULEGATE_ACCESS_FORBIDDEN",
-  "traceId": "..."
-}
-```
-
-The public problem identifiers are available through:
-
-- `RuleGateHttpAuthorizationProblemTypes.AuthenticationRequired`
-- `RuleGateHttpAuthorizationProblemTypes.AccessForbidden`
-- `RuleGateHttpAuthorizationProblemCodes.AuthenticationRequired`
-- `RuleGateHttpAuthorizationProblemCodes.AccessForbidden`
-
-The default response intentionally excludes RuleGate engine failure codes, requirement identifiers, policy details, claims, roles, permissions, subject identifiers, resource identifiers, and route values.
-
-`AddHttpAuthorizationResultMapping` does not replace a custom `IAuthorizationMiddlewareResultHandler` that was already registered by the application.
-
-Applications can replace `IRuleGateAuthorizationResourceFactory` to map domain-specific resource objects. Existing implementations of its original `Create(object?)` method remain compatible.
-
-The resource type carried by the dynamic policy must match the mapped `AuthorizationResource.Type`. A mismatch fails before the RuleGate engine is evaluated.
-
-A RuleGate deny decision, a missing or ambiguous subject identifier, an unsupported resource, or a resource-type mismatch causes ASP.NET Core authorization to fail closed. Unexpected authorization-engine failures are propagated instead of being converted into a denial.
-
-The imperative authorization-service extensions, Minimal API endpoint helper, and controller/action attribute all use the same dynamic policy provider and RuleGate authorization handler. Missing endpoints, missing required route values, empty route values, conflicting metadata, unsupported resources, and resource-type mismatches fail closed before the RuleGate engine is allowed to grant access.
-
-Automatic loading of domain entities from route identifiers remains outside the current scope.
-
-## Create the authorization engine manually
-
-```csharp
-using Fotbiler.RuleGate.Core.Engine;
-using Fotbiler.RuleGate.Core.Evaluation;
-using Fotbiler.RuleGate.Core.Evaluation.Evaluators;
-using Fotbiler.RuleGate.Core.Policies;
-
-var policyProvider =
-    new InMemoryPolicyProvider(
-        compilation.Policies);
-
-var dispatcher =
-    new RequirementEvaluationDispatcher(
-    [
-        new PermissionRequirementEvaluator(),
-        new RoleRequirementEvaluator(),
-        new AttributeRequirementEvaluator(),
-        new AllRequirementEvaluator(),
-        new AnyRequirementEvaluator(),
-        new NotRequirementEvaluator()
-    ]);
-
-var engine =
-    new PolicyAuthorizationEngine(
-        policyProvider,
-        dispatcher);
-```
-
-## Evaluate an authorization request
-
-```csharp
-using Fotbiler.RuleGate.Abstractions.Authorization;
-
-var request =
-    new AuthorizationRequest(
-        subject:
-            new AuthorizationSubject(
-                id: "user-1",
-                roles:
-                [
-                    "sample.editor"
-                ],
-                permissions:
-                [
-                    "sample.read"
-                ]),
-        resource:
-            new AuthorizationResource(
-                type: "sample-resource",
-                id: "resource-1"),
-        action: "read",
-        context:
-            new AuthorizationContext(
-                DateTimeOffset.UtcNow));
-
-var decision =
-    await engine.EvaluateAsync(request);
-
-Console.WriteLine(
-    decision.IsAllowed
-        ? "Allowed"
-        : "Denied");
-```
-
-Denied decisions contain one or more authorization failures:
-
-```csharp
-foreach (var failure in decision.Failures)
-{
-    Console.WriteLine(
-        $"Code: {failure.Code}, Requirement: {failure.RequirementId}");
-}
-```
-
-## Matching semantics
-
-RuleGate uses ordinal and case-sensitive matching for:
-
-- Policy identifiers
-- Resource types
-- Actions
-- Roles
-- Permissions
-
-For example, these resource types are different:
+Dynamic policy names use:
 
 ```text
-sample-resource
-Sample-Resource
+RuleGate:<resource-type>:<action>
 ```
 
-When no policy matches the requested resource type and action, RuleGate denies the request.
-
-## Manifest compilation pipeline
-
-```text
-YAML text or file
-        |
-        v
-RuleGateManifestYamlLoader
-        |
-        v
-RuleGateManifestValidator
-        |
-        v
-RuleGateManifestMapper
-        |
-        v
-PolicyDefinition collection
-```
-
-Manifest compilation keeps two failure categories separate:
-
-- YAML and file-loading errors
-- Manifest validation errors
-
-A failed compilation never returns a partially compiled policy collection.
-
-## Authorization pipeline
-
-```text
-AuthorizationRequest
-        |
-        v
-PolicyAuthorizationEngine
-        |
-        v
-InMemoryPolicyProvider
-        |
-        v
-RequirementEvaluationDispatcher
-        |
-        v
-AuthorizationDecision
-```
-
-## Supported requirement types
-
-### Permission
-
-```yaml
-requirement:
-  permission: sample.read
-```
-
-### Role
-
-```yaml
-requirement:
-  role: sample.editor
-```
-
-### Attribute
-
-`AttributeRequirementDefinition` compares a named attribute from the subject, resource, or authorization context.
-
-Attribute requirements can be created through the code API or declared in `rulegate.yaml`:
-
-```yaml
-requirement:
-  id: finance-department
-  attribute:
-    source: subject
-    name: department
-    operator: equal
-    valueType: string
-    value: finance
-```
-
-Supported sources are:
-
-- `subject`
-- `resource`
-- `context`
-
-Supported operators are:
-
-- `equal`
-- `notEqual`
-- `greaterThan`
-- `greaterThanOrEqual`
-- `lessThan`
-- `lessThanOrEqual`
-
-Supported `valueType` tokens are:
-
-- `nullValue`
-- `string`
-- `boolean`
-- `number`
-- `dateTimeOffset`
-
-The `value` member is always required, including explicit null comparisons:
-
-```yaml
-attribute:
-  source: resource
-  name: parentId
-  operator: equal
-  valueType: nullValue
-  value: null
-```
-
-`nullValue` is used instead of `null` because an unquoted YAML `null` token is deserialized as an absent scalar value.
-
-Integral and decimal YAML numbers are parsed as invariant-culture decimal values. Scientific notation and implicit string-to-number coercion are not supported.
-
-Boolean values accept the canonical lowercase `true` and `false` tokens.
-
-`dateTimeOffset` values must include an explicit UTC marker or numeric offset, such as `2026-07-27T07:30:00Z` or `2026-07-27T10:30:00+03:00`. Local date-time values without an offset are rejected.
-
-The `equal` and `notEqual` operators support every scalar value kind. Ordering operators support only `number` and `dateTimeOffset`.
-
-A missing runtime attribute produces a not-satisfied result. Type mismatches, unsupported runtime values, and unsupported operator/type combinations produce an indeterminate result. Both outcomes deny authorization through the fail-closed policy engine.
-
-### All
-
-Every child requirement must be satisfied:
-
-```yaml
-requirement:
-  all:
-    - permission: sample.read
-    - role: sample.editor
-```
-
-### Any
-
-At least one child requirement must be satisfied:
-
-```yaml
-requirement:
-  any:
-    - role: sample.editor
-    - role: sample.administrator
-```
-
-### Not
-
-The nested requirement must not be satisfied:
-
-```yaml
-requirement:
-  not:
-    role: sample.blocked
-```
+The [ASP.NET Core integration guide](docs/aspnetcore.md) covers authentication,
+claims mapping, domain resources, imperative authorization, endpoint metadata,
+controllers, diagnostics, and HTTP result mapping.
 
 ## Security behavior
 
-RuleGate defaults to deny and treats missing, malformed, unsupported, and
-indeterminate authorization input as non-successful.
+RuleGate defaults to deny.
 
-The backend remains the security boundary. Identity, resource, and context
-mapping must use trusted server-side data.
+Missing policies, failed requirements, unsupported values, ambiguous identity,
+and indeterminate evaluations cannot grant access.
 
-See the [security model](docs/security.md) for requirement outcomes, trust
-boundaries, manifest hardening, safe HTTP responses, exception behavior,
-diagnostics privacy, and the production checklist.
+The protected backend operation remains the security boundary. Subject,
+resource, and context data must be derived from trusted application sources.
+
+Read the [security model](docs/security.md) before production integration.
 
 ## Project status
 
-The current preview contains the authorization core, typed subject/resource/context attribute requirements, YAML manifest compilation, opt-in authorization diagnostics, safe ASP.NET Core structured logging, dependency injection, claims mapping, resource-based authorization handling, dynamic named-policy resolution, Minimal API endpoint authorization, controller/action authorization attributes, and opt-in HTTP authorization problem-details mapping.
+RuleGate is currently published as `0.2.0-preview.2`.
 
-Planned future modules include:
+The current preview includes the authorization core, manifest compilation,
+ASP.NET Core integration, safe HTTP authorization result mapping, and
+structured diagnostics.
 
-- Domain-specific resource mapping helpers
-- Subject, resource, and context attribute extraction
-- Context-based authorization
-- Higher-level decision explanation and visualization tooling
-- CLI validation and code generation
-- Angular integration
-- Keycloak helpers
-- OpenTelemetry integration
+The next milestone focuses on CLI and manifest validation workflows.
+
+See the [roadmap](docs/roadmap.md) for the complete release path.
 
 ## License
 
-Fotbiler RuleGate is licensed under the Apache License 2.0.
+Fotbiler RuleGate is licensed under the
+[Apache License 2.0](LICENSE).
