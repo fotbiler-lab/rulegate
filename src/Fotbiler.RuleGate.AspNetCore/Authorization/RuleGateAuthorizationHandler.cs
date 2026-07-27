@@ -71,7 +71,8 @@ public sealed class RuleGateAuthorizationHandler
 
             resource =
                 _resourceFactory.Create(
-                    context.Resource);
+                    context.Resource,
+                    requirement);
         }
         catch (ArgumentException)
         {

@@ -14,6 +14,14 @@ The project follows Semantic Versioning. Preview releases may introduce breaking
 - `AuthorizeRuleGateAsync` extensions for concise `IAuthorizationService` integration.
 - Automatic policy-name construction from `AuthorizationResource.Type` and an action.
 - Explicit resource-type authorization overload for applications using custom domain-resource mapping.
+- Minimal API authorization through `RequireRuleGate`.
+- Controller and action authorization through `RuleGateAuthorizeAttribute`.
+- Endpoint metadata carrying resource type, action, and an optional resource-ID route-value name.
+- Default `HttpContext` resource mapping into `AuthorizationResource`.
+- Backward-compatible requirement-aware authorization-resource factory extension.
+- Live HTTP pipeline tests for Minimal API and controller authorization.
+- Standard ASP.NET Core challenge and forbid behavior verification.
+
 - Multi-targeted package assets for .NET 8, .NET 9, and .NET 10.
 - Full test-suite execution across all supported target frameworks.
 - Package-only consumer verification on .NET 8, .NET 9, and .NET 10.
@@ -31,6 +39,10 @@ The project follows Semantic Versioning. Preview releases may introduce breaking
 - Dynamic policies require an authenticated principal.
 - Policy-name parsing uses ordinal and case-sensitive matching.
 - A policy/resource type mismatch fails closed before the RuleGate authorization engine is evaluated.
+- Missing endpoints and missing or empty required route values fail closed.
+- Conflicting endpoint metadata for the same RuleGate policy fails closed.
+- Endpoint authorization does not evaluate the RuleGate engine until a valid resource has been constructed.
+
 
 ## [0.2.0-preview.1] - 2026-07-26
 

@@ -3,9 +3,14 @@ using Fotbiler.RuleGate.Abstractions.Authorization;
 using Fotbiler.RuleGate.Abstractions.Constants;
 using Fotbiler.RuleGate.AspNetCore.Authorization;
 using Fotbiler.RuleGate.AspNetCore.DependencyInjection;
+using Fotbiler.RuleGate.AspNetCore.Endpoints;
 using Fotbiler.RuleGate.AspNetCore.Subjects;
 using Fotbiler.RuleGate.Manifest.Compilation;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Routing;
+using Microsoft.AspNetCore.Routing.Patterns;
 using Microsoft.Extensions.DependencyInjection;
 
 const string yaml = """
@@ -230,6 +235,122 @@ if (missingSubjectResult.Succeeded)
         "The ASP.NET Core authorization handler accepted a principal without a subject identifier.");
 }
 
+var ruleGateAttribute =
+    new RuleGateAuthorizeAttribute(
+        resourceType: "package-resource",
+        action: "read",
+        resourceIdRouteValue: "id");
+
+if (ruleGateAttribute.Policy !=
+        "RuleGate:package-resource:read" ||
+    ruleGateAttribute.ResourceType !=
+        "package-resource" ||
+    ruleGateAttribute.Action != "read" ||
+    ruleGateAttribute.ResourceIdRouteValue !=
+        "id")
+{
+    throw new InvalidOperationException(
+        "The RuleGate authorization attribute did not expose the expected metadata.");
+}
+
+var endpointConventionBuilder =
+    new RecordingEndpointConventionBuilder();
+
+var returnedEndpointBuilder =
+    endpointConventionBuilder.RequireRuleGate(
+        resourceType: "package-resource",
+        action: "read",
+        resourceIdRouteValue: "id");
+
+if (!ReferenceEquals(
+        endpointConventionBuilder,
+        returnedEndpointBuilder))
+{
+    throw new InvalidOperationException(
+        "RequireRuleGate did not return the original endpoint builder.");
+}
+
+var routeEndpointBuilder =
+    new RouteEndpointBuilder(
+        requestDelegate:
+            _ => Task.CompletedTask,
+        routePattern:
+            RoutePatternFactory.Parse(
+                "/package-resources/{id}"),
+        order: 0);
+
+endpointConventionBuilder.ApplyTo(
+    routeEndpointBuilder);
+
+var endpointRuleGateMetadata =
+    routeEndpointBuilder.Metadata
+        .OfType<
+            IRuleGateAuthorizationMetadata>()
+        .Single();
+
+if (endpointRuleGateMetadata.ResourceType !=
+        "package-resource" ||
+    endpointRuleGateMetadata.Action !=
+        "read" ||
+    endpointRuleGateMetadata
+        .ResourceIdRouteValue != "id")
+{
+    throw new InvalidOperationException(
+        "RequireRuleGate did not attach the expected RuleGate endpoint metadata.");
+}
+
+var endpointAuthorizeData =
+    routeEndpointBuilder.Metadata
+        .OfType<IAuthorizeData>()
+        .Single();
+
+if (endpointAuthorizeData.Policy !=
+    "RuleGate:package-resource:read")
+{
+    throw new InvalidOperationException(
+        "RequireRuleGate did not attach the expected dynamic authorization policy.");
+}
+
+var endpoint =
+    new Endpoint(
+        requestDelegate:
+            _ => Task.CompletedTask,
+        metadata:
+            new EndpointMetadataCollection(
+                routeEndpointBuilder
+                    .Metadata
+                    .ToArray()),
+        displayName:
+            "RuleGate package consumer endpoint");
+
+var endpointHttpContext =
+    new DefaultHttpContext();
+
+endpointHttpContext.SetEndpoint(endpoint);
+
+endpointHttpContext.Request
+    .RouteValues["id"] =
+        "package-resource-1";
+
+var endpointResource =
+    new RuleGateAuthorizationResourceFactory()
+        .Create(
+            endpointHttpContext,
+            new RuleGateAuthorizationRequirement(
+                resourceType:
+                    "package-resource",
+                action:
+                    "read"));
+
+if (endpointResource.Type !=
+        "package-resource" ||
+    endpointResource.Id !=
+        "package-resource-1")
+{
+    throw new InvalidOperationException(
+        "The default RuleGate HTTP resource factory did not map the endpoint route value.");
+}
+
 Console.WriteLine(
     "RULEGATE_PACKAGE_CONSUMER_SMOKE_OK");
 
@@ -280,4 +401,34 @@ static AuthorizationRequest CreateRequest(
         context:
             new AuthorizationContext(
                 DateTimeOffset.UnixEpoch));
+}
+
+internal sealed class
+    RecordingEndpointConventionBuilder
+    : IEndpointConventionBuilder
+{
+    public List<Action<EndpointBuilder>>
+        Conventions
+    { get; } = [];
+
+    public void Add(
+        Action<EndpointBuilder> convention)
+    {
+        ArgumentNullException.ThrowIfNull(
+            convention);
+
+        Conventions.Add(convention);
+    }
+
+    public void ApplyTo(
+        EndpointBuilder endpointBuilder)
+    {
+        ArgumentNullException.ThrowIfNull(
+            endpointBuilder);
+
+        foreach (var convention in Conventions)
+        {
+            convention(endpointBuilder);
+        }
+    }
 }

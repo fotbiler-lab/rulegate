@@ -11,7 +11,7 @@ Fotbiler RuleGate is a local-first, provider-independent, and policy-driven auth
 | `Fotbiler.RuleGate.Abstractions` | Authorization contracts, policy definitions, requests, decisions, and evaluation abstractions |
 | `Fotbiler.RuleGate.Core` | Policy engine, built-in requirement evaluators, dispatcher, and in-memory policy provider |
 | `Fotbiler.RuleGate.Manifest` | YAML manifest loading, validation, compilation, and domain mapping |
-| `Fotbiler.RuleGate.AspNetCore` | ASP.NET Core dependency injection, claims mapping, dynamic policy resolution, and resource-based authorization |
+| `Fotbiler.RuleGate.AspNetCore` | ASP.NET Core dependency injection, claims mapping, dynamic policies, endpoint helpers, authorization attributes, and resource-based authorization |
 
 ## Supported .NET versions
 
@@ -44,6 +44,10 @@ Every RuleGate NuGet package includes framework-specific assemblies for all thre
 - Configurable subject identifier, role, and permission claim types
 - Resource-based ASP.NET Core authorization handler
 - Dynamic ASP.NET Core policy names using `RuleGate:<resource-type>:<action>`
+- Minimal API endpoint authorization through `RequireRuleGate`
+- Controller and action authorization through `[RuleGateAuthorize]`
+- Route-value mapping into `AuthorizationResource.Id`
+- Standard ASP.NET Core `401 Challenge` and `403 Forbid` behavior
 - Fallback-compatible standard ASP.NET Core policies
 - Fail-closed resource-type enforcement
 - Multi-targeted .NET 8, .NET 9, and .NET 10 packages
@@ -255,13 +259,72 @@ Policy names not owned by RuleGate are delegated to the standard ASP.NET Core po
 
 Malformed names beginning with `RuleGate:` do not fall back to an ordinary policy. They remain unresolved and authorization fails closed.
 
-The default resource factory accepts an `AuthorizationResource` instance. Applications can replace `IRuleGateAuthorizationResourceFactory` to map domain-specific resource objects.
+The default resource factory accepts an `AuthorizationResource` instance for imperative authorization. For HTTP endpoint authorization, it also maps the current `HttpContext` into an `AuthorizationResource` by reading matching RuleGate endpoint metadata and an optional route-value name.
+
+### Protect Minimal API endpoints
+
+Use `RequireRuleGate` to attach RuleGate metadata and the corresponding dynamic authorization policy:
+
+```csharp
+using Fotbiler.RuleGate.AspNetCore.Endpoints;
+
+app.MapPost(
+        "/documents/{id}/approve",
+        ApproveDocumentAsync)
+    .RequireRuleGate(
+        resourceType: "document",
+        action: "approve",
+        resourceIdRouteValue: "id");
+```
+
+The `id` route value is mapped into `AuthorizationResource.Id`. For collection-level operations such as creating a resource, omit `resourceIdRouteValue`:
+
+```csharp
+app.MapPost(
+        "/documents",
+        CreateDocumentAsync)
+    .RequireRuleGate(
+        resourceType: "document",
+        action: "create");
+```
+
+### Protect controllers and actions
+
+Use `RuleGateAuthorizeAttribute` on a controller or action:
+
+```csharp
+using Fotbiler.RuleGate.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+
+[ApiController]
+[Route("documents")]
+public sealed class DocumentsController
+    : ControllerBase
+{
+    [HttpPost("{id}/approve")]
+    [RuleGateAuthorize(
+        resourceType: "document",
+        action: "approve",
+        resourceIdRouteValue: "id")]
+    public IActionResult Approve(
+        string id)
+    {
+        return Ok();
+    }
+}
+```
+
+Both integrations use the standard ASP.NET Core authentication and authorization middleware. Anonymous requests are challenged, denied authenticated requests are forbidden, and allowed requests proceed to the endpoint or controller action.
+
+Applications can replace `IRuleGateAuthorizationResourceFactory` to map domain-specific resource objects. Existing implementations of its original `Create(object?)` method remain compatible.
 
 The resource type carried by the dynamic policy must match the mapped `AuthorizationResource.Type`. A mismatch fails before the RuleGate engine is evaluated.
 
 A RuleGate deny decision, a missing or ambiguous subject identifier, an unsupported resource, or a resource-type mismatch causes ASP.NET Core authorization to fail closed. Unexpected authorization-engine failures are propagated instead of being converted into a denial.
 
-This integration supports resource-based `IAuthorizationService.AuthorizeAsync` calls. Authorization attributes, endpoint helpers, automatic domain-resource mapping, and automatic HTTP result mapping remain outside the current scope.
+The imperative authorization-service extensions, Minimal API endpoint helper, and controller/action attribute all use the same dynamic policy provider and RuleGate authorization handler. Missing endpoints, missing required route values, empty route values, conflicting metadata, unsupported resources, and resource-type mismatches fail closed before the RuleGate engine is allowed to grant access.
+
+Automatic loading of domain entities from route identifiers and custom HTTP authorization-result payloads remain outside the current scope.
 
 ## Create the authorization engine manually
 
@@ -460,7 +523,7 @@ RuleGate follows these principles:
 
 ## Project status
 
-The current preview contains the authorization core, YAML manifest compilation, ASP.NET Core dependency injection, claims mapping, resource-based authorization handling, and dynamic named-policy resolution.
+The current preview contains the authorization core, YAML manifest compilation, ASP.NET Core dependency injection, claims mapping, resource-based authorization handling, dynamic named-policy resolution, Minimal API endpoint authorization, and controller/action authorization attributes.
 
 Planned future modules include:
 
@@ -468,7 +531,6 @@ Planned future modules include:
 - Automatic HTTP authorization-result mapping
 - Domain-specific resource mapping helpers
 - Subject, resource, and context attribute extraction
-- Attribute-based authorization
 - Context-based authorization
 - Decision diagnostics and explanations
 - CLI validation and code generation
