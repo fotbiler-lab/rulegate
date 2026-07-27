@@ -14,6 +14,9 @@ The project follows Semantic Versioning. Preview releases may introduce breaking
 - `AuthorizeRuleGateAsync` extensions for concise `IAuthorizationService` integration.
 - Automatic policy-name construction from `AuthorizationResource.Type` and an action.
 - Explicit resource-type authorization overload for applications using custom domain-resource mapping.
+- Multi-targeted package assets for .NET 8, .NET 9, and .NET 10.
+- Full test-suite execution across all supported target frameworks.
+- Package-only consumer verification on .NET 8, .NET 9, and .NET 10.
 - Resource type and action propagation into `RuleGateAuthorizationRequirement`.
 - Fallback delegation for standard ASP.NET Core named policies.
 - Default and fallback authorization-policy preservation.

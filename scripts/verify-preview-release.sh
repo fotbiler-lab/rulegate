@@ -37,7 +37,22 @@ EXPECTED_VERSION="$EXPECTED_VERSION_PREFIX-$EXPECTED_VERSION_SUFFIX"
 EXPECTED_REPOSITORY_URL="https://github.com/fotbiler-lab/rulegate"
 EXPECTED_LICENSE="Apache-2.0"
 EXPECTED_AUTHOR="Fotbiler"
-EXPECTED_FRAMEWORK="net10.0"
+EXPECTED_FRAMEWORKS_VALUE="net8.0;net9.0;net10.0"
+
+EXPECTED_FRAMEWORKS=(
+  "net8.0"
+  "net9.0"
+  "net10.0"
+)
+
+FRAMEWORK_COUNT="${#EXPECTED_FRAMEWORKS[@]}"
+
+TEST_PROJECT_COUNT="$(
+  find tests \
+    -type f \
+    -name '*.Tests.csproj' |
+    wc -l
+)"
 
 PACKAGE_DIRECTORY="$REPOSITORY_ROOT/artifacts/packages"
 
@@ -109,6 +124,18 @@ ACTUAL_VERSION_SUFFIX="$(
   read_property VersionSuffix
 )"
 
+ACTUAL_TARGET_FRAMEWORKS="$(
+  read_property RuleGateTargetFrameworks
+)"
+
+if [[ "$ACTUAL_TARGET_FRAMEWORKS" != "$EXPECTED_FRAMEWORKS_VALUE" ]]
+then
+  echo "ERROR: Unexpected RuleGateTargetFrameworks."
+  echo "Expected: $EXPECTED_FRAMEWORKS_VALUE"
+  echo "Actual:   $ACTUAL_TARGET_FRAMEWORKS"
+  exit 1
+fi
+
 if [[ "$ACTUAL_VERSION_PREFIX" != "$EXPECTED_VERSION_PREFIX" ]]
 then
   echo "ERROR: Unexpected VersionPrefix."
@@ -126,10 +153,31 @@ then
 fi
 
 printf 'Version: %s\n' "$EXPECTED_VERSION"
+printf 'Frameworks: %s\n' "$EXPECTED_FRAMEWORKS_VALUE"
 
 printf '\n== Show .NET SDK ==\n'
 
 dotnet --version
+
+INSTALLED_RUNTIMES="$(
+  dotnet --list-runtimes
+)"
+
+for framework in "${EXPECTED_FRAMEWORKS[@]}"
+do
+  runtime_major="${framework#net}"
+  runtime_major="${runtime_major%%.*}"
+
+  assert_contains \
+    "$INSTALLED_RUNTIMES" \
+    "Microsoft.NETCore.App $runtime_major." \
+    "Microsoft.NETCore.App runtime is missing for $framework."
+
+  assert_contains \
+    "$INSTALLED_RUNTIMES" \
+    "Microsoft.AspNetCore.App $runtime_major." \
+    "Microsoft.AspNetCore.App runtime is missing for $framework."
+done
 
 printf '\n== Restore ==\n'
 
@@ -160,6 +208,27 @@ dotnet test \
   --no-build \
   --logger trx \
   --results-directory TestResults
+
+TRX_COUNT="$(
+  find TestResults \
+    -type f \
+    -name '*.trx' |
+    wc -l
+)"
+
+EXPECTED_TRX_COUNT=$((
+  TEST_PROJECT_COUNT * FRAMEWORK_COUNT
+))
+
+if [[ "$TRX_COUNT" -ne "$EXPECTED_TRX_COUNT" ]]
+then
+  echo "ERROR: Unexpected total TRX count."
+  echo "Expected: $EXPECTED_TRX_COUNT"
+  echo "Actual:   $TRX_COUNT"
+  exit 1
+fi
+
+printf 'TRX files: %s\n' "$TRX_COUNT"
 
 printf '\n== Pack ==\n'
 
@@ -234,10 +303,13 @@ do
     "README.md" \
     "$package_id does not contain README.md."
 
-  assert_contains \
-    "$package_files" \
-    "lib/$EXPECTED_FRAMEWORK/$package_id.dll" \
-    "$package_id does not contain its framework assembly."
+  for framework in "${EXPECTED_FRAMEWORKS[@]}"
+  do
+    assert_contains \
+      "$package_files" \
+      "lib/$framework/$package_id.dll" \
+      "$package_id does not contain its $framework assembly."
+  done
 
   nuspec_path="$(
     grep -E '\.nuspec$' \
@@ -301,10 +373,13 @@ do
     unzip -Z1 "$symbol_path"
   )"
 
-  assert_contains \
-    "$symbol_files" \
-    "lib/$EXPECTED_FRAMEWORK/$package_id.pdb" \
-    "$package_id symbol package does not contain its portable PDB."
+  for framework in "${EXPECTED_FRAMEWORKS[@]}"
+  do
+    assert_contains \
+      "$symbol_files" \
+      "lib/$framework/$package_id.pdb" \
+      "$package_id symbol package does not contain its $framework portable PDB."
+  done
 
   case "$package_id" in
     Fotbiler.RuleGate.Abstractions)
@@ -384,5 +459,6 @@ printf 'Commit:  %s\n' "$HEAD_COMMIT"
 printf 'Packages: %s nupkg + %s snupkg\n' \
   "$EXPECTED_PACKAGE_COUNT" \
   "$EXPECTED_PACKAGE_COUNT"
+printf 'Frameworks: %s\n' "$EXPECTED_FRAMEWORKS_VALUE"
 printf 'Tests:    completed successfully\n'
 printf 'Consumer: completed successfully\n'

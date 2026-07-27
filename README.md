@@ -13,7 +13,17 @@ Fotbiler RuleGate is a local-first, provider-independent, and policy-driven auth
 | `Fotbiler.RuleGate.Manifest` | YAML manifest loading, validation, compilation, and domain mapping |
 | `Fotbiler.RuleGate.AspNetCore` | ASP.NET Core dependency injection, claims mapping, dynamic policy resolution, and resource-based authorization |
 
-The current preview targets .NET 10.
+## Supported .NET versions
+
+The current preview targets:
+
+| Runtime | Target framework |
+|---|---|
+| .NET 8 | `net8.0` |
+| .NET 9 | `net9.0` |
+| .NET 10 | `net10.0` |
+
+Every RuleGate NuGet package includes framework-specific assemblies for all three targets. The source, test suites, package assets, and package-only consumer are verified across each supported framework.
 
 ## Current capabilities
 
@@ -36,6 +46,7 @@ The current preview targets .NET 10.
 - Dynamic ASP.NET Core policy names using `RuleGate:<resource-type>:<action>`
 - Fallback-compatible standard ASP.NET Core policies
 - Fail-closed resource-type enforcement
+- Multi-targeted .NET 8, .NET 9, and .NET 10 packages
 
 ## Installation
 
