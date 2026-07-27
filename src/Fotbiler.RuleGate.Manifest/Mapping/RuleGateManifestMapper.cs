@@ -1,5 +1,6 @@
 using Fotbiler.RuleGate.Abstractions.Policies;
 using Fotbiler.RuleGate.Manifest.Models;
+using Fotbiler.RuleGate.Manifest.Parsing;
 using Fotbiler.RuleGate.Manifest.Validation;
 
 namespace Fotbiler.RuleGate.Manifest.Mapping;
@@ -66,6 +67,34 @@ public sealed class RuleGateManifestMapper
             return new RoleRequirementDefinition(
                 role: requirement.Role,
                 id: requirement.Id);
+        }
+
+        if (requirement.Attribute is not null)
+        {
+            var attribute =
+                requirement.Attribute;
+
+            ManifestAttributeRequirementConversions
+                .TryParseSource(
+                    attribute.Source,
+                    out var source);
+
+            ManifestAttributeRequirementConversions
+                .TryParseOperator(
+                    attribute.Operator,
+                    out var @operator);
+
+            ManifestAttributeRequirementConversions
+                .TryConvertValue(
+                    attribute,
+                    out var value);
+
+            return new AttributeRequirementDefinition(
+                source,
+                attribute.Name!,
+                @operator,
+                value,
+                requirement.Id);
         }
 
         if (requirement.All is not null)

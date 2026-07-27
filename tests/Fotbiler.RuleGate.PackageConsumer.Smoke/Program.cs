@@ -29,6 +29,18 @@ const string yaml = """
         requirement:
           id: required-package-permission
           permission: package.read
+
+      - id: attribute-resource-read
+        resourceType: attribute-resource
+        action: read
+        requirement:
+          id: finance-department
+          attribute:
+            source: subject
+            name: department
+            operator: equal
+            valueType: string
+            value: finance
     """;
 
 var compiler =
@@ -52,23 +64,7 @@ services.AddAuthorizationCore();
 
 services
     .AddRuleGate()
-    .AddPolicies(compilation.Policies)
-    .AddPolicy(
-        new PolicyDefinition(
-            id: "attribute-resource-read",
-            resourceType: "attribute-resource",
-            action: "read",
-            requirement:
-                new AttributeRequirementDefinition(
-                    source:
-                        AuthorizationAttributeSource
-                            .Subject,
-                    name: "department",
-                    @operator:
-                        AuthorizationAttributeOperator
-                            .Equal,
-                    value: "finance",
-                    id: "finance-department")));
+    .AddPolicies(compilation.Policies);
 
 using var serviceProvider =
     services.BuildServiceProvider(

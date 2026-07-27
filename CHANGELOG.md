@@ -26,6 +26,11 @@ The project follows Semantic Versioning. Preview releases may introduce breaking
 - Equality, inequality, numeric ordering, and `DateTimeOffset` ordering operators.
 - Built-in fail-closed attribute requirement evaluator and default dependency-injection registration.
 - Attribute policy verification through the package-only consumer.
+- YAML manifest syntax for subject, resource, and context attribute requirements.
+- Explicit manifest attribute source, operator, value type, and value validation.
+- Manifest conversion of boolean, decimal, null, string, and `DateTimeOffset` values.
+- Nested attribute requirements inside `all`, `any`, and `not` logical requirements.
+- End-to-end YAML compilation and authorization-engine verification for attribute policies.
 
 - Multi-targeted package assets for .NET 8, .NET 9, and .NET 10.
 - Full test-suite execution across all supported target frameworks.
@@ -50,6 +55,8 @@ The project follows Semantic Versioning. Preview releases may introduce breaking
 - Missing attributes fail as not satisfied.
 - Attribute type mismatches, unsupported runtime types, and unsupported operator/type combinations fail as indeterminate.
 - Attribute comparison is ordinal, case-sensitive, and does not perform implicit string or numeric coercion.
+- Manifest `dateTimeOffset` values require an explicit UTC marker or numeric offset.
+- The `nullValue` type token avoids ambiguity with YAML's native null scalar.
 
 
 ## [0.2.0-preview.1] - 2026-07-26

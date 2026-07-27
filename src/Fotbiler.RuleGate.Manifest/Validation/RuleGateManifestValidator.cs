@@ -1,5 +1,6 @@
 using Fotbiler.RuleGate.Manifest.Configuration;
 using Fotbiler.RuleGate.Manifest.Models;
+using Fotbiler.RuleGate.Manifest.Parsing;
 
 namespace Fotbiler.RuleGate.Manifest.Validation;
 
@@ -250,6 +251,10 @@ public sealed class RuleGateManifestValidator
             ? 0
             : 1;
 
+        kindCount += requirement.Attribute is null
+            ? 0
+            : 1;
+
         kindCount += requirement.All is null
             ? 0
             : 1;
@@ -269,7 +274,7 @@ public sealed class RuleGateManifestValidator
                     ManifestValidationCodes
                         .RequirementKindInvalid,
                     path,
-                    "A requirement must define exactly one of permission, role, all, any, or not."));
+                    "A requirement must define exactly one of permission, role, attribute, all, any, or not."));
         }
 
         if (requirement.Permission is not null &&
@@ -295,6 +300,14 @@ public sealed class RuleGateManifestValidator
                     "Role value is required."));
         }
 
+        if (requirement.Attribute is not null)
+        {
+            ValidateAttributeRequirement(
+                requirement.Attribute,
+                $"{path}.attribute",
+                errors);
+        }
+
         if (requirement.All is not null)
         {
             ValidateRequirementCollection(
@@ -317,6 +330,169 @@ public sealed class RuleGateManifestValidator
                 requirement.Not,
                 $"{path}.not",
                 errors);
+        }
+    }
+
+    private static void ValidateAttributeRequirement(
+        ManifestAttributeRequirement requirement,
+        string path,
+        ICollection<ManifestValidationError> errors)
+    {
+        var hasSource =
+            !string.IsNullOrWhiteSpace(
+                requirement.Source);
+
+        var hasOperator =
+            !string.IsNullOrWhiteSpace(
+                requirement.Operator);
+
+        var hasValueType =
+            !string.IsNullOrWhiteSpace(
+                requirement.ValueType);
+
+        var sourceIsValid = false;
+        var operatorIsValid = false;
+        var valueTypeIsValid = false;
+
+        var parsedOperator = default(
+            Fotbiler.RuleGate.Abstractions.Policies
+                .AuthorizationAttributeOperator);
+
+        var parsedValueKind = default(
+            Fotbiler.RuleGate.Abstractions.Attributes
+                .AuthorizationAttributeValueKind);
+
+        if (!hasSource)
+        {
+            errors.Add(
+                new ManifestValidationError(
+                    ManifestValidationCodes
+                        .AttributeSourceRequired,
+                    $"{path}.source",
+                    "Attribute source is required."));
+        }
+        else
+        {
+            sourceIsValid =
+                ManifestAttributeRequirementConversions
+                    .TryParseSource(
+                        requirement.Source,
+                        out _);
+
+            if (!sourceIsValid)
+            {
+                errors.Add(
+                    new ManifestValidationError(
+                        ManifestValidationCodes
+                            .AttributeSourceInvalid,
+                        $"{path}.source",
+                        $"Attribute source '{requirement.Source}' is not supported."));
+            }
+        }
+
+        if (string.IsNullOrWhiteSpace(
+                requirement.Name))
+        {
+            errors.Add(
+                new ManifestValidationError(
+                    ManifestValidationCodes
+                        .AttributeNameRequired,
+                    $"{path}.name",
+                    "Attribute name is required."));
+        }
+
+        if (!hasOperator)
+        {
+            errors.Add(
+                new ManifestValidationError(
+                    ManifestValidationCodes
+                        .AttributeOperatorRequired,
+                    $"{path}.operator",
+                    "Attribute operator is required."));
+        }
+        else
+        {
+            operatorIsValid =
+                ManifestAttributeRequirementConversions
+                    .TryParseOperator(
+                        requirement.Operator,
+                        out parsedOperator);
+
+            if (!operatorIsValid)
+            {
+                errors.Add(
+                    new ManifestValidationError(
+                        ManifestValidationCodes
+                            .AttributeOperatorInvalid,
+                        $"{path}.operator",
+                        $"Attribute operator '{requirement.Operator}' is not supported."));
+            }
+        }
+
+        if (!hasValueType)
+        {
+            errors.Add(
+                new ManifestValidationError(
+                    ManifestValidationCodes
+                        .AttributeValueTypeRequired,
+                    $"{path}.valueType",
+                    "Attribute value type is required."));
+        }
+        else
+        {
+            valueTypeIsValid =
+                ManifestAttributeRequirementConversions
+                    .TryParseValueType(
+                        requirement.ValueType,
+                        out parsedValueKind);
+
+            if (!valueTypeIsValid)
+            {
+                errors.Add(
+                    new ManifestValidationError(
+                        ManifestValidationCodes
+                            .AttributeValueTypeInvalid,
+                        $"{path}.valueType",
+                        $"Attribute value type '{requirement.ValueType}' is not supported."));
+            }
+        }
+
+        if (!requirement.HasValue)
+        {
+            errors.Add(
+                new ManifestValidationError(
+                    ManifestValidationCodes
+                        .AttributeValueRequired,
+                    $"{path}.value",
+                    "Attribute value must be specified."));
+        }
+        else if (valueTypeIsValid &&
+                 !ManifestAttributeRequirementConversions
+                     .TryConvertValue(
+                         requirement,
+                         out _))
+        {
+            errors.Add(
+                new ManifestValidationError(
+                    ManifestValidationCodes
+                        .AttributeValueInvalid,
+                    $"{path}.value",
+                    $"Attribute value is invalid for value type '{requirement.ValueType}'."));
+        }
+
+        if (operatorIsValid &&
+            valueTypeIsValid &&
+            !ManifestAttributeRequirementConversions
+                .IsOperatorSupported(
+                    parsedOperator,
+                    parsedValueKind))
+        {
+            errors.Add(
+                new ManifestValidationError(
+                    ManifestValidationCodes
+                        .AttributeOperatorValueTypeInvalid,
+                    $"{path}.operator",
+                    $"Attribute operator '{requirement.Operator}' is not supported for value type '{requirement.ValueType}'."));
         }
     }
 
