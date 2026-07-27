@@ -29,7 +29,7 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
 
     <PackageTags>authorization;rbac;policy;security;access-control;rulegate</PackageTags>
-    <PackageReleaseNotes>Adds .NET 8, .NET 9, and .NET 10 multi-target support, dynamic ASP.NET Core policy names, authorization-service extensions, fallback-compatible policy resolution, and fail-closed resource-type enforcement. Adds Minimal API endpoint authorization, controller/action authorization attributes, route-value resource mapping, and live HTTP pipeline verification.</PackageReleaseNotes>
+    <PackageReleaseNotes>Adds .NET 8, .NET 9, and .NET 10 multi-target support, dynamic ASP.NET Core policy names, authorization-service extensions, fallback-compatible policy resolution, and fail-closed resource-type enforcement. Adds Minimal API endpoint authorization, controller/action authorization attributes, route-value resource mapping, and live HTTP pipeline verification. Adds strict scalar subject, resource, and context attribute comparisons with fail-closed type handling.</PackageReleaseNotes>
 
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>

@@ -37,6 +37,8 @@ Every RuleGate NuGet package includes framework-specific assemblies for all thre
 - Ordinal and case-sensitive matching
 - Default-deny authorization
 - Fail-closed requirement evaluation
+- Subject, resource, and context attribute requirements
+- Strict scalar attribute comparison with typed normalization
 - Requirement-level failure identifiers
 - ASP.NET Core dependency injection integration
 - Fluent registration of policies and custom requirement evaluators
@@ -343,6 +345,7 @@ var dispatcher =
     [
         new PermissionRequirementEvaluator(),
         new RoleRequirementEvaluator(),
+        new AttributeRequirementEvaluator(),
         new AllRequirementEvaluator(),
         new AnyRequirementEvaluator(),
         new NotRequirementEvaluator()
@@ -478,6 +481,18 @@ requirement:
   role: sample.editor
 ```
 
+### Attribute
+
+`AttributeRequirementDefinition` compares a named attribute from the subject, resource, or authorization context.
+
+Supported scalar values are null, strings, booleans, integral numeric values, decimal values, and `DateTimeOffset`. Integral numeric values are normalized to decimal before comparison.
+
+The `Equal` and `NotEqual` operators support every scalar value kind. Ordering operators support numeric and `DateTimeOffset` values. String comparisons are ordinal and case-sensitive.
+
+A missing attribute produces a not-satisfied result. Type mismatches, unsupported runtime values, and unsupported operator/type combinations produce an indeterminate result. Both outcomes deny authorization through the fail-closed policy engine.
+
+Attribute requirements are currently defined through the code API. YAML manifest syntax for attribute requirements will be added separately.
+
 ### All
 
 Every child requirement must be satisfied:
@@ -523,11 +538,11 @@ RuleGate follows these principles:
 
 ## Project status
 
-The current preview contains the authorization core, YAML manifest compilation, ASP.NET Core dependency injection, claims mapping, resource-based authorization handling, dynamic named-policy resolution, Minimal API endpoint authorization, and controller/action authorization attributes.
+The current preview contains the authorization core, typed subject/resource/context attribute requirements, YAML manifest compilation, ASP.NET Core dependency injection, claims mapping, resource-based authorization handling, dynamic named-policy resolution, Minimal API endpoint authorization, and controller/action authorization attributes.
 
 Planned future modules include:
 
-- Authorization attributes and endpoint helpers
+- Manifest syntax and validation for attribute requirements
 - Automatic HTTP authorization-result mapping
 - Domain-specific resource mapping helpers
 - Subject, resource, and context attribute extraction

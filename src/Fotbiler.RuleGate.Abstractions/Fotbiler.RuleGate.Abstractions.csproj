@@ -7,7 +7,7 @@
 
     <PackageId>Fotbiler.RuleGate.Abstractions</PackageId>
     <Title>Fotbiler RuleGate Abstractions</Title>
-    <Description>Public authorization contracts, policy definitions, requests, decisions, and requirement evaluation abstractions for Fotbiler RuleGate.</Description>
+    <Description>Public authorization contracts, typed attribute values, policy definitions, requests, decisions, and requirement evaluation abstractions for Fotbiler RuleGate.</Description>
   </PropertyGroup>
 
   <ItemGroup>
