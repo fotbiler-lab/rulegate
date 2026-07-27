@@ -1,0 +1,81 @@
+name: Usage question
+description: Ask for help with RuleGate installation, policies, or integration
+title: "[Question]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this form for usage and troubleshooting questions.
+
+        Do not include credentials, tokens, private keys, production policies,
+        personal information, or security vulnerabilities.
+
+        Reproducible incorrect behavior should use the bug-report form.
+        Security vulnerabilities must use private security reporting.
+
+  - type: checkboxes
+    id: prerequisites
+    attributes:
+      label: Prerequisites
+      options:
+        - label: I read the README and relevant documentation.
+          required: true
+        - label: I searched existing issues for the same question.
+          required: true
+        - label: This is not a security vulnerability.
+          required: true
+        - label: I agree to follow the project's Code of Conduct.
+          required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Question area
+      options:
+        - Installation and packages
+        - Authorization modeling
+        - Manifest design
+        - ASP.NET Core integration
+        - Claims and subject mapping
+        - Resource-based authorization
+        - Diagnostics and logging
+        - Testing
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: RuleGate version
+      placeholder: For example, 0.2.0-preview.2
+    validations:
+      required: true
+
+  - type: input
+    id: framework
+    attributes:
+      label: Target framework
+      placeholder: net8.0, net9.0, or net10.0
+
+  - type: textarea
+    id: question
+    attributes:
+      label: Question
+      description: State the behavior or concept you need help understanding.
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Relevant context
+      description: |
+        Include a minimal sanitized policy, request, integration snippet, or
+        error message when it helps explain the question.
+
+  - type: textarea
+    id: attempted
+    attributes:
+      label: What have you tried?
+      description: Link the documentation you followed and describe the result.

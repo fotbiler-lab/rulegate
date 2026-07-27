@@ -1,0 +1,108 @@
+name: Bug report
+description: Report reproducible incorrect RuleGate behavior
+title: "[Bug]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for reporting a problem.
+
+        Do not include credentials, tokens, private keys, personal information,
+        production policies, or security vulnerabilities in this public form.
+
+        Security vulnerabilities must be reported through the repository's
+        private security reporting process.
+
+  - type: checkboxes
+    id: prerequisites
+    attributes:
+      label: Prerequisites
+      options:
+        - label: I searched existing issues for the same problem.
+          required: true
+        - label: I am using a supported RuleGate preview.
+          required: true
+        - label: This report does not contain a security vulnerability.
+          required: true
+        - label: I agree to follow the project's Code of Conduct.
+          required: true
+
+  - type: dropdown
+    id: package
+    attributes:
+      label: Affected package
+      options:
+        - Fotbiler.RuleGate.Abstractions
+        - Fotbiler.RuleGate.Core
+        - Fotbiler.RuleGate.Manifest
+        - Fotbiler.RuleGate.AspNetCore
+        - Multiple packages
+        - Not sure
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: RuleGate version
+      placeholder: For example, 0.2.0-preview.2
+    validations:
+      required: true
+
+  - type: input
+    id: framework
+    attributes:
+      label: Target framework
+      placeholder: net8.0, net9.0, or net10.0
+    validations:
+      required: true
+
+  - type: input
+    id: environment
+    attributes:
+      label: Operating system and environment
+      placeholder: Ubuntu 24.04, Windows 11, container, CI runner, and so on
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Problem description
+      description: Describe what is incorrect and why it matters.
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal reproduction
+      description: |
+        Provide the smallest code, manifest, command sequence, or repository
+        that reproduces the issue.
+      placeholder: |
+        Include the relevant setup, policy, request, and exact steps.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: Include the expected authorization decision or public result.
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      description: Include the actual decision, response, or exception.
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional context
+      description: Add sanitized logs, diagnostics, screenshots, or related information.

@@ -342,6 +342,13 @@ The next milestone focuses on CLI and manifest validation workflows.
 
 See the [roadmap](docs/roadmap.md) for the complete release path.
 
+## Community
+
+- [Contributing](CONTRIBUTING.md)
+- [Support](SUPPORT.md)
+- [Security policy](SECURITY.md)
+- [Code of Conduct](CODE_OF_CONDUCT.md)
+
 ## License
 
 Fotbiler RuleGate is licensed under the

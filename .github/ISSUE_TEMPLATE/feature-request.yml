@@ -1,0 +1,79 @@
+name: Feature request
+description: Propose a new RuleGate capability or improvement
+title: "[Feature]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Describe the authorization problem first. Proposed APIs are welcome,
+        but the underlying use case is more important than a specific design.
+
+        Do not include credentials, private policies, personal information, or
+        security vulnerabilities in this public form.
+
+  - type: checkboxes
+    id: prerequisites
+    attributes:
+      label: Prerequisites
+      options:
+        - label: I searched existing issues and the roadmap.
+          required: true
+        - label: This request is not a usage or troubleshooting question.
+          required: true
+        - label: This request does not disclose a security vulnerability.
+          required: true
+        - label: I agree to follow the project's Code of Conduct.
+          required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Authorization problem
+      description: What limitation or recurring problem should RuleGate solve?
+    validations:
+      required: true
+
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Desired outcome
+      description: Describe the observable result for RuleGate consumers.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Proposed area
+      options:
+        - Core authorization engine
+        - Manifest
+        - ASP.NET Core
+        - CLI
+        - Code generation
+        - Angular SDK
+        - Keycloak helpers
+        - Observability
+        - Documentation
+        - Not sure
+    validations:
+      required: true
+
+  - type: textarea
+    id: example
+    attributes:
+      label: Example usage
+      description: Show a proposed manifest, API, command, or workflow when possible.
+      placeholder: Include code, YAML, commands, or pseudocode as appropriate.
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Explain current workarounds or alternative designs.
+
+  - type: textarea
+    id: security
+    attributes:
+      label: Authorization and security considerations
+      description: Describe fail-closed behavior, compatibility, or disclosure risks.
