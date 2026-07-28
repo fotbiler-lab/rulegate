@@ -16,6 +16,7 @@ resource-based authorization through one composable policy model.
 | Validate manifests locally or in CI | [RuleGate CLI](cli.md) |
 | Generate C# constants and detect stale output | [C# code generation](code-generation.md) |
 | Integrate RuleGate with ASP.NET Core | [ASP.NET Core integration](aspnetcore.md) |
+| Add permission and policy checks to Angular | [Angular SDK](angular.md) |
 | Operate authorization diagnostics safely | [Diagnostics](diagnostics.md) |
 | Understand runtime and integration security | [Security model](security.md) |
 | Understand current and planned capabilities | [Roadmap](roadmap.md) |
@@ -33,6 +34,12 @@ The latest published preview is
 | [`Fotbiler.RuleGate.Manifest`](https://www.nuget.org/packages/Fotbiler.RuleGate.Manifest) | YAML manifest loading, validation, and compilation |
 | [`Fotbiler.RuleGate.AspNetCore`](https://www.nuget.org/packages/Fotbiler.RuleGate.AspNetCore) | ASP.NET Core integration |
 | [`Fotbiler.RuleGate.Cli`](https://www.nuget.org/packages/Fotbiler.RuleGate.Cli) | .NET tool for manifest validation, deterministic C# generation, stale-output checks, and CI usage |
+
+## Next npm package
+
+`@fotbiler/rulegate-angular` is implemented for `0.4.0-preview.1` but is not
+yet published to npm. See the [Angular SDK guide](angular.md) for its public API
+and security boundary.
 
 ## Recommended learning path
 
@@ -58,10 +65,12 @@ After completing that guide:
    should consume manifest identifiers as constants.
 4. Follow the [ASP.NET Core integration](aspnetcore.md) guide to protect HTTP
    endpoints and map authenticated identities.
-5. Use the [diagnostics guide](diagnostics.md) to configure logging and custom
+5. Use the [Angular SDK guide](angular.md) for route and template visibility
+   after backend authorization is in place.
+6. Use the [diagnostics guide](diagnostics.md) to configure logging and custom
    observability safely.
-6. Review the [security model](security.md) before production integration.
-7. Use the root [README](../README.md) for the repository overview and current
+7. Review the [security model](security.md) before production integration.
+8. Use the root [README](../README.md) for the repository overview and current
    package status.
 
 ## Documentation principles
@@ -91,3 +100,9 @@ project maintainers rather than package consumers.
   exit-code contract.
 - [C# code generation](code-generation.md) — generate deterministic constants,
   enforce stale-output checks in CI, and understand identifier diagnostics.
+
+## Angular SDK
+
+- [Angular SDK](angular.md) — supply frontend authorization state, protect
+  routes, control template visibility, and preserve the backend security
+  boundary.

@@ -356,6 +356,6 @@ Continue with:
 - The [RuleGate CLI guide](cli.md) for deterministic manifest validation.
 - The [C# code-generation guide](code-generation.md) for generated constants
   and stale-output checks.
-- The [roadmap](roadmap.md) for upcoming Angular, Keycloak, and OpenTelemetry
-  work.
+- The [Angular SDK guide](angular.md) for frontend route and template checks.
+- The [roadmap](roadmap.md) for upcoming Keycloak and OpenTelemetry work.
 - The [documentation index](README.md) to navigate all available guides.

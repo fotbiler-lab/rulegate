@@ -1,0 +1,35 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "cli": {
+    "packageManager": "pnpm"
+  },
+  "projects": {
+    "rulegate-angular": {
+      "projectType": "library",
+      "root": "src/Fotbiler.RuleGate.Angular",
+      "sourceRoot": "src/Fotbiler.RuleGate.Angular/src",
+      "prefix": "ruleGate",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:ng-packagr",
+          "configurations": {
+            "production": {
+              "tsConfig": "src/Fotbiler.RuleGate.Angular/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "src/Fotbiler.RuleGate.Angular/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular/build:unit-test",
+          "options": {
+            "tsConfig": "src/Fotbiler.RuleGate.Angular/tsconfig.spec.json"
+          }
+        }
+      }
+    }
+  }
+}

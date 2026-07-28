@@ -11,6 +11,7 @@ TestResults/
 # Node and frontend
 node_modules/
 dist/
+out-tsc/
 coverage/
 .angular/
 .nx/
