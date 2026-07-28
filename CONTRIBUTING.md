@@ -103,6 +103,15 @@ dotnet pack \
   --configuration Release \
   --no-build
 
+./scripts/test-nuget-consumer-smoke.sh \
+  --packages-ready
+
+./scripts/test-cli-tool-smoke.sh \
+  --packages-ready
+
+./scripts/test-generated-code-smoke.sh \
+  --packages-ready
+
 git diff --check
 ```
 

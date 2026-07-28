@@ -6,6 +6,24 @@ The project follows Semantic Versioning. Preview releases may introduce breaking
 
 ## [Unreleased]
 
+### Added
+
+- Deterministic `rulegate generate csharp` command for manifest-derived policy,
+  resource-type, and action constants.
+- C# source output to standard output or atomically replaced UTF-8 files.
+- Byte-exact `--check` mode for missing and stale generated output.
+- Fail-closed namespace, identifier, empty-value, and identifier-collision
+  diagnostics.
+- Generated-code compilation and execution smoke coverage on .NET 8, .NET 9,
+  and .NET 10.
+- Normal CI and preview-release verification for packaged code generation.
+
+### Security
+
+- Invalid manifests and generation diagnostics produce no partial source.
+- Existing output files remain unchanged when validation or generation fails.
+- Stale-output checks never rewrite the inspected file.
+
 ### Documentation
 
 - Added a dedicated RuleGate CLI guide covering installation, manifest

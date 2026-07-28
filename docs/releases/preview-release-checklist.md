@@ -123,6 +123,8 @@ The verification must cover:
 - source commit metadata;
 - package-only consumer smoke tests;
 - packaged CLI tool installation and execution;
+- generated C# output, stale detection, compilation, and execution on every
+  supported framework;
 - confirmation that normal CI does not publish.
 
 Do not open or merge the release pull request while any validation is failing.
