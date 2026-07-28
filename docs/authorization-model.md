@@ -657,12 +657,12 @@ The current preview includes:
 - ASP.NET Core integration
 - Diagnostics and logging
 - Generic HTTP authorization-result mapping
+- Deterministic CLI manifest validation with text and JSON output
 
 The following areas are planned separately:
 
 - Attribute-to-attribute comparison helpers
 - Domain resource mapping helpers
-- CLI validation
 - Code generation
 - Angular SDK
 - Keycloak helpers
