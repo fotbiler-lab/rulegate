@@ -6,13 +6,17 @@ The project follows Semantic Versioning. Preview releases may introduce breaking
 
 ## [Unreleased]
 
+## [0.4.0-preview.1] - 2026-07-28
+
 ### Added
 
-- Added the `@fotbiler/rulegate-angular` package foundation for Angular 22.
+- Published the first `@fotbiler/rulegate-angular` package for Angular 22.
 - Added a signal-backed frontend authorization client, permission and policy
   route guards, and a standalone structural authorization directive.
 - Added package-only npm tarball verification through a minimal Angular
   consumer application.
+- Added npm release verification and a tokenless staged-publishing workflow for
+  releases after the initial package bootstrap.
 
 ### Security
 
@@ -33,6 +37,8 @@ The project follows Semantic Versioning. Preview releases may introduce breaking
   capability wording.
 - Corrected the supported-preview table to match the latest-preview-only
   security-fix policy.
+- Added the npm bootstrap, Trusted Publishing, staged approval, and public
+  package verification procedure.
 
 ## [0.3.0-preview.2] - 2026-07-28
 
@@ -238,7 +244,8 @@ The project follows Semantic Versioning. Preview releases may introduce breaking
 - CLI, Angular, and Keycloak integration packages are not yet included.
 - Public APIs may change before the first stable release.
 
-[Unreleased]: https://github.com/fotbiler-lab/rulegate/compare/v0.3.0-preview.2...HEAD
+[Unreleased]: https://github.com/fotbiler-lab/rulegate/compare/v0.4.0-preview.1...HEAD
+[0.4.0-preview.1]: https://github.com/fotbiler-lab/rulegate/compare/v0.3.0-preview.2...v0.4.0-preview.1
 [0.3.0-preview.2]: https://github.com/fotbiler-lab/rulegate/compare/v0.3.0-preview.1...v0.3.0-preview.2
 [0.3.0-preview.1]: https://github.com/fotbiler-lab/rulegate/compare/v0.2.0-preview.2...v0.3.0-preview.1
 [0.2.0-preview.2]: https://github.com/fotbiler-lab/rulegate/compare/v0.2.0-preview.1...v0.2.0-preview.2

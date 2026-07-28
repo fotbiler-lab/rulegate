@@ -12,13 +12,14 @@ security guidance, read the [RuleGate security model](docs/security.md).
 
 RuleGate is currently in preview.
 
-Only the latest published preview receives security fixes.
+Only the latest published preview in each package ecosystem receives security
+fixes.
 
-| Version | Supported |
-|---|---|
-| [`0.3.0-preview.2`](https://github.com/fotbiler-lab/rulegate/releases/tag/v0.3.0-preview.2) | Yes |
-| [`0.3.0-preview.1`](https://github.com/fotbiler-lab/rulegate/releases/tag/v0.3.0-preview.1) | No |
-| Older previews | No |
+| Package family | Version | Supported |
+|---|---|---|
+| Angular npm package | [`0.4.0-preview.1`](https://www.npmjs.com/package/@fotbiler/rulegate-angular/v/0.4.0-preview.1) | Yes |
+| NuGet packages | [`0.3.0-preview.2`](https://github.com/fotbiler-lab/rulegate/releases/tag/v0.3.0-preview.2) | Yes |
+| Older previews | — | No |
 
 This table is updated when a new preview or stable version is published.
 

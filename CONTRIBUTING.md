@@ -128,10 +128,11 @@ Run relevant focused tests while developing, but complete the full validation
 sequence before opening a pull request.
 
 Before proposing a release-related change, create a local commit so the working
-tree is clean, then run:
+tree is clean, then run the verifier for the affected package ecosystem:
 
 ```bash
 ./scripts/verify-preview-release.sh
+./scripts/verify-npm-preview-release.sh
 ```
 
 The release verification script requires a clean working tree.
