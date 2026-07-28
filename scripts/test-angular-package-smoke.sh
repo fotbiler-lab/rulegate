@@ -333,7 +333,7 @@ printf '\n== Install package-only Angular consumer ==\n'
 pnpm \
   --dir "$CONSUMER_DIRECTORY" \
   install \
-  --offline \
+  --prefer-offline \
   --ignore-scripts \
   --ignore-workspace \
   --frozen-lockfile=false
