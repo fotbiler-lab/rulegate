@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference
+      Include="..\Fotbiler.RuleGate.AspNetCore\Fotbiler.RuleGate.AspNetCore.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFrameworks>$(RuleGateTargetFrameworks)</TargetFrameworks>
+
+    <VersionPrefix>0.5.0</VersionPrefix>
+    <VersionSuffix>preview.1</VersionSuffix>
+    <PackageId>Fotbiler.RuleGate.Keycloak</PackageId>
+    <Title>RuleGate Keycloak Integration</Title>
+    <Description>Optional Keycloak claim normalization and RuleGate subject mapping for ASP.NET Core applications.</Description>
+    <PackageTags>authorization;rbac;security;rulegate;keycloak;oidc</PackageTags>
+    <PackageReleaseNotes>Adds optional, dependency-light Keycloak realm-role and explicitly selected client-role normalization for RuleGate subjects.</PackageReleaseNotes>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None
+      Include="$(MSBuildThisFileDirectory)../../packaging/nuget/Fotbiler.RuleGate.Keycloak/README.md"
+      Pack="true"
+      PackagePath="\"
+      Link="README.md"
+      Visible="false" />
+  </ItemGroup>
+
+</Project>

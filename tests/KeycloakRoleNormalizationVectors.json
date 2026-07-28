@@ -1,0 +1,48 @@
+{
+  "components": [
+    {
+      "value": "realm-admin",
+      "encoded": "realm-admin"
+    },
+    {
+      "value": "sales portal",
+      "encoded": "sales%20portal"
+    },
+    {
+      "value": "a/b:c",
+      "encoded": "a%2Fb%3Ac"
+    },
+    {
+      "value": "mühendis",
+      "encoded": "m%C3%BChendis"
+    },
+    {
+      "value": "!*()'",
+      "encoded": "%21%2A%28%29%27"
+    }
+  ],
+  "roles": [
+    {
+      "scope": "realm",
+      "role": "realm-admin",
+      "normalized": "keycloak:realm:realm-admin"
+    },
+    {
+      "scope": "realm",
+      "role": "müşteri temsilcisi",
+      "normalized": "keycloak:realm:m%C3%BC%C5%9Fteri%20temsilcisi"
+    },
+    {
+      "scope": "client",
+      "clientId": "web portal",
+      "role": "documents/read",
+      "normalized": "keycloak:client:web%20portal:documents%2Fread"
+    },
+    {
+      "scope": "client",
+      "clientId": "angular-app",
+      "role": "Editor",
+      "normalized": "keycloak:client:angular-app:Editor"
+    }
+  ]
+}

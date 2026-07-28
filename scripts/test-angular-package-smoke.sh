@@ -61,7 +61,9 @@ test -f "$PACKAGE_BUILD_DIRECTORY/package.json"
 test -f "$PACKAGE_BUILD_DIRECTORY/README.md"
 test -f "$PACKAGE_BUILD_DIRECTORY/LICENSE"
 test -f "$PACKAGE_BUILD_DIRECTORY/fesm2022/fotbiler-rulegate-angular.mjs"
+test -f "$PACKAGE_BUILD_DIRECTORY/fesm2022/fotbiler-rulegate-angular-keycloak.mjs"
 test -f "$PACKAGE_BUILD_DIRECTORY/types/fotbiler-rulegate-angular.d.ts"
+test -f "$PACKAGE_BUILD_DIRECTORY/types/fotbiler-rulegate-angular-keycloak.d.ts"
 
 rm -rf "$PACKAGE_ARTIFACT_DIRECTORY"
 mkdir -p "$PACKAGE_ARTIFACT_DIRECTORY"
@@ -101,7 +103,9 @@ for expected_file in \
   package/LICENSE \
   package/bin/rulegate-angular.mjs \
   package/fesm2022/fotbiler-rulegate-angular.mjs \
-  package/types/fotbiler-rulegate-angular.d.ts
+  package/fesm2022/fotbiler-rulegate-angular-keycloak.mjs \
+  package/types/fotbiler-rulegate-angular.d.ts \
+  package/types/fotbiler-rulegate-angular-keycloak.d.ts
 do
   if ! grep -Fx "$expected_file" \
     <<<"$PACKAGE_FILES" \
@@ -161,6 +165,14 @@ if (manifest.bin?.['rulegate-angular'] !== 'bin/rulegate-angular.mjs') {
 if (manifest.dependencies?.yaml !== '2.9.0') {
   throw new Error('The generator YAML dependency is missing.');
 }
+
+if (!manifest.exports?.['./keycloak']) {
+  throw new Error('The optional Keycloak secondary entry point is missing.');
+}
+
+if (manifest.dependencies?.['keycloak-js'] || manifest.peerDependencies?.['keycloak-js']) {
+  throw new Error('The RuleGate package must not require keycloak-js.');
+}
 JS
 
 printf 'Package: %s\n' "$(basename "$PACKAGE_PATH")"
@@ -184,6 +196,7 @@ cat >"$CONSUMER_DIRECTORY/package.json" <<EOF_PACKAGE
     "@angular/platform-browser": "22.0.8",
     "@angular/router": "22.0.8",
     "@fotbiler/rulegate-angular": "file:$PACKAGE_PATH",
+    "keycloak-js": "26.2.4",
     "rxjs": "7.8.2",
     "tslib": "2.8.1"
   },
@@ -286,6 +299,11 @@ policies:
     action: read
     requirement:
       permission: documents.read
+  - id: documents-by-role
+    resourceType: document
+    action: list
+    requirement:
+      role: keycloak:realm:documents.reader
 EOF_MANIFEST
 
 cat >"$CONSUMER_DIRECTORY/src/main.ts" <<'EOF_TYPESCRIPT'
@@ -300,6 +318,8 @@ import {
   ruleGateGuard,
   ruleGateRouteData,
 } from '@fotbiler/rulegate-angular';
+import { RuleGateKeycloakAdapter } from '@fotbiler/rulegate-angular/keycloak';
+import Keycloak from 'keycloak-js';
 
 import { RuleGateIdentifiers } from './generated/rulegate';
 
@@ -326,6 +346,17 @@ class PackageConsumerComponent {
     });
   }
 }
+
+function synchronizeKeycloak(
+  adapter: RuleGateKeycloakAdapter,
+  keycloak: Keycloak,
+): boolean {
+  return adapter.synchronize(keycloak, {
+    clientIds: ['rulegate-angular-consumer'],
+  });
+}
+
+void synchronizeKeycloak;
 
 const routes: Routes = [
   {

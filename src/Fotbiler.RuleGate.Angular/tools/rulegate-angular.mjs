@@ -72,6 +72,7 @@ export async function runRuleGateAngularCli(
     io.stdout.write(`Output: ${outputPath}\n`);
     io.stdout.write(`Policies: ${generation.counts.policies}\n`);
     io.stdout.write(`Permissions: ${generation.counts.permissions}\n`);
+    io.stdout.write(`Roles: ${generation.counts.roles}\n`);
 
     return ruleGateAngularExitCodes.success;
   } catch (error) {
@@ -124,6 +125,7 @@ export function generateRuleGateTypeScript(manifestText, manifestPath = 'rulegat
   const groups = {
     policies: createEntries('policy', identifiers.policies, diagnostics),
     permissions: createEntries('permission', identifiers.permissions, diagnostics),
+    roles: createEntries('role', identifiers.roles, diagnostics),
     resourceTypes: createEntries('resource type', identifiers.resourceTypes, diagnostics),
     actions: createEntries('action', identifiers.actions, diagnostics),
   };
@@ -137,11 +139,13 @@ export function generateRuleGateTypeScript(manifestText, manifestPath = 'rulegat
     `export const RuleGateIdentifiers = {\n` +
     appendGroup('policies', groups.policies) +
     appendGroup('permissions', groups.permissions) +
+    appendGroup('roles', groups.roles) +
     appendGroup('resourceTypes', groups.resourceTypes) +
     appendGroup('actions', groups.actions) +
     `} as const;\n\n` +
     appendValueType('RuleGatePolicy', 'policies') +
     appendValueType('RuleGatePermission', 'permissions') +
+    appendValueType('RuleGateRole', 'roles') +
     appendValueType('RuleGateResourceType', 'resourceTypes') +
     appendValueType('RuleGateAction', 'actions');
 
@@ -153,6 +157,7 @@ export function generateRuleGateTypeScript(manifestText, manifestPath = 'rulegat
     counts: Object.freeze({
       policies: groups.policies.length,
       permissions: groups.permissions.length,
+      roles: groups.roles.length,
       resourceTypes: groups.resourceTypes.length,
       actions: groups.actions.length,
     }),
@@ -232,6 +237,7 @@ function collectManifestIdentifiers(manifest, diagnostics) {
 
   const policies = new Set();
   const permissions = new Set();
+  const roles = new Set();
   const resourceTypes = new Set();
   const actions = new Set();
   const routes = new Set();
@@ -274,13 +280,13 @@ function collectManifestIdentifiers(manifest, diagnostics) {
       routes.add(route);
     }
 
-    collectPermissions(policy.requirement, `${path}.requirement`, permissions, diagnostics);
+    collectRequirements(policy.requirement, `${path}.requirement`, permissions, roles, diagnostics);
   });
 
-  return { policies, permissions, resourceTypes, actions };
+  return { policies, permissions, roles, resourceTypes, actions };
 }
 
-function collectPermissions(requirement, path, permissions, diagnostics) {
+function collectRequirements(requirement, path, permissions, roles, diagnostics) {
   if (!isPlainObject(requirement)) {
     diagnostics.push(`${path} must be an object.`);
     return;
@@ -308,7 +314,12 @@ function collectPermissions(requirement, path, permissions, diagnostics) {
   }
 
   if (kind === 'role') {
-    readIdentifier(requirement.role, `${path}.role`, diagnostics);
+    const role = readIdentifier(requirement.role, `${path}.role`, diagnostics);
+
+    if (role) {
+      roles.add(role);
+    }
+
     return;
   }
 
@@ -321,7 +332,7 @@ function collectPermissions(requirement, path, permissions, diagnostics) {
   }
 
   if (kind === 'not') {
-    collectPermissions(requirement.not, `${path}.not`, permissions, diagnostics);
+    collectRequirements(requirement.not, `${path}.not`, permissions, roles, diagnostics);
     return;
   }
 
@@ -333,7 +344,7 @@ function collectPermissions(requirement, path, permissions, diagnostics) {
   }
 
   children.forEach((child, index) =>
-    collectPermissions(child, `${path}.${kind}[${index}]`, permissions, diagnostics),
+    collectRequirements(child, `${path}.${kind}[${index}]`, permissions, roles, diagnostics),
   );
 }
 

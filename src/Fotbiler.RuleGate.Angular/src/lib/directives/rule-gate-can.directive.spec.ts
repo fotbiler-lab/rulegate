@@ -9,6 +9,7 @@ import { RuleGateCanDirective } from './rule-gate-can.directive';
   template: `
     <span class="permission" *ruleGateCan="{ permission: permission }">permission content</span>
     <span class="policy" *ruleGateCan="{ policy: policy }">policy content</span>
+    <span class="role" *ruleGateCan="{ role: role }">role content</span>
     <span class="composed" *ruleGateCan="{ permission: permission }; else denied">
       granted content
     </span>
@@ -18,6 +19,7 @@ import { RuleGateCanDirective } from './rule-gate-can.directive';
 class TestHostComponent {
   readonly permission = 'documents.read';
   readonly policy = 'documents-read';
+  readonly role = 'documents.reader';
 }
 
 describe('RuleGateCanDirective', () => {
@@ -37,17 +39,19 @@ describe('RuleGateCanDirective', () => {
   it('renders no protected content before state is ready', () => {
     expect(query('.permission')).toBeNull();
     expect(query('.policy')).toBeNull();
+    expect(query('.role')).toBeNull();
     expect(query('.composed')).toBeNull();
     expect(query('.denied')?.textContent).toContain('denied content');
   });
 
-  it('reacts independently to permission and policy grants', async () => {
+  it('reacts independently to permission, policy, and role grants', async () => {
     authorization.replaceSnapshot({ permissions: ['documents.read'] });
     await fixture.whenStable();
     fixture.detectChanges();
 
     expect(query('.permission')?.textContent).toContain('permission content');
     expect(query('.policy')).toBeNull();
+    expect(query('.role')).toBeNull();
     expect(query('.composed')?.textContent).toContain('granted content');
     expect(query('.denied')).toBeNull();
 
@@ -57,14 +61,24 @@ describe('RuleGateCanDirective', () => {
 
     expect(query('.permission')).toBeNull();
     expect(query('.policy')?.textContent).toContain('policy content');
+    expect(query('.role')).toBeNull();
     expect(query('.composed')).toBeNull();
     expect(query('.denied')?.textContent).toContain('denied content');
+
+    authorization.replaceSnapshot({ roles: ['documents.reader'] });
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    expect(query('.permission')).toBeNull();
+    expect(query('.policy')).toBeNull();
+    expect(query('.role')?.textContent).toContain('role content');
   });
 
   it('removes rendered content when state is cleared', async () => {
     authorization.replaceSnapshot({
       permissions: ['documents.read'],
       policies: ['documents-read'],
+      roles: ['documents.reader'],
     });
     await fixture.whenStable();
     fixture.detectChanges();
@@ -75,6 +89,7 @@ describe('RuleGateCanDirective', () => {
 
     expect(query('.permission')).toBeNull();
     expect(query('.policy')).toBeNull();
+    expect(query('.role')).toBeNull();
     expect(query('.composed')).toBeNull();
     expect(query('.denied')?.textContent).toContain('denied content');
   });

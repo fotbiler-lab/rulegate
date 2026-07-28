@@ -12,12 +12,14 @@ const EMPTY_IDENTIFIERS: readonly string[] = Object.freeze([]);
 const EMPTY_SNAPSHOT: RuleGateAuthorizationSnapshot = Object.freeze({
   permissions: EMPTY_IDENTIFIERS,
   policies: EMPTY_IDENTIFIERS,
+  roles: EMPTY_IDENTIFIERS,
 });
 
 interface RuleGateAuthorizationState {
   readonly isReady: boolean;
   readonly permissionSet: ReadonlySet<string>;
   readonly policySet: ReadonlySet<string>;
+  readonly roleSet: ReadonlySet<string>;
   readonly snapshot: RuleGateAuthorizationSnapshot;
 }
 
@@ -25,6 +27,7 @@ const EMPTY_STATE: RuleGateAuthorizationState = Object.freeze({
   isReady: false,
   permissionSet: new Set<string>(),
   policySet: new Set<string>(),
+  roleSet: new Set<string>(),
   snapshot: EMPTY_SNAPSHOT,
 });
 
@@ -54,8 +57,9 @@ export class RuleGateAuthorizationClient {
 
     const permissions = normalizeIdentifiers(snapshot.permissions);
     const policies = normalizeIdentifiers(snapshot.policies);
+    const roles = normalizeIdentifiers(snapshot.roles);
 
-    if (permissions === null || policies === null) {
+    if (permissions === null || policies === null || roles === null) {
       this.clear();
       return false;
     }
@@ -63,6 +67,7 @@ export class RuleGateAuthorizationClient {
     const normalizedSnapshot: RuleGateAuthorizationSnapshot = Object.freeze({
       permissions,
       policies,
+      roles,
     });
 
     this.state.set(
@@ -70,6 +75,7 @@ export class RuleGateAuthorizationClient {
         isReady: true,
         permissionSet: new Set(permissions),
         policySet: new Set(policies),
+        roleSet: new Set(roles),
         snapshot: normalizedSnapshot,
       }),
     );
@@ -100,6 +106,12 @@ export class RuleGateAuthorizationClient {
     );
   }
 
+  hasRole(role: string): boolean {
+    const currentState = this.state();
+
+    return currentState.isReady && isRuleGateIdentifier(role) && currentState.roleSet.has(role);
+  }
+
   isGranted(requirement: RuleGateAuthorizationRequirement | null | undefined): boolean {
     if (!isRuleGateAuthorizationRequirement(requirement)) {
       return false;
@@ -109,7 +121,11 @@ export class RuleGateAuthorizationClient {
       return this.hasPermission(requirement.permission);
     }
 
-    return this.hasPolicy(requirement.policy);
+    if (requirement.policy !== undefined) {
+      return this.hasPolicy(requirement.policy);
+    }
+
+    return this.hasRole(requirement.role);
   }
 }
 

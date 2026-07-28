@@ -4,7 +4,7 @@ import { RuleGateAuthorizationClient } from '../client/rule-gate-authorization-c
 import { RuleGateAuthorizationRequirement } from '../models/rule-gate-authorization.models';
 
 /**
- * Renders its template when one permission or policy requirement is granted.
+ * Renders its template when one permission, policy, or role requirement is granted.
  *
  * The directive removes the view when state is missing, malformed, or denied.
  */

@@ -11,7 +11,13 @@
     "experimentalDecorators": true,
     "importHelpers": true,
     "target": "ES2022",
-    "module": "preserve"
+    "module": "preserve",
+    "paths": {
+      "@fotbiler/rulegate-angular": ["./src/Fotbiler.RuleGate.Angular/src/public-api.ts"],
+      "@fotbiler/rulegate-angular/keycloak": [
+        "./src/Fotbiler.RuleGate.Angular/keycloak/src/public-api.ts"
+      ]
+    }
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

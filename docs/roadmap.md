@@ -26,12 +26,12 @@ the preview releases.
 | Deterministic C# code generation             | ✅ Available |
 | Angular SDK                                  | ✅ Available |
 | Deterministic TypeScript generation          | ✅ Available |
-| Keycloak helpers                             | ⏳ Planned   |
+| Keycloak helpers                             | 🧪 Preview pending |
 | OpenTelemetry integration                    | ⏳ Planned   |
 | Decision visualization                       | ⏳ Planned   |
 
-The latest published preview is `0.4.0-preview.2`. The next product milestone
-is the Keycloak integration work in `0.5.0-preview.1`.
+The latest published preview is `0.4.0-preview.2`. Keycloak integration work
+for `0.5.0-preview.1` is implemented in source and awaiting its preview release.
 
 ## Published previews
 
@@ -103,7 +103,7 @@ is the Keycloak integration work in `0.5.0-preview.1`.
 - TypeScript generation and backend identifier alignment
 - Angular examples and integration consumers
 
-## Next milestone
+## Next preview
 
 ### `0.5.0-preview.1` — Keycloak Helpers
 
@@ -113,6 +113,9 @@ is the Keycloak integration work in `0.5.0-preview.1`.
 - Claim normalization
 - RuleGate subject creation
 - Provider-specific integration documentation
+- Optional Angular secondary entrypoint
+- Package-only npm and NuGet consumer verification
+- [Keycloak integration guide](keycloak.md)
 
 ## Later milestones
 

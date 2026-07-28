@@ -60,6 +60,8 @@ Before tagging, verify:
 - [ ] Repository URL and directory are correct.
 - [ ] License is `Apache-2.0`.
 - [ ] Angular peer dependencies match the supported major version.
+- [ ] The Keycloak secondary entrypoint is present without making
+      `keycloak-js` a dependency or peer dependency.
 - [ ] Changelog contains a dated release section.
 - [ ] Roadmap describes the Angular SDK as available.
 - [ ] Installation examples contain the exact preview version.
@@ -80,7 +82,8 @@ Create a local commit, then run:
 The npm verifier checks repository cleanliness, locked dependencies, format,
 production build, tests, package metadata, tarball contents, exported public
 APIs, a package-only Angular consumer, registry uniqueness, and normal-CI
-publication isolation.
+publication isolation. The consumer installs real `keycloak-js` separately and
+compiles against the optional secondary entrypoint.
 
 Record the produced tarball name and SHA-256 hash.
 
@@ -179,6 +182,8 @@ After publication, verify:
 - [ ] License and README rendering.
 - [ ] Angular peer dependencies.
 - [ ] FESM and TypeScript declaration assets.
+- [ ] Keycloak secondary-entrypoint FESM and declaration assets.
+- [ ] No `keycloak-js` dependency or peer dependency in the RuleGate package.
 - [ ] Package installation into a clean Angular application.
 - [ ] No unexpected files or lifecycle scripts.
 

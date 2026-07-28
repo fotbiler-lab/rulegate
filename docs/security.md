@@ -1477,5 +1477,6 @@ Continue with:
 - [Manifest guide](manifests.md) for complete YAML syntax.
 - [ASP.NET Core integration](aspnetcore.md) for HTTP integration.
 - [Angular SDK](angular.md) for client-side user-experience controls.
+- [Keycloak integration](keycloak.md) for optional identity claim mapping.
 - [Diagnostics](diagnostics.md) for diagnostic contracts.
 - [Documentation index](README.md) for all guides.

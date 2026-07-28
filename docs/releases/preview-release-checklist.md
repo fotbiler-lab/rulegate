@@ -14,9 +14,12 @@ The current release family contains:
 3. `Fotbiler.RuleGate.Manifest`
 4. `Fotbiler.RuleGate.AspNetCore`
 5. `Fotbiler.RuleGate.Cli`
+6. `Fotbiler.RuleGate.Keycloak`
 
 The publish workflow must produce one `.nupkg` and one `.snupkg` for every
-package.
+package in the tagged source. Package versions are independent: the existing
+packages remain at `0.3.0-preview.2`, while the Keycloak integration begins at
+`0.5.0-preview.1`.
 
 ## Release workflow
 
@@ -74,7 +77,8 @@ Before committing the release preparation, verify:
 - [ ] The release comparison link begins at the previous release tag.
 - [ ] `.github/workflows/publish-nuget.yml` expects the exact tag.
 - [ ] The workflow publishes the exact version.
-- [ ] The workflow includes all release package IDs.
+- [ ] The workflow includes every package ID intended for this release and
+      does not attempt to republish unchanged immutable versions.
 - [ ] Normal CI does not publish packages or create releases.
 
 ## Documentation gate
@@ -121,6 +125,7 @@ The verification must cover:
 - package metadata and contents;
 - source commit metadata;
 - package-only consumer smoke tests;
+- package-only Keycloak integration smoke tests;
 - packaged CLI tool installation and execution;
 - generated C# output, stale detection, compilation, and execution on every
   supported framework;
