@@ -1,4 +1,4 @@
-# Fotbiler.RuleGate.Manifest
+# RuleGate Manifest
 
 YAML manifest loading, validation, and policy compilation for Fotbiler
 RuleGate.

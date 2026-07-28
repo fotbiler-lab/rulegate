@@ -1,4 +1,4 @@
-# Fotbiler.RuleGate.AspNetCore
+# RuleGate ASP.NET Core
 
 ASP.NET Core integration for the Fotbiler RuleGate authorization framework.
 

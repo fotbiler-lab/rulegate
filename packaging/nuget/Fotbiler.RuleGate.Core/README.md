@@ -1,4 +1,4 @@
-# Fotbiler.RuleGate.Core
+# RuleGate Core
 
 Local, provider-independent authorization engine for Fotbiler RuleGate.
 
