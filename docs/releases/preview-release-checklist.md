@@ -1,7 +1,6 @@
-# RuleGate Preview Release Checklist
+# NuGet Preview Release Checklist
 
-This checklist defines the release process for Fotbiler RuleGate preview
-versions.
+This checklist defines the release process for RuleGate NuGet previews.
 
 NuGet packages are immutable. A published version must never be overwritten,
 and a published release tag must never be moved or recreated.

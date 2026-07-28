@@ -1,0 +1,119 @@
+name: Publish npm Preview
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing release tag to stage
+        required: true
+        default: v0.4.0-preview.1
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: publish-npm-${{ inputs.tag }}
+  cancel-in-progress: false
+
+jobs:
+  stage:
+    name: Verify and stage npm package
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    environment: npm-production
+
+    permissions:
+      contents: read
+      id-token: write
+
+    env:
+      EXPECTED_TAG: v0.4.0-preview.1
+      PACKAGE_PATH: artifacts/npm/fotbiler-rulegate-angular-0.4.0-preview.1.tgz
+
+    steps:
+      - name: Check out release tag
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ inputs.tag }}
+          fetch-depth: 0
+
+      - name: Verify release tag
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          requested_tag='${{ inputs.tag }}'
+
+          if [[ "$requested_tag" != "$EXPECTED_TAG" ]]
+          then
+            echo "ERROR: Unexpected release tag."
+            echo "Expected: $EXPECTED_TAG"
+            echo "Actual:   $requested_tag"
+            exit 1
+          fi
+
+          if [[ "$(git cat-file -t "$EXPECTED_TAG")" != "tag" ]]
+          then
+            echo "ERROR: Release tag is not an annotated tag."
+            exit 1
+          fi
+
+          tag_commit="$(git rev-parse "$EXPECTED_TAG^{commit}")"
+          head_commit="$(git rev-parse HEAD)"
+
+          printf 'Tag commit:  %s\n' "$tag_commit"
+          printf 'HEAD commit: %s\n' "$head_commit"
+
+          if [[ "$tag_commit" != "$head_commit" ]]
+          then
+            echo "ERROR: Checkout does not match the release tag."
+            exit 1
+          fi
+
+          if [[ -n "$(git status --porcelain)" ]]
+          then
+            echo "ERROR: Working tree is not clean."
+            git status --short
+            exit 1
+          fi
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v6
+        with:
+          version: 11.3.0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 22.22.3
+          registry-url: https://registry.npmjs.org
+
+      - name: Set up npm CLI with Trusted Publishing support
+        run: npm install --global npm@12.0.1
+
+      - name: Show JavaScript toolchain
+        run: |
+          node --version
+          npm --version
+          pnpm --version
+
+      - name: Verify npm preview package
+        run: ./scripts/verify-npm-preview-release.sh --check-registry-availability
+
+      - name: Upload verified npm package
+        uses: actions/upload-artifact@v6
+        with:
+          name: rulegate-${{ inputs.tag }}-npm-package
+          path: ${{ env.PACKAGE_PATH }}
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Stage npm package through Trusted Publishing
+        run: |
+          npm stage publish \
+            "$PACKAGE_PATH" \
+            --access public \
+            --tag preview

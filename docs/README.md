@@ -20,12 +20,13 @@ resource-based authorization through one composable policy model.
 | Operate authorization diagnostics safely | [Diagnostics](diagnostics.md) |
 | Understand runtime and integration security | [Security model](security.md) |
 | Understand current and planned capabilities | [Roadmap](roadmap.md) |
-| Prepare and verify a preview release | [Preview release checklist](releases/preview-release-checklist.md) |
+| Prepare and verify a NuGet preview | [NuGet release checklist](releases/preview-release-checklist.md) |
+| Prepare and verify an npm preview | [npm release checklist](releases/npm-preview-release-checklist.md) |
 
 ## Published packages
 
-The latest published preview is
-[`0.3.0-preview.2`](https://github.com/fotbiler-lab/rulegate/releases/tag/v0.3.0-preview.2).
+The latest published RuleGate preview is
+[`0.4.0-preview.1`](https://github.com/fotbiler-lab/rulegate/releases/tag/v0.4.0-preview.1).
 
 | Package | Purpose |
 |---|---|
@@ -34,12 +35,10 @@ The latest published preview is
 | [`Fotbiler.RuleGate.Manifest`](https://www.nuget.org/packages/Fotbiler.RuleGate.Manifest) | YAML manifest loading, validation, and compilation |
 | [`Fotbiler.RuleGate.AspNetCore`](https://www.nuget.org/packages/Fotbiler.RuleGate.AspNetCore) | ASP.NET Core integration |
 | [`Fotbiler.RuleGate.Cli`](https://www.nuget.org/packages/Fotbiler.RuleGate.Cli) | .NET tool for manifest validation, deterministic C# generation, stale-output checks, and CI usage |
+| [`@fotbiler/rulegate-angular`](https://www.npmjs.com/package/@fotbiler/rulegate-angular) | Angular authorization client, route guards, and structural directive |
 
-## Next npm package
-
-`@fotbiler/rulegate-angular` is implemented for `0.4.0-preview.1` but is not
-yet published to npm. See the [Angular SDK guide](angular.md) for its public API
-and security boundary.
+The NuGet packages remain at `0.3.0-preview.2`. The Angular npm package is
+`0.4.0-preview.1`.
 
 ## Recommended learning path
 

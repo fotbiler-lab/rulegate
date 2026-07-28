@@ -24,13 +24,13 @@ the preview releases.
 | HTTP authorization-result mapping | ✅ Available |
 | CLI manifest validation | ✅ Available |
 | Deterministic C# code generation | ✅ Available |
-| Angular SDK | 🧪 Implemented for `0.4.0-preview.1` |
+| Angular SDK | ✅ Available |
 | Keycloak helpers | ⏳ Planned |
 | OpenTelemetry integration | ⏳ Planned |
 | Decision visualization | ⏳ Planned |
 
-The latest published preview is `0.3.0-preview.2`. The Angular SDK foundation
-is implemented in source for the next preview, `0.4.0-preview.1`.
+The latest published preview is `0.4.0-preview.1`. The next product milestone
+is the Angular developer-experience work in `0.4.0-preview.2`.
 
 ## Published previews
 
@@ -84,8 +84,6 @@ is implemented in source for the next preview, `0.4.0-preview.1`.
 - Generated-code verification on .NET 8, .NET 9, and .NET 10
 - [C# code-generation guide](code-generation.md)
 
-## Next preview
-
 ### `0.4.0-preview.1` — Angular SDK Foundation
 
 - Signal-backed authorization client and public TypeScript models
@@ -96,7 +94,7 @@ is implemented in source for the next preview, `0.4.0-preview.1`.
 - Package-only npm tarball consumer verification
 - [Angular SDK guide](angular.md)
 
-## Later milestones
+## Next milestone
 
 ### `0.4.0-preview.2` — Angular Developer Experience
 
@@ -105,6 +103,8 @@ is implemented in source for the next preview, `0.4.0-preview.1`.
 - Framework-aware denied-navigation handling
 - TypeScript generation and backend identifier alignment
 - Angular examples and integration consumers
+
+## Later milestones
 
 ### `0.5.0-preview.1` — Keycloak Helpers
 
