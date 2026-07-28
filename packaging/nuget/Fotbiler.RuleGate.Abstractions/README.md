@@ -1,4 +1,4 @@
-# Fotbiler.RuleGate.Abstractions
+# RuleGate Abstractions
 
 Public authorization contracts for the Fotbiler RuleGate ecosystem.
 
