@@ -23,7 +23,7 @@ resource-based authorization through one composable policy model.
 ## Published packages
 
 The latest published preview is
-[`0.3.0-preview.1`](https://github.com/fotbiler-lab/rulegate/releases/tag/v0.3.0-preview.1).
+[`0.3.0-preview.2`](https://github.com/fotbiler-lab/rulegate/releases/tag/v0.3.0-preview.2).
 
 | Package | Purpose |
 |---|---|
@@ -31,7 +31,7 @@ The latest published preview is
 | [`Fotbiler.RuleGate.Core`](https://www.nuget.org/packages/Fotbiler.RuleGate.Core) | Local fail-closed authorization engine and built-in evaluators |
 | [`Fotbiler.RuleGate.Manifest`](https://www.nuget.org/packages/Fotbiler.RuleGate.Manifest) | YAML manifest loading, validation, and compilation |
 | [`Fotbiler.RuleGate.AspNetCore`](https://www.nuget.org/packages/Fotbiler.RuleGate.AspNetCore) | ASP.NET Core integration |
-| [`Fotbiler.RuleGate.Cli`](https://www.nuget.org/packages/Fotbiler.RuleGate.Cli) | .NET tool for manifest validation; current source adds deterministic C# generation for `0.3.0-preview.2` |
+| [`Fotbiler.RuleGate.Cli`](https://www.nuget.org/packages/Fotbiler.RuleGate.Cli) | .NET tool for manifest validation, deterministic C# generation, stale-output checks, and CI usage |
 
 ## Recommended learning path
 

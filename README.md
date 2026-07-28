@@ -28,10 +28,10 @@
       alt="NuGet downloads"
       src="https://img.shields.io/nuget/dt/Fotbiler.RuleGate.AspNetCore?style=flat-square&amp;logo=nuget&amp;label=downloads">
   </a>
-  <a href="https://github.com/fotbiler-lab/rulegate/releases/tag/v0.3.0-preview.1">
+  <a href="https://github.com/fotbiler-lab/rulegate/releases/tag/v0.3.0-preview.2">
     <img
-      alt="GitHub release 0.3.0-preview.1"
-      src="https://img.shields.io/badge/release-v0.3.0--preview.1-orange?style=flat-square">
+      alt="GitHub release 0.3.0-preview.2"
+      src="https://img.shields.io/badge/release-v0.3.0--preview.2-orange?style=flat-square">
   </a>
   <a href="https://dotnet.microsoft.com/">
     <img
@@ -149,8 +149,8 @@ modules.
 Install the ASP.NET Core and manifest packages:
 
 ```bash
-dotnet add package Fotbiler.RuleGate.AspNetCore --version 0.3.0-preview.1
-dotnet add package Fotbiler.RuleGate.Manifest --version 0.3.0-preview.1
+dotnet add package Fotbiler.RuleGate.AspNetCore --version 0.3.0-preview.2
+dotnet add package Fotbiler.RuleGate.Manifest --version 0.3.0-preview.2
 ```
 
 `Fotbiler.RuleGate.AspNetCore` references the core engine and abstractions
@@ -160,7 +160,7 @@ Applications using only RuleGate contracts may reference the abstractions
 package directly:
 
 ```bash
-dotnet add package Fotbiler.RuleGate.Abstractions --version 0.3.0-preview.1
+dotnet add package Fotbiler.RuleGate.Abstractions --version 0.3.0-preview.2
 ```
 
 ## Use the RuleGate CLI
@@ -171,7 +171,7 @@ Install the RuleGate command-line tool:
 dotnet tool install \
   --global \
   Fotbiler.RuleGate.Cli \
-  --version 0.3.0-preview.1
+  --version 0.3.0-preview.2
 ```
 
 Validate the default `rulegate.yaml` in the current directory:
@@ -190,17 +190,23 @@ rulegate validate --format json
 Use `rulegate --help`, `rulegate --version`, and `rulegate info` to inspect the
 installed tool.
 
-The current repository source also provides deterministic C# generation for the
-upcoming `0.3.0-preview.2` release:
+The installed `0.3.0-preview.2` tool provides deterministic C# generation:
 
 ```bash
-dotnet run   --project src/Fotbiler.RuleGate.Cli/Fotbiler.RuleGate.Cli.csproj   --framework net10.0   --   generate csharp   ./rulegate.yaml   --namespace Sample.Authorization   --output Generated/RuleGate.g.cs
+rulegate generate csharp \
+  ./rulegate.yaml \
+  --namespace Sample.Authorization \
+  --output Generated/RuleGate.g.cs
 ```
 
 Verify in CI that the committed generated file is current without modifying it:
 
 ```bash
-dotnet run   --project src/Fotbiler.RuleGate.Cli/Fotbiler.RuleGate.Cli.csproj   --framework net10.0   --   generate csharp   ./rulegate.yaml   --namespace Sample.Authorization   --output Generated/RuleGate.g.cs   --check
+rulegate generate csharp \
+  ./rulegate.yaml \
+  --namespace Sample.Authorization \
+  --output Generated/RuleGate.g.cs \
+  --check
 ```
 
 See the [RuleGate CLI guide](docs/cli.md) for the complete validation,
@@ -384,17 +390,15 @@ Read the [security model](docs/security.md) before production integration.
 
 ## Project status
 
-RuleGate is currently published as
-[`0.3.0-preview.1`](https://github.com/fotbiler-lab/rulegate/releases/tag/v0.3.0-preview.1).
+RuleGate is published as
+[`0.3.0-preview.2`](https://github.com/fotbiler-lab/rulegate/releases/tag/v0.3.0-preview.2).
 
-The published preview includes the authorization core, manifest compilation,
-ASP.NET Core integration, safe HTTP authorization result mapping, structured
-diagnostics, and deterministic CLI manifest validation.
-
-Current repository source additionally includes the implementation planned for
-`0.3.0-preview.2`: deterministic C# policy, resource-type, and action constants,
-atomic output writes, byte-exact stale-output checks, and generated-code
-compilation smoke coverage across .NET 8, .NET 9, and .NET 10.
+This preview includes the authorization core, manifest compilation, ASP.NET
+Core integration, safe HTTP authorization result mapping, structured
+diagnostics, deterministic CLI manifest validation, manifest-derived C# policy,
+resource-type, and action constants, atomic output writes, byte-exact
+stale-output checks, and generated-code compilation coverage across .NET 8,
+.NET 9, and .NET 10.
 
 See the [roadmap](docs/roadmap.md) for the complete release path.
 

@@ -6,6 +6,8 @@ The project follows Semantic Versioning. Preview releases may introduce breaking
 
 ## [Unreleased]
 
+## [0.3.0-preview.2] - 2026-07-28
+
 ### Added
 
 - Deterministic `rulegate generate csharp` command for manifest-derived policy,
@@ -30,7 +32,7 @@ The project follows Semantic Versioning. Preview releases may introduce breaking
   validation, JSON output, stable exit codes, automation, and security
   behavior.
 - Updated repository guides and package README sources for
-  `0.3.0-preview.1` and the five-package release inventory.
+  `0.3.0-preview.2` and the five-package release inventory.
 - Replaced the original preview checklist with the current release-branch,
   Trusted Publishing, package verification, and documentation-gate workflow.
 - Audited all repository Markdown documentation, linked the public package
@@ -208,7 +210,8 @@ The project follows Semantic Versioning. Preview releases may introduce breaking
 - CLI, Angular, and Keycloak integration packages are not yet included.
 - Public APIs may change before the first stable release.
 
-[Unreleased]: https://github.com/fotbiler-lab/rulegate/compare/v0.3.0-preview.1...HEAD
+[Unreleased]: https://github.com/fotbiler-lab/rulegate/compare/v0.3.0-preview.2...HEAD
+[0.3.0-preview.2]: https://github.com/fotbiler-lab/rulegate/compare/v0.3.0-preview.1...v0.3.0-preview.2
 [0.3.0-preview.1]: https://github.com/fotbiler-lab/rulegate/compare/v0.2.0-preview.2...v0.3.0-preview.1
 [0.2.0-preview.2]: https://github.com/fotbiler-lab/rulegate/compare/v0.2.0-preview.1...v0.2.0-preview.2
 [0.2.0-preview.1]: https://github.com/fotbiler-lab/rulegate/releases/tag/v0.2.0-preview.1

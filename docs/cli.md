@@ -1,23 +1,16 @@
 # RuleGate CLI
 
 `Fotbiler.RuleGate.Cli` is the RuleGate command-line tool for deterministic
-manifest validation, C# constant generation, and CI automation.
+manifest validation, C# constant generation, stale-output checks, and CI
+automation.
 
 The installed command is `rulegate`.
 
-## Release status
+## Current release
 
-The latest public tool package is `0.3.0-preview.1` and provides deterministic
-manifest validation.
-
-The current repository source additionally contains the C# generation command
-planned for `0.3.0-preview.2`. Until that preview is published, run generation
-from the repository with `dotnet run` as shown below. Release preparation will
-update the exact installation version before publication.
+The current public tool package is `0.3.0-preview.2`.
 
 ## Supported runtimes
-
-RuleGate CLI targets:
 
 | Runtime | Target framework |
 |---|---|
@@ -38,13 +31,13 @@ https://api.nuget.org/v3/index.json
 
 GitHub Packages is not used as the public RuleGate package registry.
 
-## Install the published preview
+## Install
 
 ```bash
 dotnet tool install \
   --global \
   Fotbiler.RuleGate.Cli \
-  --version 0.3.0-preview.1
+  --version 0.3.0-preview.2
 ```
 
 Update an existing global installation:
@@ -53,7 +46,7 @@ Update an existing global installation:
 dotnet tool update \
   --global \
   Fotbiler.RuleGate.Cli \
-  --version 0.3.0-preview.1
+  --version 0.3.0-preview.2
 ```
 
 Verify the installation:
@@ -122,22 +115,17 @@ JSON mode writes one complete JSON document to standard output. Automation
 should use its fields and the process exit code rather than parsing
 human-readable text.
 
-## Generate C# constants from current source
+## Generate C# constants
 
-Until `0.3.0-preview.2` is published, invoke the repository build:
+Write generated source to standard output:
 
 ```bash
-dotnet run \
-  --project src/Fotbiler.RuleGate.Cli/Fotbiler.RuleGate.Cli.csproj \
-  --framework net10.0 \
-  -- \
-  generate csharp \
+rulegate generate csharp \
   ./rulegate.yaml \
   --namespace Sample.Authorization
 ```
 
-When `--output` is omitted, standard output contains only generated C# source.
-This allows redirection and composition with other command-line tools.
+When `--output` is omitted, stdout contains only generated C# source.
 
 The generated source contains three public static classes:
 
@@ -151,11 +139,7 @@ C# identifier.
 ## Generate a file
 
 ```bash
-dotnet run \
-  --project src/Fotbiler.RuleGate.Cli/Fotbiler.RuleGate.Cli.csproj \
-  --framework net10.0 \
-  -- \
-  generate csharp \
+rulegate generate csharp \
   ./rulegate.yaml \
   --namespace Sample.Authorization \
   --output Generated/RuleGate.g.cs
@@ -177,11 +161,7 @@ unchanged.
 Use `--check` in CI:
 
 ```bash
-dotnet run \
-  --project src/Fotbiler.RuleGate.Cli/Fotbiler.RuleGate.Cli.csproj \
-  --framework net10.0 \
-  -- \
-  generate csharp \
+rulegate generate csharp \
   ./rulegate.yaml \
   --namespace Sample.Authorization \
   --output Generated/RuleGate.g.cs \
@@ -204,7 +184,7 @@ Manifest policy IDs, resource types, and actions are converted into PascalCase
 C# identifiers. Non-alphanumeric separators start a new identifier segment, and
 a leading number is prefixed with `_`.
 
-Different values may normalize to the same C# identifier. For example,
+Different values may normalize to the same identifier. For example,
 `orders.read` and `orders-read` both normalize to `OrdersRead`. RuleGate treats
 this as generation diagnostic `RGCG004` and produces no source.
 
@@ -221,23 +201,24 @@ empty or conflicting manifest values fail closed.
 | `3` | Internal error | An unexpected failure occurred |
 | `130` | Cancelled | The operation was cancelled |
 
-## CI validation and generation example
+## CI example
 
 ```bash
 set -euo pipefail
 
-dotnet run \
-  --project src/Fotbiler.RuleGate.Cli/Fotbiler.RuleGate.Cli.csproj \
-  --framework net10.0 \
-  -- \
+TOOL_DIRECTORY="$PWD/.rulegate-tools"
+
+dotnet tool install \
+  Fotbiler.RuleGate.Cli \
+  --tool-path "$TOOL_DIRECTORY" \
+  --version 0.3.0-preview.2
+
+"$TOOL_DIRECTORY/rulegate" \
   validate \
   ./rulegate.yaml \
   --format json
 
-dotnet run \
-  --project src/Fotbiler.RuleGate.Cli/Fotbiler.RuleGate.Cli.csproj \
-  --framework net10.0 \
-  -- \
+"$TOOL_DIRECTORY/rulegate" \
   generate csharp \
   ./rulegate.yaml \
   --namespace Sample.Authorization \
@@ -245,8 +226,7 @@ dotnet run \
   --check
 ```
 
-After `0.3.0-preview.2` is published, the same subcommands can be executed
-through the installed `rulegate` tool.
+Do not combine an exact `--version` with `--prerelease`.
 
 ## Information command
 
@@ -284,11 +264,6 @@ Confirm that the .NET global tools directory is on `PATH`, then run:
 ```bash
 dotnet tool list --global
 ```
-
-### The public package does not recognize `generate`
-
-The public `0.3.0-preview.1` package predates code generation. Use the repository
-`dotnet run` command until `0.3.0-preview.2` is published.
 
 ### The output is stale
 

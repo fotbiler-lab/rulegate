@@ -16,6 +16,7 @@ Only the latest published preview receives security fixes.
 
 | Version | Supported |
 |---|---|
+| [`0.3.0-preview.2`](https://github.com/fotbiler-lab/rulegate/releases/tag/v0.3.0-preview.2) | Yes |
 | [`0.3.0-preview.1`](https://github.com/fotbiler-lab/rulegate/releases/tag/v0.3.0-preview.1) | Yes |
 | Older previews | No |
 
