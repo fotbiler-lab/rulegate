@@ -489,6 +489,11 @@ printf '\n== Run packaged CLI tool smoke test ==\n'
 ./scripts/test-cli-tool-smoke.sh \
   --packages-ready
 
+printf '\n== Run generated C# compilation smoke test ==\n'
+
+./scripts/test-generated-code-smoke.sh \
+  --packages-ready
+
 printf '\n== Verify normal CI does not publish ==\n'
 
 if grep -RInE \

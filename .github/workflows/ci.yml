@@ -89,6 +89,11 @@ jobs:
           ./scripts/test-cli-tool-smoke.sh \
             --packages-ready
 
+      - name: Test generated C# compilation
+        run: |
+          ./scripts/test-generated-code-smoke.sh \
+            --packages-ready
+
       - name: Upload NuGet packages
         uses: actions/upload-artifact@v6
         with:

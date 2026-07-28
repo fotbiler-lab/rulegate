@@ -221,6 +221,11 @@ do
     >/dev/null
 
   grep -F \
+    'generate' \
+    "$TEMP_DIRECTORY/help-$framework.out" \
+    >/dev/null
+
+  grep -F \
     'info' \
     "$TEMP_DIRECTORY/help-$framework.out" \
     >/dev/null
