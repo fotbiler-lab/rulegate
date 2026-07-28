@@ -6,6 +6,24 @@ The project follows Semantic Versioning. Preview releases may introduce breaking
 
 ## [Unreleased]
 
+## [0.3.0-preview.1] - 2026-07-28
+
+### Added
+
+- Multi-targeted `Fotbiler.RuleGate.Cli` .NET tool for .NET 8, .NET 9, and .NET 10.
+- `rulegate validate` with default `rulegate.yaml` discovery and explicit manifest paths.
+- Human-readable and machine-readable JSON manifest validation output.
+- Stable CLI exit codes for success, invalid manifests, usage errors, internal errors, and cancellation.
+- Automatic root and command help, CLI version output, and safe runtime information through `rulegate info`.
+- Package-level CLI installation and execution smoke tests across all supported runtimes.
+- Five-package preview release verification and CLI publication support.
+
+### Security
+
+- CLI validation reuses the fail-closed manifest compiler and never returns partially compiled policies.
+- Unexpected CLI failures do not expose exception details or stack traces.
+- Machine-readable JSON output is isolated from standard error diagnostics.
+
 ## [0.2.0-preview.2] - 2026-07-27
 
 ### Added
@@ -159,7 +177,8 @@ The project follows Semantic Versioning. Preview releases may introduce breaking
 - CLI, Angular, and Keycloak integration packages are not yet included.
 - Public APIs may change before the first stable release.
 
-[Unreleased]: https://github.com/fotbiler-lab/rulegate/compare/v0.2.0-preview.2...HEAD
+[Unreleased]: https://github.com/fotbiler-lab/rulegate/compare/v0.3.0-preview.1...HEAD
+[0.3.0-preview.1]: https://github.com/fotbiler-lab/rulegate/compare/v0.2.0-preview.2...v0.3.0-preview.1
 [0.2.0-preview.2]: https://github.com/fotbiler-lab/rulegate/compare/v0.2.0-preview.1...v0.2.0-preview.2
 [0.2.0-preview.1]: https://github.com/fotbiler-lab/rulegate/releases/tag/v0.2.0-preview.1
 [0.1.0-preview.1]: https://github.com/fotbiler-lab/rulegate/releases/tag/v0.1.0-preview.1

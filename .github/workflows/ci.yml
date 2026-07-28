@@ -84,6 +84,11 @@ jobs:
           ./scripts/test-nuget-consumer-smoke.sh \
             --packages-ready
 
+      - name: Test RuleGate CLI tool
+        run: |
+          ./scripts/test-cli-tool-smoke.sh \
+            --packages-ready
+
       - name: Upload NuGet packages
         uses: actions/upload-artifact@v6
         with:

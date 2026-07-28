@@ -1,0 +1,44 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFrameworks>$(RuleGateTargetFrameworks)</TargetFrameworks>
+
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>rulegate</ToolCommandName>
+    <UseAppHost>false</UseAppHost>
+    <CreateRidSpecificToolPackages>false</CreateRidSpecificToolPackages>
+
+    <PackageId>Fotbiler.RuleGate.Cli</PackageId>
+    <Title>Fotbiler RuleGate CLI</Title>
+    <Description>Command-line manifest validation, diagnostics, and automation tooling for Fotbiler RuleGate.</Description>
+    <PackageTags>$(PackageTags);cli;dotnet-tool;manifest;validation</PackageTags>
+    <PackageReleaseNotes>Introduces the RuleGate .NET tool with manifest validation, human-readable and JSON output, stable exit codes, help, version, and environment information commands.</PackageReleaseNotes>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference
+      Include="System.CommandLine"
+      Version="2.0.10" />
+
+    <ProjectReference
+      Include="..\Fotbiler.RuleGate.Manifest\Fotbiler.RuleGate.Manifest.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None
+      Include="$(MSBuildThisFileDirectory)../../packaging/nuget/Fotbiler.RuleGate.Cli/README.md"
+      Pack="true"
+      PackagePath="\"
+      Link="README.md"
+      Visible="false" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AssemblyAttribute
+      Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+      <_Parameter1>Fotbiler.RuleGate.Cli.Tests</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
+
+</Project>
