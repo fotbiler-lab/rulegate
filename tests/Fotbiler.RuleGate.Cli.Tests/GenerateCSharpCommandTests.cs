@@ -76,6 +76,11 @@ public sealed class GenerateCSharpCommandTests
             StringComparison.Ordinal);
 
         Assert.Contains(
+            "--check",
+            result.StandardOutput,
+            StringComparison.Ordinal);
+
+        Assert.Contains(
             "[<file>]",
             result.StandardOutput,
             StringComparison.Ordinal);
@@ -432,6 +437,282 @@ public sealed class GenerateCSharpCommandTests
             Environment.CurrentDirectory =
                 originalDirectory;
         }
+    }
+
+    [Fact]
+    public async Task GenerateCSharp_CheckAcceptsCurrentOutput()
+    {
+        using var directory =
+            new TemporaryDirectory();
+
+        string manifestPath =
+            directory.WriteFile(
+                "rulegate.yaml",
+                ValidManifest);
+
+        string outputPath =
+            Path.Combine(
+                directory.Path,
+                "generated",
+                "RuleGate.g.cs");
+
+        CliResult generationResult =
+            await RunAsync(
+                "generate",
+                "csharp",
+                manifestPath,
+                "--namespace",
+                "Sample.Authorization",
+                "--output",
+                outputPath);
+
+        Assert.Equal(
+            0,
+            generationResult.ExitCode);
+
+        byte[] beforeCheck =
+            await File.ReadAllBytesAsync(
+                outputPath);
+
+        CliResult checkResult =
+            await RunAsync(
+                "generate",
+                "csharp",
+                manifestPath,
+                "--namespace",
+                "Sample.Authorization",
+                "--output",
+                outputPath,
+                "--check");
+
+        byte[] afterCheck =
+            await File.ReadAllBytesAsync(
+                outputPath);
+
+        Assert.Equal(
+            0,
+            checkResult.ExitCode);
+
+        Assert.Equal(
+            beforeCheck,
+            afterCheck);
+
+        Assert.Contains(
+            "RuleGate C# output is current.",
+            checkResult.StandardOutput,
+            StringComparison.Ordinal);
+
+        Assert.Contains(
+            Path.GetFullPath(
+                outputPath),
+            checkResult.StandardOutput,
+            StringComparison.Ordinal);
+
+        Assert.Empty(
+            checkResult.StandardError);
+    }
+
+    [Fact]
+    public async Task GenerateCSharp_CheckRejectsStaleOutputWithoutChangingIt()
+    {
+        using var directory =
+            new TemporaryDirectory();
+
+        string manifestPath =
+            directory.WriteFile(
+                "rulegate.yaml",
+                ValidManifest);
+
+        string outputPath =
+            directory.WriteFile(
+                "RuleGate.g.cs",
+                "stale-content");
+
+        CliResult result =
+            await RunAsync(
+                "generate",
+                "csharp",
+                manifestPath,
+                "--namespace",
+                "Sample.Authorization",
+                "--output",
+                outputPath,
+                "--check");
+
+        Assert.Equal(
+            1,
+            result.ExitCode);
+
+        Assert.Equal(
+            "stale-content",
+            await File.ReadAllTextAsync(
+                outputPath));
+
+        Assert.Contains(
+            "RuleGate C# output is stale.",
+            result.StandardError,
+            StringComparison.Ordinal);
+
+        Assert.Contains(
+            "without --check",
+            result.StandardError,
+            StringComparison.Ordinal);
+
+        Assert.Empty(
+            result.StandardOutput);
+    }
+
+    [Fact]
+    public async Task GenerateCSharp_CheckRejectsMissingOutput()
+    {
+        using var directory =
+            new TemporaryDirectory();
+
+        string manifestPath =
+            directory.WriteFile(
+                "rulegate.yaml",
+                ValidManifest);
+
+        string outputPath =
+            Path.Combine(
+                directory.Path,
+                "missing",
+                "RuleGate.g.cs");
+
+        CliResult result =
+            await RunAsync(
+                "generate",
+                "csharp",
+                manifestPath,
+                "--namespace",
+                "Sample.Authorization",
+                "--output",
+                outputPath,
+                "--check");
+
+        Assert.Equal(
+            1,
+            result.ExitCode);
+
+        Assert.False(
+            File.Exists(
+                outputPath));
+
+        Assert.Contains(
+            "RuleGate C# output is missing.",
+            result.StandardError,
+            StringComparison.Ordinal);
+
+        Assert.Empty(
+            result.StandardOutput);
+    }
+
+    [Fact]
+    public async Task GenerateCSharp_CheckRequiresOutput()
+    {
+        using var directory =
+            new TemporaryDirectory();
+
+        string manifestPath =
+            directory.WriteFile(
+                "rulegate.yaml",
+                ValidManifest);
+
+        CliResult result =
+            await RunAsync(
+                "generate",
+                "csharp",
+                manifestPath,
+                "--namespace",
+                "Sample.Authorization",
+                "--check");
+
+        Assert.Equal(
+            2,
+            result.ExitCode);
+
+        Assert.Contains(
+            "--check requires --output",
+            result.StandardError,
+            StringComparison.Ordinal);
+
+        Assert.Empty(
+            result.StandardOutput);
+    }
+
+    [Fact]
+    public async Task GenerateCSharp_CheckTreatsUtf8BomAsStale()
+    {
+        using var directory =
+            new TemporaryDirectory();
+
+        string manifestPath =
+            directory.WriteFile(
+                "rulegate.yaml",
+                ValidManifest);
+
+        string outputPath =
+            Path.Combine(
+                directory.Path,
+                "RuleGate.g.cs");
+
+        CliResult generationResult =
+            await RunAsync(
+                "generate",
+                "csharp",
+                manifestPath,
+                "--namespace",
+                "Sample.Authorization",
+                "--output",
+                outputPath);
+
+        Assert.Equal(
+            0,
+            generationResult.ExitCode);
+
+        byte[] generatedBytes =
+            await File.ReadAllBytesAsync(
+                outputPath);
+
+        byte[] bytesWithBom =
+        [
+            0xEF,
+            0xBB,
+            0xBF,
+            .. generatedBytes
+        ];
+
+        await File.WriteAllBytesAsync(
+            outputPath,
+            bytesWithBom);
+
+        CliResult checkResult =
+            await RunAsync(
+                "generate",
+                "csharp",
+                manifestPath,
+                "--namespace",
+                "Sample.Authorization",
+                "--output",
+                outputPath,
+                "--check");
+
+        Assert.Equal(
+            1,
+            checkResult.ExitCode);
+
+        Assert.Equal(
+            bytesWithBom,
+            await File.ReadAllBytesAsync(
+                outputPath));
+
+        Assert.Contains(
+            "RuleGate C# output is stale.",
+            checkResult.StandardError,
+            StringComparison.Ordinal);
+
+        Assert.Empty(
+            checkResult.StandardOutput);
     }
 
     private static async Task<CliResult> RunAsync(

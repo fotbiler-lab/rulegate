@@ -46,6 +46,14 @@ internal static class GenerateCSharpCommand
                 HelpName = "file"
             };
 
+        var checkOption =
+            new Option<bool>(
+                "--check")
+            {
+                Description =
+                    "Verify that --output is current without modifying it."
+            };
+
         var runner =
             new CSharpGenerationCommandRunner(
                 new ManifestCSharpGenerationRunner(
@@ -66,6 +74,9 @@ internal static class GenerateCSharpCommand
         command.Options.Add(
             outputOption);
 
+        command.Options.Add(
+            checkOption);
+
         command.SetAction(
             async (
                 parseResult,
@@ -84,10 +95,15 @@ internal static class GenerateCSharpCommand
                     parseResult.GetValue(
                         outputOption);
 
+                var check =
+                    parseResult.GetValue(
+                        checkOption);
+
                 return await runner.RunAsync(
                     path,
                     namespaceName,
                     outputPath,
+                    check,
                     parseResult
                         .InvocationConfiguration
                         .Output,

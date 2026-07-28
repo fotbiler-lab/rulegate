@@ -23,6 +23,7 @@ internal sealed class CSharpGenerationCommandRunner
         string? manifestPath,
         string namespaceName,
         string? outputPath,
+        bool check,
         TextWriter output,
         TextWriter error,
         CancellationToken cancellationToken)
@@ -35,6 +36,16 @@ internal sealed class CSharpGenerationCommandRunner
 
         ArgumentNullException.ThrowIfNull(
             error);
+
+        if (check
+            && string.IsNullOrWhiteSpace(
+                outputPath))
+        {
+            error.WriteLine(
+                "error: --check requires --output.");
+
+            return RuleGateExitCodes.UsageError;
+        }
 
         var result =
             await _runner.GenerateAsync(
@@ -72,6 +83,19 @@ internal sealed class CSharpGenerationCommandRunner
             ?? throw new InvalidOperationException(
                 "Successful C# generation did not produce source.");
 
+        if (check)
+        {
+            return await CheckOutputAsync(
+                result,
+                source,
+                outputPath
+                ?? throw new InvalidOperationException(
+                    "Check mode requires an output path."),
+                output,
+                error,
+                cancellationToken);
+        }
+
         if (string.IsNullOrWhiteSpace(
                 outputPath))
         {
@@ -90,8 +114,81 @@ internal sealed class CSharpGenerationCommandRunner
             source,
             cancellationToken);
 
+        WriteOutputSummary(
+            "RuleGate C# source generated.",
+            result,
+            fullOutputPath,
+            output);
+
+        return RuleGateExitCodes.Success;
+    }
+
+    private static async Task<int> CheckOutputAsync(
+        ManifestCSharpGenerationResult result,
+        string source,
+        string outputPath,
+        TextWriter output,
+        TextWriter error,
+        CancellationToken cancellationToken)
+    {
+        string fullOutputPath =
+            Path.GetFullPath(
+                outputPath);
+
+        if (!File.Exists(
+                fullOutputPath))
+        {
+            WriteCheckFailure(
+                "RuleGate C# output is missing.",
+                result,
+                fullOutputPath,
+                error);
+
+            return RuleGateExitCodes.ManifestInvalid;
+        }
+
+        byte[] actualBytes =
+            await File.ReadAllBytesAsync(
+                fullOutputPath,
+                cancellationToken);
+
+        byte[] expectedBytes =
+            new UTF8Encoding(
+                encoderShouldEmitUTF8Identifier: false)
+                .GetBytes(
+                    source);
+
+        if (!actualBytes
+                .AsSpan()
+                .SequenceEqual(
+                    expectedBytes))
+        {
+            WriteCheckFailure(
+                "RuleGate C# output is stale.",
+                result,
+                fullOutputPath,
+                error);
+
+            return RuleGateExitCodes.ManifestInvalid;
+        }
+
+        WriteOutputSummary(
+            "RuleGate C# output is current.",
+            result,
+            fullOutputPath,
+            output);
+
+        return RuleGateExitCodes.Success;
+    }
+
+    private static void WriteOutputSummary(
+        string heading,
+        ManifestCSharpGenerationResult result,
+        string fullOutputPath,
+        TextWriter output)
+    {
         output.WriteLine(
-            "RuleGate C# source generated.");
+            heading);
 
         output.WriteLine();
 
@@ -103,8 +200,29 @@ internal sealed class CSharpGenerationCommandRunner
 
         output.WriteLine(
             $"Policies: {result.Compilation.Policies.Count}");
+    }
 
-        return RuleGateExitCodes.Success;
+    private static void WriteCheckFailure(
+        string heading,
+        ManifestCSharpGenerationResult result,
+        string fullOutputPath,
+        TextWriter error)
+    {
+        error.WriteLine(
+            heading);
+
+        error.WriteLine();
+
+        error.WriteLine(
+            $"Manifest: {result.ManifestPath}");
+
+        error.WriteLine(
+            $"Output: {fullOutputPath}");
+
+        error.WriteLine();
+
+        error.WriteLine(
+            "Run the command without --check to regenerate the file.");
     }
 
     private static void WriteGenerationDiagnostics(
