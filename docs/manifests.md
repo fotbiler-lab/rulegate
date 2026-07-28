@@ -1005,9 +1005,23 @@ The current format does not directly support:
 - Environment-variable substitution
 - Remote manifest loading
 - Watch mode
-- Code generation
+- TypeScript code generation
+- Generated requirement or domain-resource models
 
-See the [roadmap](roadmap.md) for planned CLI validation and generation work.
+The current repository CLI can generate deterministic C# constants for policy
+IDs, resource types, and actions. Generation consumes only a completely
+compiled manifest; load, schema, structural, semantic, namespace, or identifier
+collision failures produce no source.
+
+Use:
+
+```bash
+dotnet run   --project src/Fotbiler.RuleGate.Cli/Fotbiler.RuleGate.Cli.csproj   --framework net10.0   --   generate csharp   ./rulegate.yaml   --namespace Sample.Authorization   --output Generated/RuleGate.g.cs
+```
+
+Use `--check` with the same arguments in CI to reject missing or stale output
+without modifying the file. See the [RuleGate CLI guide](cli.md) for the
+complete generation contract.
 
 ## Next steps
 
@@ -1069,5 +1083,5 @@ The process exit-code contract is:
 | `3` | An unexpected internal failure occurred |
 | `130` | Validation was cancelled |
 
-See the [RuleGate CLI guide](cli.md) for installation, automation, CI, and
-operational details.
+See the [RuleGate CLI guide](cli.md) for installation, validation, C#
+generation, stale-output detection, automation, CI, and operational details.

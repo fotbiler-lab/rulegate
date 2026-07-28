@@ -78,8 +78,9 @@ more than framework-level roles or ad hoc permission checks.
   mapping.
 - **Manifest-enabled:** YAML policies can be loaded, validated, and compiled
   into immutable runtime policy definitions.
-- **CLI-ready:** manifests can be validated locally or in CI with deterministic
-  text or JSON output and stable process exit codes.
+- **CLI-ready:** manifests can be validated and converted into deterministic C#
+  policy, resource-type, and action constants locally or in CI, with stable
+  process exit codes and stale-output detection.
 
 ## Packages
 
@@ -89,7 +90,7 @@ more than framework-level roles or ad hoc permission checks.
 | [`Fotbiler.RuleGate.Core`](https://www.nuget.org/packages/Fotbiler.RuleGate.Core) | Policy engine, built-in requirement evaluators, dispatcher, and in-memory policy provider |
 | [`Fotbiler.RuleGate.Manifest`](https://www.nuget.org/packages/Fotbiler.RuleGate.Manifest) | YAML manifest loading, validation, compilation, and domain mapping |
 | [`Fotbiler.RuleGate.AspNetCore`](https://www.nuget.org/packages/Fotbiler.RuleGate.AspNetCore) | ASP.NET Core dependency injection, claims mapping, dynamic policies, endpoint helpers, authorization attributes, and resource-based authorization |
-| [`Fotbiler.RuleGate.Cli`](https://www.nuget.org/packages/Fotbiler.RuleGate.Cli) | .NET tool for deterministic manifest validation, JSON output, stable exit codes, and CI usage |
+| [`Fotbiler.RuleGate.Cli`](https://www.nuget.org/packages/Fotbiler.RuleGate.Cli) | .NET tool for manifest validation, deterministic C# constant generation, stale-output checks, stable exit codes, and CI usage |
 
 ## Supported .NET versions
 
@@ -121,6 +122,9 @@ RuleGate currently provides:
 - Opt-in safe HTTP authorization results
 - Opt-in structured authorization diagnostics
 - Deterministic CLI manifest validation with text and JSON output
+- Manifest-derived C# policy, resource-type, and action constants
+- Atomic generated-file writes and byte-exact stale-output checks
+- Generated-code compilation smoke coverage on .NET 8, .NET 9, and .NET 10
 - .NET 8, .NET 9, and .NET 10 packages
 
 See the [roadmap](docs/roadmap.md) for published milestones and planned
@@ -159,7 +163,7 @@ package directly:
 dotnet add package Fotbiler.RuleGate.Abstractions --version 0.3.0-preview.1
 ```
 
-## Validate manifests with the CLI
+## Use the RuleGate CLI
 
 Install the RuleGate command-line tool:
 
@@ -184,8 +188,23 @@ rulegate validate --format json
 ```
 
 Use `rulegate --help`, `rulegate --version`, and `rulegate info` to inspect the
-installed tool. See the [RuleGate CLI guide](docs/cli.md) for the complete
-command, output, exit-code, CI, and security contract.
+installed tool.
+
+The current repository source also provides deterministic C# generation for the
+upcoming `0.3.0-preview.2` release:
+
+```bash
+dotnet run   --project src/Fotbiler.RuleGate.Cli/Fotbiler.RuleGate.Cli.csproj   --framework net10.0   --   generate csharp   ./rulegate.yaml   --namespace Sample.Authorization   --output Generated/RuleGate.g.cs
+```
+
+Verify in CI that the committed generated file is current without modifying it:
+
+```bash
+dotnet run   --project src/Fotbiler.RuleGate.Cli/Fotbiler.RuleGate.Cli.csproj   --framework net10.0   --   generate csharp   ./rulegate.yaml   --namespace Sample.Authorization   --output Generated/RuleGate.g.cs   --check
+```
+
+See the [RuleGate CLI guide](docs/cli.md) for the complete validation,
+generation, output, exit-code, CI, and security contract.
 
 ## Quick start
 
@@ -368,12 +387,14 @@ Read the [security model](docs/security.md) before production integration.
 RuleGate is currently published as
 [`0.3.0-preview.1`](https://github.com/fotbiler-lab/rulegate/releases/tag/v0.3.0-preview.1).
 
-The current preview includes the authorization core, manifest compilation,
+The published preview includes the authorization core, manifest compilation,
 ASP.NET Core integration, safe HTTP authorization result mapping, structured
 diagnostics, and deterministic CLI manifest validation.
 
-The next milestone focuses on deterministic C# code generation from validated
-RuleGate manifests.
+Current repository source additionally includes the implementation planned for
+`0.3.0-preview.2`: deterministic C# policy, resource-type, and action constants,
+atomic output writes, byte-exact stale-output checks, and generated-code
+compilation smoke coverage across .NET 8, .NET 9, and .NET 10.
 
 See the [roadmap](docs/roadmap.md) for the complete release path.
 

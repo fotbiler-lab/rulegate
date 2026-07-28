@@ -1,9 +1,16 @@
 # Fotbiler RuleGate CLI
 
-`Fotbiler.RuleGate.Cli` is the RuleGate command-line tool for validating policy
-manifests locally and in CI pipelines.
+`Fotbiler.RuleGate.Cli` is the RuleGate command-line tool for deterministic
+manifest validation, C# constant generation, stale-output checks, and CI
+automation.
 
-## Install
+## Release status
+
+The latest public package is `0.3.0-preview.1`. The generation commands in the
+current repository source target `0.3.0-preview.2`; release preparation will
+update the exact installation version before that package is published.
+
+## Install the published preview
 
 ```bash
 dotnet tool install \
@@ -12,48 +19,72 @@ dotnet tool install \
   --version 0.3.0-preview.1
 ```
 
-The installed command is:
-
-```text
-rulegate
-```
+The installed command is `rulegate`.
 
 ## Supported runtimes
-
-The tool package contains assets for:
 
 - .NET 8
 - .NET 9
 - .NET 10
 
-## Validate the default manifest
-
-From a directory containing `rulegate.yaml`:
+## Validate manifests
 
 ```bash
 rulegate validate
-```
-
-## Validate an explicit manifest
-
-```bash
 rulegate validate ./policies/rulegate.yaml
+rulegate validate --format json
 ```
 
-## JSON output
+## Generate C# constants
+
+The upcoming `0.3.0-preview.2` package exposes:
 
 ```bash
-rulegate validate \
-  --format json
+rulegate generate csharp \
+  ./rulegate.yaml \
+  --namespace Sample.Authorization
 ```
 
-JSON output is written to standard output so automation can capture it.
+Write deterministic UTF-8 source to a file:
+
+```bash
+rulegate generate csharp \
+  ./rulegate.yaml \
+  --namespace Sample.Authorization \
+  --output Generated/RuleGate.g.cs
+```
+
+The generated file contains:
+
+- `RuleGatePolicies`
+- `RuleGateResourceTypes`
+- `RuleGateActions`
+
+## Detect stale output
+
+```bash
+rulegate generate csharp \
+  ./rulegate.yaml \
+  --namespace Sample.Authorization \
+  --output Generated/RuleGate.g.cs \
+  --check
+```
+
+Check mode does not modify the file. Current output returns `0`; missing or
+stale output returns `1`.
+
+## Fail-closed generation
+
+Generation runs only after complete manifest compilation. Invalid manifests,
+invalid namespaces, empty values, and identifier collisions produce no source.
+Existing output files are preserved when generation fails.
 
 ## Help, version, and information
 
 ```bash
 rulegate --help
 rulegate validate --help
+rulegate generate csharp --help
 rulegate --version
 rulegate info
 ```
@@ -63,13 +94,10 @@ rulegate info
 | Code | Meaning |
 |---:|---|
 | `0` | Command completed successfully |
-| `1` | Manifest loading or validation failed |
+| `1` | Manifest, generation, missing-output, or stale-output failure |
 | `2` | Command-line usage error |
 | `3` | Unexpected internal error |
 | `130` | Operation canceled |
-
-Manifest validation reuses `Fotbiler.RuleGate.Manifest`. A failed load or
-validation never produces a partial policy collection.
 
 ## RuleGate packages
 
@@ -79,7 +107,8 @@ validation never produces a partial policy collection.
 | [Fotbiler.RuleGate.Core](https://www.nuget.org/packages/Fotbiler.RuleGate.Core) | Local fail-closed authorization engine and built-in evaluators |
 | [Fotbiler.RuleGate.Manifest](https://www.nuget.org/packages/Fotbiler.RuleGate.Manifest) | YAML manifest loading, validation, and compilation |
 | [Fotbiler.RuleGate.AspNetCore](https://www.nuget.org/packages/Fotbiler.RuleGate.AspNetCore) | ASP.NET Core integration |
-| [Fotbiler.RuleGate.Cli](https://www.nuget.org/packages/Fotbiler.RuleGate.Cli) | .NET tool for deterministic manifest validation and CI usage |
+| [Fotbiler.RuleGate.Cli](https://www.nuget.org/packages/Fotbiler.RuleGate.Cli) | Manifest validation, deterministic C# generation, stale-output checks, and CI automation |
+
 ## Documentation
 
 - [RuleGate CLI guide](https://github.com/fotbiler-lab/rulegate/blob/main/docs/cli.md)
@@ -87,4 +116,3 @@ validation never produces a partial policy collection.
 - [Security model](https://github.com/fotbiler-lab/rulegate/blob/main/docs/security.md)
 - [Roadmap](https://github.com/fotbiler-lab/rulegate/blob/main/docs/roadmap.md)
 - [Documentation index](https://github.com/fotbiler-lab/rulegate/blob/main/docs/README.md)
-- [RuleGate documentation](https://github.com/fotbiler-lab/rulegate/tree/main/docs)

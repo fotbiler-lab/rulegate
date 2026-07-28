@@ -125,16 +125,25 @@ The following items are intentionally excluded from `0.3.0-preview.1`:
 - IDE extensions
 - Graphical decision visualization
 
-## Planned milestone queue
+## Current development milestone
 
 ### `0.3.0-preview.2` — Code Generation
 
+Implemented on the current `main` development line and pending release
+preparation:
+
 - Manifest-derived C# policy constants
-- Manifest-derived resource and action constants
-- Deterministic generated output
-- Stale-output detection
-- CLI generation commands
-- Generated-code compilation smoke tests
+- Manifest-derived resource-type and action constants
+- Deterministic UTF-8, LF-only generated output
+- Atomic generated-file replacement
+- Byte-exact stale-output detection through `--check`
+- `rulegate generate csharp`
+- Identifier, namespace, and collision diagnostics
+- Generated-code compilation and execution smoke tests on .NET 8, .NET 9, and
+  .NET 10
+- Normal CI and release-verification integration
+
+## Planned milestone queue
 
 ### `0.3.0-preview.3` — Developer Experience
 

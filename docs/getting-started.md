@@ -119,6 +119,22 @@ rulegate validate ./policies/rulegate.yaml
 CLI validation uses the same fail-closed manifest compiler as application
 startup. A failed validation never produces or exposes a partial policy set.
 
+The current repository source can also generate deterministic policy,
+resource-type, and action constants for the upcoming `0.3.0-preview.2` release:
+
+```bash
+dotnet run   --project src/Fotbiler.RuleGate.Cli/Fotbiler.RuleGate.Cli.csproj   --framework net10.0   --   generate csharp   ./rulegate.yaml   --namespace Sample.Authorization   --output Generated/RuleGate.g.cs
+```
+
+Verify committed generated output in CI without modifying it:
+
+```bash
+dotnet run   --project src/Fotbiler.RuleGate.Cli/Fotbiler.RuleGate.Cli.csproj   --framework net10.0   --   generate csharp   ./rulegate.yaml   --namespace Sample.Authorization   --output Generated/RuleGate.g.cs   --check
+```
+
+The public `0.3.0-preview.1` CLI package does not yet include `generate`; use
+the repository invocation until `0.3.0-preview.2` is published.
+
 ## 4. Create the authorization flow
 
 Replace `Program.cs` with:
@@ -334,6 +350,8 @@ Continue with:
 
 - The root [README](../README.md) for ASP.NET Core dynamic policies, Minimal
   API endpoints, controller attributes, diagnostics, and HTTP result mapping.
-- The [roadmap](roadmap.md) for upcoming code generation, Angular,
+- The [RuleGate CLI guide](cli.md) for deterministic validation, C#
+  generation, and stale-output checks.
+- The [roadmap](roadmap.md) for upcoming developer-experience, Angular,
   Keycloak, and OpenTelemetry work.
 - The [documentation index](README.md) to navigate all available guides.
