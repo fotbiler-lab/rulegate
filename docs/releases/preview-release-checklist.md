@@ -16,10 +16,10 @@ The current release family contains:
 5. `Fotbiler.RuleGate.Cli`
 6. `Fotbiler.RuleGate.Keycloak`
 
-The publish workflow must produce one `.nupkg` and one `.snupkg` for every
-package in the tagged source. Package versions are independent: the existing
-packages remain at `0.3.0-preview.2`, while the Keycloak integration begins at
-`0.5.0-preview.1`.
+Release verification produces one `.nupkg` and one `.snupkg` for every package
+in the tagged source. The publish workflow submits only
+`Fotbiler.RuleGate.Keycloak` at `0.5.0-preview.1`; the existing packages remain
+at immutable version `0.3.0-preview.2` and are not republished.
 
 ## Release workflow
 
@@ -38,8 +38,9 @@ Use this order:
 10. Update and verify clean `main`.
 11. Create and push an annotated release tag.
 12. Manually dispatch the NuGet publish workflow with the existing tag.
-13. Verify the workflow artifact and all NuGet.org packages.
-14. Create the GitHub prerelease from the verified workflow artifact.
+13. Verify the workflow artifact and the Keycloak package on NuGet.org.
+14. Verify the npm package from the shared release tag.
+15. Create the GitHub prerelease from the verified workflow artifacts.
 
 Do not tag or publish directly from a feature branch.
 
@@ -70,8 +71,9 @@ Use the exact intended version in the branch name.
 
 Before committing the release preparation, verify:
 
-- [ ] `Directory.Build.props` contains the intended `VersionPrefix`.
-- [ ] `Directory.Build.props` contains the intended `VersionSuffix`.
+- [ ] `Directory.Build.props` preserves the foundational package version.
+- [ ] `Fotbiler.RuleGate.Keycloak.csproj` contains the intended Keycloak
+      `VersionPrefix` and `VersionSuffix`.
 - [ ] `CHANGELOG.md` contains a dated section for the release.
 - [ ] The `Unreleased` comparison link begins at the new release tag.
 - [ ] The release comparison link begins at the previous release tag.
@@ -194,7 +196,7 @@ Before creating the tag, confirm that the version is absent from:
 - local tags;
 - remote tags;
 - GitHub Releases;
-- every NuGet.org package index.
+- the `Fotbiler.RuleGate.Keycloak` NuGet.org package index.
 
 Never rely on `--skip-duplicate` as a release strategy. A duplicate version
 indicates that the release state must be inspected rather than republished.
@@ -208,7 +210,7 @@ git tag \
   --annotate \
   "$TAG" \
   "$EXPECTED_COMMIT" \
-  --message "Fotbiler RuleGate $VERSION"
+  --message "RuleGate $VERSION"
 
 git push \
   origin \
@@ -262,9 +264,9 @@ Verify that the run:
 - [ ] Validates the annotated tag.
 - [ ] Runs the complete release verification.
 - [ ] Completes successfully.
-- [ ] Uploads one workflow artifact containing all `.nupkg` and `.snupkg`
-      files.
-- [ ] Publishes packages in dependency-safe order.
+- [ ] Uploads one workflow artifact containing the verified Keycloak `.nupkg`
+      and `.snupkg` files.
+- [ ] Publishes only `Fotbiler.RuleGate.Keycloak` at `0.5.0-preview.1`.
 
 Record:
 
@@ -279,9 +281,9 @@ Record:
 
 NuGet.org indexing may take several minutes after a successful push.
 
-Wait until all package indexes contain the exact release version.
+Wait until the Keycloak package index contains the exact release version.
 
-For every published `.nupkg`, verify:
+For the published Keycloak `.nupkg`, verify:
 
 - [ ] Package ID.
 - [ ] Exact version.
@@ -292,29 +294,12 @@ For every published `.nupkg`, verify:
 - [ ] Supported target frameworks.
 - [ ] README presence.
 - [ ] Symbol package publication.
-
-For the CLI package, also install the exact public version and verify:
-
-```bash
-dotnet tool install \
-  Fotbiler.RuleGate.Cli \
-  --tool-path ./rulegate-public-tool \
-  --version "$VERSION"
-
-./rulegate-public-tool/rulegate \
-  --version
-
-./rulegate-public-tool/rulegate \
-  validate \
-  ./rulegate.yaml
-```
-
-Use only NuGet.org as the package source during the public-package smoke test.
+- [ ] Package installation and subject-mapping smoke test using only NuGet.org.
 
 ## Create the GitHub prerelease
 
-Create the GitHub prerelease only after NuGet publication and workflow artifact
-verification succeed.
+Create the GitHub prerelease only after NuGet and npm publication and both
+workflow artifact verifications succeed.
 
 Use the existing annotated tag and upload the package files downloaded from the
 successful workflow artifact.
@@ -327,8 +312,9 @@ Before publishing the draft, verify:
 - [ ] Correct title.
 - [ ] `prerelease` is enabled.
 - [ ] Release notes match the changelog.
-- [ ] Exactly five `.nupkg` assets exist.
-- [ ] Exactly five `.snupkg` assets exist.
+- [ ] Exactly one `.nupkg` asset exists.
+- [ ] Exactly one `.snupkg` asset exists.
+- [ ] Exactly one `.tgz` asset exists.
 - [ ] Uploaded asset sizes match the workflow artifact.
 - [ ] Downloaded release assets match the workflow artifact hashes.
 - [ ] The release is not marked as latest stable.
@@ -342,12 +328,13 @@ Publish the draft only after every check succeeds.
 - [ ] Only local `main` remains.
 - [ ] Only remote `origin/main` remains.
 - [ ] Annotated tag points to the intended release commit.
-- [ ] Publish workflow completed successfully.
-- [ ] Workflow artifact contains all ten package files.
-- [ ] All five NuGet.org package versions are visible.
+- [ ] NuGet and npm publish workflows completed successfully.
+- [ ] Workflow artifacts contain the Keycloak `.nupkg`, `.snupkg`, and Angular
+      `.tgz` files.
+- [ ] The Keycloak NuGet and Angular npm versions are visible.
 - [ ] Public package metadata is correct.
 - [ ] GitHub release is marked as a prerelease.
-- [ ] GitHub release contains all ten verified assets.
+- [ ] GitHub release contains all three verified assets.
 - [ ] No package or release artifact is committed to Git.
 - [ ] No persistent NuGet publishing credential was introduced.
 
@@ -357,7 +344,7 @@ When publication fails:
 
 - Do not move or delete a published tag merely to retry.
 - Do not republish a package version already accepted by NuGet.org.
-- Determine which packages were accepted before taking another action.
+- Determine which registry accepted an artifact before taking another action.
 - Resume only with a new version when immutability requires it.
 - Keep failed or partial release evidence for diagnosis.
 - Never hide a partial publication with duplicate-skipping behavior.

@@ -36,7 +36,7 @@ do
 done
 
 EXPECTED_PACKAGE_NAME="@fotbiler/rulegate-angular"
-EXPECTED_PACKAGE_VERSION="0.4.0-preview.2"
+EXPECTED_PACKAGE_VERSION="0.5.0-preview.1"
 EXPECTED_PACKAGE_FILE="fotbiler-rulegate-angular-$EXPECTED_PACKAGE_VERSION.tgz"
 EXPECTED_REPOSITORY="git+https://github.com/fotbiler-lab/rulegate.git"
 EXPECTED_REPOSITORY_DIRECTORY="src/Fotbiler.RuleGate.Angular"

@@ -6,7 +6,7 @@ on:
       tag:
         description: Existing release tag to publish
         required: true
-        default: v0.3.0-preview.2
+        default: v0.5.0-preview.1
         type: string
 
 permissions:
@@ -23,7 +23,7 @@ env:
 
 jobs:
   publish:
-    name: Publish NuGet packages
+    name: Publish Keycloak NuGet package
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     timeout-minutes: 20
@@ -35,7 +35,9 @@ jobs:
       id-token: write
 
     env:
-      EXPECTED_TAG: v0.3.0-preview.2
+      EXPECTED_TAG: v0.5.0-preview.1
+      EXPECTED_PACKAGE_ID: Fotbiler.RuleGate.Keycloak
+      EXPECTED_PACKAGE_VERSION: 0.5.0-preview.1
       NUGET_SOURCE: https://api.nuget.org/v3/index.json
 
     steps:
@@ -108,13 +110,44 @@ jobs:
         run: |
           ./scripts/verify-preview-release.sh
 
-      - name: Upload verified release packages
+      - name: Verify NuGet version availability
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          package_id="${EXPECTED_PACKAGE_ID,,}"
+          package_url="https://api.nuget.org/v3-flatcontainer/$package_id/$EXPECTED_PACKAGE_VERSION/$package_id.$EXPECTED_PACKAGE_VERSION.nupkg"
+          status_code="$(
+            curl \
+              --silent \
+              --show-error \
+              --output /dev/null \
+              --write-out '%{http_code}' \
+              "$package_url"
+          )"
+
+          if [[ "$status_code" == "200" ]]
+          then
+            echo "ERROR: NuGet package version already exists."
+            exit 1
+          fi
+
+          if [[ "$status_code" != "404" ]]
+          then
+            echo "ERROR: NuGet version availability could not be determined."
+            echo "HTTP status: $status_code"
+            exit 1
+          fi
+
+          echo "NuGet package version is available."
+
+      - name: Upload verified Keycloak package
         uses: actions/upload-artifact@v6
         with:
           name: rulegate-${{ inputs.tag }}-packages
           path: |
-            artifacts/packages/*.nupkg
-            artifacts/packages/*.snupkg
+            artifacts/packages/Fotbiler.RuleGate.Keycloak.0.5.0-preview.1.nupkg
+            artifacts/packages/Fotbiler.RuleGate.Keycloak.0.5.0-preview.1.snupkg
           if-no-files-found: error
           retention-days: 30
 
@@ -124,37 +157,21 @@ jobs:
         with:
           user: fotbiler
 
-      - name: Publish NuGet packages
+      - name: Publish Keycloak NuGet package
         shell: bash
         env:
           NUGET_API_KEY: ${{ steps.login.outputs.NUGET_API_KEY }}
         run: |
           set -euo pipefail
 
-          version="0.3.0-preview.2"
+          package_path="artifacts/packages/Fotbiler.RuleGate.Keycloak.0.5.0-preview.1.nupkg"
 
-          package_ids=(
-            "Fotbiler.RuleGate.Abstractions"
-            "Fotbiler.RuleGate.Core"
-            "Fotbiler.RuleGate.Manifest"
-            "Fotbiler.RuleGate.AspNetCore"
-            "Fotbiler.RuleGate.Cli"
-          )
+          dotnet nuget push \
+            "$package_path" \
+            --api-key "$NUGET_API_KEY" \
+            --source "$NUGET_SOURCE" \
+            --symbol-api-key "$NUGET_API_KEY" \
+            --symbol-source "$NUGET_SOURCE" \
+            --timeout 600
 
-          for package_id in "${package_ids[@]}"
-          do
-            package_path="artifacts/packages/$package_id.$version.nupkg"
-
-            printf '\n== Publish %s ==\n' "$package_id"
-
-            dotnet nuget push \
-              "$package_path" \
-              --api-key "$NUGET_API_KEY" \
-              --source "$NUGET_SOURCE" \
-              --symbol-api-key "$NUGET_API_KEY" \
-              --symbol-source "$NUGET_SOURCE" \
-              --timeout 600
-          done
-
-          echo
-          echo "All RuleGate packages were submitted to NuGet.org."
+          echo "The RuleGate Keycloak package was submitted to NuGet.org."

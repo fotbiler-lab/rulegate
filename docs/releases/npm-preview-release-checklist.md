@@ -8,14 +8,15 @@ published version or move an existing release tag.
 
 ## Release inventory
 
-The `0.4.0-preview.2` npm release contains one package:
+The `0.5.0-preview.1` npm release contains one package:
 
 ```text
 @fotbiler/rulegate-angular
 ```
 
-The package is public and uses the `preview` distribution tag. The RuleGate
-NuGet packages remain independently versioned at `0.3.0-preview.2`.
+The package is public and uses the `preview` distribution tag. The optional
+Keycloak NuGet package uses the shared `0.5.0-preview.1` release tag, while the
+foundational NuGet packages remain at `0.3.0-preview.2`.
 
 ## Required security configuration
 
@@ -46,7 +47,8 @@ Use the normal release order:
 7. Delete the release branch and update clean `main`.
 8. Re-run release verification from the final merge commit.
 9. Create and push an annotated release tag.
-10. Publish and verify npm before creating the GitHub prerelease.
+10. Publish and verify both npm and NuGet artifacts before creating the GitHub
+    prerelease.
 
 Do not publish from a feature or release-preparation branch.
 
@@ -189,10 +191,10 @@ After publication, verify:
 
 ## GitHub prerelease
 
-Create a draft GitHub prerelease only after npm verification succeeds. Use the
-existing annotated tag, attach the verified `.tgz`, include the release notes,
-and leave the release marked as a prerelease rather than the latest stable
-release.
+Create a draft GitHub prerelease only after npm and NuGet verification succeed.
+Use the existing annotated tag, attach the verified `.tgz`, `.nupkg`, and
+`.snupkg`, include the release notes, and leave the release marked as a
+prerelease rather than the latest stable release.
 
 ## Failure handling
 

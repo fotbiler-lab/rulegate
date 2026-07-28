@@ -27,7 +27,7 @@ resource-based authorization through one composable policy model.
 ## Published packages
 
 The latest published RuleGate preview is
-[`0.4.0-preview.2`](https://github.com/fotbiler-lab/rulegate/releases/tag/v0.4.0-preview.2).
+[`0.5.0-preview.1`](https://github.com/fotbiler-lab/rulegate/releases/tag/v0.5.0-preview.1).
 
 | Package | Purpose |
 |---|---|
@@ -36,11 +36,11 @@ The latest published RuleGate preview is
 | [`Fotbiler.RuleGate.Manifest`](https://www.nuget.org/packages/Fotbiler.RuleGate.Manifest) | YAML manifest loading, validation, and compilation |
 | [`Fotbiler.RuleGate.AspNetCore`](https://www.nuget.org/packages/Fotbiler.RuleGate.AspNetCore) | ASP.NET Core integration |
 | [`Fotbiler.RuleGate.Cli`](https://www.nuget.org/packages/Fotbiler.RuleGate.Cli) | .NET tool for manifest validation, deterministic C# generation, stale-output checks, and CI usage |
+| [`Fotbiler.RuleGate.Keycloak`](https://www.nuget.org/packages/Fotbiler.RuleGate.Keycloak) | Optional Keycloak claim normalization and RuleGate subject mapping |
 | [`@fotbiler/rulegate-angular`](https://www.npmjs.com/package/@fotbiler/rulegate-angular) | Angular authorization client, route guards, UI directives, and TypeScript generation |
 
-The published NuGet packages remain at `0.3.0-preview.2`. The Angular npm
-package is `0.4.0-preview.2`. The optional Keycloak integrations are
-implemented in source for the next preview.
+The foundational NuGet packages remain at `0.3.0-preview.2`. The Angular npm
+package and optional Keycloak NuGet package are `0.5.0-preview.1`.
 
 ## Recommended learning path
 
