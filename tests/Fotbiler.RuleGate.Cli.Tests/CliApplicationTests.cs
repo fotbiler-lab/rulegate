@@ -40,6 +40,11 @@ public sealed class CliApplicationTests
             StringComparison.Ordinal);
 
         Assert.Contains(
+            "generate",
+            result.StandardOutput,
+            StringComparison.Ordinal);
+
+        Assert.Contains(
             "info",
             result.StandardOutput,
             StringComparison.Ordinal);
@@ -59,7 +64,7 @@ public sealed class CliApplicationTests
             result.ExitCode);
 
         Assert.Contains(
-            "Validate and manage Fotbiler RuleGate policies.",
+            "Validate, generate, and manage Fotbiler RuleGate policies.",
             result.StandardOutput,
             StringComparison.Ordinal);
 
