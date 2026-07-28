@@ -10,7 +10,7 @@ a frontend authorization projection in RuleGate applications.
 ## Install
 
 ```bash
-pnpm add @fotbiler/rulegate-angular@0.4.0-preview.1
+pnpm add @fotbiler/rulegate-angular@0.4.0-preview.2
 ```
 
 The package requires Angular 22.
@@ -37,28 +37,30 @@ malformed state denies every check.
 
 ## Protect routes
 
-Permission and policy guard factories accept string constants directly:
+Declarative route metadata keeps requirements visible in route configuration:
 
 ```ts
 import { Routes } from '@angular/router';
-import { ruleGatePermissionGuard, ruleGatePolicyGuard } from '@fotbiler/rulegate-angular';
+import { ruleGateGuard, ruleGateRouteData } from '@fotbiler/rulegate-angular';
 
-import { GeneratedAuthorization } from './generated/authorization';
+import { RuleGateIdentifiers } from './generated/rulegate';
 
 export const routes: Routes = [
   {
     path: 'documents',
     loadComponent: () => import('./documents/documents.component'),
-    canActivate: [
-      ruleGatePermissionGuard(GeneratedAuthorization.permissions.documentsRead),
-      ruleGatePolicyGuard(GeneratedAuthorization.policies.documentsRead),
-    ],
+    canActivate: [ruleGateGuard],
+    data: ruleGateRouteData({
+      permission: RuleGateIdentifiers.permissions.documentsRead,
+    }),
   },
 ];
 ```
 
-Guards deny navigation when the client is not ready or the exact identifier is
-not present. Matching is ordinal and case-sensitive.
+Missing or malformed metadata denies. Configure
+`provideRuleGateDeniedNavigation` to return an Angular `UrlTree` or
+`RedirectCommand` for valid denied requirements. The direct permission and
+policy guard factories remain available.
 
 ## Control template visibility
 
@@ -67,31 +69,43 @@ requirement:
 
 ```ts
 import { Component } from '@angular/core';
-import { RuleGateCanDirective } from '@fotbiler/rulegate-angular';
+import { RuleGateCanDirective, RuleGateDisableDirective } from '@fotbiler/rulegate-angular';
 
-import { GeneratedAuthorization } from './generated/authorization';
+import { RuleGateIdentifiers } from './generated/rulegate';
 
 @Component({
   selector: 'app-document-actions',
-  imports: [RuleGateCanDirective],
+  imports: [RuleGateCanDirective, RuleGateDisableDirective],
   template: `
-    <button *ruleGateCan="{ permission: permissions.documentsWrite }">Edit document</button>
+    <button *ruleGateCan="{ permission: permissions.documentsWrite }; else unavailable">
+      Edit document
+    </button>
+    <ng-template #unavailable>Editing is unavailable.</ng-template>
+
+    <button [ruleGateDisable]="{ permission: permissions.documentsDelete }">Delete document</button>
   `,
 })
 export class DocumentActionsComponent {
-  readonly permissions = GeneratedAuthorization.permissions;
+  readonly permissions = RuleGateIdentifiers.permissions;
 }
 ```
 
-The directive removes its embedded view when state is cleared, malformed, or
-denied.
+The structural directive supports an `else` template. The disabled-state
+directive owns the native `disabled` property where available and blocks denied
+click activation on other hosts.
 
-## Generated constants
+## Generate TypeScript identifiers
 
-The public APIs accept ordinary string-valued constants, including `as const`
-objects produced or committed by application tooling. The SDK does not treat a
-constant as proof of authorization; it only compares it with the current
-frontend projection.
+Generate deterministic constants directly from `rulegate.yaml`:
+
+```bash
+pnpm exec rulegate-angular generate rulegate.yaml --output src/app/generated/rulegate.ts
+pnpm exec rulegate-angular generate rulegate.yaml --output src/app/generated/rulegate.ts --check
+```
+
+The generator fails on malformed identifier-bearing manifest shapes and name
+collisions, writes atomically, and checks output byte-for-byte. Use the backend
+RuleGate CLI for authoritative full-manifest validation.
 
 ## Security behavior
 
@@ -99,6 +113,7 @@ frontend projection.
 - Invalid or whitespace-padded identifiers invalidate the complete snapshot.
 - Permission and policy matching is exact and case-sensitive.
 - A directive requirement containing both or neither identifier kind denies.
+- Missing or malformed declarative route metadata denies navigation.
 - Browser state can be modified by the user and never replaces backend
   authorization.
 

@@ -1,9 +1,19 @@
 import { TestBed } from '@angular/core/testing';
-import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+import {
+  ActivatedRouteSnapshot,
+  RedirectCommand,
+  Router,
+  RouterStateSnapshot,
+} from '@angular/router';
 
 import { RuleGateAuthorizationClient } from '../client/rule-gate-authorization-client';
 import { ruleGatePermissionGuard } from './rule-gate-permission.guard';
 import { ruleGatePolicyGuard } from './rule-gate-policy.guard';
+import {
+  provideRuleGateDeniedNavigation,
+  ruleGateGuard,
+  ruleGateRouteData,
+} from '../routing/rule-gate-route-authorization';
 
 describe('RuleGate route guards', () => {
   let client: RuleGateAuthorizationClient;
@@ -34,10 +44,81 @@ describe('RuleGate route guards', () => {
     expect(runGuard(ruleGatePolicyGuard('documents-read'))).toBe(true);
     expect(runGuard(ruleGatePolicyGuard('documents-write'))).toBe(false);
   });
+
+  it('reads a requirement from declarative route metadata', () => {
+    client.replaceSnapshot({ permissions: ['documents.read'] });
+
+    expect(
+      runGuard(ruleGateGuard, {
+        data: ruleGateRouteData({ permission: 'documents.read' }),
+      }),
+    ).toBe(true);
+  });
+
+  it('denies missing and malformed route metadata without invoking a handler', () => {
+    const deniedHandler = vi.fn(() => true);
+
+    TestBed.resetTestingModule();
+    TestBed.configureTestingModule({
+      providers: [provideRuleGateDeniedNavigation(deniedHandler)],
+    });
+
+    expect(runGuard(ruleGateGuard)).toBe(false);
+    expect(
+      runGuard(ruleGateGuard, {
+        data: { ruleGate: { permission: ' documents.read' } },
+      }),
+    ).toBe(false);
+    expect(
+      runGuard(ruleGateGuard, {
+        data: { ruleGate: { permission: 'documents.read', unexpected: true } },
+      }),
+    ).toBe(false);
+    expect(deniedHandler).not.toHaveBeenCalled();
+  });
+
+  it('delegates valid denials to a framework-aware navigation handler', () => {
+    TestBed.resetTestingModule();
+    TestBed.configureTestingModule({
+      providers: [
+        provideRuleGateDeniedNavigation(({ state }) => {
+          const redirect = TestBed.inject(Router).parseUrl('/forbidden');
+
+          return new RedirectCommand(redirect, {
+            state: { returnUrl: state.url },
+          });
+        }),
+      ],
+    });
+
+    const result = runGuard(
+      ruleGateGuard,
+      {
+        data: ruleGateRouteData({ policy: 'documents-read' }),
+      },
+      { url: '/documents' },
+    );
+
+    expect(result).toBeInstanceOf(RedirectCommand);
+    expect((result as RedirectCommand).redirectTo.toString()).toBe('/forbidden');
+  });
 });
 
-function runGuard(guard: ReturnType<typeof ruleGatePermissionGuard>): unknown {
+function runGuard(
+  guard: ReturnType<typeof ruleGatePermissionGuard>,
+  route: Partial<ActivatedRouteSnapshot> = {},
+  state: Partial<RouterStateSnapshot> = {},
+): unknown {
   return TestBed.runInInjectionContext(() =>
-    guard({} as ActivatedRouteSnapshot, {} as RouterStateSnapshot),
+    guard(
+      {
+        data: {},
+        ...route,
+      } as ActivatedRouteSnapshot,
+      {
+        url: '/',
+        ...state,
+      } as RouterStateSnapshot,
+    ),
   );
 }

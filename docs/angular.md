@@ -6,7 +6,7 @@ frontend authorization projection.
 Install the current preview from npm:
 
 ```bash
-pnpm add @fotbiler/rulegate-angular@0.4.0-preview.1
+pnpm add @fotbiler/rulegate-angular@0.4.0-preview.2
 ```
 
 > [!IMPORTANT]
@@ -16,13 +16,15 @@ pnpm add @fotbiler/rulegate-angular@0.4.0-preview.1
 
 ## Package scope
 
-The first preview provides:
+The package provides:
 
 - `RuleGateAuthorizationClient` for holding the current frontend projection
-- Permission and policy route-guard factories
-- The standalone `RuleGateCanDirective` structural directive
+- Declarative route metadata and a shared route guard
+- Application-defined denied-navigation handling
+- Permission and policy route-guard factories for direct checks
+- Standalone visibility and disabled-state directives
+- Deterministic TypeScript constants generated from `rulegate.yaml`
 - Public TypeScript models for snapshots and requirements
-- Direct consumption of generated or committed string constants
 
 The package requires Angular 22.
 
@@ -49,31 +51,51 @@ the complete snapshot and clears all grants.
 
 ## Protect routes
 
-Use a guard factory with one exact permission or policy identifier:
+Use `ruleGateRouteData` with the shared `ruleGateGuard` to keep authorization
+requirements visible in route configuration:
 
 ```ts
 import { Routes } from '@angular/router';
-import {
-  ruleGatePermissionGuard,
-  ruleGatePolicyGuard,
-} from '@fotbiler/rulegate-angular';
+import { ruleGateGuard, ruleGateRouteData } from '@fotbiler/rulegate-angular';
 
-import { GeneratedAuthorization } from './generated/authorization';
+import { RuleGateIdentifiers } from './generated/rulegate';
 
 export const routes: Routes = [
   {
     path: 'documents',
     loadComponent: () => import('./documents/documents.component'),
-    canActivate: [
-      ruleGatePermissionGuard(GeneratedAuthorization.permissions.documentsRead),
-      ruleGatePolicyGuard(GeneratedAuthorization.policies.documentsRead),
-    ],
+    canActivate: [ruleGateGuard],
+    data: ruleGateRouteData({
+      permission: RuleGateIdentifiers.permissions.documentsRead,
+    }),
   },
 ];
 ```
 
-A guard returns `false` before the client is ready, for an invalid identifier,
-or when the identifier is not granted.
+Missing or malformed route metadata denies directly. A valid denied
+requirement uses the application's denied-navigation handler. Without a
+configured handler, navigation is cancelled.
+
+Register a handler when denied navigation should redirect:
+
+```ts
+import { ApplicationConfig, inject } from '@angular/core';
+import { RedirectCommand, Router } from '@angular/router';
+import { provideRuleGateDeniedNavigation } from '@fotbiler/rulegate-angular';
+
+export const appConfig: ApplicationConfig = {
+  providers: [
+    provideRuleGateDeniedNavigation(() => {
+      const router = inject(Router);
+      return new RedirectCommand(router.parseUrl('/forbidden'));
+    }),
+  ],
+};
+```
+
+The handler may return any Angular guard result, including `false`, a
+`UrlTree`, or a `RedirectCommand`. The permission and policy guard factories
+remain available for routes that do not use declarative metadata.
 
 ## Control template visibility
 
@@ -83,44 +105,84 @@ Import the standalone directive and pass either a permission or a policy:
 import { Component } from '@angular/core';
 import { RuleGateCanDirective } from '@fotbiler/rulegate-angular';
 
-import { GeneratedAuthorization } from './generated/authorization';
+import { RuleGateIdentifiers } from './generated/rulegate';
 
 @Component({
   selector: 'app-document-actions',
   imports: [RuleGateCanDirective],
   template: `
-    <button *ruleGateCan="{ permission: permissions.documentsWrite }">
+    <button *ruleGateCan="{ permission: permissions.documentsWrite }; else unavailable">
       Edit document
     </button>
+
+    <ng-template #unavailable>Editing is unavailable.</ng-template>
   `,
 })
 export class DocumentActionsComponent {
-  readonly permissions = GeneratedAuthorization.permissions;
+  readonly permissions = RuleGateIdentifiers.permissions;
 }
 ```
 
-The directive creates its embedded view only while the requirement is granted.
-A requirement containing both a permission and a policy, or neither, denies.
+The directive renders the protected view only while the requirement is
+granted. Its optional `else` template is rendered while state is uninitialized,
+cleared, malformed, or denied.
 
-## Generated constants
+## Disable interactions
 
-SDK APIs accept ordinary strings and string-valued `as const` objects. This
-keeps generated policy identifiers aligned without coupling the Angular
-package to one code generator.
+Use `RuleGateDisableDirective` when an action should remain visible but disabled:
 
 ```ts
-export const GeneratedAuthorization = {
-  permissions: {
-    documentsRead: 'documents.read',
-  },
-  policies: {
-    documentsRead: 'documents-read',
-  },
-} as const;
+import { Component } from '@angular/core';
+import { RuleGateDisableDirective } from '@fotbiler/rulegate-angular';
+
+import { RuleGateIdentifiers } from './generated/rulegate';
+
+@Component({
+  selector: 'app-document-delete',
+  imports: [RuleGateDisableDirective],
+  template: `
+    <button type="button" [ruleGateDisable]="{ permission: permissions.documentsDelete }">
+      Delete document
+    </button>
+  `,
+})
+export class DocumentDeleteComponent {
+  readonly permissions = RuleGateIdentifiers.permissions;
+}
 ```
 
-Constants reduce identifier drift; they do not prove that the current user is
-authorized.
+Native controls receive their `disabled` property. Other interactive hosts
+receive `aria-disabled`, expose `data-rulegate-disabled`, and have denied click
+activation blocked. Keyboard and focus behavior for custom controls remains an
+application responsibility.
+
+## Generate TypeScript identifiers
+
+The npm package includes `rulegate-angular`, which generates deterministic
+TypeScript constants from the manifest's policies, permissions, resource
+types, and actions:
+
+```bash
+pnpm exec rulegate-angular generate \
+  ./rulegate.yaml \
+  --output ./src/app/generated/rulegate.ts
+```
+
+Verify committed output in CI without modifying it:
+
+```bash
+pnpm exec rulegate-angular generate \
+  ./rulegate.yaml \
+  --output ./src/app/generated/rulegate.ts \
+  --check
+```
+
+Generation sorts identifiers ordinally, rejects generated-name collisions,
+writes files atomically, and uses byte-exact stale-output detection. Run the
+backend RuleGate CLI validation as the authoritative full-manifest check. The
+TypeScript generator validates the identifier-bearing manifest shape needed
+for generation; generated constants reduce drift but do not prove that the
+current user is authorized.
 
 ## Fail-closed behavior
 
@@ -128,7 +190,9 @@ authorized.
 - Empty, non-string, or whitespace-padded identifiers invalidate a snapshot.
 - Matching is exact and case-sensitive.
 - Replacing a snapshot replaces every prior grant.
-- Invalid directive requirements render no protected content.
+- Missing or invalid route metadata denies navigation.
+- Invalid directive requirements render no protected content and keep disabled
+  hosts denied.
 - Client-side checks never replace backend authorization.
 
 Read the [security model](security.md) for the complete trust boundary.

@@ -6,6 +6,33 @@ The project follows Semantic Versioning. Preview releases may introduce breaking
 
 ## [Unreleased]
 
+### Added
+
+- Added declarative Angular route authorization metadata with one shared
+  fail-closed guard.
+- Added application-defined denied-navigation handling for Angular guard
+  results and redirects.
+- Added `else` template composition to `RuleGateCanDirective` and a standalone
+  disabled-state directive for native and custom interactive hosts.
+- Added deterministic TypeScript identifier generation from `rulegate.yaml`,
+  including atomic writes, collision diagnostics, and byte-exact `--check`
+  mode.
+- Expanded the package-only Angular consumer to exercise generated identifiers,
+  declarative routes, denied redirects, template fallbacks, and disabled state.
+
+### Security
+
+- Missing or malformed route metadata denies without invoking application
+  redirect behavior.
+- TypeScript generation fails closed without replacing an existing output file
+  when the manifest cannot be parsed or validated for generation.
+
+### Documentation
+
+- Expanded the Angular guide with declarative routes, denied-navigation
+  handling, template composition, disabled-state behavior, and TypeScript
+  generation.
+
 ## [0.4.0-preview.1] - 2026-07-28
 
 ### Added

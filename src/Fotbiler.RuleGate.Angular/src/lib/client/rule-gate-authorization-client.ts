@@ -1,6 +1,8 @@
 import { computed, Injectable, signal } from '@angular/core';
 
 import {
+  isRuleGateAuthorizationRequirement,
+  isRuleGateIdentifier,
   RuleGateAuthorizationRequirement,
   RuleGateAuthorizationSnapshot,
 } from '../models/rule-gate-authorization.models';
@@ -85,7 +87,7 @@ export class RuleGateAuthorizationClient {
 
     return (
       currentState.isReady &&
-      isValidIdentifier(permission) &&
+      isRuleGateIdentifier(permission) &&
       currentState.permissionSet.has(permission)
     );
   }
@@ -93,26 +95,21 @@ export class RuleGateAuthorizationClient {
   hasPolicy(policy: string): boolean {
     const currentState = this.state();
 
-    return currentState.isReady && isValidIdentifier(policy) && currentState.policySet.has(policy);
+    return (
+      currentState.isReady && isRuleGateIdentifier(policy) && currentState.policySet.has(policy)
+    );
   }
 
   isGranted(requirement: RuleGateAuthorizationRequirement | null | undefined): boolean {
-    if (!requirement || typeof requirement !== 'object') {
+    if (!isRuleGateAuthorizationRequirement(requirement)) {
       return false;
     }
 
-    const hasPermission = Object.prototype.hasOwnProperty.call(requirement, 'permission');
-    const hasPolicy = Object.prototype.hasOwnProperty.call(requirement, 'policy');
-
-    if (hasPermission === hasPolicy) {
-      return false;
+    if (requirement.permission !== undefined) {
+      return this.hasPermission(requirement.permission);
     }
 
-    if (hasPermission) {
-      return this.hasPermission((requirement as { readonly permission: string }).permission);
-    }
-
-    return this.hasPolicy((requirement as { readonly policy: string }).policy);
+    return this.hasPolicy(requirement.policy);
   }
 }
 
@@ -128,7 +125,7 @@ function normalizeIdentifiers(values: readonly string[] | undefined): readonly s
   const identifiers = new Set<string>();
 
   for (const value of values) {
-    if (!isValidIdentifier(value)) {
+    if (!isRuleGateIdentifier(value)) {
       return null;
     }
 
@@ -136,10 +133,4 @@ function normalizeIdentifiers(values: readonly string[] | undefined): readonly s
   }
 
   return Object.freeze([...identifiers]);
-}
-
-function isValidIdentifier(identifier: unknown): identifier is string {
-  return (
-    typeof identifier === 'string' && identifier.length > 0 && identifier.trim() === identifier
-  );
 }

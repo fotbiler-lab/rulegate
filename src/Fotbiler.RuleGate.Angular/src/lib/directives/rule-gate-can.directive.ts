@@ -18,18 +18,30 @@ export class RuleGateCanDirective {
   private readonly viewContainer = inject(ViewContainerRef);
 
   readonly ruleGateCan = input<RuleGateAuthorizationRequirement | null>(null);
+  readonly ruleGateCanElse = input<TemplateRef<unknown> | null>(null);
+
+  private renderedTemplate: TemplateRef<unknown> | null = null;
 
   constructor() {
     effect(() => {
-      if (this.authorization.isGranted(this.ruleGateCan())) {
-        if (this.viewContainer.length === 0) {
-          this.viewContainer.createEmbeddedView(this.template);
-        }
+      const template = this.authorization.isGranted(this.ruleGateCan())
+        ? this.template
+        : this.ruleGateCanElse();
 
-        return;
-      }
-
-      this.viewContainer.clear();
+      this.render(template);
     });
+  }
+
+  private render(template: TemplateRef<unknown> | null): void {
+    if (template === this.renderedTemplate && this.viewContainer.length !== 0) {
+      return;
+    }
+
+    this.viewContainer.clear();
+    this.renderedTemplate = template;
+
+    if (template) {
+      this.viewContainer.createEmbeddedView(template);
+    }
   }
 }

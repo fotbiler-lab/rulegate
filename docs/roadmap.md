@@ -8,29 +8,30 @@ the preview releases.
 
 ## Current status
 
-| Capability | Status |
-|---|---|
-| Authorization engine | ✅ Available |
-| Permission-based authorization | ✅ Available |
-| Role-based authorization | ✅ Available |
+| Capability                                   | Status       |
+| -------------------------------------------- | ------------ |
+| Authorization engine                         | ✅ Available |
+| Permission-based authorization               | ✅ Available |
+| Role-based authorization                     | ✅ Available |
 | Logical `all`, `any`, and `not` requirements | ✅ Available |
-| Subject, resource, and context attributes | ✅ Available |
-| YAML manifest compilation | ✅ Available |
-| ASP.NET Core integration | ✅ Available |
-| Dynamic authorization policies | ✅ Available |
-| Minimal API endpoint integration | ✅ Available |
-| Controller and action attributes | ✅ Available |
-| Authorization diagnostics and logging | ✅ Available |
-| HTTP authorization-result mapping | ✅ Available |
-| CLI manifest validation | ✅ Available |
-| Deterministic C# code generation | ✅ Available |
-| Angular SDK | ✅ Available |
-| Keycloak helpers | ⏳ Planned |
-| OpenTelemetry integration | ⏳ Planned |
-| Decision visualization | ⏳ Planned |
+| Subject, resource, and context attributes    | ✅ Available |
+| YAML manifest compilation                    | ✅ Available |
+| ASP.NET Core integration                     | ✅ Available |
+| Dynamic authorization policies               | ✅ Available |
+| Minimal API endpoint integration             | ✅ Available |
+| Controller and action attributes             | ✅ Available |
+| Authorization diagnostics and logging        | ✅ Available |
+| HTTP authorization-result mapping            | ✅ Available |
+| CLI manifest validation                      | ✅ Available |
+| Deterministic C# code generation             | ✅ Available |
+| Angular SDK                                  | ✅ Available |
+| Keycloak helpers                             | ⏳ Planned   |
+| OpenTelemetry integration                    | ⏳ Planned   |
+| Decision visualization                       | ⏳ Planned   |
 
-The latest published preview is `0.4.0-preview.1`. The next product milestone
-is the Angular developer-experience work in `0.4.0-preview.2`.
+The latest published preview is `0.4.0-preview.1`. Angular developer-experience
+work for `0.4.0-preview.2` is implemented in source and awaiting its preview
+release.
 
 ## Published previews
 
@@ -94,7 +95,7 @@ is the Angular developer-experience work in `0.4.0-preview.2`.
 - Package-only npm tarball consumer verification
 - [Angular SDK guide](angular.md)
 
-## Next milestone
+## Next preview
 
 ### `0.4.0-preview.2` — Angular Developer Experience
 

@@ -13,7 +13,7 @@ REPOSITORY_ROOT="$(
 )"
 
 PACKAGE_NAME="@fotbiler/rulegate-angular"
-PACKAGE_VERSION="0.4.0-preview.1"
+PACKAGE_VERSION="0.4.0-preview.2"
 PACKAGE_BUILD_DIRECTORY="$REPOSITORY_ROOT/dist/rulegate-angular"
 PACKAGE_ARTIFACT_DIRECTORY="$REPOSITORY_ROOT/artifacts/npm"
 
@@ -99,6 +99,7 @@ for expected_file in \
   package/package.json \
   package/README.md \
   package/LICENSE \
+  package/bin/rulegate-angular.mjs \
   package/fesm2022/fotbiler-rulegate-angular.mjs \
   package/types/fotbiler-rulegate-angular.d.ts
 do
@@ -151,6 +152,14 @@ if (manifest.peerDependencies?.['@angular/router'] !== '^22.0.0') {
 
 if (manifest.publishConfig?.access !== 'public') {
   throw new Error('The scoped npm package is not configured for public access.');
+}
+
+if (manifest.bin?.['rulegate-angular'] !== 'bin/rulegate-angular.mjs') {
+  throw new Error('The RuleGate Angular generator binary is missing.');
+}
+
+if (manifest.dependencies?.yaml !== '2.9.0') {
+  throw new Error('The generator YAML dependency is missing.');
 }
 JS
 
@@ -264,44 +273,56 @@ cat >"$CONSUMER_DIRECTORY/src/index.html" <<'EOF_HTML'
 </html>
 EOF_HTML
 
+cat >"$CONSUMER_DIRECTORY/rulegate.yaml" <<'EOF_MANIFEST'
+schemaVersion: 1
+
+application:
+  id: angular-package-consumer
+  name: Angular Package Consumer
+
+policies:
+  - id: documents-read
+    resourceType: document
+    action: read
+    requirement:
+      permission: documents.read
+EOF_MANIFEST
+
 cat >"$CONSUMER_DIRECTORY/src/main.ts" <<'EOF_TYPESCRIPT'
 import { Component, inject } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { provideRouter, Routes } from '@angular/router';
+import { provideRouter, RedirectCommand, Router, Routes } from '@angular/router';
 import {
   RuleGateAuthorizationClient,
   RuleGateCanDirective,
-  ruleGatePermissionGuard,
-  ruleGatePolicyGuard,
+  RuleGateDisableDirective,
+  provideRuleGateDeniedNavigation,
+  ruleGateGuard,
+  ruleGateRouteData,
 } from '@fotbiler/rulegate-angular';
 
-const generatedAuthorization = {
-  permissions: {
-    documentsRead: 'documents.read',
-  },
-  policies: {
-    documentsRead: 'documents-read',
-  },
-} as const;
+import { RuleGateIdentifiers } from './generated/rulegate';
 
 @Component({
   selector: 'app-root',
-  imports: [RuleGateCanDirective],
+  imports: [RuleGateCanDirective, RuleGateDisableDirective],
   template: `
-    <span *ruleGateCan="{ permission: permissions.documentsRead }">
+    <span *ruleGateCan="{ permission: permissions.documentsRead }; else denied">
       package consumer
     </span>
+    <button [ruleGateDisable]="{ permission: permissions.documentsRead }">Open</button>
+    <ng-template #denied>denied</ng-template>
   `,
 })
 class PackageConsumerComponent {
   private readonly authorization = inject(RuleGateAuthorizationClient);
 
-  readonly permissions = generatedAuthorization.permissions;
+  readonly permissions = RuleGateIdentifiers.permissions;
 
   constructor() {
     this.authorization.replaceSnapshot({
-      permissions: [generatedAuthorization.permissions.documentsRead],
-      policies: [generatedAuthorization.policies.documentsRead],
+      permissions: [RuleGateIdentifiers.permissions.documentsRead],
+      policies: [RuleGateIdentifiers.policies.documentsRead],
     });
   }
 }
@@ -309,20 +330,31 @@ class PackageConsumerComponent {
 const routes: Routes = [
   {
     path: 'permission',
-    canActivate: [
-      ruleGatePermissionGuard(generatedAuthorization.permissions.documentsRead),
-    ],
+    canActivate: [ruleGateGuard],
+    data: ruleGateRouteData({
+      permission: RuleGateIdentifiers.permissions.documentsRead,
+    }),
     component: PackageConsumerComponent,
   },
   {
     path: 'policy',
-    canActivate: [ruleGatePolicyGuard(generatedAuthorization.policies.documentsRead)],
+    canActivate: [ruleGateGuard],
+    data: ruleGateRouteData({ policy: RuleGateIdentifiers.policies.documentsRead }),
     component: PackageConsumerComponent,
   },
 ];
 
 bootstrapApplication(PackageConsumerComponent, {
-  providers: [provideRouter(routes)],
+  providers: [
+    provideRouter(routes),
+    provideRuleGateDeniedNavigation(({ state }) =>
+      new RedirectCommand(
+        inject(Router).createUrlTree(['/denied'], {
+          queryParams: { returnUrl: state.url },
+        }),
+      ),
+    ),
+  ],
 }).catch((error: unknown) => {
   console.error(error);
 });
@@ -337,6 +369,27 @@ pnpm \
   --ignore-scripts \
   --ignore-workspace \
   --frozen-lockfile=false
+
+printf '\n== Generate package-only Angular identifiers ==\n'
+
+pnpm \
+  --dir "$CONSUMER_DIRECTORY" \
+  exec \
+  rulegate-angular \
+  generate \
+  rulegate.yaml \
+  --output \
+  src/generated/rulegate.ts
+
+pnpm \
+  --dir "$CONSUMER_DIRECTORY" \
+  exec \
+  rulegate-angular \
+  generate \
+  rulegate.yaml \
+  --output \
+  src/generated/rulegate.ts \
+  --check
 
 printf '\n== Build package-only Angular consumer ==\n'
 

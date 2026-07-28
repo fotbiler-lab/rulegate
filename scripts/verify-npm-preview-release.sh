@@ -36,7 +36,7 @@ do
 done
 
 EXPECTED_PACKAGE_NAME="@fotbiler/rulegate-angular"
-EXPECTED_PACKAGE_VERSION="0.4.0-preview.1"
+EXPECTED_PACKAGE_VERSION="0.4.0-preview.2"
 EXPECTED_PACKAGE_FILE="fotbiler-rulegate-angular-$EXPECTED_PACKAGE_VERSION.tgz"
 EXPECTED_REPOSITORY="git+https://github.com/fotbiler-lab/rulegate.git"
 EXPECTED_REPOSITORY_DIRECTORY="src/Fotbiler.RuleGate.Angular"
@@ -188,6 +188,7 @@ for expected_file in \
   package/package.json \
   package/README.md \
   package/LICENSE \
+  package/bin/rulegate-angular.mjs \
   package/fesm2022/fotbiler-rulegate-angular.mjs \
   package/types/fotbiler-rulegate-angular.d.ts
 do
@@ -214,6 +215,10 @@ for public_api in \
   RuleGateAuthorizationSnapshot \
   RuleGateAuthorizationRequirement \
   RuleGateCanDirective \
+  RuleGateDisableDirective \
+  ruleGateGuard \
+  ruleGateRouteData \
+  provideRuleGateDeniedNavigation \
   ruleGatePermissionGuard \
   ruleGatePolicyGuard
 do

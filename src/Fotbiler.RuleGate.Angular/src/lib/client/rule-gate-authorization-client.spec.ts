@@ -93,6 +93,9 @@ describe('RuleGateAuthorizationClient', () => {
         policy: 'documents-read',
       } as never),
     ).toBe(false);
+    expect(client.isGranted({ permission: 'documents.read', unexpected: true } as never)).toBe(
+      false,
+    );
     expect(client.isGranted({} as never)).toBe(false);
   });
 

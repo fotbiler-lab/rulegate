@@ -23,3 +23,32 @@ export interface RuleGatePolicyRequirement {
 export type RuleGateAuthorizationRequirement =
   | RuleGatePermissionRequirement
   | RuleGatePolicyRequirement;
+
+/** Returns whether a runtime value is one valid RuleGate UI requirement. */
+export function isRuleGateAuthorizationRequirement(
+  requirement: unknown,
+): requirement is RuleGateAuthorizationRequirement {
+  if (!requirement || typeof requirement !== 'object') {
+    return false;
+  }
+
+  const keys = Object.keys(requirement);
+
+  if (keys.length !== 1 || (keys[0] !== 'permission' && keys[0] !== 'policy')) {
+    return false;
+  }
+
+  const identifier =
+    keys[0] === 'permission'
+      ? (requirement as { readonly permission: unknown }).permission
+      : (requirement as { readonly policy: unknown }).policy;
+
+  return isRuleGateIdentifier(identifier);
+}
+
+/** Returns whether a runtime value is one exact, non-empty RuleGate identifier. */
+export function isRuleGateIdentifier(identifier: unknown): identifier is string {
+  return (
+    typeof identifier === 'string' && identifier.length > 0 && identifier.trim() === identifier
+  );
+}
