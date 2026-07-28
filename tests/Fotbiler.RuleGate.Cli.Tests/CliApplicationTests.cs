@@ -70,6 +70,30 @@ public sealed class CliApplicationTests
     }
 
     [Fact]
+    public async Task Help_UsesInstalledCommandName()
+    {
+        var result =
+            await RunAsync("--help");
+
+        Assert.Equal(
+            0,
+            result.ExitCode);
+
+        Assert.Contains(
+            "rulegate [command] [options]",
+            result.StandardOutput,
+            StringComparison.Ordinal);
+
+        Assert.DoesNotContain(
+            "Fotbiler.RuleGate.Cli [command]",
+            result.StandardOutput,
+            StringComparison.Ordinal);
+
+        Assert.Empty(
+            result.StandardError);
+    }
+
+    [Fact]
     public async Task Version_ReturnsVersionInformation()
     {
         var result =

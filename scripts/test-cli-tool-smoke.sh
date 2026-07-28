@@ -225,6 +225,19 @@ do
     "$TEMP_DIRECTORY/help-$framework.out" \
     >/dev/null
 
+  grep -F \
+    'rulegate [command] [options]' \
+    "$TEMP_DIRECTORY/help-$framework.out" \
+    >/dev/null
+
+  if grep -F \
+    'Fotbiler.RuleGate.Cli [command]' \
+    "$TEMP_DIRECTORY/help-$framework.out"
+  then
+    printf 'Assembly name leaked into help usage.\n' >&2
+    exit 1
+  fi
+
   printf '\n== Verify validate help ==\n'
 
   "$CLI" \
@@ -238,6 +251,11 @@ do
 
   grep -F \
     -- '--format' \
+    "$TEMP_DIRECTORY/validate-help-$framework.out" \
+    >/dev/null
+
+  grep -F \
+    'rulegate validate [<file>] [options]' \
     "$TEMP_DIRECTORY/validate-help-$framework.out" \
     >/dev/null
 

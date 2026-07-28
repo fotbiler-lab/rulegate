@@ -1,4 +1,5 @@
 using System.CommandLine;
+using System.CommandLine.Help;
 using Fotbiler.RuleGate.Cli.Commands;
 using Fotbiler.RuleGate.Cli.ExitCodes;
 
@@ -75,11 +76,18 @@ internal static class RuleGateCliApplication
         }
     }
 
-    private static RootCommand CreateRootCommand()
+    private static Command CreateRootCommand()
     {
         var rootCommand =
-            new RootCommand(
+            new Command(
+                "rulegate",
                 "Validate and manage Fotbiler RuleGate policies.");
+
+        rootCommand.Options.Add(
+            new HelpOption());
+
+        rootCommand.Options.Add(
+            new VersionOption());
 
         rootCommand.Subcommands.Add(
             ValidateCommand.Create());
