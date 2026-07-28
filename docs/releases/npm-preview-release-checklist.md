@@ -8,7 +8,7 @@ published version or move an existing release tag.
 
 ## Release inventory
 
-The `0.4.0-preview.1` npm release contains one package:
+The `0.4.0-preview.2` npm release contains one package:
 
 ```text
 @fotbiler/rulegate-angular
@@ -135,13 +135,13 @@ automation token to work around the bootstrap constraint.
 After the first package is visible, open its npm settings and create a GitHub
 Actions Trusted Publisher with these exact values:
 
-| Field | Value |
-|---|---|
-| Organization or user | `fotbiler-lab` |
-| Repository | `rulegate` |
-| Workflow filename | `publish-npm.yml` |
-| Environment | `npm-production` |
-| Allowed action | `npm stage publish` only |
+| Field                | Value                    |
+| -------------------- | ------------------------ |
+| Organization or user | `fotbiler-lab`           |
+| Repository           | `rulegate`               |
+| Workflow filename    | `publish-npm.yml`        |
+| Environment          | `npm-production`         |
+| Allowed action       | `npm stage publish` only |
 
 Then set package publishing access to require 2FA and disallow traditional
 tokens. Future GitHub Actions publications use short-lived OIDC credentials
