@@ -25,13 +25,13 @@ the preview releases.
 | CLI manifest validation                      | ✅ Available |
 | Deterministic C# code generation             | ✅ Available |
 | Angular SDK                                  | ✅ Available |
+| Deterministic TypeScript generation          | ✅ Available |
 | Keycloak helpers                             | ⏳ Planned   |
 | OpenTelemetry integration                    | ⏳ Planned   |
 | Decision visualization                       | ⏳ Planned   |
 
-The latest published preview is `0.4.0-preview.1`. Angular developer-experience
-work for `0.4.0-preview.2` is implemented in source and awaiting its preview
-release.
+The latest published preview is `0.4.0-preview.2`. The next product milestone
+is the Keycloak integration work in `0.5.0-preview.1`.
 
 ## Published previews
 
@@ -95,8 +95,6 @@ release.
 - Package-only npm tarball consumer verification
 - [Angular SDK guide](angular.md)
 
-## Next preview
-
 ### `0.4.0-preview.2` — Angular Developer Experience
 
 - Declarative route authorization metadata
@@ -105,7 +103,7 @@ release.
 - TypeScript generation and backend identifier alignment
 - Angular examples and integration consumers
 
-## Later milestones
+## Next milestone
 
 ### `0.5.0-preview.1` — Keycloak Helpers
 
@@ -115,6 +113,8 @@ release.
 - Claim normalization
 - RuleGate subject creation
 - Provider-specific integration documentation
+
+## Later milestones
 
 ### `0.6.0-preview.1` — OpenTelemetry
 
