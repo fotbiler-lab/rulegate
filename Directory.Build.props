@@ -10,7 +10,7 @@
     <DebugType>portable</DebugType>
 
     <VersionPrefix>0.3.0</VersionPrefix>
-    <VersionSuffix>preview.1</VersionSuffix>
+    <VersionSuffix>preview.2</VersionSuffix>
 
     <Authors>Fotbiler</Authors>
     <Company>Fotbiler</Company>
@@ -29,7 +29,7 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
 
     <PackageTags>authorization;rbac;policy;security;access-control;rulegate</PackageTags>
-    <PackageReleaseNotes>Adds the RuleGate CLI as a multi-targeted .NET tool for .NET 8, .NET 9, and .NET 10. Adds manifest validation with default-file discovery, explicit paths, human-readable and JSON output, stable exit codes, automatic help and version output, safe runtime information, packaged-tool smoke testing, and five-package release verification.</PackageReleaseNotes>
+    <PackageReleaseNotes>Adds deterministic manifest-derived C# policy, resource-type, and action constants through the RuleGate CLI. Adds atomic UTF-8 file output, byte-exact stale-output checks, fail-closed generation diagnostics, and generated-code compilation and execution verification across .NET 8, .NET 9, and .NET 10.</PackageReleaseNotes>
 
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>

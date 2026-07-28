@@ -1008,15 +1008,18 @@ The current format does not directly support:
 - TypeScript code generation
 - Generated requirement or domain-resource models
 
-The current repository CLI can generate deterministic C# constants for policy
-IDs, resource types, and actions. Generation consumes only a completely
-compiled manifest; load, schema, structural, semantic, namespace, or identifier
+RuleGate CLI can generate deterministic C# constants for policy IDs,
+resource types, and actions. Generation consumes only a completely compiled
+manifest; load, schema, structural, semantic, namespace, or identifier
 collision failures produce no source.
 
 Use:
 
 ```bash
-dotnet run   --project src/Fotbiler.RuleGate.Cli/Fotbiler.RuleGate.Cli.csproj   --framework net10.0   --   generate csharp   ./rulegate.yaml   --namespace Sample.Authorization   --output Generated/RuleGate.g.cs
+rulegate generate csharp \
+  ./rulegate.yaml \
+  --namespace Sample.Authorization \
+  --output Generated/RuleGate.g.cs
 ```
 
 Use `--check` with the same arguments in CI to reject missing or stale output
@@ -1043,7 +1046,7 @@ Install the current preview:
 dotnet tool install \
   --global \
   Fotbiler.RuleGate.Cli \
-  --version 0.3.0-preview.1
+  --version 0.3.0-preview.2
 ```
 
 Validate `rulegate.yaml` in the current directory:

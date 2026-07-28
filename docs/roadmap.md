@@ -23,6 +23,7 @@ the preview releases.
 | Authorization diagnostics and logging | ✅ Available |
 | HTTP authorization-result mapping | ✅ Available |
 | CLI manifest validation | ✅ Published in `0.3.0-preview.1` |
+| Deterministic C# code generation | ✅ Published in `0.3.0-preview.2` |
 | Code generation | ⏳ Planned |
 | Angular SDK | ⏳ Planned |
 | Keycloak helpers | ⏳ Planned |
@@ -125,12 +126,11 @@ The following items are intentionally excluded from `0.3.0-preview.1`:
 - IDE extensions
 - Graphical decision visualization
 
-## Current development milestone
+## Latest published milestone
 
 ### `0.3.0-preview.2` — Code Generation
 
-Implemented on the current `main` development line and pending release
-preparation:
+Published in `0.3.0-preview.2`:
 
 - Manifest-derived C# policy constants
 - Manifest-derived resource-type and action constants

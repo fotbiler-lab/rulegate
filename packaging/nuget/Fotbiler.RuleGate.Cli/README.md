@@ -4,19 +4,13 @@
 manifest validation, C# constant generation, stale-output checks, and CI
 automation.
 
-## Release status
-
-The latest public package is `0.3.0-preview.1`. The generation commands in the
-current repository source target `0.3.0-preview.2`; release preparation will
-update the exact installation version before that package is published.
-
-## Install the published preview
+## Install
 
 ```bash
 dotnet tool install \
   --global \
   Fotbiler.RuleGate.Cli \
-  --version 0.3.0-preview.1
+  --version 0.3.0-preview.2
 ```
 
 The installed command is `rulegate`.
@@ -36,8 +30,6 @@ rulegate validate --format json
 ```
 
 ## Generate C# constants
-
-The upcoming `0.3.0-preview.2` package exposes:
 
 ```bash
 rulegate generate csharp \
