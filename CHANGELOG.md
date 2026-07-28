@@ -15,6 +15,9 @@ The project follows Semantic Versioning. Preview releases may introduce breaking
   `0.3.0-preview.1` and the five-package release inventory.
 - Replaced the original preview checklist with the current release-branch,
   Trusted Publishing, package verification, and documentation-gate workflow.
+- Audited all repository Markdown documentation, linked the public package
+  catalog directly to NuGet.org, updated the supported preview and project
+  status, and removed stale CLI milestone references.
 
 ## [0.3.0-preview.1] - 2026-07-28
 

@@ -80,15 +80,11 @@ validation never produces a partial policy collection.
 | [Fotbiler.RuleGate.Manifest](https://www.nuget.org/packages/Fotbiler.RuleGate.Manifest) | YAML manifest loading, validation, and compilation |
 | [Fotbiler.RuleGate.AspNetCore](https://www.nuget.org/packages/Fotbiler.RuleGate.AspNetCore) | ASP.NET Core integration |
 | [Fotbiler.RuleGate.Cli](https://www.nuget.org/packages/Fotbiler.RuleGate.Cli) | .NET tool for deterministic manifest validation and CI usage |
-
 ## Documentation
 
-- [RuleGate documentation](https://github.com/fotbiler-lab/rulegate/tree/main/docs)
+- [RuleGate CLI guide](https://github.com/fotbiler-lab/rulegate/blob/main/docs/cli.md)
 - [Manifest guide](https://github.com/fotbiler-lab/rulegate/blob/main/docs/manifests.md)
 - [Security model](https://github.com/fotbiler-lab/rulegate/blob/main/docs/security.md)
 - [Roadmap](https://github.com/fotbiler-lab/rulegate/blob/main/docs/roadmap.md)
-
-## Documentation
-
-- [RuleGate CLI](https://github.com/fotbiler-lab/rulegate/blob/main/docs/cli.md)
 - [Documentation index](https://github.com/fotbiler-lab/rulegate/blob/main/docs/README.md)
+- [RuleGate documentation](https://github.com/fotbiler-lab/rulegate/tree/main/docs)

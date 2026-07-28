@@ -13,11 +13,25 @@ resource-based authorization through one composable policy model.
 | Make your first authorization decision | [Getting started](getting-started.md) |
 | Understand subjects, resources, actions, policies, and requirements | [Authorization model](authorization-model.md) |
 | Define and validate `rulegate.yaml` policies | [Manifest guide](manifests.md) |
+| Validate manifests locally and in CI | [RuleGate CLI](cli.md) |
 | Integrate RuleGate with ASP.NET Core | [ASP.NET Core integration](aspnetcore.md) |
 | Operate authorization diagnostics safely | [Diagnostics](diagnostics.md) |
 | Understand runtime and integration security | [Security model](security.md) |
 | Understand current and planned capabilities | [Roadmap](roadmap.md) |
 | Prepare and verify a preview release | [Preview release checklist](releases/preview-release-checklist.md) |
+
+## Published packages
+
+The latest published preview is
+[`0.3.0-preview.1`](https://github.com/fotbiler-lab/rulegate/releases/tag/v0.3.0-preview.1).
+
+| Package | Purpose |
+|---|---|
+| [`Fotbiler.RuleGate.Abstractions`](https://www.nuget.org/packages/Fotbiler.RuleGate.Abstractions) | Public authorization contracts and extension abstractions |
+| [`Fotbiler.RuleGate.Core`](https://www.nuget.org/packages/Fotbiler.RuleGate.Core) | Local fail-closed authorization engine and built-in evaluators |
+| [`Fotbiler.RuleGate.Manifest`](https://www.nuget.org/packages/Fotbiler.RuleGate.Manifest) | YAML manifest loading, validation, and compilation |
+| [`Fotbiler.RuleGate.AspNetCore`](https://www.nuget.org/packages/Fotbiler.RuleGate.AspNetCore) | ASP.NET Core integration |
+| [`Fotbiler.RuleGate.Cli`](https://www.nuget.org/packages/Fotbiler.RuleGate.Cli) | .NET tool for deterministic manifest validation and CI usage |
 
 ## Recommended learning path
 

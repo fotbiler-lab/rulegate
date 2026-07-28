@@ -28,10 +28,10 @@
       alt="NuGet downloads"
       src="https://img.shields.io/nuget/dt/Fotbiler.RuleGate.AspNetCore?style=flat-square&amp;logo=nuget&amp;label=downloads">
   </a>
-  <a href="https://github.com/fotbiler-lab/rulegate/releases">
+  <a href="https://github.com/fotbiler-lab/rulegate/releases/tag/v0.3.0-preview.1">
     <img
-      alt="GitHub release"
-      src="https://img.shields.io/github/v/release/fotbiler-lab/rulegate?include_prereleases&amp;sort=semver&amp;style=flat-square&amp;label=release">
+      alt="GitHub release 0.3.0-preview.1"
+      src="https://img.shields.io/badge/release-v0.3.0--preview.1-orange?style=flat-square">
   </a>
   <a href="https://dotnet.microsoft.com/">
     <img
@@ -85,11 +85,11 @@ more than framework-level roles or ad hoc permission checks.
 
 | Package | Purpose |
 |---|---|
-| `Fotbiler.RuleGate.Abstractions` | Authorization contracts, policy definitions, requests, decisions, and evaluation abstractions |
-| `Fotbiler.RuleGate.Core` | Policy engine, built-in requirement evaluators, dispatcher, and in-memory policy provider |
-| `Fotbiler.RuleGate.Manifest` | YAML manifest loading, validation, compilation, and domain mapping |
-| `Fotbiler.RuleGate.AspNetCore` | ASP.NET Core dependency injection, claims mapping, dynamic policies, endpoint helpers, authorization attributes, and resource-based authorization |
-| `Fotbiler.RuleGate.Cli` | .NET tool for deterministic manifest validation, JSON output, stable exit codes, and CI usage |
+| [`Fotbiler.RuleGate.Abstractions`](https://www.nuget.org/packages/Fotbiler.RuleGate.Abstractions) | Authorization contracts, policy definitions, requests, decisions, and evaluation abstractions |
+| [`Fotbiler.RuleGate.Core`](https://www.nuget.org/packages/Fotbiler.RuleGate.Core) | Policy engine, built-in requirement evaluators, dispatcher, and in-memory policy provider |
+| [`Fotbiler.RuleGate.Manifest`](https://www.nuget.org/packages/Fotbiler.RuleGate.Manifest) | YAML manifest loading, validation, compilation, and domain mapping |
+| [`Fotbiler.RuleGate.AspNetCore`](https://www.nuget.org/packages/Fotbiler.RuleGate.AspNetCore) | ASP.NET Core dependency injection, claims mapping, dynamic policies, endpoint helpers, authorization attributes, and resource-based authorization |
+| [`Fotbiler.RuleGate.Cli`](https://www.nuget.org/packages/Fotbiler.RuleGate.Cli) | .NET tool for deterministic manifest validation, JSON output, stable exit codes, and CI usage |
 
 ## Supported .NET versions
 
@@ -120,6 +120,7 @@ RuleGate currently provides:
 - Resource-based authorization
 - Opt-in safe HTTP authorization results
 - Opt-in structured authorization diagnostics
+- Deterministic CLI manifest validation with text and JSON output
 - .NET 8, .NET 9, and .NET 10 packages
 
 See the [roadmap](docs/roadmap.md) for published milestones and planned
@@ -364,13 +365,15 @@ Read the [security model](docs/security.md) before production integration.
 
 ## Project status
 
-RuleGate is currently published as `0.3.0-preview.1`.
+RuleGate is currently published as
+[`0.3.0-preview.1`](https://github.com/fotbiler-lab/rulegate/releases/tag/v0.3.0-preview.1).
 
 The current preview includes the authorization core, manifest compilation,
-ASP.NET Core integration, safe HTTP authorization result mapping, and
-structured diagnostics.
+ASP.NET Core integration, safe HTTP authorization result mapping, structured
+diagnostics, and deterministic CLI manifest validation.
 
-The next milestone focuses on CLI and manifest validation workflows.
+The next milestone focuses on deterministic C# code generation from validated
+RuleGate manifests.
 
 See the [roadmap](docs/roadmap.md) for the complete release path.
 
