@@ -33,6 +33,7 @@ esac
 EXPECTED_VERSION_PREFIX="0.3.0"
 EXPECTED_VERSION_SUFFIX="preview.2"
 EXPECTED_VERSION="$EXPECTED_VERSION_PREFIX-$EXPECTED_VERSION_SUFFIX"
+EXPECTED_KEYCLOAK_VERSION="0.5.0-preview.1"
 
 EXPECTED_REPOSITORY_URL="https://github.com/fotbiler-lab/rulegate"
 EXPECTED_LICENSE="Apache-2.0"
@@ -62,6 +63,7 @@ PACKAGE_IDS=(
   "Fotbiler.RuleGate.Manifest"
   "Fotbiler.RuleGate.AspNetCore"
   "Fotbiler.RuleGate.Cli"
+  "Fotbiler.RuleGate.Keycloak"
 )
 
 EXPECTED_PACKAGE_COUNT="${#PACKAGE_IDS[@]}"
@@ -278,8 +280,15 @@ printf '\n== Verify package contents and metadata ==\n'
 
 for package_id in "${PACKAGE_IDS[@]}"
 do
-  package_path="$PACKAGE_DIRECTORY/$package_id.$EXPECTED_VERSION.nupkg"
-  symbol_path="$PACKAGE_DIRECTORY/$package_id.$EXPECTED_VERSION.snupkg"
+  package_version="$EXPECTED_VERSION"
+
+  if [[ "$package_id" == "Fotbiler.RuleGate.Keycloak" ]]
+  then
+    package_version="$EXPECTED_KEYCLOAK_VERSION"
+  fi
+
+  package_path="$PACKAGE_DIRECTORY/$package_id.$package_version.nupkg"
+  symbol_path="$PACKAGE_DIRECTORY/$package_id.$package_version.snupkg"
 
   if [[ ! -f "$package_path" ]]
   then
@@ -353,7 +362,7 @@ do
 
   assert_contains \
     "$nuspec_content" \
-    "<version>$EXPECTED_VERSION</version>" \
+    "<version>$package_version</version>" \
     "$package_id has an unexpected package version."
 
   assert_contains \
@@ -474,6 +483,18 @@ do
           "CLI package does not contain YamlDotNet for $framework."
       done
       ;;
+
+    Fotbiler.RuleGate.Keycloak)
+      assert_contains \
+        "$nuspec_content" \
+        "<dependency id=\"Fotbiler.RuleGate.AspNetCore\" version=\"$EXPECTED_VERSION\"" \
+        "Keycloak does not depend on the expected AspNetCore version."
+
+      assert_contains \
+        "$nuspec_content" \
+        "<frameworkReference name=\"Microsoft.AspNetCore.App\"" \
+        "Keycloak does not reference Microsoft.AspNetCore.App."
+      ;;
   esac
 
   echo "Verified: $package_id"
@@ -482,6 +503,11 @@ done
 printf '\n== Run package consumer smoke test ==\n'
 
 ./scripts/test-nuget-consumer-smoke.sh \
+  --packages-ready
+
+printf '\n== Run Keycloak package consumer smoke test ==\n'
+
+./scripts/test-keycloak-nuget-consumer-smoke.sh \
   --packages-ready
 
 printf '\n== Run packaged CLI tool smoke test ==\n'
@@ -509,6 +535,7 @@ echo "No release or publishing configuration found in the normal CI workflow."
 printf '\n== Release verification succeeded ==\n'
 
 printf 'Version: %s\n' "$EXPECTED_VERSION"
+printf 'Keycloak version: %s\n' "$EXPECTED_KEYCLOAK_VERSION"
 printf 'Commit:  %s\n' "$HEAD_COMMIT"
 printf 'Packages: %s nupkg + %s snupkg\n' \
   "$EXPECTED_PACKAGE_COUNT" \

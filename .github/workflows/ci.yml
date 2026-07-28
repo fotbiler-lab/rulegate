@@ -128,6 +128,11 @@ jobs:
           ./scripts/test-nuget-consumer-smoke.sh \
             --packages-ready
 
+      - name: Test Keycloak NuGet package consumer
+        run: |
+          ./scripts/test-keycloak-nuget-consumer-smoke.sh \
+            --packages-ready
+
       - name: Test RuleGate CLI tool
         run: |
           ./scripts/test-cli-tool-smoke.sh \

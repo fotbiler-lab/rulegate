@@ -357,5 +357,6 @@ Continue with:
 - The [C# code-generation guide](code-generation.md) for generated constants
   and stale-output checks.
 - The [Angular SDK guide](angular.md) for frontend route and template checks.
-- The [roadmap](roadmap.md) for upcoming Keycloak and OpenTelemetry work.
+- The [Keycloak integration guide](keycloak.md) for optional provider mapping.
+- The [roadmap](roadmap.md) for upcoming OpenTelemetry work.
 - The [documentation index](README.md) to navigate all available guides.

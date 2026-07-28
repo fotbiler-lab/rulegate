@@ -21,7 +21,7 @@ The package provides:
 - `RuleGateAuthorizationClient` for holding the current frontend projection
 - Declarative route metadata and a shared route guard
 - Application-defined denied-navigation handling
-- Permission and policy route-guard factories for direct checks
+- Permission, policy, and role route-guard factories for direct checks
 - Standalone visibility and disabled-state directives
 - Deterministic TypeScript constants generated from `rulegate.yaml`
 - Public TypeScript models for snapshots and requirements
@@ -42,6 +42,7 @@ const authorization = inject(RuleGateAuthorizationClient);
 authorization.replaceSnapshot({
   permissions: ['documents.read'],
   policies: ['documents-read'],
+  roles: ['documents.reader'],
 });
 ```
 
@@ -94,12 +95,12 @@ export const appConfig: ApplicationConfig = {
 ```
 
 The handler may return any Angular guard result, including `false`, a
-`UrlTree`, or a `RedirectCommand`. The permission and policy guard factories
+`UrlTree`, or a `RedirectCommand`. The permission, policy, and role guard factories
 remain available for routes that do not use declarative metadata.
 
 ## Control template visibility
 
-Import the standalone directive and pass either a permission or a policy:
+Import the standalone directive and pass one permission, policy, or role:
 
 ```ts
 import { Component } from '@angular/core';
@@ -159,8 +160,8 @@ application responsibility.
 ## Generate TypeScript identifiers
 
 The npm package includes `rulegate-angular`, which generates deterministic
-TypeScript constants from the manifest's policies, permissions, resource
-types, and actions:
+TypeScript constants from the manifest's policies, permissions, roles,
+resource types, and actions:
 
 ```bash
 pnpm exec rulegate-angular generate \
@@ -196,3 +197,12 @@ current user is authorized.
 - Client-side checks never replace backend authorization.
 
 Read the [security model](security.md) for the complete trust boundary.
+
+## Optional Keycloak adapter
+
+Applications using Keycloak can import the optional
+`@fotbiler/rulegate-angular/keycloak` secondary entrypoint. The primary Angular
+entrypoint has no `keycloak-js` dependency and remains provider-independent.
+
+See the [Keycloak integration guide](keycloak.md) for session synchronization,
+canonical realm and client role names, and the matching ASP.NET Core package.

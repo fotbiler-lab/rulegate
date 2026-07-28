@@ -6,6 +6,33 @@ The project follows Semantic Versioning. Preview releases may introduce breaking
 
 ## [Unreleased]
 
+### Added
+
+- Added generic Angular role snapshots, requirements, route guards, and
+  deterministic manifest-derived role constants.
+- Added the optional `@fotbiler/rulegate-angular/keycloak` secondary entrypoint
+  for lifecycle-safe `keycloak-js` session synchronization without a
+  `keycloak-js` package dependency.
+- Added the optional `Fotbiler.RuleGate.Keycloak` package for authenticated
+  subject creation from realm roles, explicitly selected client roles, and
+  explicit permission claims.
+- Added shared UTF-8 role-normalization vectors and package-only Angular and
+  .NET consumers.
+
+### Security
+
+- Keycloak integrations fail closed for unauthenticated or malformed identity
+  input and do not own authentication, token storage, refresh, or Admin API
+  access.
+- Client roles are imported only for explicitly configured client IDs, and
+  frontend projections remain user-experience controls rather than security
+  boundaries.
+
+### Documentation
+
+- Added a Keycloak integration guide covering package independence, canonical
+  role names, ASP.NET Core and Angular composition, and security boundaries.
+
 ## [0.4.0-preview.2] - 2026-07-28
 
 ### Added

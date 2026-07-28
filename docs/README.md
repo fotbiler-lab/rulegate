@@ -16,7 +16,8 @@ resource-based authorization through one composable policy model.
 | Validate manifests locally or in CI | [RuleGate CLI](cli.md) |
 | Generate C# constants and detect stale output | [C# code generation](code-generation.md) |
 | Integrate RuleGate with ASP.NET Core | [ASP.NET Core integration](aspnetcore.md) |
-| Add permission and policy checks to Angular | [Angular SDK](angular.md) |
+| Add permission, policy, and role checks to Angular | [Angular SDK](angular.md) |
+| Map Keycloak roles on ASP.NET Core and Angular | [Keycloak integration](keycloak.md) |
 | Operate authorization diagnostics safely | [Diagnostics](diagnostics.md) |
 | Understand runtime and integration security | [Security model](security.md) |
 | Understand current and planned capabilities | [Roadmap](roadmap.md) |
@@ -26,7 +27,7 @@ resource-based authorization through one composable policy model.
 ## Published packages
 
 The latest published RuleGate preview is
-[`0.4.0-preview.1`](https://github.com/fotbiler-lab/rulegate/releases/tag/v0.4.0-preview.1).
+[`0.4.0-preview.2`](https://github.com/fotbiler-lab/rulegate/releases/tag/v0.4.0-preview.2).
 
 | Package | Purpose |
 |---|---|
@@ -35,10 +36,11 @@ The latest published RuleGate preview is
 | [`Fotbiler.RuleGate.Manifest`](https://www.nuget.org/packages/Fotbiler.RuleGate.Manifest) | YAML manifest loading, validation, and compilation |
 | [`Fotbiler.RuleGate.AspNetCore`](https://www.nuget.org/packages/Fotbiler.RuleGate.AspNetCore) | ASP.NET Core integration |
 | [`Fotbiler.RuleGate.Cli`](https://www.nuget.org/packages/Fotbiler.RuleGate.Cli) | .NET tool for manifest validation, deterministic C# generation, stale-output checks, and CI usage |
-| [`@fotbiler/rulegate-angular`](https://www.npmjs.com/package/@fotbiler/rulegate-angular) | Angular authorization client, route guards, and structural directive |
+| [`@fotbiler/rulegate-angular`](https://www.npmjs.com/package/@fotbiler/rulegate-angular) | Angular authorization client, route guards, UI directives, and TypeScript generation |
 
-The NuGet packages remain at `0.3.0-preview.2`. The Angular npm package is
-`0.4.0-preview.1`.
+The published NuGet packages remain at `0.3.0-preview.2`. The Angular npm
+package is `0.4.0-preview.2`. The optional Keycloak integrations are
+implemented in source for the next preview.
 
 ## Recommended learning path
 
@@ -66,10 +68,12 @@ After completing that guide:
    endpoints and map authenticated identities.
 5. Use the [Angular SDK guide](angular.md) for route and template visibility
    after backend authorization is in place.
-6. Use the [diagnostics guide](diagnostics.md) to configure logging and custom
+6. Follow the [Keycloak integration](keycloak.md) guide when Keycloak supplies
+   the authenticated identity.
+7. Use the [diagnostics guide](diagnostics.md) to configure logging and custom
    observability safely.
-7. Review the [security model](security.md) before production integration.
-8. Use the root [README](../README.md) for the repository overview and current
+8. Review the [security model](security.md) before production integration.
+9. Use the root [README](../README.md) for the repository overview and current
    package status.
 
 ## Documentation principles
@@ -105,3 +109,9 @@ project maintainers rather than package consumers.
 - [Angular SDK](angular.md) — supply frontend authorization state, protect
   routes, control template visibility, and preserve the backend security
   boundary.
+
+## Identity-provider integrations
+
+- [Keycloak integration](keycloak.md) — normalize effective realm and selected
+  client roles into the same provider-independent RuleGate model on ASP.NET
+  Core and Angular.

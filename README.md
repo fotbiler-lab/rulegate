@@ -60,6 +60,9 @@ more than framework-level roles or ad hoc permission checks.
 - **Angular-ready:** a fail-closed frontend projection, declarative route
   authorization, template composition, disabled state, and generated
   TypeScript identifiers keep frontend behavior aligned with RuleGate.
+- **Provider integrations:** optional adapters normalize provider claims
+  without coupling the RuleGate engine or primary Angular entrypoint to an
+  identity provider.
 
 ## Packages
 
@@ -70,6 +73,7 @@ more than framework-level roles or ad hoc permission checks.
 | [`Fotbiler.RuleGate.Manifest`](https://www.nuget.org/packages/Fotbiler.RuleGate.Manifest)         | YAML manifest loading, validation, compilation, and domain mapping                                                                                |
 | [`Fotbiler.RuleGate.AspNetCore`](https://www.nuget.org/packages/Fotbiler.RuleGate.AspNetCore)     | ASP.NET Core dependency injection, claims mapping, dynamic policies, endpoint helpers, authorization attributes, and resource-based authorization |
 | [`Fotbiler.RuleGate.Cli`](https://www.nuget.org/packages/Fotbiler.RuleGate.Cli)                   | .NET tool for manifest validation, deterministic C# constant generation, stale-output checks, stable exit codes, and CI usage                     |
+| `Fotbiler.RuleGate.Keycloak`                                                                     | Optional Keycloak claim normalization and RuleGate subject mapping; preview release pending                                                       |
 | [`@fotbiler/rulegate-angular`](https://www.npmjs.com/package/@fotbiler/rulegate-angular)          | Angular 22 authorization client, declarative route guards, UI directives, and TypeScript identifier generation                                    |
 
 The Angular npm package is `0.4.0-preview.2`. The independently versioned
@@ -109,11 +113,13 @@ RuleGate currently provides:
 - Atomic generated-file writes and byte-exact stale-output checks
 - Generated-code compilation smoke coverage on .NET 8, .NET 9, and .NET 10
 - Signal-backed Angular frontend authorization state
-- Angular permission and policy route guards
+- Angular permission, policy, and role route guards
 - Declarative Angular route metadata and denied-navigation handling
 - Angular visibility, fallback-template, and disabled-state directives
-- Manifest-derived TypeScript policy, permission, resource-type, and action
+- Manifest-derived TypeScript policy, permission, role, resource-type, and action
   constants
+- Optional Keycloak realm-role and selected client-role normalization for
+  ASP.NET Core and Angular
 - Package-only Angular npm tarball verification
 - .NET 8, .NET 9, and .NET 10 packages
 
@@ -132,7 +138,8 @@ previews.
 | Review trust boundaries and production controls | [Security model](docs/security.md)                 |
 | Use the RuleGate command-line tool              | [CLI guide](docs/cli.md)                           |
 | Generate deterministic C# constants             | [C# code generation](docs/code-generation.md)      |
-| Add frontend permission and policy checks       | [Angular SDK](docs/angular.md)                     |
+| Add frontend permission, policy, and role checks | [Angular SDK](docs/angular.md)                    |
+| Map Keycloak roles without coupling the engine  | [Keycloak integration](docs/keycloak.md)           |
 | Browse all documentation                        | [Documentation index](docs/README.md)              |
 | Review current and planned capabilities         | [Roadmap](docs/roadmap.md)                         |
 
@@ -397,8 +404,9 @@ It expands the Angular SDK with declarative route authorization, denied
 navigation handling, template composition, disabled-state helpers, and
 manifest-derived TypeScript identifiers.
 
-The NuGet packages remain at `0.3.0-preview.2`. The next product milestone is
-the Keycloak integration work in `0.5.0-preview.1`.
+The published NuGet packages remain at `0.3.0-preview.2`. The optional Keycloak
+integrations for `0.5.0-preview.1` are implemented in source and awaiting their
+preview release.
 
 See the [roadmap](docs/roadmap.md) for the complete release path.
 

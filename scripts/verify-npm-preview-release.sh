@@ -190,7 +190,9 @@ for expected_file in \
   package/LICENSE \
   package/bin/rulegate-angular.mjs \
   package/fesm2022/fotbiler-rulegate-angular.mjs \
-  package/types/fotbiler-rulegate-angular.d.ts
+  package/fesm2022/fotbiler-rulegate-angular-keycloak.mjs \
+  package/types/fotbiler-rulegate-angular.d.ts \
+  package/types/fotbiler-rulegate-angular-keycloak.d.ts
 do
   if ! grep -Fx "$expected_file" \
     <<<"$PACKAGE_FILES" \
@@ -220,13 +222,40 @@ for public_api in \
   ruleGateRouteData \
   provideRuleGateDeniedNavigation \
   ruleGatePermissionGuard \
-  ruleGatePolicyGuard
+  ruleGatePolicyGuard \
+  ruleGateRoleGuard \
+  RuleGateRoleRequirement
 do
   if ! grep -F "$public_api" \
     <<<"$TYPE_DECLARATIONS" \
     >/dev/null
   then
     echo "ERROR: Packed declarations do not contain $public_api."
+    exit 1
+  fi
+done
+
+KEYCLOAK_TYPE_DECLARATIONS="$(
+  tar \
+    --extract \
+    --to-stdout \
+    --gzip \
+    --file "$PACKAGE_PATH" \
+    package/types/fotbiler-rulegate-angular-keycloak.d.ts
+)"
+
+for public_api in \
+  RuleGateKeycloakAdapter \
+  RuleGateKeycloakSession \
+  createRuleGateSnapshotFromKeycloak \
+  ruleGateKeycloakRealmRole \
+  ruleGateKeycloakClientRole
+do
+  if ! grep -F "$public_api" \
+    <<<"$KEYCLOAK_TYPE_DECLARATIONS" \
+    >/dev/null
+  then
+    echo "ERROR: Packed Keycloak declarations do not contain $public_api."
     exit 1
   fi
 done

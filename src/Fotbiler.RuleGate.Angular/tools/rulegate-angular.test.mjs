@@ -39,9 +39,12 @@ test('generates deterministic identifiers and literal types', () => {
   assert.match(result.source, /documentsRead: "documents\.read"/);
   assert.match(result.source, /documentsWrite: "documents-write"/);
   assert.match(result.source, /export type RuleGatePermission/);
+  assert.match(result.source, /documentsReader: "documents\.reader"/);
+  assert.match(result.source, /export type RuleGateRole/);
   assert.deepEqual(result.counts, {
     policies: 2,
     permissions: 2,
+    roles: 2,
     resourceTypes: 1,
     actions: 2,
   });

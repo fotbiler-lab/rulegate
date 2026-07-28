@@ -554,8 +554,8 @@ Provider-specific helpers can simplify mapping, but they must remain optional.
 
 ## Frontend authorization
 
-Frontend permission and policy checks improve user experience by hiding or
-disabling unavailable actions.
+Frontend permission, policy, and role checks improve user experience by hiding
+or disabling unavailable actions.
 
 They are not a security boundary.
 
@@ -659,14 +659,14 @@ The current preview includes:
 - Generic HTTP authorization-result mapping
 - Deterministic CLI manifest validation with text and JSON output
 - Deterministic C# constants generated from manifest identifiers
+- Deterministic TypeScript constants generated from manifest identifiers
+- Angular authorization helpers
+- Optional Keycloak claim-normalization helpers
 
 The following areas are planned separately:
 
 - Attribute-to-attribute comparison helpers
 - Domain resource mapping helpers
-- TypeScript code generation
-- Angular developer-experience helpers
-- Keycloak helpers
 - OpenTelemetry integration
 - Decision visualization
 
@@ -678,5 +678,6 @@ Continue with:
 
 - [Getting started](getting-started.md) for an executable example.
 - The root [README](../README.md) for current ASP.NET Core usage.
+- The [Keycloak integration guide](keycloak.md) for optional provider mapping.
 - [Documentation index](README.md) for all available guides.
 - [Roadmap](roadmap.md) for upcoming capabilities.

@@ -29,6 +29,7 @@ const authorization = inject(RuleGateAuthorizationClient);
 authorization.replaceSnapshot({
   permissions: ['documents.read'],
   policies: ['documents-read'],
+  roles: ['documents.reader'],
 });
 ```
 
@@ -59,13 +60,13 @@ export const routes: Routes = [
 
 Missing or malformed metadata denies. Configure
 `provideRuleGateDeniedNavigation` to return an Angular `UrlTree` or
-`RedirectCommand` for valid denied requirements. The direct permission and
-policy guard factories remain available.
+`RedirectCommand` for valid denied requirements. The direct permission,
+policy, and role guard factories remain available.
 
 ## Control template visibility
 
-Import the standalone directive and pass exactly one permission or policy
-requirement:
+Import the standalone directive and pass exactly one permission, policy, or
+role requirement:
 
 ```ts
 import { Component } from '@angular/core';
@@ -111,7 +112,7 @@ RuleGate CLI for authoritative full-manifest validation.
 
 - Uninitialized state denies every check.
 - Invalid or whitespace-padded identifiers invalidate the complete snapshot.
-- Permission and policy matching is exact and case-sensitive.
+- Permission, policy, and role matching is exact and case-sensitive.
 - A directive requirement containing both or neither identifier kind denies.
 - Missing or malformed declarative route metadata denies navigation.
 - Browser state can be modified by the user and never replaces backend
@@ -120,6 +121,18 @@ RuleGate CLI for authoritative full-manifest validation.
 See the full
 [RuleGate Angular guide](https://github.com/fotbiler-lab/rulegate/blob/main/docs/angular.md)
 and [security model](https://github.com/fotbiler-lab/rulegate/blob/main/docs/security.md).
+
+## Optional Keycloak adapter
+
+Import `@fotbiler/rulegate-angular/keycloak` when the host application uses
+Keycloak. The secondary entrypoint converts an authenticated `keycloak-js`
+session into the generic RuleGate snapshot without owning login, refresh,
+logout, callbacks, or token storage. The package does not require
+`keycloak-js`.
+
+See the
+[Keycloak integration guide](https://github.com/fotbiler-lab/rulegate/blob/main/docs/keycloak.md)
+for the Angular and ASP.NET Core composition model.
 
 ## License
 

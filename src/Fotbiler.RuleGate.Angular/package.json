@@ -5,8 +5,10 @@
   "keywords": [
     "angular",
     "authorization",
+    "keycloak",
     "permissions",
     "policy",
+    "roles",
     "rulegate",
     "security"
   ],

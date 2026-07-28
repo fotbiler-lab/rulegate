@@ -9,6 +9,7 @@ import {
 import { RuleGateAuthorizationClient } from '../client/rule-gate-authorization-client';
 import { ruleGatePermissionGuard } from './rule-gate-permission.guard';
 import { ruleGatePolicyGuard } from './rule-gate-policy.guard';
+import { ruleGateRoleGuard } from './rule-gate-role.guard';
 import {
   provideRuleGateDeniedNavigation,
   ruleGateGuard,
@@ -43,6 +44,13 @@ describe('RuleGate route guards', () => {
 
     expect(runGuard(ruleGatePolicyGuard('documents-read'))).toBe(true);
     expect(runGuard(ruleGatePolicyGuard('documents-write'))).toBe(false);
+  });
+
+  it('allows only an exact granted role', () => {
+    client.replaceSnapshot({ roles: ['documents.reader'] });
+
+    expect(runGuard(ruleGateRoleGuard('documents.reader'))).toBe(true);
+    expect(runGuard(ruleGateRoleGuard('Documents.Reader'))).toBe(false);
   });
 
   it('reads a requirement from declarative route metadata', () => {
