@@ -57,20 +57,20 @@ more than framework-level roles or ad hoc permission checks.
 - **CLI-ready:** manifests can be validated and converted into deterministic C#
   policy, resource-type, and action constants locally or in CI, with stable
   process exit codes and stale-output detection.
-- **Angular-ready:** a fail-closed frontend projection, route guards, and a
-  structural directive keep navigation and template visibility aligned with
-  RuleGate identifiers.
+- **Angular-ready:** a fail-closed frontend projection, declarative route
+  authorization, template composition, disabled state, and generated
+  TypeScript identifiers keep frontend behavior aligned with RuleGate.
 
 ## Packages
 
-| Package | Purpose |
-|---|---|
-| [`Fotbiler.RuleGate.Abstractions`](https://www.nuget.org/packages/Fotbiler.RuleGate.Abstractions) | Authorization contracts, policy definitions, requests, decisions, and evaluation abstractions |
-| [`Fotbiler.RuleGate.Core`](https://www.nuget.org/packages/Fotbiler.RuleGate.Core) | Policy engine, built-in requirement evaluators, dispatcher, and in-memory policy provider |
-| [`Fotbiler.RuleGate.Manifest`](https://www.nuget.org/packages/Fotbiler.RuleGate.Manifest) | YAML manifest loading, validation, compilation, and domain mapping |
-| [`Fotbiler.RuleGate.AspNetCore`](https://www.nuget.org/packages/Fotbiler.RuleGate.AspNetCore) | ASP.NET Core dependency injection, claims mapping, dynamic policies, endpoint helpers, authorization attributes, and resource-based authorization |
-| [`Fotbiler.RuleGate.Cli`](https://www.nuget.org/packages/Fotbiler.RuleGate.Cli) | .NET tool for manifest validation, deterministic C# constant generation, stale-output checks, stable exit codes, and CI usage |
-| [`@fotbiler/rulegate-angular`](https://www.npmjs.com/package/@fotbiler/rulegate-angular) | Angular 22 authorization client, permission and policy guards, and structural template directive |
+| Package                                                                                           | Purpose                                                                                                                                           |
+| ------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`Fotbiler.RuleGate.Abstractions`](https://www.nuget.org/packages/Fotbiler.RuleGate.Abstractions) | Authorization contracts, policy definitions, requests, decisions, and evaluation abstractions                                                     |
+| [`Fotbiler.RuleGate.Core`](https://www.nuget.org/packages/Fotbiler.RuleGate.Core)                 | Policy engine, built-in requirement evaluators, dispatcher, and in-memory policy provider                                                         |
+| [`Fotbiler.RuleGate.Manifest`](https://www.nuget.org/packages/Fotbiler.RuleGate.Manifest)         | YAML manifest loading, validation, compilation, and domain mapping                                                                                |
+| [`Fotbiler.RuleGate.AspNetCore`](https://www.nuget.org/packages/Fotbiler.RuleGate.AspNetCore)     | ASP.NET Core dependency injection, claims mapping, dynamic policies, endpoint helpers, authorization attributes, and resource-based authorization |
+| [`Fotbiler.RuleGate.Cli`](https://www.nuget.org/packages/Fotbiler.RuleGate.Cli)                   | .NET tool for manifest validation, deterministic C# constant generation, stale-output checks, stable exit codes, and CI usage                     |
+| [`@fotbiler/rulegate-angular`](https://www.npmjs.com/package/@fotbiler/rulegate-angular)          | Angular 22 authorization client, declarative route guards, UI directives, and TypeScript identifier generation                                    |
 
 The Angular npm package is `0.4.0-preview.1`. The independently versioned
 NuGet packages remain at `0.3.0-preview.2`.
@@ -80,10 +80,10 @@ NuGet packages remain at `0.3.0-preview.2`.
 The current preview targets:
 
 | Runtime | Target framework |
-|---|---|
-| .NET 8 | `net8.0` |
-| .NET 9 | `net9.0` |
-| .NET 10 | `net10.0` |
+| ------- | ---------------- |
+| .NET 8  | `net8.0`         |
+| .NET 9  | `net9.0`         |
+| .NET 10 | `net10.0`        |
 
 Every RuleGate NuGet package includes framework-specific assemblies for all three targets. The source, test suites, package assets, and package-only consumer are verified across each supported framework.
 
@@ -110,7 +110,10 @@ RuleGate currently provides:
 - Generated-code compilation smoke coverage on .NET 8, .NET 9, and .NET 10
 - Signal-backed Angular frontend authorization state
 - Angular permission and policy route guards
-- Angular structural authorization directive
+- Declarative Angular route metadata and denied-navigation handling
+- Angular visibility, fallback-template, and disabled-state directives
+- Manifest-derived TypeScript policy, permission, resource-type, and action
+  constants
 - Package-only Angular npm tarball verification
 - .NET 8, .NET 9, and .NET 10 packages
 
@@ -119,19 +122,19 @@ previews.
 
 ## Documentation
 
-| Goal | Guide |
-|---|---|
-| Make the first authorization decision | [Getting started](docs/getting-started.md) |
-| Understand the authorization model | [Authorization model](docs/authorization-model.md) |
-| Define `rulegate.yaml` policies | [Manifest guide](docs/manifests.md) |
-| Protect ASP.NET Core applications | [ASP.NET Core integration](docs/aspnetcore.md) |
-| Configure logs and diagnostic sinks | [Diagnostics](docs/diagnostics.md) |
-| Review trust boundaries and production controls | [Security model](docs/security.md) |
-| Use the RuleGate command-line tool | [CLI guide](docs/cli.md) |
-| Generate deterministic C# constants | [C# code generation](docs/code-generation.md) |
-| Add frontend permission and policy checks | [Angular SDK](docs/angular.md) |
-| Browse all documentation | [Documentation index](docs/README.md) |
-| Review current and planned capabilities | [Roadmap](docs/roadmap.md) |
+| Goal                                            | Guide                                              |
+| ----------------------------------------------- | -------------------------------------------------- |
+| Make the first authorization decision           | [Getting started](docs/getting-started.md)         |
+| Understand the authorization model              | [Authorization model](docs/authorization-model.md) |
+| Define `rulegate.yaml` policies                 | [Manifest guide](docs/manifests.md)                |
+| Protect ASP.NET Core applications               | [ASP.NET Core integration](docs/aspnetcore.md)     |
+| Configure logs and diagnostic sinks             | [Diagnostics](docs/diagnostics.md)                 |
+| Review trust boundaries and production controls | [Security model](docs/security.md)                 |
+| Use the RuleGate command-line tool              | [CLI guide](docs/cli.md)                           |
+| Generate deterministic C# constants             | [C# code generation](docs/code-generation.md)      |
+| Add frontend permission and policy checks       | [Angular SDK](docs/angular.md)                     |
+| Browse all documentation                        | [Documentation index](docs/README.md)              |
+| Review current and planned capabilities         | [Roadmap](docs/roadmap.md)                         |
 
 ## Installation
 
@@ -394,8 +397,9 @@ It publishes the Angular SDK on npm with frontend authorization state,
 permission and policy route guards, a structural authorization directive, and
 package-only tarball verification.
 
-The NuGet packages remain at `0.3.0-preview.2`. The next product milestone is
-the Angular developer-experience work in `0.4.0-preview.2`.
+The NuGet packages remain at `0.3.0-preview.2`. Angular developer-experience
+work for `0.4.0-preview.2` is implemented in source and awaiting its preview
+release.
 
 See the [roadmap](docs/roadmap.md) for the complete release path.
 

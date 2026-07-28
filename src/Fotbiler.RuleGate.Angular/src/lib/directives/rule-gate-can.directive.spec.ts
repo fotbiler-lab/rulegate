@@ -9,6 +9,10 @@ import { RuleGateCanDirective } from './rule-gate-can.directive';
   template: `
     <span class="permission" *ruleGateCan="{ permission: permission }">permission content</span>
     <span class="policy" *ruleGateCan="{ policy: policy }">policy content</span>
+    <span class="composed" *ruleGateCan="{ permission: permission }; else denied">
+      granted content
+    </span>
+    <ng-template #denied><span class="denied">denied content</span></ng-template>
   `,
 })
 class TestHostComponent {
@@ -33,6 +37,8 @@ describe('RuleGateCanDirective', () => {
   it('renders no protected content before state is ready', () => {
     expect(query('.permission')).toBeNull();
     expect(query('.policy')).toBeNull();
+    expect(query('.composed')).toBeNull();
+    expect(query('.denied')?.textContent).toContain('denied content');
   });
 
   it('reacts independently to permission and policy grants', async () => {
@@ -42,6 +48,8 @@ describe('RuleGateCanDirective', () => {
 
     expect(query('.permission')?.textContent).toContain('permission content');
     expect(query('.policy')).toBeNull();
+    expect(query('.composed')?.textContent).toContain('granted content');
+    expect(query('.denied')).toBeNull();
 
     authorization.replaceSnapshot({ policies: ['documents-read'] });
     await fixture.whenStable();
@@ -49,6 +57,8 @@ describe('RuleGateCanDirective', () => {
 
     expect(query('.permission')).toBeNull();
     expect(query('.policy')?.textContent).toContain('policy content');
+    expect(query('.composed')).toBeNull();
+    expect(query('.denied')?.textContent).toContain('denied content');
   });
 
   it('removes rendered content when state is cleared', async () => {
@@ -65,6 +75,8 @@ describe('RuleGateCanDirective', () => {
 
     expect(query('.permission')).toBeNull();
     expect(query('.policy')).toBeNull();
+    expect(query('.composed')).toBeNull();
+    expect(query('.denied')?.textContent).toContain('denied content');
   });
 
   function query(selector: string): Element | null {
