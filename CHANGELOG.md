@@ -6,6 +6,16 @@ The project follows Semantic Versioning. Preview releases may introduce breaking
 
 ## [Unreleased]
 
+### Documentation
+
+- Added a dedicated RuleGate CLI guide covering installation, manifest
+  validation, JSON output, stable exit codes, automation, and security
+  behavior.
+- Updated repository guides and package README sources for
+  `0.3.0-preview.1` and the five-package release inventory.
+- Replaced the original preview checklist with the current release-branch,
+  Trusted Publishing, package verification, and documentation-gate workflow.
+
 ## [0.3.0-preview.1] - 2026-07-28
 
 ### Added

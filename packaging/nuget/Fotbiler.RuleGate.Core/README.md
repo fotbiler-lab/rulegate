@@ -11,7 +11,7 @@ stable release.
 
 ## Installation
 
-    dotnet add package Fotbiler.RuleGate.Core --prerelease
+    dotnet add package Fotbiler.RuleGate.Core --version 0.3.0-preview.1
 
 ## When to use this package
 
@@ -46,6 +46,7 @@ authorization inputs cannot grant access.
 | [Fotbiler.RuleGate.Core](https://www.nuget.org/packages/Fotbiler.RuleGate.Core) | Local fail-closed authorization engine and built-in evaluators |
 | [Fotbiler.RuleGate.Manifest](https://www.nuget.org/packages/Fotbiler.RuleGate.Manifest) | YAML manifest loading, validation, and compilation |
 | [Fotbiler.RuleGate.AspNetCore](https://www.nuget.org/packages/Fotbiler.RuleGate.AspNetCore) | ASP.NET Core integration |
+| [Fotbiler.RuleGate.Cli](https://www.nuget.org/packages/Fotbiler.RuleGate.Cli) | .NET tool for deterministic manifest validation and CI usage |
 
 ## Documentation
 
@@ -53,6 +54,7 @@ authorization inputs cannot grant access.
 - [Authorization model](https://github.com/fotbiler-lab/rulegate/blob/main/docs/authorization-model.md)
 - [Diagnostics](https://github.com/fotbiler-lab/rulegate/blob/main/docs/diagnostics.md)
 - [Security model](https://github.com/fotbiler-lab/rulegate/blob/main/docs/security.md)
+- [RuleGate CLI](https://github.com/fotbiler-lab/rulegate/blob/main/docs/cli.md)
 - [Documentation index](https://github.com/fotbiler-lab/rulegate/blob/main/docs/README.md)
 
 ## Security

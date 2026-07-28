@@ -22,7 +22,7 @@ the preview releases.
 | Controller and action attributes | ✅ Available |
 | Authorization diagnostics and logging | ✅ Available |
 | HTTP authorization-result mapping | ✅ Available |
-| CLI | ⏳ Planned |
+| CLI manifest validation | ✅ Published in `0.3.0-preview.1` |
 | Code generation | ⏳ Planned |
 | Angular SDK | ⏳ Planned |
 | Keycloak helpers | ⏳ Planned |
@@ -67,17 +67,17 @@ Advanced authorization and diagnostics:
 - Generic RuleGate HTTP `401` and `403` problem responses
 - Multi-targeting for .NET 8, .NET 9, and .NET 10
 
-## Next milestone
+## Latest published preview
 
 ### `0.3.0-preview.1` — CLI and Manifest Validation
 
-The next milestone introduces the first RuleGate command-line experience.
+This preview introduces the first RuleGate command-line experience and is published on NuGet.org.
 
 Its primary outcome is a deterministic manifest-validation command that can be
 used locally, in CI pipelines, and by repository tooling without starting an
 application.
 
-#### Planned scope
+#### Delivered scope
 
 - New `Fotbiler.RuleGate.Cli` project
 - Distribution as a .NET tool
@@ -94,7 +94,7 @@ application.
 - CLI usage documentation
 - Release verification for the CLI package
 
-#### Proposed command surface
+#### Command surface
 
 ```bash
 rulegate validate
@@ -102,7 +102,7 @@ rulegate validate ./policies/rulegate.yaml
 rulegate validate --format json
 ```
 
-#### Proposed exit codes
+#### Exit codes
 
 | Exit code | Meaning |
 |---:|---|

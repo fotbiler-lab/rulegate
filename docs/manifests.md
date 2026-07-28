@@ -1017,3 +1017,57 @@ Continue with:
 - [Authorization model](authorization-model.md) for conceptual guidance.
 - The root [README](../README.md) for current ASP.NET Core integration.
 - [Documentation index](README.md) for all available guides.
+
+## Validate manifests with the RuleGate CLI
+
+`Fotbiler.RuleGate.Cli` exposes the manifest compiler through a deterministic
+command-line interface.
+
+Install the current preview:
+
+```bash
+dotnet tool install \
+  --global \
+  Fotbiler.RuleGate.Cli \
+  --version 0.3.0-preview.1
+```
+
+Validate `rulegate.yaml` in the current directory:
+
+```bash
+rulegate validate
+```
+
+Validate an explicit file:
+
+```bash
+rulegate validate ./policies/rulegate.yaml
+```
+
+Request machine-readable JSON:
+
+```bash
+rulegate validate --format json
+```
+
+The CLI preserves the same fail-closed guarantees as
+`RuleGateManifestCompiler`:
+
+- loading and parsing failures cannot produce policies;
+- schema and semantic failures cannot produce partial policies;
+- JSON mode keeps machine-readable output isolated from standard-error
+  diagnostics;
+- unexpected failures do not expose exception details or stack traces.
+
+The process exit-code contract is:
+
+| Exit code | Meaning |
+|---:|---|
+| `0` | Manifest is valid |
+| `1` | File loading, YAML, schema, structural, or semantic validation failed |
+| `2` | Command-line usage is invalid |
+| `3` | An unexpected internal failure occurred |
+| `130` | Validation was cancelled |
+
+See the [RuleGate CLI guide](cli.md) for installation, automation, CI, and
+operational details.

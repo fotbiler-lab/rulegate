@@ -12,11 +12,11 @@ stable release.
 
 ## Installation
 
-    dotnet add package Fotbiler.RuleGate.AspNetCore --prerelease
+    dotnet add package Fotbiler.RuleGate.AspNetCore --version 0.3.0-preview.1
 
 Install the manifest package as well when policies are defined in YAML:
 
-    dotnet add package Fotbiler.RuleGate.Manifest --prerelease
+    dotnet add package Fotbiler.RuleGate.Manifest --version 0.3.0-preview.1
 
 ## Register RuleGate
 
@@ -60,6 +60,7 @@ Dynamic policy names use this form:
 | [Fotbiler.RuleGate.Core](https://www.nuget.org/packages/Fotbiler.RuleGate.Core) | Local fail-closed authorization engine and built-in evaluators |
 | [Fotbiler.RuleGate.Manifest](https://www.nuget.org/packages/Fotbiler.RuleGate.Manifest) | YAML manifest loading, validation, and compilation |
 | [Fotbiler.RuleGate.AspNetCore](https://www.nuget.org/packages/Fotbiler.RuleGate.AspNetCore) | ASP.NET Core integration |
+| [Fotbiler.RuleGate.Cli](https://www.nuget.org/packages/Fotbiler.RuleGate.Cli) | .NET tool for deterministic manifest validation and CI usage |
 
 ## Documentation
 
@@ -67,6 +68,7 @@ Dynamic policy names use this form:
 - [Getting started](https://github.com/fotbiler-lab/rulegate/blob/main/docs/getting-started.md)
 - [Diagnostics](https://github.com/fotbiler-lab/rulegate/blob/main/docs/diagnostics.md)
 - [Security model](https://github.com/fotbiler-lab/rulegate/blob/main/docs/security.md)
+- [RuleGate CLI](https://github.com/fotbiler-lab/rulegate/blob/main/docs/cli.md)
 - [Documentation index](https://github.com/fotbiler-lab/rulegate/blob/main/docs/README.md)
 
 ## Security

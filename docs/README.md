@@ -66,3 +66,9 @@ RuleGate documentation follows these principles:
 Documents under [`releases`](releases/) describe release preparation,
 verification, publication, and post-release checks. They are intended for
 project maintainers rather than package consumers.
+
+## Command-line interface
+
+- [RuleGate CLI](cli.md) — install the `rulegate` .NET tool, validate
+  manifests, consume pure JSON output, integrate validation into CI, and use
+  the stable process exit-code contract.
