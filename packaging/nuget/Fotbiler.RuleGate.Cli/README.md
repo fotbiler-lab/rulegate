@@ -1,4 +1,4 @@
-# Fotbiler RuleGate CLI
+# RuleGate CLI
 
 `Fotbiler.RuleGate.Cli` is the RuleGate command-line tool for deterministic
 manifest validation, C# constant generation, stale-output checks, and CI

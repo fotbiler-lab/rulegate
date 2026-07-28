@@ -13,7 +13,8 @@ resource-based authorization through one composable policy model.
 | Make your first authorization decision | [Getting started](getting-started.md) |
 | Understand subjects, resources, actions, policies, and requirements | [Authorization model](authorization-model.md) |
 | Define and validate `rulegate.yaml` policies | [Manifest guide](manifests.md) |
-| Validate manifests, generate C# constants, and detect stale output | [RuleGate CLI](cli.md) |
+| Validate manifests locally or in CI | [RuleGate CLI](cli.md) |
+| Generate C# constants and detect stale output | [C# code generation](code-generation.md) |
 | Integrate RuleGate with ASP.NET Core | [ASP.NET Core integration](aspnetcore.md) |
 | Operate authorization diagnostics safely | [Diagnostics](diagnostics.md) |
 | Understand runtime and integration security | [Security model](security.md) |
@@ -53,12 +54,14 @@ After completing that guide:
 1. Read the [authorization model](authorization-model.md) to understand the
    concepts behind each decision.
 2. Use the [manifest guide](manifests.md) to define and validate policies.
-3. Follow the [ASP.NET Core integration](aspnetcore.md) guide to protect HTTP
+3. Use the [C# code-generation guide](code-generation.md) when application code
+   should consume manifest identifiers as constants.
+4. Follow the [ASP.NET Core integration](aspnetcore.md) guide to protect HTTP
    endpoints and map authenticated identities.
-4. Use the [diagnostics guide](diagnostics.md) to configure logging and custom
+5. Use the [diagnostics guide](diagnostics.md) to configure logging and custom
    observability safely.
-5. Review the [security model](security.md) before production integration.
-6. Use the root [README](../README.md) for the repository overview and current
+6. Review the [security model](security.md) before production integration.
+7. Use the root [README](../README.md) for the repository overview and current
    package status.
 
 ## Documentation principles
@@ -84,5 +87,7 @@ project maintainers rather than package consumers.
 ## Command-line interface
 
 - [RuleGate CLI](cli.md) — install or run the `rulegate` .NET tool,
-  validate manifests, generate deterministic C# constants, enforce stale-output
-  checks in CI, and use the stable process exit-code contract.
+  validate manifests, inspect tool information, and use the stable process
+  exit-code contract.
+- [C# code generation](code-generation.md) — generate deterministic constants,
+  enforce stale-output checks in CI, and understand identifier diagnostics.

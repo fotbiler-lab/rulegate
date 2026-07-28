@@ -1,4 +1,4 @@
-# Fotbiler RuleGate Roadmap
+# RuleGate Roadmap
 
 This document describes the planned development direction of Fotbiler RuleGate.
 
@@ -22,19 +22,19 @@ the preview releases.
 | Controller and action attributes | ✅ Available |
 | Authorization diagnostics and logging | ✅ Available |
 | HTTP authorization-result mapping | ✅ Available |
-| CLI manifest validation | ✅ Published in `0.3.0-preview.1` |
-| Deterministic C# code generation | ✅ Published in `0.3.0-preview.2` |
-| Code generation | ⏳ Planned |
-| Angular SDK | ⏳ Planned |
+| CLI manifest validation | ✅ Available |
+| Deterministic C# code generation | ✅ Available |
+| Angular SDK | 🎯 Next milestone |
 | Keycloak helpers | ⏳ Planned |
 | OpenTelemetry integration | ⏳ Planned |
 | Decision visualization | ⏳ Planned |
 
+The latest published preview is `0.3.0-preview.2`. The next product milestone
+is the Angular SDK foundation in `0.4.0-preview.1`.
+
 ## Published previews
 
-### `0.1.0-preview.1`
-
-Authorization core foundation:
+### `0.1.0-preview.1` — Authorization Core Foundation
 
 - Public authorization contracts
 - Policy and requirement definitions
@@ -44,9 +44,7 @@ Authorization core foundation:
 - In-memory policy provider
 - YAML manifest foundation
 
-### `0.2.0-preview.1`
-
-ASP.NET Core integration foundation:
+### `0.2.0-preview.1` — ASP.NET Core Integration Foundation
 
 - Dependency injection registration
 - `ClaimsPrincipal` subject mapping
@@ -56,9 +54,7 @@ ASP.NET Core integration foundation:
 - Controller and action authorization
 - Package-only consumer verification
 
-### `0.2.0-preview.2`
-
-Advanced authorization and diagnostics:
+### `0.2.0-preview.2` — Advanced Authorization and Diagnostics
 
 - Subject, resource, and context attribute requirements
 - Typed scalar comparison
@@ -68,91 +64,27 @@ Advanced authorization and diagnostics:
 - Generic RuleGate HTTP `401` and `403` problem responses
 - Multi-targeting for .NET 8, .NET 9, and .NET 10
 
-## Latest published preview
-
 ### `0.3.0-preview.1` — CLI and Manifest Validation
 
-This preview introduces the first RuleGate command-line experience and is published on NuGet.org.
-
-Its primary outcome is a deterministic manifest-validation command that can be
-used locally, in CI pipelines, and by repository tooling without starting an
-application.
-
-#### Delivered scope
-
-- New `Fotbiler.RuleGate.Cli` project
-- Distribution as a .NET tool
-- `rulegate validate` command
-- Automatic discovery of `rulegate.yaml`
-- Explicit manifest file path support
-- Reuse of the existing manifest compiler and validator
-- Human-readable terminal output
-- Machine-readable JSON output
+- Installable `Fotbiler.RuleGate.Cli` .NET tool
+- Default and explicit manifest-file validation
+- Human-readable and JSON output
 - Stable process exit codes
-- Separate reporting for file-loading, YAML, and validation errors
-- Fail-closed behavior
+- Fail-closed manifest compilation and structured errors
 - Package-only CLI installation and execution smoke tests
-- CLI usage documentation
-- Release verification for the CLI package
-
-#### Command surface
-
-```bash
-rulegate validate
-rulegate validate ./policies/rulegate.yaml
-rulegate validate --format json
-```
-
-#### Exit codes
-
-| Exit code | Meaning |
-|---:|---|
-| `0` | The manifest is valid |
-| `1` | The manifest is invalid |
-| `2` | The command, input file, or environment is invalid |
-| `3` | An unexpected internal failure occurred |
-
-#### Explicit non-goals
-
-The following items are intentionally excluded from `0.3.0-preview.1`:
-
-- C# code generation
-- TypeScript code generation
-- Angular SDK
-- npm publishing
-- Keycloak integration
-- OpenTelemetry integration
-- Watch mode
-- IDE extensions
-- Graphical decision visualization
-
-## Latest published milestone
+- [RuleGate CLI guide](cli.md)
 
 ### `0.3.0-preview.2` — Code Generation
 
-Published in `0.3.0-preview.2`:
-
 - Manifest-derived C# policy constants
 - Manifest-derived resource-type and action constants
-- Deterministic UTF-8, LF-only generated output
-- Atomic generated-file replacement
+- Deterministic output and atomic generated-file replacement
 - Byte-exact stale-output detection through `--check`
-- `rulegate generate csharp`
 - Identifier, namespace, and collision diagnostics
-- Generated-code compilation and execution smoke tests on .NET 8, .NET 9, and
-  .NET 10
-- Normal CI and release-verification integration
+- Generated-code verification on .NET 8, .NET 9, and .NET 10
+- [C# code-generation guide](code-generation.md)
 
-## Planned milestone queue
-
-### `0.3.0-preview.3` — Developer Experience
-
-- Domain resource mapping helpers
-- Subject attribute extraction helpers
-- Resource attribute extraction helpers
-- Context attribute extraction helpers
-- Higher-level authorization result APIs
-- Clearer decision explanation models
+## Next milestone
 
 ### `0.4.0-preview.1` — Angular SDK Foundation
 
@@ -161,6 +93,8 @@ Published in `0.3.0-preview.2`:
 - Structural authorization directive
 - Generated policy constant consumption
 - Initial `@fotbiler` npm package
+
+## Later milestones
 
 ### `0.4.0-preview.2` — Angular Developer Experience
 
