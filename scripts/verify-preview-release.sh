@@ -30,8 +30,8 @@ case "${1:-}" in
     ;;
 esac
 
-EXPECTED_VERSION_PREFIX="0.2.0"
-EXPECTED_VERSION_SUFFIX="preview.2"
+EXPECTED_VERSION_PREFIX="0.3.0"
+EXPECTED_VERSION_SUFFIX="preview.1"
 EXPECTED_VERSION="$EXPECTED_VERSION_PREFIX-$EXPECTED_VERSION_SUFFIX"
 
 EXPECTED_REPOSITORY_URL="https://github.com/fotbiler-lab/rulegate"
@@ -61,6 +61,7 @@ PACKAGE_IDS=(
   "Fotbiler.RuleGate.Core"
   "Fotbiler.RuleGate.Manifest"
   "Fotbiler.RuleGate.AspNetCore"
+  "Fotbiler.RuleGate.Cli"
 )
 
 EXPECTED_PACKAGE_COUNT="${#PACKAGE_IDS[@]}"
@@ -305,10 +306,26 @@ do
 
   for framework in "${EXPECTED_FRAMEWORKS[@]}"
   do
-    assert_contains \
-      "$package_files" \
-      "lib/$framework/$package_id.dll" \
-      "$package_id does not contain its $framework assembly."
+    if [[ "$package_id" == "Fotbiler.RuleGate.Cli" ]]
+    then
+      assert_contains \
+        "$package_files" \
+        "tools/$framework/any/DotnetToolSettings.xml" \
+        "$package_id does not contain its $framework tool settings."
+      assert_contains \
+        "$package_files" \
+        "tools/$framework/any/Fotbiler.RuleGate.Cli.dll" \
+        "$package_id does not contain its $framework CLI assembly."
+      assert_contains \
+        "$package_files" \
+        "tools/$framework/any/Fotbiler.RuleGate.Manifest.dll" \
+        "$package_id does not contain its $framework manifest dependency."
+    else
+      assert_contains \
+        "$package_files" \
+        "lib/$framework/$package_id.dll" \
+        "$package_id does not contain its $framework assembly."
+    fi
   done
 
   nuspec_path="$(
@@ -375,10 +392,18 @@ do
 
   for framework in "${EXPECTED_FRAMEWORKS[@]}"
   do
-    assert_contains \
-      "$symbol_files" \
-      "lib/$framework/$package_id.pdb" \
-      "$package_id symbol package does not contain its $framework portable PDB."
+    if [[ "$package_id" == "Fotbiler.RuleGate.Cli" ]]
+    then
+      assert_contains \
+        "$symbol_files" \
+        "tools/$framework/any/Fotbiler.RuleGate.Cli.pdb" \
+        "$package_id symbol package does not contain its $framework portable PDB."
+    else
+      assert_contains \
+        "$symbol_files" \
+        "lib/$framework/$package_id.pdb" \
+        "$package_id symbol package does not contain its $framework portable PDB."
+    fi
   done
 
   case "$package_id" in
@@ -430,6 +455,25 @@ do
         "README.md" \
         "AspNetCore package does not contain README.md."
       ;;
+
+    Fotbiler.RuleGate.Cli)
+      assert_contains \
+        "$nuspec_content" \
+        "<packageType name=\"DotnetTool\"" \
+        "CLI package is not declared as a .NET tool."
+
+      for framework in "${EXPECTED_FRAMEWORKS[@]}"
+      do
+        assert_contains \
+          "$package_files" \
+          "tools/$framework/any/System.CommandLine.dll" \
+          "CLI package does not contain System.CommandLine for $framework."
+        assert_contains \
+          "$package_files" \
+          "tools/$framework/any/YamlDotNet.dll" \
+          "CLI package does not contain YamlDotNet for $framework."
+      done
+      ;;
   esac
 
   echo "Verified: $package_id"
@@ -438,6 +482,11 @@ done
 printf '\n== Run package consumer smoke test ==\n'
 
 ./scripts/test-nuget-consumer-smoke.sh \
+  --packages-ready
+
+printf '\n== Run packaged CLI tool smoke test ==\n'
+
+./scripts/test-cli-tool-smoke.sh \
   --packages-ready
 
 printf '\n== Verify normal CI does not publish ==\n'
@@ -462,3 +511,4 @@ printf 'Packages: %s nupkg + %s snupkg\n' \
 printf 'Frameworks: %s\n' "$EXPECTED_FRAMEWORKS_VALUE"
 printf 'Tests:    completed successfully\n'
 printf 'Consumer: completed successfully\n'
+printf 'CLI tool: completed successfully\n'
