@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-  <strong>Local-first, provider-independent authorization for .NET</strong>
+  <strong>Local-first, provider-independent authorization for .NET and Angular</strong>
 </p>
 
 <p align="center">
@@ -16,8 +16,8 @@
   <a href="https://www.nuget.org/packages/Fotbiler.RuleGate.AspNetCore"><img alt="NuGet downloads" src="https://img.shields.io/nuget/dt/Fotbiler.RuleGate.AspNetCore?logo=nuget&amp;label=downloads"></a>
   <a href="https://www.npmjs.com/package/@fotbiler/rulegate-angular"><img alt="npm" src="https://img.shields.io/npm/v/%40fotbiler%2Frulegate-angular?logo=npm&amp;label=npm"></a>
   <a href="https://www.npmjs.com/package/@fotbiler/rulegate-angular"><img alt="npm downloads" src="https://img.shields.io/npm/dm/%40fotbiler%2Frulegate-angular?logo=npm&amp;label=downloads"></a>
-  <a href="https://github.com/fotbiler-lab/rulegate/releases/tag/v0.4.0-preview.2"><img alt="GitHub release 0.4.0-preview.2" src="https://img.shields.io/badge/release-v0.4.0--preview.2-orange"></a>
   <a href="https://dotnet.microsoft.com/"><img alt=".NET 8, 9, and 10" src="https://img.shields.io/badge/.NET-8%20%7C%209%20%7C%2010-512BD4?logo=dotnet"></a>
+  <a href="https://angular.dev/"><img alt="Angular 22" src="https://img.shields.io/badge/Angular-22-DD0031?logo=angular&amp;logoColor=white"></a>
   <a href="LICENSE"><img alt="License" src="https://img.shields.io/github/license/fotbiler-lab/rulegate?label=license"></a>
 </p>
 
@@ -73,23 +73,20 @@ more than framework-level roles or ad hoc permission checks.
 | [`Fotbiler.RuleGate.Manifest`](https://www.nuget.org/packages/Fotbiler.RuleGate.Manifest)         | YAML manifest loading, validation, compilation, and domain mapping                                                                                |
 | [`Fotbiler.RuleGate.AspNetCore`](https://www.nuget.org/packages/Fotbiler.RuleGate.AspNetCore)     | ASP.NET Core dependency injection, claims mapping, dynamic policies, endpoint helpers, authorization attributes, and resource-based authorization |
 | [`Fotbiler.RuleGate.Cli`](https://www.nuget.org/packages/Fotbiler.RuleGate.Cli)                   | .NET tool for manifest validation, deterministic C# constant generation, stale-output checks, stable exit codes, and CI usage                     |
-| `Fotbiler.RuleGate.Keycloak`                                                                     | Optional Keycloak claim normalization and RuleGate subject mapping; preview release pending                                                       |
+| [`Fotbiler.RuleGate.Keycloak`](https://www.nuget.org/packages/Fotbiler.RuleGate.Keycloak)         | Optional Keycloak claim normalization and RuleGate subject mapping                                                                                |
 | [`@fotbiler/rulegate-angular`](https://www.npmjs.com/package/@fotbiler/rulegate-angular)          | Angular 22 authorization client, declarative route guards, UI directives, and TypeScript identifier generation                                    |
 
-The Angular npm package is `0.4.0-preview.2`. The independently versioned
-NuGet packages remain at `0.3.0-preview.2`.
+## Supported .NET and Angular versions
 
-## Supported .NET versions
+| Package family                  | Current preview     | Supported platform                                      | Distribution |
+| ------------------------------- | ------------------- | ------------------------------------------------------- | ------------ |
+| Foundational RuleGate packages  | `0.3.0-preview.2`   | .NET 8 (`net8.0`), .NET 9 (`net9.0`), .NET 10 (`net10.0`) | NuGet        |
+| RuleGate Keycloak integration   | `0.5.0-preview.1`   | .NET 8 (`net8.0`), .NET 9 (`net9.0`), .NET 10 (`net10.0`) | NuGet        |
+| RuleGate Angular SDK            | `0.5.0-preview.1`   | Angular 22                                              | npm          |
 
-The current preview targets:
-
-| Runtime | Target framework |
-| ------- | ---------------- |
-| .NET 8  | `net8.0`         |
-| .NET 9  | `net9.0`         |
-| .NET 10 | `net10.0`        |
-
-Every RuleGate NuGet package includes framework-specific assemblies for all three targets. The source, test suites, package assets, and package-only consumer are verified across each supported framework.
+Every RuleGate NuGet package includes framework-specific assemblies for all
+three .NET targets. The source, test suites, package assets, and package-only
+consumers are verified across each supported platform.
 
 ## Current capabilities
 
@@ -165,7 +162,13 @@ dotnet add package Fotbiler.RuleGate.Abstractions --version 0.3.0-preview.2
 Install the Angular SDK:
 
 ```bash
-pnpm add @fotbiler/rulegate-angular@0.4.0-preview.2
+pnpm add @fotbiler/rulegate-angular@0.5.0-preview.1
+```
+
+Install the optional Keycloak integration when Keycloak supplies the identity:
+
+```bash
+dotnet add package Fotbiler.RuleGate.Keycloak --version 0.5.0-preview.1
 ```
 
 ## Use the RuleGate CLI
@@ -399,14 +402,12 @@ Read the [security model](docs/security.md) before production integration.
 ## Project status
 
 The latest RuleGate preview is
-[`0.4.0-preview.2`](https://github.com/fotbiler-lab/rulegate/releases/tag/v0.4.0-preview.2).
-It expands the Angular SDK with declarative route authorization, denied
-navigation handling, template composition, disabled-state helpers, and
-manifest-derived TypeScript identifiers.
+[`0.5.0-preview.1`](https://github.com/fotbiler-lab/rulegate/releases/tag/v0.5.0-preview.1).
+It adds optional, provider-specific Keycloak adapters while keeping the
+authorization engine and primary Angular entrypoint provider-independent.
 
-The published NuGet packages remain at `0.3.0-preview.2`. The optional Keycloak
-integrations for `0.5.0-preview.1` are implemented in source and awaiting their
-preview release.
+The Angular npm package and Keycloak NuGet package are `0.5.0-preview.1`. The
+foundational NuGet packages remain at `0.3.0-preview.2`.
 
 See the [roadmap](docs/roadmap.md) for the complete release path.
 

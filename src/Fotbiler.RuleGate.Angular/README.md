@@ -10,7 +10,7 @@ a frontend authorization projection in RuleGate applications.
 ## Install
 
 ```bash
-pnpm add @fotbiler/rulegate-angular@0.4.0-preview.2
+pnpm add @fotbiler/rulegate-angular@0.5.0-preview.1
 ```
 
 The package requires Angular 22.

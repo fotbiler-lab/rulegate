@@ -6,7 +6,7 @@ on:
       tag:
         description: Existing release tag to stage
         required: true
-        default: v0.4.0-preview.2
+        default: v0.5.0-preview.1
         type: string
 
 permissions:
@@ -30,8 +30,8 @@ jobs:
       id-token: write
 
     env:
-      EXPECTED_TAG: v0.4.0-preview.2
-      PACKAGE_PATH: artifacts/npm/fotbiler-rulegate-angular-0.4.0-preview.2.tgz
+      EXPECTED_TAG: v0.5.0-preview.1
+      PACKAGE_PATH: artifacts/npm/fotbiler-rulegate-angular-0.5.0-preview.1.tgz
 
     steps:
       - name: Check out release tag
