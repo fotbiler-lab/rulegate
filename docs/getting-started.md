@@ -44,16 +44,26 @@ Install the ASP.NET Core integration and manifest packages:
 ```bash
 dotnet add package \
   Fotbiler.RuleGate.AspNetCore \
-  --version 0.2.0-preview.2
+  --version 0.3.0-preview.1
 
 dotnet add package \
   Fotbiler.RuleGate.Manifest \
-  --version 0.2.0-preview.2
+  --version 0.3.0-preview.1
 ```
 
 `Fotbiler.RuleGate.AspNetCore` brings in the authorization engine and public
 contracts. `Fotbiler.RuleGate.Manifest` provides YAML loading, validation, and
 policy compilation.
+
+The RuleGate CLI is distributed as a separate .NET tool. Install the exact
+preview version used by this guide:
+
+```bash
+dotnet tool install \
+  --global \
+  Fotbiler.RuleGate.Cli \
+  --version 0.3.0-preview.1
+```
 
 ## 3. Create the policy manifest
 
@@ -82,6 +92,32 @@ This policy matches requests where:
 - The subject contains the `document.read` permission.
 
 RuleGate matching is ordinal and case-sensitive.
+
+## Validate the manifest before startup
+
+From the directory containing `rulegate.yaml`, run:
+
+```bash
+rulegate validate
+```
+
+A valid manifest returns exit code `0`. Manifest loading, schema, structural,
+or semantic validation failures return exit code `1`.
+
+For CI systems and other automation, request pure JSON output:
+
+```bash
+rulegate validate --format json
+```
+
+An explicit path may be supplied when the manifest is stored elsewhere:
+
+```bash
+rulegate validate ./policies/rulegate.yaml
+```
+
+CLI validation uses the same fail-closed manifest compiler as application
+startup. A failed validation never produces or exposes a partial policy set.
 
 ## 4. Create the authorization flow
 
@@ -298,6 +334,6 @@ Continue with:
 
 - The root [README](../README.md) for ASP.NET Core dynamic policies, Minimal
   API endpoints, controller attributes, diagnostics, and HTTP result mapping.
-- The [roadmap](roadmap.md) for upcoming CLI, code generation, Angular,
+- The [roadmap](roadmap.md) for upcoming code generation, Angular,
   Keycloak, and OpenTelemetry work.
 - The [documentation index](README.md) to navigate all available guides.

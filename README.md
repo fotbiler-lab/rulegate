@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  RBAC · ABAC · CBAC · Resource-based authorization · ASP.NET Core · YAML manifests
+  RBAC · ABAC · CBAC · Resource-based authorization · ASP.NET Core · YAML manifests · RuleGate CLI
 </p>
 
 <p align="center">
@@ -78,6 +78,8 @@ more than framework-level roles or ad hoc permission checks.
   mapping.
 - **Manifest-enabled:** YAML policies can be loaded, validated, and compiled
   into immutable runtime policy definitions.
+- **CLI-ready:** manifests can be validated locally or in CI with deterministic
+  text or JSON output and stable process exit codes.
 
 ## Packages
 
@@ -87,6 +89,7 @@ more than framework-level roles or ad hoc permission checks.
 | `Fotbiler.RuleGate.Core` | Policy engine, built-in requirement evaluators, dispatcher, and in-memory policy provider |
 | `Fotbiler.RuleGate.Manifest` | YAML manifest loading, validation, compilation, and domain mapping |
 | `Fotbiler.RuleGate.AspNetCore` | ASP.NET Core dependency injection, claims mapping, dynamic policies, endpoint helpers, authorization attributes, and resource-based authorization |
+| `Fotbiler.RuleGate.Cli` | .NET tool for deterministic manifest validation, JSON output, stable exit codes, and CI usage |
 
 ## Supported .NET versions
 
@@ -132,6 +135,7 @@ modules.
 | Protect ASP.NET Core applications | [ASP.NET Core integration](docs/aspnetcore.md) |
 | Configure logs and diagnostic sinks | [Diagnostics](docs/diagnostics.md) |
 | Review trust boundaries and production controls | [Security model](docs/security.md) |
+| Use the RuleGate command-line tool | [CLI guide](docs/cli.md) |
 | Browse all documentation | [Documentation index](docs/README.md) |
 | Review current and planned capabilities | [Roadmap](docs/roadmap.md) |
 
@@ -140,8 +144,8 @@ modules.
 Install the ASP.NET Core and manifest packages:
 
 ```bash
-dotnet add package Fotbiler.RuleGate.AspNetCore --prerelease
-dotnet add package Fotbiler.RuleGate.Manifest --prerelease
+dotnet add package Fotbiler.RuleGate.AspNetCore --version 0.3.0-preview.1
+dotnet add package Fotbiler.RuleGate.Manifest --version 0.3.0-preview.1
 ```
 
 `Fotbiler.RuleGate.AspNetCore` references the core engine and abstractions
@@ -151,8 +155,36 @@ Applications using only RuleGate contracts may reference the abstractions
 package directly:
 
 ```bash
-dotnet add package Fotbiler.RuleGate.Abstractions --prerelease
+dotnet add package Fotbiler.RuleGate.Abstractions --version 0.3.0-preview.1
 ```
+
+## Validate manifests with the CLI
+
+Install the RuleGate command-line tool:
+
+```bash
+dotnet tool install \
+  --global \
+  Fotbiler.RuleGate.Cli \
+  --version 0.3.0-preview.1
+```
+
+Validate the default `rulegate.yaml` in the current directory:
+
+```bash
+rulegate validate
+```
+
+Validate an explicit manifest or request pure JSON output:
+
+```bash
+rulegate validate ./policies/rulegate.yaml
+rulegate validate --format json
+```
+
+Use `rulegate --help`, `rulegate --version`, and `rulegate info` to inspect the
+installed tool. See the [RuleGate CLI guide](docs/cli.md) for the complete
+command, output, exit-code, CI, and security contract.
 
 ## Quick start
 
@@ -332,7 +364,7 @@ Read the [security model](docs/security.md) before production integration.
 
 ## Project status
 
-RuleGate is currently published as `0.2.0-preview.2`.
+RuleGate is currently published as `0.3.0-preview.1`.
 
 The current preview includes the authorization core, manifest compilation,
 ASP.NET Core integration, safe HTTP authorization result mapping, and
