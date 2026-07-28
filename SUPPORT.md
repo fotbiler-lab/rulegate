@@ -1,4 +1,4 @@
-# Fotbiler RuleGate Support
+# RuleGate Support
 
 RuleGate is currently a preview project maintained on a best-effort basis.
 

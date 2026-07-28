@@ -1,4 +1,4 @@
-# Contributing to Fotbiler RuleGate
+# Contributing to RuleGate
 
 Thank you for considering a contribution to Fotbiler RuleGate.
 

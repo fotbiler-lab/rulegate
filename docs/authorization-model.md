@@ -658,12 +658,13 @@ The current preview includes:
 - Diagnostics and logging
 - Generic HTTP authorization-result mapping
 - Deterministic CLI manifest validation with text and JSON output
+- Deterministic C# constants generated from manifest identifiers
 
 The following areas are planned separately:
 
 - Attribute-to-attribute comparison helpers
 - Domain resource mapping helpers
-- Code generation
+- TypeScript code generation
 - Angular SDK
 - Keycloak helpers
 - OpenTelemetry integration

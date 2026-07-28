@@ -1023,8 +1023,9 @@ rulegate generate csharp \
 ```
 
 Use `--check` with the same arguments in CI to reject missing or stale output
-without modifying the file. See the [RuleGate CLI guide](cli.md) for the
-complete generation contract.
+without modifying the file. See the
+[C# code-generation guide](code-generation.md) for the complete generation
+contract.
 
 ## Next steps
 

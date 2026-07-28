@@ -6,6 +6,17 @@ The project follows Semantic Versioning. Preview releases may introduce breaking
 
 ## [Unreleased]
 
+### Documentation
+
+- Added a dedicated C# code-generation guide and aligned related CLI, manifest,
+  authorization-model, and documentation-index references.
+- Simplified published roadmap milestones and made the Angular SDK foundation
+  the explicit next milestone.
+- Added a scalable RuleGate wordmark and refreshed the root README badges and
+  capability wording.
+- Corrected the supported-preview table to match the latest-preview-only
+  security-fix policy.
+
 ## [0.3.0-preview.2] - 2026-07-28
 
 ### Added

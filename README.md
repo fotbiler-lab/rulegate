@@ -1,8 +1,6 @@
 <p align="center">
-  <strong>FOTBILER</strong>
+  <img src="docs/assets/rulegate-logo.svg" alt="RuleGate" width="520">
 </p>
-
-<h1 align="center">RuleGate</h1>
 
 <p align="center">
   <strong>Local-first, provider-independent authorization for .NET</strong>
@@ -13,36 +11,12 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/fotbiler-lab/rulegate/actions/workflows/ci.yml">
-    <img
-      alt="CI"
-      src="https://img.shields.io/github/actions/workflow/status/fotbiler-lab/rulegate/ci.yml?branch=main&amp;style=flat-square&amp;label=CI">
-  </a>
-  <a href="https://www.nuget.org/packages/Fotbiler.RuleGate.AspNetCore">
-    <img
-      alt="NuGet"
-      src="https://img.shields.io/nuget/vpre/Fotbiler.RuleGate.AspNetCore?style=flat-square&amp;logo=nuget&amp;label=NuGet">
-  </a>
-  <a href="https://www.nuget.org/packages/Fotbiler.RuleGate.AspNetCore">
-    <img
-      alt="NuGet downloads"
-      src="https://img.shields.io/nuget/dt/Fotbiler.RuleGate.AspNetCore?style=flat-square&amp;logo=nuget&amp;label=downloads">
-  </a>
-  <a href="https://github.com/fotbiler-lab/rulegate/releases/tag/v0.3.0-preview.2">
-    <img
-      alt="GitHub release 0.3.0-preview.2"
-      src="https://img.shields.io/badge/release-v0.3.0--preview.2-orange?style=flat-square">
-  </a>
-  <a href="https://dotnet.microsoft.com/">
-    <img
-      alt=".NET 8, 9, and 10"
-      src="https://img.shields.io/badge/.NET-8%20%7C%209%20%7C%2010-512BD4?style=flat-square&amp;logo=dotnet">
-  </a>
-  <a href="LICENSE">
-    <img
-      alt="License"
-      src="https://img.shields.io/github/license/fotbiler-lab/rulegate?style=flat-square&amp;label=license">
-  </a>
+  <a href="https://github.com/fotbiler-lab/rulegate/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/fotbiler-lab/rulegate/actions/workflows/ci.yml/badge.svg?branch=main"></a>
+  <a href="https://www.nuget.org/packages/Fotbiler.RuleGate.AspNetCore"><img alt="NuGet" src="https://img.shields.io/nuget/vpre/Fotbiler.RuleGate.AspNetCore?logo=nuget&amp;label=NuGet"></a>
+  <a href="https://www.nuget.org/packages/Fotbiler.RuleGate.AspNetCore"><img alt="NuGet downloads" src="https://img.shields.io/nuget/dt/Fotbiler.RuleGate.AspNetCore?logo=nuget&amp;label=downloads"></a>
+  <a href="https://github.com/fotbiler-lab/rulegate/releases/tag/v0.3.0-preview.2"><img alt="GitHub release 0.3.0-preview.2" src="https://img.shields.io/badge/release-v0.3.0--preview.2-orange"></a>
+  <a href="https://dotnet.microsoft.com/"><img alt=".NET 8, 9, and 10" src="https://img.shields.io/badge/.NET-8%20%7C%209%20%7C%2010-512BD4?logo=dotnet"></a>
+  <a href="LICENSE"><img alt="License" src="https://img.shields.io/github/license/fotbiler-lab/rulegate?label=license"></a>
 </p>
 
 <p align="center">
@@ -108,7 +82,7 @@ Every RuleGate NuGet package includes framework-specific assemblies for all thre
 
 RuleGate currently provides:
 
-- Permission- and role-based authorization
+- Permission and role-based authorization
 - Subject, resource, and context attribute requirements
 - Composable `all`, `any`, and `not` requirements
 - Default-deny and fail-closed evaluation
@@ -141,6 +115,7 @@ modules.
 | Configure logs and diagnostic sinks | [Diagnostics](docs/diagnostics.md) |
 | Review trust boundaries and production controls | [Security model](docs/security.md) |
 | Use the RuleGate command-line tool | [CLI guide](docs/cli.md) |
+| Generate deterministic C# constants | [C# code generation](docs/code-generation.md) |
 | Browse all documentation | [Documentation index](docs/README.md) |
 | Review current and planned capabilities | [Roadmap](docs/roadmap.md) |
 
@@ -209,8 +184,9 @@ rulegate generate csharp \
   --check
 ```
 
-See the [RuleGate CLI guide](docs/cli.md) for the complete validation,
-generation, output, exit-code, CI, and security contract.
+See the [RuleGate CLI guide](docs/cli.md) for validation and command reference,
+and the [C# code-generation guide](docs/code-generation.md) for generated
+output, stale checks, identifier rules, and CI usage.
 
 ## Quick start
 
@@ -399,6 +375,8 @@ diagnostics, deterministic CLI manifest validation, manifest-derived C# policy,
 resource-type, and action constants, atomic output writes, byte-exact
 stale-output checks, and generated-code compilation coverage across .NET 8,
 .NET 9, and .NET 10.
+
+The next milestone is the Angular SDK foundation in `0.4.0-preview.1`.
 
 See the [roadmap](docs/roadmap.md) for the complete release path.
 

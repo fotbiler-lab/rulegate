@@ -117,27 +117,6 @@ human-readable text.
 
 ## Generate C# constants
 
-Write generated source to standard output:
-
-```bash
-rulegate generate csharp \
-  ./rulegate.yaml \
-  --namespace Sample.Authorization
-```
-
-When `--output` is omitted, stdout contains only generated C# source.
-
-The generated source contains three public static classes:
-
-- `RuleGatePolicies`
-- `RuleGateResourceTypes`
-- `RuleGateActions`
-
-Each constant preserves the exact manifest value while exposing a deterministic
-C# identifier.
-
-## Generate a file
-
 ```bash
 rulegate generate csharp \
   ./rulegate.yaml \
@@ -145,20 +124,8 @@ rulegate generate csharp \
   --output Generated/RuleGate.g.cs
 ```
 
-File output is:
-
-- UTF-8 without a byte-order mark;
-- LF-only;
-- sorted deterministically by ordinal manifest value;
-- written through a temporary file and atomically replaced;
-- produced only after complete manifest compilation and generation succeed.
-
-A failed manifest or generation diagnostic leaves an existing output file
-unchanged.
-
-## Check for stale generated output
-
-Use `--check` in CI:
+Use the same command with `--check` to detect missing or stale committed output
+without modifying it:
 
 ```bash
 rulegate generate csharp \
@@ -168,28 +135,9 @@ rulegate generate csharp \
   --check
 ```
 
-Check mode never modifies the output file. It compares the expected UTF-8 bytes
-with the existing file:
-
-- current output returns `0`;
-- missing or stale output returns `1`;
-- using `--check` without `--output` returns `2`.
-
-A byte-order mark, CRLF conversion, manual edit, changed namespace, changed
-manifest, or changed generator output makes the file stale.
-
-## Identifier generation and collisions
-
-Manifest policy IDs, resource types, and actions are converted into PascalCase
-C# identifiers. Non-alphanumeric separators start a new identifier segment, and
-a leading number is prefixed with `_`.
-
-Different values may normalize to the same identifier. For example,
-`orders.read` and `orders-read` both normalize to `OrdersRead`. RuleGate treats
-this as generation diagnostic `RGCG004` and produces no source.
-
-Namespace values must be valid dotted C# namespaces. Invalid namespaces and
-empty or conflicting manifest values fail closed.
+See the [C# code-generation guide](code-generation.md) for generated classes,
+deterministic file guarantees, stale-output checks, identifier rules, collision
+diagnostics, and security boundaries.
 
 ## Exit codes
 
@@ -284,6 +232,7 @@ Run from the directory containing `rulegate.yaml`, or provide an explicit path.
 
 - [Getting started](getting-started.md)
 - [Manifest guide](manifests.md)
+- [C# code generation](code-generation.md)
 - [Authorization model](authorization-model.md)
 - [Security model](security.md)
 - [Roadmap](roadmap.md)

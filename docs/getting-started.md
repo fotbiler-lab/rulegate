@@ -353,8 +353,9 @@ Continue with:
 
 - The root [README](../README.md) for ASP.NET Core dynamic policies, Minimal
   API endpoints, controller attributes, diagnostics, and HTTP result mapping.
-- The [RuleGate CLI guide](cli.md) for deterministic validation, C#
-  generation, and stale-output checks.
-- The [roadmap](roadmap.md) for upcoming developer-experience, Angular,
-  Keycloak, and OpenTelemetry work.
+- The [RuleGate CLI guide](cli.md) for deterministic manifest validation.
+- The [C# code-generation guide](code-generation.md) for generated constants
+  and stale-output checks.
+- The [roadmap](roadmap.md) for upcoming Angular, Keycloak, and OpenTelemetry
+  work.
 - The [documentation index](README.md) to navigate all available guides.
