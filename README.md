@@ -7,7 +7,7 @@
 </p>
 
 <p align="center">
-  RBAC · ABAC · CBAC · Resource-based authorization · ASP.NET Core · YAML manifests · RuleGate CLI
+  RBAC · ABAC · CBAC · Resource-based authorization · ASP.NET Core · Angular · YAML manifests · RuleGate CLI
 </p>
 
 <p align="center">
@@ -55,6 +55,9 @@ more than framework-level roles or ad hoc permission checks.
 - **CLI-ready:** manifests can be validated and converted into deterministic C#
   policy, resource-type, and action constants locally or in CI, with stable
   process exit codes and stale-output detection.
+- **Angular-ready:** a fail-closed frontend projection, route guards, and a
+  structural directive keep navigation and template visibility aligned with
+  RuleGate identifiers.
 
 ## Packages
 
@@ -65,6 +68,10 @@ more than framework-level roles or ad hoc permission checks.
 | [`Fotbiler.RuleGate.Manifest`](https://www.nuget.org/packages/Fotbiler.RuleGate.Manifest) | YAML manifest loading, validation, compilation, and domain mapping |
 | [`Fotbiler.RuleGate.AspNetCore`](https://www.nuget.org/packages/Fotbiler.RuleGate.AspNetCore) | ASP.NET Core dependency injection, claims mapping, dynamic policies, endpoint helpers, authorization attributes, and resource-based authorization |
 | [`Fotbiler.RuleGate.Cli`](https://www.nuget.org/packages/Fotbiler.RuleGate.Cli) | .NET tool for manifest validation, deterministic C# constant generation, stale-output checks, stable exit codes, and CI usage |
+| [`@fotbiler/rulegate-angular`](src/Fotbiler.RuleGate.Angular) | Angular 22 authorization client, permission and policy guards, and structural template directive |
+
+The Angular package is implemented for `0.4.0-preview.1` but is not yet
+published to npm. The NuGet packages remain at `0.3.0-preview.2`.
 
 ## Supported .NET versions
 
@@ -99,10 +106,14 @@ RuleGate currently provides:
 - Manifest-derived C# policy, resource-type, and action constants
 - Atomic generated-file writes and byte-exact stale-output checks
 - Generated-code compilation smoke coverage on .NET 8, .NET 9, and .NET 10
+- Signal-backed Angular frontend authorization state
+- Angular permission and policy route guards
+- Angular structural authorization directive
+- Package-only Angular npm tarball verification
 - .NET 8, .NET 9, and .NET 10 packages
 
-See the [roadmap](docs/roadmap.md) for published milestones and planned
-modules.
+See the [roadmap](docs/roadmap.md) for published milestones and upcoming
+previews.
 
 ## Documentation
 
@@ -116,6 +127,7 @@ modules.
 | Review trust boundaries and production controls | [Security model](docs/security.md) |
 | Use the RuleGate command-line tool | [CLI guide](docs/cli.md) |
 | Generate deterministic C# constants | [C# code generation](docs/code-generation.md) |
+| Add frontend permission and policy checks | [Angular SDK](docs/angular.md) |
 | Browse all documentation | [Documentation index](docs/README.md) |
 | Review current and planned capabilities | [Roadmap](docs/roadmap.md) |
 
@@ -361,6 +373,8 @@ and indeterminate evaluations cannot grant access.
 
 The protected backend operation remains the security boundary. Subject,
 resource, and context data must be derived from trusted application sources.
+Angular guards and template directives improve user experience only and cannot
+protect an API.
 
 Read the [security model](docs/security.md) before production integration.
 
@@ -369,14 +383,13 @@ Read the [security model](docs/security.md) before production integration.
 RuleGate is published as
 [`0.3.0-preview.2`](https://github.com/fotbiler-lab/rulegate/releases/tag/v0.3.0-preview.2).
 
-This preview includes the authorization core, manifest compilation, ASP.NET
-Core integration, safe HTTP authorization result mapping, structured
-diagnostics, deterministic CLI manifest validation, manifest-derived C# policy,
-resource-type, and action constants, atomic output writes, byte-exact
-stale-output checks, and generated-code compilation coverage across .NET 8,
-.NET 9, and .NET 10.
+The repository also contains the `0.4.0-preview.1` Angular SDK foundation:
+frontend authorization state, permission and policy route guards, a structural
+authorization directive, and package-only npm tarball verification. This npm
+package has not yet been published.
 
-The next milestone is the Angular SDK foundation in `0.4.0-preview.1`.
+The next release is `0.4.0-preview.1`; the following product milestone is the
+Angular developer-experience work in `0.4.0-preview.2`.
 
 See the [roadmap](docs/roadmap.md) for the complete release path.
 

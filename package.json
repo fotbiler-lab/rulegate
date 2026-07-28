@@ -1,0 +1,29 @@
+{
+  "name": "@fotbiler/rulegate-workspace",
+  "version": "0.0.0",
+  "private": true,
+  "packageManager": "pnpm@11.3.0",
+  "scripts": {
+    "angular:build": "./scripts/build-angular-package.sh",
+    "angular:format:check": "prettier --check angular.json package.json pnpm-workspace.yaml tsconfig.json src/Fotbiler.RuleGate.Angular",
+    "angular:package:smoke": "./scripts/test-angular-package-smoke.sh",
+    "angular:test": "ng test rulegate-angular --watch=false"
+  },
+  "devDependencies": {
+    "@angular/build": "22.0.8",
+    "@angular/cli": "22.0.8",
+    "@angular/common": "22.0.8",
+    "@angular/compiler": "22.0.8",
+    "@angular/compiler-cli": "22.0.8",
+    "@angular/core": "22.0.8",
+    "@angular/platform-browser": "22.0.8",
+    "@angular/router": "22.0.8",
+    "jsdom": "28.0.0",
+    "ng-packagr": "22.0.2",
+    "prettier": "3.8.1",
+    "rxjs": "7.8.2",
+    "tslib": "2.8.1",
+    "typescript": "6.0.2",
+    "vitest": "4.1.10"
+  }
+}

@@ -22,7 +22,8 @@ Do not report security vulnerabilities through public issues. Follow
 
 ## Development requirements
 
-Use the .NET SDK selected by [`global.json`](global.json).
+Use the .NET SDK selected by [`global.json`](global.json). Angular SDK changes
+also require Node.js 22.22.3 and pnpm 11.3.0.
 
 The repository targets:
 
@@ -37,6 +38,7 @@ git clone https://github.com/fotbiler-lab/rulegate.git
 cd rulegate
 
 dotnet restore Fotbiler.RuleGate.slnx
+pnpm install --frozen-lockfile
 ```
 
 ## Branches
@@ -111,6 +113,13 @@ dotnet pack \
 
 ./scripts/test-generated-code-smoke.sh \
   --packages-ready
+
+pnpm angular:format:check
+pnpm angular:build
+pnpm angular:test
+
+./scripts/test-angular-package-smoke.sh \
+  --package-ready
 
 git diff --check
 ```

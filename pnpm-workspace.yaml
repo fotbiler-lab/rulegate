@@ -1,0 +1,8 @@
+packages:
+  - src/Fotbiler.RuleGate.Angular
+
+allowBuilds:
+  '@parcel/watcher': false
+  esbuild: true
+  lmdb: false
+  msgpackr-extract: false

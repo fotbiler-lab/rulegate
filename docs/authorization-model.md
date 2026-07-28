@@ -665,7 +665,7 @@ The following areas are planned separately:
 - Attribute-to-attribute comparison helpers
 - Domain resource mapping helpers
 - TypeScript code generation
-- Angular SDK
+- Angular developer-experience helpers
 - Keycloak helpers
 - OpenTelemetry integration
 - Decision visualization

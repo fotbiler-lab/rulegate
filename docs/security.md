@@ -27,6 +27,9 @@ For policy syntax, read the [manifest guide](manifests.md).
 For diagnostic fields and sinks, read the
 [diagnostics guide](diagnostics.md).
 
+For client-side route and template APIs, read the
+[Angular SDK guide](angular.md).
+
 ## Security boundary
 
 The protected backend operation is the security boundary.
@@ -1473,5 +1476,6 @@ Continue with:
 - [Authorization model](authorization-model.md) for policy concepts.
 - [Manifest guide](manifests.md) for complete YAML syntax.
 - [ASP.NET Core integration](aspnetcore.md) for HTTP integration.
+- [Angular SDK](angular.md) for client-side user-experience controls.
 - [Diagnostics](diagnostics.md) for diagnostic contracts.
 - [Documentation index](README.md) for all guides.

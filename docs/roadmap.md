@@ -24,13 +24,13 @@ the preview releases.
 | HTTP authorization-result mapping | ✅ Available |
 | CLI manifest validation | ✅ Available |
 | Deterministic C# code generation | ✅ Available |
-| Angular SDK | 🎯 Next milestone |
+| Angular SDK | 🧪 Implemented for `0.4.0-preview.1` |
 | Keycloak helpers | ⏳ Planned |
 | OpenTelemetry integration | ⏳ Planned |
 | Decision visualization | ⏳ Planned |
 
-The latest published preview is `0.3.0-preview.2`. The next product milestone
-is the Angular SDK foundation in `0.4.0-preview.1`.
+The latest published preview is `0.3.0-preview.2`. The Angular SDK foundation
+is implemented in source for the next preview, `0.4.0-preview.1`.
 
 ## Published previews
 
@@ -84,25 +84,27 @@ is the Angular SDK foundation in `0.4.0-preview.1`.
 - Generated-code verification on .NET 8, .NET 9, and .NET 10
 - [C# code-generation guide](code-generation.md)
 
-## Next milestone
+## Next preview
 
 ### `0.4.0-preview.1` — Angular SDK Foundation
 
-- Angular authorization client models
-- Permission and policy guards
-- Structural authorization directive
-- Generated policy constant consumption
-- Initial `@fotbiler` npm package
+- Signal-backed authorization client and public TypeScript models
+- Permission and policy route guards
+- Standalone structural authorization directive
+- Generated string-constant consumption
+- Angular Package Format build for `@fotbiler/rulegate-angular`
+- Package-only npm tarball consumer verification
+- [Angular SDK guide](angular.md)
 
 ## Later milestones
 
 ### `0.4.0-preview.2` — Angular Developer Experience
 
-- Route integration
-- Template authorization helpers
-- Framework-aware result handling
-- Frontend and backend policy identifier alignment
-- Angular examples and consumer tests
+- Declarative route authorization metadata
+- Disabled-state and template composition helpers
+- Framework-aware denied-navigation handling
+- TypeScript generation and backend identifier alignment
+- Angular examples and integration consumers
 
 ### `0.5.0-preview.1` — Keycloak Helpers
 

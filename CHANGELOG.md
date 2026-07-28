@@ -6,8 +6,25 @@ The project follows Semantic Versioning. Preview releases may introduce breaking
 
 ## [Unreleased]
 
+### Added
+
+- Added the `@fotbiler/rulegate-angular` package foundation for Angular 22.
+- Added a signal-backed frontend authorization client, permission and policy
+  route guards, and a standalone structural authorization directive.
+- Added package-only npm tarball verification through a minimal Angular
+  consumer application.
+
+### Security
+
+- Angular checks deny when state is uninitialized, cleared, malformed, or does
+  not contain the exact case-sensitive identifier.
+- Documented that browser-side guards and visibility controls never replace
+  backend authorization.
+
 ### Documentation
 
+- Added an Angular SDK guide covering state, guards, template visibility,
+  generated constants, and the frontend trust boundary.
 - Added a dedicated C# code-generation guide and aligned related CLI, manifest,
   authorization-model, and documentation-index references.
 - Simplified published roadmap milestones and made the Angular SDK foundation
