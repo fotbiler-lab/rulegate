@@ -105,10 +105,10 @@ boundaries.
 
 The built-in sink emits two structured event types.
 
-| Event ID | Level | Purpose |
-|---:|---|---|
-| `2000` | Information | Completed authorization evaluation |
-| `2001` | Debug | Completed requirement evaluation |
+| Event ID | Level       | Purpose                            |
+| -------: | ----------- | ---------------------------------- |
+|   `2000` | Information | Completed authorization evaluation |
+|   `2001` | Debug       | Completed requirement evaluation   |
 
 ## Authorization event
 
@@ -116,14 +116,14 @@ Event `2000` represents the completed authorization decision.
 
 It contains:
 
-| Field | Description |
-|---|---|
-| `EvaluationId` | Unique authorization evaluation identifier |
-| `PolicyId` | Matched policy identifier, or null when no policy matched |
-| `IsAllowed` | Final allow or deny result |
-| `DurationMs` | Total measured evaluation duration |
-| `FailureCodes` | Comma-separated authorization failure codes |
-| `RequirementCount` | Number of recorded requirement evaluations |
+| Field              | Description                                               |
+| ------------------ | --------------------------------------------------------- |
+| `EvaluationId`     | Unique authorization evaluation identifier                |
+| `PolicyId`         | Matched policy identifier, or null when no policy matched |
+| `IsAllowed`        | Final allow or deny result                                |
+| `DurationMs`       | Total measured evaluation duration                        |
+| `FailureCodes`     | Comma-separated authorization failure codes               |
+| `RequirementCount` | Number of recorded requirement evaluations                |
 
 Conceptual log entry:
 
@@ -145,17 +145,18 @@ Event `2001` represents one evaluated requirement.
 
 It contains:
 
-| Field | Description |
-|---|---|
-| `AuthorizationEvaluationId` | Parent authorization evaluation |
-| `RequirementEvaluationId` | Unique requirement evaluation identifier |
-| `ParentEvaluationId` | Parent requirement identifier in the trace tree |
-| `RequirementId` | Optional policy-defined requirement identifier |
-| `RequirementKind` | Built-in or custom requirement category |
-| `Outcome` | Satisfied, NotSatisfied, or Indeterminate |
-| `DurationMs` | Requirement evaluation duration |
-| `FailureCodes` | Comma-separated requirement failure codes |
-| `AttributeSource` | Subject, Resource, or Context when applicable |
+| Field                       | Description                                     |
+| --------------------------- | ----------------------------------------------- |
+| `AuthorizationEvaluationId` | Parent authorization evaluation                 |
+| `RequirementEvaluationId`   | Unique requirement evaluation identifier        |
+| `ParentEvaluationId`        | Parent requirement identifier in the trace tree |
+| `RequirementId`             | Optional policy-defined requirement identifier  |
+| `RequirementKind`           | Built-in or custom requirement category         |
+| `Outcome`                   | Satisfied, NotSatisfied, or Indeterminate       |
+| `DurationMs`                | Requirement evaluation duration                 |
+| `FailureCodes`              | Comma-separated requirement failure codes       |
+| `AttributeSource`           | Subject, Resource, or Context when applicable   |
+| `ComparedAttributeSource`   | Second operand source when applicable           |
 
 The built-in logging sink intentionally does not log the attribute name.
 
@@ -191,14 +192,14 @@ evaluation.
 
 It exposes:
 
-| Property | Type | Description |
-|---|---|---|
-| `EvaluationId` | `Guid` | Non-empty evaluation identifier |
-| `PolicyId` | `string?` | Matched policy identifier |
-| `IsAllowed` | `bool` | Final decision |
-| `Duration` | `TimeSpan` | Total measured duration |
-| `FailureCodes` | `IReadOnlyList<string>` | Decision failure codes |
-| `RequirementEvaluations` | `IReadOnlyList<RequirementEvaluationDiagnostic>` | Requirement trace |
+| Property                 | Type                                             | Description                     |
+| ------------------------ | ------------------------------------------------ | ------------------------------- |
+| `EvaluationId`           | `Guid`                                           | Non-empty evaluation identifier |
+| `PolicyId`               | `string?`                                        | Matched policy identifier       |
+| `IsAllowed`              | `bool`                                           | Final decision                  |
+| `Duration`               | `TimeSpan`                                       | Total measured duration         |
+| `FailureCodes`           | `IReadOnlyList<string>`                          | Decision failure codes          |
+| `RequirementEvaluations` | `IReadOnlyList<RequirementEvaluationDiagnostic>` | Requirement trace               |
 
 The model:
 
@@ -224,19 +225,21 @@ One `RequirementEvaluationDiagnostic` represents one requirement evaluation.
 
 It exposes:
 
-| Property | Type | Description |
-|---|---|---|
-| `EvaluationId` | `Guid` | Unique requirement evaluation ID |
-| `ParentEvaluationId` | `Guid?` | Parent requirement evaluation ID |
-| `RequirementId` | `string?` | Optional policy-defined ID |
-| `RequirementKind` | `AuthorizationRequirementKind` | Requirement category |
-| `Outcome` | `RequirementEvaluationOutcome` | Evaluation outcome |
-| `Duration` | `TimeSpan` | Measured duration |
-| `FailureCodes` | `IReadOnlyList<string>` | Requirement failure codes |
-| `AttributeSource` | `AuthorizationAttributeSource?` | Attribute model |
-| `AttributeName` | `string?` | Attribute name for custom sinks |
+| Property                  | Type                            | Description                                    |
+| ------------------------- | ------------------------------- | ---------------------------------------------- |
+| `EvaluationId`            | `Guid`                          | Unique requirement evaluation ID               |
+| `ParentEvaluationId`      | `Guid?`                         | Parent requirement evaluation ID               |
+| `RequirementId`           | `string?`                       | Optional policy-defined ID                     |
+| `RequirementKind`         | `AuthorizationRequirementKind`  | Requirement category                           |
+| `Outcome`                 | `RequirementEvaluationOutcome`  | Evaluation outcome                             |
+| `Duration`                | `TimeSpan`                      | Measured duration                              |
+| `FailureCodes`            | `IReadOnlyList<string>`         | Requirement failure codes                      |
+| `AttributeSource`         | `AuthorizationAttributeSource?` | Attribute model                                |
+| `AttributeName`           | `string?`                       | Attribute name for custom sinks                |
+| `ComparedAttributeSource` | `AuthorizationAttributeSource?` | Second operand attribute model                 |
+| `ComparedAttributeName`   | `string?`                       | Second operand attribute name for custom sinks |
 
-The diagnostic model can contain an attribute name.
+The diagnostic model can contain attribute names for either operand.
 
 It never contains:
 
@@ -253,15 +256,16 @@ The built-in logging sink does not emit `AttributeName`.
 
 `AuthorizationRequirementKind` contains:
 
-| Value | Meaning |
-|---|---|
-| `Permission` | Permission requirement |
-| `Role` | Role requirement |
-| `Attribute` | Attribute requirement |
-| `All` | Logical all requirement |
-| `Any` | Logical any requirement |
-| `Not` | Logical negation requirement |
-| `Custom` | Application-specific requirement |
+| Value                 | Meaning                          |
+| --------------------- | -------------------------------- |
+| `Permission`          | Permission requirement           |
+| `Role`                | Role requirement                 |
+| `Attribute`           | Attribute requirement            |
+| `AttributeComparison` | Attribute comparison requirement |
+| `All`                 | Logical all requirement          |
+| `Any`                 | Logical any requirement          |
+| `Not`                 | Logical negation requirement     |
+| `Custom`              | Application-specific requirement |
 
 Custom requirement definitions are reported as `Custom` unless RuleGate knows
 their built-in category.
@@ -270,10 +274,10 @@ their built-in category.
 
 `RequirementEvaluationOutcome` contains:
 
-| Outcome | Meaning |
-|---|---|
-| `Satisfied` | The requirement succeeded |
-| `NotSatisfied` | The requirement evaluated normally but did not pass |
+| Outcome         | Meaning                                                 |
+| --------------- | ------------------------------------------------------- |
+| `Satisfied`     | The requirement succeeded                               |
+| `NotSatisfied`  | The requirement evaluated normally but did not pass     |
 | `Indeterminate` | The requirement could not produce a reliable comparison |
 
 Examples of `NotSatisfied`:
@@ -393,6 +397,7 @@ The Debug requirement event includes:
 - Duration
 - Failure codes
 - Attribute source
+- Compared attribute source
 
 ## Data omitted by the built-in logging sink
 

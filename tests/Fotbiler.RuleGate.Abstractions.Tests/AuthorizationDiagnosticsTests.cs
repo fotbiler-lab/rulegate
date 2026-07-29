@@ -27,6 +27,8 @@ public sealed class AuthorizationDiagnosticsTests
                 TimeSpan.FromMilliseconds(1),
                 failureCodes,
                 AuthorizationAttributeSource.Subject,
+                "department",
+                AuthorizationAttributeSource.Resource,
                 "department");
 
         failureCodes.Clear();
@@ -42,6 +44,14 @@ public sealed class AuthorizationDiagnosticsTests
         Assert.Equal(
             "department",
             diagnostic.AttributeName);
+
+        Assert.Equal(
+            AuthorizationAttributeSource.Resource,
+            diagnostic.ComparedAttributeSource);
+
+        Assert.Equal(
+            "department",
+            diagnostic.ComparedAttributeName);
     }
 
     [Fact]

@@ -211,6 +211,7 @@ Supported kinds are:
 - `permission`
 - `role`
 - `attribute`
+- `attributeComparison`
 - `all`
 - `any`
 - `not`
@@ -320,17 +321,8 @@ Attribute members are:
 `exists`, `notExists`, `isNull`, `isNotNull`, `isEmpty`, and `isNotEmpty` do
 not accept `valueType` or `value`. Every other operator requires both members.
 
-The built-in attribute requirement does not compare one attribute directly
-with another attribute.
-
-For example, it cannot directly express:
-
-```text
-Resource.ownerId equals Subject.id
-```
-
-Use a custom evaluator or a trusted, application-computed attribute for that
-kind of rule.
+Use an `attributeComparison` requirement when both operands must be resolved
+at evaluation time.
 
 ### Attribute sources
 
@@ -627,6 +619,106 @@ The following conditions produce an indeterminate requirement result:
 
 Both not-satisfied and indeterminate outcomes deny access through the
 fail-closed engine.
+
+## Attribute comparison requirements
+
+An `attributeComparison` requirement compares two explicit operands. Each
+operand may read a subject, resource, or context attribute, or declare a typed
+literal:
+
+```yaml
+requirement:
+  id: resource-owner
+  attributeComparison:
+    left:
+      source: resource
+      name: ownerId
+    operator: equal
+    right:
+      source: subject
+      name: id
+```
+
+This expresses `Resource.ownerId equals Subject.id` without trusting a
+client-computed `isOwner` flag.
+
+An attribute operand requires `source` and `name`:
+
+```yaml
+left:
+  source: subject
+  name: organizationId
+```
+
+A literal operand requires `valueType` and `value`:
+
+```yaml
+right:
+  valueType: stringCollection
+  value:
+    - organization-1
+    - organization-2
+```
+
+An operand cannot combine the attribute and literal shapes. The supported
+sources and literal value types are the same as for `attribute` requirements.
+
+Only binary operators are valid. `exists`, `notExists`, `isNull`, `isNotNull`,
+`isEmpty`, and `isNotEmpty` remain single-attribute operations and must use an
+`attribute` requirement. Operator direction follows the YAML order: `left`
+is the runtime value on the left side of the operation and `right` is the
+value on the right.
+
+Common rules include ownership and organization scope:
+
+```yaml
+requirement:
+  all:
+    - attributeComparison:
+        left:
+          source: resource
+          name: ownerId
+        operator: equal
+        right:
+          source: subject
+          name: id
+    - attributeComparison:
+        left:
+          source: subject
+          name: organizationId
+        operator: equal
+        right:
+          source: resource
+          name: organizationId
+```
+
+Numeric operands are normalized before comparison, so supported integral and
+decimal runtime types can be compared consistently. Date/time ordering uses
+`DateTimeOffset` values. A manifest literal still requires an explicit type:
+
+```yaml
+attributeComparison:
+  left:
+    source: resource
+    name: totalAmount
+  operator: lessThanOrEqual
+  right:
+    valueType: number
+    value: 1000.50
+```
+
+String comparison is ordinal and case-sensitive by default. Set
+`stringComparison: ordinalIgnoreCase` only when the selected operator and both
+known operand kinds support string comparison.
+
+Missing and null remain distinct. A missing attribute is not satisfied; an
+unsupported runtime value, incompatible operand kinds, or unsupported
+operator/type combination is indeterminate. Every non-successful outcome is
+denied by the fail-closed engine.
+
+Diagnostics identify operand structure through attribute sources and names,
+but never contain resolved attribute or literal values. The built-in logging
+sink omits attribute names as well.
 
 ## Logical requirements
 
@@ -958,18 +1050,43 @@ policies[0].requirement.all[1].attribute.operator
 
 ### Attribute codes
 
-| Code                                             | Typical path           |
-| ------------------------------------------------ | ---------------------- |
-| `MANIFEST_ATTRIBUTE_SOURCE_REQUIRED`             | Attribute `.source`    |
-| `MANIFEST_ATTRIBUTE_SOURCE_INVALID`              | Attribute `.source`    |
-| `MANIFEST_ATTRIBUTE_NAME_REQUIRED`               | Attribute `.name`      |
-| `MANIFEST_ATTRIBUTE_OPERATOR_REQUIRED`           | Attribute `.operator`  |
-| `MANIFEST_ATTRIBUTE_OPERATOR_INVALID`            | Attribute `.operator`  |
-| `MANIFEST_ATTRIBUTE_VALUE_TYPE_REQUIRED`         | Attribute `.valueType` |
-| `MANIFEST_ATTRIBUTE_VALUE_TYPE_INVALID`          | Attribute `.valueType` |
-| `MANIFEST_ATTRIBUTE_VALUE_REQUIRED`              | Attribute `.value`     |
-| `MANIFEST_ATTRIBUTE_VALUE_INVALID`               | Attribute `.value`     |
-| `MANIFEST_ATTRIBUTE_OPERATOR_VALUE_TYPE_INVALID` | Attribute `.operator`  |
+| Code                                               | Typical path                  |
+| -------------------------------------------------- | ----------------------------- |
+| `MANIFEST_ATTRIBUTE_SOURCE_REQUIRED`               | Attribute `.source`           |
+| `MANIFEST_ATTRIBUTE_SOURCE_INVALID`                | Attribute `.source`           |
+| `MANIFEST_ATTRIBUTE_NAME_REQUIRED`                 | Attribute `.name`             |
+| `MANIFEST_ATTRIBUTE_OPERATOR_REQUIRED`             | Attribute `.operator`         |
+| `MANIFEST_ATTRIBUTE_OPERATOR_INVALID`              | Attribute `.operator`         |
+| `MANIFEST_ATTRIBUTE_VALUE_TYPE_REQUIRED`           | Attribute `.valueType`        |
+| `MANIFEST_ATTRIBUTE_VALUE_TYPE_INVALID`            | Attribute `.valueType`        |
+| `MANIFEST_ATTRIBUTE_VALUE_REQUIRED`                | Attribute `.value`            |
+| `MANIFEST_ATTRIBUTE_VALUE_INVALID`                 | Attribute `.value`            |
+| `MANIFEST_ATTRIBUTE_OPERATOR_VALUE_TYPE_INVALID`   | Attribute `.operator`         |
+| `MANIFEST_ATTRIBUTE_VALUE_TYPE_NOT_ALLOWED`        | Attribute `.valueType`        |
+| `MANIFEST_ATTRIBUTE_VALUE_NOT_ALLOWED`             | Attribute `.value`            |
+| `MANIFEST_ATTRIBUTE_STRING_COMPARISON_INVALID`     | Attribute `.stringComparison` |
+| `MANIFEST_ATTRIBUTE_STRING_COMPARISON_NOT_ALLOWED` | Attribute `.stringComparison` |
+
+### Attribute comparison codes
+
+| Code                                                          | Typical path                             |
+| ------------------------------------------------------------- | ---------------------------------------- |
+| `MANIFEST_ATTRIBUTE_COMPARISON_LEFT_REQUIRED`                 | Attribute comparison `.left`             |
+| `MANIFEST_ATTRIBUTE_COMPARISON_RIGHT_REQUIRED`                | Attribute comparison `.right`            |
+| `MANIFEST_ATTRIBUTE_COMPARISON_OPERATOR_REQUIRED`             | Attribute comparison `.operator`         |
+| `MANIFEST_ATTRIBUTE_COMPARISON_OPERATOR_INVALID`              | Attribute comparison `.operator`         |
+| `MANIFEST_ATTRIBUTE_COMPARISON_OPERATOR_NOT_BINARY`           | Attribute comparison `.operator`         |
+| `MANIFEST_ATTRIBUTE_COMPARISON_OPERAND_KIND_INVALID`          | Attribute comparison operand             |
+| `MANIFEST_ATTRIBUTE_COMPARISON_OPERAND_SOURCE_REQUIRED`       | Operand `.source`                        |
+| `MANIFEST_ATTRIBUTE_COMPARISON_OPERAND_SOURCE_INVALID`        | Operand `.source`                        |
+| `MANIFEST_ATTRIBUTE_COMPARISON_OPERAND_NAME_REQUIRED`         | Operand `.name`                          |
+| `MANIFEST_ATTRIBUTE_COMPARISON_OPERAND_VALUE_TYPE_REQUIRED`   | Literal operand `.valueType`             |
+| `MANIFEST_ATTRIBUTE_COMPARISON_OPERAND_VALUE_TYPE_INVALID`    | Literal operand `.valueType`             |
+| `MANIFEST_ATTRIBUTE_COMPARISON_OPERAND_VALUE_REQUIRED`        | Literal operand `.value`                 |
+| `MANIFEST_ATTRIBUTE_COMPARISON_OPERAND_VALUE_INVALID`         | Literal operand `.value`                 |
+| `MANIFEST_ATTRIBUTE_COMPARISON_OPERAND_TYPE_INCOMPATIBLE`     | Attribute comparison `.operator`         |
+| `MANIFEST_ATTRIBUTE_COMPARISON_STRING_COMPARISON_INVALID`     | Attribute comparison `.stringComparison` |
+| `MANIFEST_ATTRIBUTE_COMPARISON_STRING_COMPARISON_NOT_ALLOWED` | Attribute comparison `.stringComparison` |
 
 Applications may use stable codes and paths for tooling. Human-facing messages
 may evolve during preview releases.
@@ -1118,6 +1235,7 @@ The current manifest format supports:
 - Permission requirements
 - Role requirements
 - Typed attribute-to-literal requirements
+- Attribute-to-attribute and attribute-to-literal comparison requirements
 - Nested `all`, `any`, and `not` requirements
 - Structured load errors
 - Structured validation errors
@@ -1125,7 +1243,6 @@ The current manifest format supports:
 
 The current format does not directly support:
 
-- Attribute-to-attribute comparison
 - Includes or imported manifest fragments
 - Environment-variable substitution
 - Remote manifest loading

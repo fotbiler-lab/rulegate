@@ -318,14 +318,15 @@ A requirement defines a condition that must be satisfied.
 
 RuleGate currently provides these built-in requirement categories:
 
-| Requirement | Purpose                                                                |
-| ----------- | ---------------------------------------------------------------------- |
-| Permission  | Require a subject permission                                           |
-| Role        | Require a subject role                                                 |
-| Attribute   | Compare a subject, resource, or context attribute with a typed literal |
-| `all`       | Require every child requirement                                        |
-| `any`       | Require at least one child requirement                                 |
-| `not`       | Negate one child requirement                                           |
+| Requirement          | Purpose                                                                |
+| -------------------- | ---------------------------------------------------------------------- |
+| Permission           | Require a subject permission                                           |
+| Role                 | Require a subject role                                                 |
+| Attribute            | Compare a subject, resource, or context attribute with a typed literal |
+| Attribute comparison | Compare two attribute or typed-literal operands                        |
+| `all`                | Require every child requirement                                        |
+| `any`                | Require at least one child requirement                                 |
+| `not`                | Negate one child requirement                                           |
 
 ### Permission
 
@@ -378,19 +379,37 @@ explicitly select ordinal case-insensitive comparison. Collection values are
 homogeneous, cannot contain null or nested collections, and are limited to 256
 elements.
 
-It does not currently compare one attribute directly with another:
+Use an attribute comparison requirement when both values must be resolved at
+evaluation time:
 
-```text
-Resource.ownerId equals Subject.id
+```yaml
+requirement:
+  attributeComparison:
+    left:
+      source: resource
+      name: ownerId
+    operator: equal
+    right:
+      source: subject
+      name: id
 ```
 
-Cross-attribute rules require either:
+The equivalent programmatic definition is:
 
-- A custom requirement evaluator
-- A trusted, application-computed attribute such as `isOwner`
+```csharp
+new AttributeComparisonRequirementDefinition(
+    AuthorizationAttributeOperand.Resource("ownerId"),
+    AuthorizationAttributeOperator.Equal,
+    AuthorizationAttributeOperand.Subject("id"));
+```
 
-The manifest reference will document the complete operator and scalar-type
-surface.
+Either operand may reference subject, resource, or context attributes, or a
+typed literal. The comparison uses the same strict scalar, collection,
+numeric, date/time, and ordinal string rules as the built-in attribute
+requirement. Missing, unsupported, and incompatible values deny access.
+
+The [manifest reference](manifests.md#attribute-comparison-requirements)
+documents the complete operand and operator surface.
 
 ### Logical composition
 
@@ -645,7 +664,6 @@ satisfy a policy.
 
 A custom evaluator is appropriate when a rule requires:
 
-- Attribute-to-attribute comparison
 - Domain service access
 - Hierarchy traversal
 - Specialized temporal logic
@@ -661,6 +679,7 @@ The current preview includes:
 - Permission requirements
 - Role requirements
 - Typed attribute-to-literal comparison
+- Attribute-to-attribute comparison
 - Logical requirement trees
 - YAML manifest compilation
 - ASP.NET Core integration
@@ -674,7 +693,6 @@ The current preview includes:
 
 The following areas are planned separately:
 
-- Attribute-to-attribute comparison helpers
 - Domain resource mapping helpers
 - OpenTelemetry integration
 - Decision visualization

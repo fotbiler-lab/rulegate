@@ -62,6 +62,11 @@ public static class RuleGateServiceCollectionExtensions
         services.TryAddEnumerable(
             ServiceDescriptor.Singleton<
                 IRequirementEvaluator,
+                AttributeComparisonRequirementEvaluator>());
+
+        services.TryAddEnumerable(
+            ServiceDescriptor.Singleton<
+                IRequirementEvaluator,
                 AllRequirementEvaluator>());
 
         services.TryAddEnumerable(

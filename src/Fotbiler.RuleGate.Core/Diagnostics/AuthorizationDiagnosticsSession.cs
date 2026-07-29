@@ -29,6 +29,11 @@ internal sealed class AuthorizationDiagnosticsSession
 
         string? attributeName = null;
 
+        AuthorizationAttributeSource?
+            comparedAttributeSource = null;
+
+        string? comparedAttributeName = null;
+
         if (requirement is
             AttributeRequirementDefinition
                 attributeRequirement)
@@ -38,6 +43,20 @@ internal sealed class AuthorizationDiagnosticsSession
 
             attributeName =
                 attributeRequirement.Name;
+        }
+
+        if (requirement is
+            AttributeComparisonRequirementDefinition
+                comparisonRequirement)
+        {
+            (attributeSource, attributeName) =
+                GetAttributeStructure(
+                    comparisonRequirement.Left);
+
+            (comparedAttributeSource,
+             comparedAttributeName) =
+                GetAttributeStructure(
+                    comparisonRequirement.Right);
         }
 
         int index;
@@ -56,6 +75,8 @@ internal sealed class AuthorizationDiagnosticsSession
             requirementKind,
             attributeSource,
             attributeName,
+            comparedAttributeSource,
+            comparedAttributeName,
             Stopwatch.GetTimestamp());
     }
 
@@ -78,7 +99,9 @@ internal sealed class AuthorizationDiagnosticsSession
                     static failure =>
                         failure.Code),
                 token.AttributeSource,
-                token.AttributeName);
+                token.AttributeName,
+                token.ComparedAttributeSource,
+                token.ComparedAttributeName);
 
         lock (_syncRoot)
         {
@@ -116,6 +139,10 @@ internal sealed class AuthorizationDiagnosticsSession
             AttributeRequirementDefinition =>
                 AuthorizationRequirementKind.Attribute,
 
+            AttributeComparisonRequirementDefinition =>
+                AuthorizationRequirementKind
+                    .AttributeComparison,
+
             AllRequirementDefinition =>
                 AuthorizationRequirementKind.All,
 
@@ -130,6 +157,35 @@ internal sealed class AuthorizationDiagnosticsSession
         };
     }
 
+    private static (
+        AuthorizationAttributeSource? Source,
+        string? Name) GetAttributeStructure(
+            AuthorizationAttributeOperand operand)
+    {
+        return operand.Kind switch
+        {
+            AuthorizationAttributeOperandKind.Subject =>
+                (AuthorizationAttributeSource.Subject,
+                 operand.Name),
+
+            AuthorizationAttributeOperandKind.Resource =>
+                (AuthorizationAttributeSource.Resource,
+                 operand.Name),
+
+            AuthorizationAttributeOperandKind.Context =>
+                (AuthorizationAttributeSource.Context,
+                 operand.Name),
+
+            AuthorizationAttributeOperandKind.Literal =>
+                (null, null),
+
+            _ => throw new ArgumentOutOfRangeException(
+                nameof(operand),
+                operand.Kind,
+                "The authorization attribute operand kind is not supported.")
+        };
+    }
+
     internal readonly record struct
         RequirementEvaluationToken(
             int Index,
@@ -139,5 +195,8 @@ internal sealed class AuthorizationDiagnosticsSession
             AuthorizationRequirementKind RequirementKind,
             AuthorizationAttributeSource? AttributeSource,
             string? AttributeName,
+            AuthorizationAttributeSource?
+                ComparedAttributeSource,
+            string? ComparedAttributeName,
             long StartTimestamp);
 }

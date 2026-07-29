@@ -62,7 +62,8 @@ internal sealed partial class
                     requirement.Duration.TotalMilliseconds,
                     JoinFailureCodes(
                         requirement.FailureCodes),
-                    requirement.AttributeSource);
+                    requirement.AttributeSource,
+                    requirement.ComparedAttributeSource);
             }
         }
 
@@ -96,7 +97,7 @@ internal sealed partial class
         EventId = 2001,
         Level = LogLevel.Debug,
         Message =
-            "RuleGate requirement evaluation {RequirementEvaluationId} completed for authorization evaluation {AuthorizationEvaluationId}. ParentEvaluationId: {ParentEvaluationId}; RequirementId: {RequirementId}; RequirementKind: {RequirementKind}; Outcome: {Outcome}; DurationMs: {DurationMs}; FailureCodes: {FailureCodes}; AttributeSource: {AttributeSource}.")]
+            "RuleGate requirement evaluation {RequirementEvaluationId} completed for authorization evaluation {AuthorizationEvaluationId}. ParentEvaluationId: {ParentEvaluationId}; RequirementId: {RequirementId}; RequirementKind: {RequirementKind}; Outcome: {Outcome}; DurationMs: {DurationMs}; FailureCodes: {FailureCodes}; AttributeSource: {AttributeSource}; ComparedAttributeSource: {ComparedAttributeSource}.")]
     private static partial void
         LogRequirementEvaluation(
             ILogger logger,
@@ -109,5 +110,7 @@ internal sealed partial class
             double durationMs,
             string failureCodes,
             AuthorizationAttributeSource?
-                attributeSource);
+                attributeSource,
+            AuthorizationAttributeSource?
+                comparedAttributeSource);
 }

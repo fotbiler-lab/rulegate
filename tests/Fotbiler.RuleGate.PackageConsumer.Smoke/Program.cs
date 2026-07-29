@@ -67,6 +67,20 @@ const string yaml = """
                 source: context
                 name: blocked
                 operator: notExists
+
+      - id: owned-resource-update
+        resourceType: owned-resource
+        action: update
+        requirement:
+          id: resource-owner
+          attributeComparison:
+            left:
+              source: resource
+              name: ownerId
+            operator: equal
+            right:
+              source: subject
+              name: id
     """;
 
 var compiler =
@@ -378,6 +392,59 @@ if (!advancedAttributeDecision.IsAllowed ||
 {
     throw new InvalidOperationException(
         "The packaged advanced attribute operators did not allow the valid request.");
+}
+
+var ownerSubject =
+    new AuthorizationSubject(
+        id: "owner-user",
+        attributes:
+            new AuthorizationAttributes(
+            [
+                new KeyValuePair<string, object?>(
+                    "id",
+                    "owner-user")
+            ]));
+
+var ownedResource =
+    new AuthorizationResource(
+        type: "owned-resource",
+        id: "owned-resource-1",
+        attributes:
+            new AuthorizationAttributes(
+            [
+                new KeyValuePair<string, object?>(
+                    "ownerId",
+                    "owner-user")
+            ]));
+
+var ownershipDecision =
+    await firstEngine.EvaluateAsync(
+        CreateRequest(
+            ownerSubject,
+            ownedResource,
+            action: "update"));
+
+if (!ownershipDecision.IsAllowed)
+{
+    throw new InvalidOperationException(
+        "The packaged attribute-comparison evaluator did not allow the matching owner.");
+}
+
+var publicComparisonRequirement =
+    new AttributeComparisonRequirementDefinition(
+        AuthorizationAttributeOperand.Resource(
+            "ownerId"),
+        AuthorizationAttributeOperator.Equal,
+        AuthorizationAttributeOperand.Subject("id"),
+        id: "resource-owner");
+
+if (publicComparisonRequirement.Left.Kind !=
+        AuthorizationAttributeOperandKind.Resource ||
+    publicComparisonRequirement.Right.Kind !=
+        AuthorizationAttributeOperandKind.Subject)
+{
+    throw new InvalidOperationException(
+        "The packaged attribute-comparison public API did not preserve its operand structure.");
 }
 
 var publicRequirement =

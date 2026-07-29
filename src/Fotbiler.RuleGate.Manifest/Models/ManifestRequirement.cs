@@ -14,6 +14,13 @@ public sealed class ManifestRequirement
         set;
     }
 
+    public ManifestAttributeComparisonRequirement?
+        AttributeComparison
+    {
+        get;
+        set;
+    }
+
     public List<ManifestRequirement?>? All { get; set; }
 
     public List<ManifestRequirement?>? Any { get; set; }

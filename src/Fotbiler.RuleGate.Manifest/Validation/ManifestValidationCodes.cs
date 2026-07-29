@@ -92,6 +92,54 @@ public static class ManifestValidationCodes
     public const string AttributeStringComparisonNotAllowed =
         "MANIFEST_ATTRIBUTE_STRING_COMPARISON_NOT_ALLOWED";
 
+    public const string AttributeComparisonLeftRequired =
+        "MANIFEST_ATTRIBUTE_COMPARISON_LEFT_REQUIRED";
+
+    public const string AttributeComparisonRightRequired =
+        "MANIFEST_ATTRIBUTE_COMPARISON_RIGHT_REQUIRED";
+
+    public const string AttributeComparisonOperatorRequired =
+        "MANIFEST_ATTRIBUTE_COMPARISON_OPERATOR_REQUIRED";
+
+    public const string AttributeComparisonOperatorInvalid =
+        "MANIFEST_ATTRIBUTE_COMPARISON_OPERATOR_INVALID";
+
+    public const string AttributeComparisonOperatorNotBinary =
+        "MANIFEST_ATTRIBUTE_COMPARISON_OPERATOR_NOT_BINARY";
+
+    public const string AttributeComparisonOperandKindInvalid =
+        "MANIFEST_ATTRIBUTE_COMPARISON_OPERAND_KIND_INVALID";
+
+    public const string AttributeComparisonOperandSourceRequired =
+        "MANIFEST_ATTRIBUTE_COMPARISON_OPERAND_SOURCE_REQUIRED";
+
+    public const string AttributeComparisonOperandSourceInvalid =
+        "MANIFEST_ATTRIBUTE_COMPARISON_OPERAND_SOURCE_INVALID";
+
+    public const string AttributeComparisonOperandNameRequired =
+        "MANIFEST_ATTRIBUTE_COMPARISON_OPERAND_NAME_REQUIRED";
+
+    public const string AttributeComparisonOperandValueTypeRequired =
+        "MANIFEST_ATTRIBUTE_COMPARISON_OPERAND_VALUE_TYPE_REQUIRED";
+
+    public const string AttributeComparisonOperandValueTypeInvalid =
+        "MANIFEST_ATTRIBUTE_COMPARISON_OPERAND_VALUE_TYPE_INVALID";
+
+    public const string AttributeComparisonOperandValueRequired =
+        "MANIFEST_ATTRIBUTE_COMPARISON_OPERAND_VALUE_REQUIRED";
+
+    public const string AttributeComparisonOperandValueInvalid =
+        "MANIFEST_ATTRIBUTE_COMPARISON_OPERAND_VALUE_INVALID";
+
+    public const string AttributeComparisonOperandTypeIncompatible =
+        "MANIFEST_ATTRIBUTE_COMPARISON_OPERAND_TYPE_INCOMPATIBLE";
+
+    public const string AttributeComparisonStringComparisonInvalid =
+        "MANIFEST_ATTRIBUTE_COMPARISON_STRING_COMPARISON_INVALID";
+
+    public const string AttributeComparisonStringComparisonNotAllowed =
+        "MANIFEST_ATTRIBUTE_COMPARISON_STRING_COMPARISON_NOT_ALLOWED";
+
     public const string RequirementChildrenRequired =
         "MANIFEST_REQUIREMENT_CHILDREN_REQUIRED";
 
