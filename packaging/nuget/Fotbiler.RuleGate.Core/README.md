@@ -11,7 +11,7 @@ stable release.
 
 ## Installation
 
-    dotnet add package Fotbiler.RuleGate.Core --version 0.6.0-preview.1
+    dotnet add package Fotbiler.RuleGate.Core --version 0.6.0-preview.2
 
 ## When to use this package
 
@@ -21,6 +21,7 @@ Use Core when you need:
 - A framework-independent authorization engine
 - Built-in role, permission, logical, scalar, collection, presence, and null
   attribute requirements
+- Attribute-to-attribute comparisons for ownership and organization scope
 - Custom policy-provider or evaluator composition
 - Direct control over authorization requests and decisions
 

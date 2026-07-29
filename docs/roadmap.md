@@ -40,7 +40,7 @@ Development through 1.0 preserves five product properties:
 | Angular SDK and TypeScript generation        | ✅ Available |
 | Optional Keycloak helpers                    | ✅ Available |
 | Advanced Attribute Operators                 | ✅ Available |
-| Attribute-to-Attribute Comparison            | ⏳ Planned   |
+| Attribute-to-Attribute Comparison            | ✅ Available |
 | First-Class Time and Context Policies        | ⏳ Planned   |
 | ASP.NET Core Enrichment Pipeline             | ⏳ Planned   |
 | Official Reference Applications              | ⏳ Planned   |
@@ -52,9 +52,9 @@ Development through 1.0 preserves five product properties:
 | API Freeze and Security Hardening            | ⏳ Planned   |
 | Stable Release                               | ⏳ Planned   |
 
-The latest RuleGate NuGet preview is `0.6.0-preview.1`. The independently
+The latest RuleGate NuGet preview is `0.6.0-preview.2`. The independently
 versioned Angular npm package is `0.5.0-preview.1`. The next feature milestone
-is Attribute-to-Attribute Comparison in `0.6.0-preview.2`.
+is First-Class Time and Context Policies in `0.7.0-preview.1`.
 
 All NuGet packages share one version and are published together for every
 NuGet release, including packages without code changes. npm packages are
@@ -179,23 +179,18 @@ verification describes compatibility only.
 - Homogeneous collection validation with a 256-element limit
 - Defined missing-versus-null semantics and fail-closed type handling
 
+### `0.6.0-preview.2` — Attribute-to-Attribute Comparison
+
+- Subject, resource, context, and literal operands
+- Ownership and organization-scope comparisons
+- Numeric normalization and date/time comparison
+- Defined type compatibility and null/missing behavior
+- Manifest validation and safe, value-free evaluation traces
+
 ## Planned previews
 
 The compatibility track runs alongside these feature milestones and becomes a
 release criterion at `1.0.0-rc.1`.
-
-### `0.6.0-preview.2` — Attribute-to-Attribute Comparison
-
-- Subject, resource, context, and literal operands
-- Comparisons such as resource owner to subject ID and organization scopes
-- Numeric normalization and date/time comparison
-- Defined type compatibility and null/missing behavior
-- Manifest validation and safe diagnostics
-- Evaluation traces that identify the evaluated structure without exposing
-  sensitive values
-
-This milestone makes common ownership and organization-scope rules possible
-without custom evaluators.
 
 ### `0.7.0-preview.1` — First-Class Time and Context Policies
 

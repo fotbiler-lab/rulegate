@@ -11,7 +11,7 @@ stable release.
 
 ## Installation
 
-    dotnet add package Fotbiler.RuleGate.Abstractions --version 0.6.0-preview.1
+    dotnet add package Fotbiler.RuleGate.Abstractions --version 0.6.0-preview.2
 
 ## When to use this package
 
@@ -22,6 +22,7 @@ Reference Abstractions directly when you are:
 - Sharing authorization contracts across assemblies
 - Depending on RuleGate contracts without the built-in engine
 - Defining typed scalar, collection, presence, and null attribute requirements
+- Defining subject, resource, context, and literal operand comparisons
 - Creating diagnostic or policy-provider extensions
 
 Most applications should install

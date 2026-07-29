@@ -10,7 +10,7 @@
     <DebugType>portable</DebugType>
 
     <VersionPrefix>0.6.0</VersionPrefix>
-    <VersionSuffix>preview.1</VersionSuffix>
+    <VersionSuffix>preview.2</VersionSuffix>
 
     <Authors>Fotbiler</Authors>
     <Company>Fotbiler</Company>
@@ -29,7 +29,7 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
 
     <PackageTags>authorization;rbac;policy;security;access-control;rulegate</PackageTags>
-    <PackageReleaseNotes>Adds advanced string, collection, presence, and null attribute operators with explicit ordinal string comparison across .NET 8, .NET 9, and .NET 10.</PackageReleaseNotes>
+    <PackageReleaseNotes>Adds subject, resource, context, and literal operand comparisons for ownership and organization-scope policies across .NET 8, .NET 9, and .NET 10.</PackageReleaseNotes>
 
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
