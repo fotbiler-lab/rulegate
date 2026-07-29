@@ -6,6 +6,47 @@ The project follows Semantic Versioning. Preview releases may introduce breaking
 
 ## [Unreleased]
 
+## [0.7.0-preview.1] - 2026-07-29
+
+### Added
+
+- Added recurring `timeWindow` policies with explicit time zones, weekday
+  schedules, overnight intervals, and half-open boundaries.
+- Added `dateTimeWindow` policies for before, after, and bounded rules with
+  UTC-normalized explicit-offset timestamps.
+- Added `contextAge` policies for authentication age, MFA age, and
+  reauthentication windows.
+- Added canonical `context` policies for authentication method, request
+  channel, network zone, tenant, organization, trusted-device state, and
+  identity type.
+- Added manifest validation, mapping, diagnostics, failure codes, dependency
+  injection, and package-consumer support for the new requirements.
+
+### Changed
+
+- Updated `@fotbiler/rulegate-angular` to recognize backend-only attribute,
+  time, and context requirement kinds while generating frontend identifiers.
+- Published the independently versioned Angular package and synchronized
+  NuGet family at `0.7.0-preview.1` for this coordinated release.
+
+### Security
+
+- Request-derived context remains untrusted and is never inferred from
+  headers, IP addresses, arbitrary claims, or device assertions.
+- Missing trusted context denies access; unsupported or incompatible values
+  and future authentication timestamps fail closed as indeterminate.
+- Time policies use the authorization evaluation time supplied through the
+  registered `TimeProvider` and require explicit timezone or offset data.
+
+### Verification
+
+- Added contract, evaluator, manifest, diagnostics, integration, and packed
+  NuGet consumer coverage across .NET 8, .NET 9, and .NET 10.
+- Added Angular generator and packed npm consumer coverage for all current
+  backend requirement kinds.
+- Audited every repository and package README, Markdown formatting, and local
+  documentation link.
+
 ## [0.6.0-preview.2] - 2026-07-29
 
 ### Added
@@ -372,7 +413,8 @@ The project follows Semantic Versioning. Preview releases may introduce breaking
 - CLI, Angular, and Keycloak integration packages are not yet included.
 - Public APIs may change before the first stable release.
 
-[Unreleased]: https://github.com/fotbiler-lab/rulegate/compare/v0.6.0-preview.2...HEAD
+[Unreleased]: https://github.com/fotbiler-lab/rulegate/compare/v0.7.0-preview.1...HEAD
+[0.7.0-preview.1]: https://github.com/fotbiler-lab/rulegate/compare/v0.6.0-preview.2...v0.7.0-preview.1
 [0.6.0-preview.2]: https://github.com/fotbiler-lab/rulegate/compare/v0.6.0-preview.1...v0.6.0-preview.2
 [0.6.0-preview.1]: https://github.com/fotbiler-lab/rulegate/compare/v0.5.0-preview.2...v0.6.0-preview.1
 [0.5.0-preview.2]: https://github.com/fotbiler-lab/rulegate/compare/v0.5.0-preview.1...v0.5.0-preview.2

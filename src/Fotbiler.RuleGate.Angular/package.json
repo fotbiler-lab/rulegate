@@ -1,6 +1,6 @@
 {
   "name": "@fotbiler/rulegate-angular",
-  "version": "0.5.0-preview.1",
+  "version": "0.7.0-preview.1",
   "description": "Angular authorization helpers for RuleGate applications.",
   "keywords": [
     "angular",

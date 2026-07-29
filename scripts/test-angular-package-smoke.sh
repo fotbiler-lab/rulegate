@@ -13,7 +13,7 @@ REPOSITORY_ROOT="$(
 )"
 
 PACKAGE_NAME="@fotbiler/rulegate-angular"
-PACKAGE_VERSION="0.5.0-preview.1"
+PACKAGE_VERSION="0.7.0-preview.1"
 PACKAGE_BUILD_DIRECTORY="$REPOSITORY_ROOT/dist/rulegate-angular"
 PACKAGE_ARTIFACT_DIRECTORY="$REPOSITORY_ROOT/artifacts/npm"
 

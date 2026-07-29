@@ -41,7 +41,7 @@ Development through 1.0 preserves five product properties:
 | Optional Keycloak helpers                    | ✅ Available |
 | Advanced Attribute Operators                 | ✅ Available |
 | Attribute-to-Attribute Comparison            | ✅ Available |
-| First-Class Time and Context Policies        | ⏳ Planned   |
+| First-Class Time and Context Policies        | ✅ Available |
 | ASP.NET Core Enrichment Pipeline             | ⏳ Planned   |
 | Official Reference Applications              | ⏳ Planned   |
 | Policy Testing CLI                           | ⏳ Planned   |
@@ -52,9 +52,9 @@ Development through 1.0 preserves five product properties:
 | API Freeze and Security Hardening            | ⏳ Planned   |
 | Stable Release                               | ⏳ Planned   |
 
-The latest RuleGate NuGet preview is `0.6.0-preview.2`. The independently
-versioned Angular npm package is `0.5.0-preview.1`. The next feature milestone
-is First-Class Time and Context Policies in `0.7.0-preview.1`.
+The latest RuleGate NuGet preview is `0.7.0-preview.1`. The independently
+versioned Angular npm package is also `0.7.0-preview.1`. The next feature
+milestone is ASP.NET Core Enrichment Pipeline in `0.7.0-preview.2`.
 
 All NuGet packages share one version and are published together for every
 NuGet release, including packages without code changes. npm packages are
@@ -187,23 +187,20 @@ verification describes compatibility only.
 - Defined type compatibility and null/missing behavior
 - Manifest validation and safe, value-free evaluation traces
 
+### `0.7.0-preview.1` — First-Class Time and Context Policies
+
+- Explicit-time-zone workday and overnight schedules
+- Before, after, and bounded date-time policies
+- Authentication-age, MFA-age, and reauthentication windows
+- Canonical authentication, channel, network, tenant, organization,
+  trusted-device, and identity-type context
+- Deterministic `TimeProvider` testing and untrusted-by-default request context
+- Angular TypeScript generation compatibility with backend requirement kinds
+
 ## Planned previews
 
 The compatibility track runs alongside these feature milestones and becomes a
 release criterion at `1.0.0-rc.1`.
-
-### `0.7.0-preview.1` — First-Class Time and Context Policies
-
-- Workday, time-window, before/after, and bounded-date policies
-- Explicit time-zone handling
-- Authentication-age, MFA-age, and reauthentication-window policies
-- Context rules for authentication method, request channel, network zone,
-  tenant, organization, trusted-device state, and identity type
-- Deterministic testing built on the existing injectable time-provider
-  foundation
-
-Request-derived context is untrusted by default. Applications remain
-responsible for establishing trusted context values before evaluation.
 
 ### `0.7.0-preview.2` — ASP.NET Core Enrichment Pipeline
 

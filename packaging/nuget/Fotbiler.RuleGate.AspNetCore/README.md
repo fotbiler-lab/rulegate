@@ -14,11 +14,11 @@ stable release.
 
 ## Installation
 
-    dotnet add package Fotbiler.RuleGate.AspNetCore --version 0.6.0-preview.2
+    dotnet add package Fotbiler.RuleGate.AspNetCore --version 0.7.0-preview.1
 
 Install the manifest package as well when policies are defined in YAML:
 
-    dotnet add package Fotbiler.RuleGate.Manifest --version 0.6.0-preview.2
+    dotnet add package Fotbiler.RuleGate.Manifest --version 0.7.0-preview.1
 
 ## Register RuleGate
 

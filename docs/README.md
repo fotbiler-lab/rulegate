@@ -31,7 +31,7 @@ rules, authentication and MFA age, and canonical trusted request context.
 ## Published packages
 
 The latest published RuleGate preview is
-[`0.6.0-preview.2`](https://github.com/fotbiler-lab/rulegate/releases/tag/v0.6.0-preview.2).
+[`0.7.0-preview.1`](https://github.com/fotbiler-lab/rulegate/releases/tag/v0.7.0-preview.1).
 
 | Package                                                                                           | Purpose                                                                                           |
 | ------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
@@ -43,8 +43,8 @@ The latest published RuleGate preview is
 | [`Fotbiler.RuleGate.Keycloak`](https://www.nuget.org/packages/Fotbiler.RuleGate.Keycloak)         | Optional Keycloak claim normalization and RuleGate subject mapping                                |
 | [`@fotbiler/rulegate-angular`](https://www.npmjs.com/package/@fotbiler/rulegate-angular)          | Angular authorization client, route guards, UI directives, and TypeScript generation              |
 
-All RuleGate NuGet packages are `0.6.0-preview.2`. The independently versioned
-Angular npm package remains at `0.5.0-preview.1`.
+All RuleGate NuGet packages are `0.7.0-preview.1`. The independently versioned
+Angular npm package is also `0.7.0-preview.1` for this coordinated release.
 
 ## Recommended learning path
 

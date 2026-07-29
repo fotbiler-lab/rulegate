@@ -11,7 +11,7 @@ stable release.
 
 ## Installation
 
-    dotnet add package Fotbiler.RuleGate.Abstractions --version 0.6.0-preview.2
+    dotnet add package Fotbiler.RuleGate.Abstractions --version 0.7.0-preview.1
 
 ## When to use this package
 
