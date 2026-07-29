@@ -629,7 +629,6 @@ RuleGate does not perform:
 - Implicit string-to-boolean conversion
 - Arbitrary object conversion
 - Culture-sensitive numeric parsing
-- Attribute-to-attribute comparison in the built-in evaluator
 
 String matching is ordinal and case-sensitive by default. A policy must
 explicitly select `ordinalIgnoreCase` when case-insensitive comparison is
@@ -648,24 +647,25 @@ Both deny access.
 
 ## Cross-attribute rules
 
-The built-in attribute evaluator compares one runtime attribute with one typed
-policy literal.
-
-It does not directly evaluate:
+The built-in attribute-comparison evaluator can compare trusted subject,
+resource, and context attributes directly:
 
 ```text
 Resource.ownerId equals Subject.id
 ```
 
-Cross-attribute rules require:
+Both operands are normalized through the same strict authorization-value
+model. Missing attributes are `NotSatisfied`; unsupported values and
+incompatible operand kinds are `Indeterminate`. Both outcomes deny access.
 
-- A custom requirement evaluator, or
-- A trusted application-computed attribute such as `isOwner`
+Do not populate either operand from an untrusted client assertion. Subject
+attributes must come from validated identity data, resource attributes from
+authoritative domain data, and context attributes from trusted server-side
+state.
 
-Never compute `isOwner` from a client assertion.
-
-Compute it from authenticated subject identity and authoritative resource
-data.
+Diagnostics may identify both operand sources and names for custom sinks, but
+never contain their resolved values or typed policy literal values. The
+built-in logging sink omits attribute names.
 
 ## Dynamic ASP.NET Core policy names
 
@@ -1448,6 +1448,7 @@ The current preview provides:
 - Default-deny decisions
 - Fail-closed built-in requirements
 - Typed scalar attribute comparison
+- Attribute-to-attribute comparison
 - Declarative YAML manifests
 - Duplicate-key rejection
 - Unknown-property rejection

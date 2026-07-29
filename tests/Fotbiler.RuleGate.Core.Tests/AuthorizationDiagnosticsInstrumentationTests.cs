@@ -185,6 +185,55 @@ public sealed class
 
     [Fact]
     public async Task
+        EvaluateAsync_records_attribute_comparison_structure()
+    {
+        var sink = new RecordingDiagnosticsSink();
+
+        var engine = CreateEngine(
+            new AttributeComparisonRequirementDefinition(
+                AuthorizationAttributeOperand.Resource(
+                    "ownerId"),
+                AuthorizationAttributeOperator.Equal,
+                AuthorizationAttributeOperand.Subject(
+                    "id"),
+                id: "ownership"),
+            sink);
+
+        var decision = await engine.EvaluateAsync(
+            CreateRequest(
+                resourceAttributes:
+                    CreateAttributes(
+                        "ownerId",
+                        "user-1"),
+                subjectAttributes:
+                    CreateAttributes(
+                        "id",
+                        "user-1")));
+
+        Assert.True(decision.IsAllowed);
+
+        var requirement = Assert.Single(
+            Assert.Single(sink.Diagnostics)
+                .RequirementEvaluations);
+
+        Assert.Equal(
+            AuthorizationRequirementKind
+                .AttributeComparison,
+            requirement.RequirementKind);
+        Assert.Equal(
+            AuthorizationAttributeSource.Resource,
+            requirement.AttributeSource);
+        Assert.Equal("ownerId", requirement.AttributeName);
+        Assert.Equal(
+            AuthorizationAttributeSource.Subject,
+            requirement.ComparedAttributeSource);
+        Assert.Equal(
+            "id",
+            requirement.ComparedAttributeName);
+    }
+
+    [Fact]
+    public async Task
         EvaluateAsync_records_no_matching_policy()
     {
         var sink = new RecordingDiagnosticsSink();
@@ -290,6 +339,7 @@ public sealed class
             new PermissionRequirementEvaluator(),
             new RoleRequirementEvaluator(),
             new AttributeRequirementEvaluator(),
+            new AttributeComparisonRequirementEvaluator(),
             new AllRequirementEvaluator(),
             new AnyRequirementEvaluator(),
             new NotRequirementEvaluator()
@@ -298,12 +348,14 @@ public sealed class
 
     private static AuthorizationRequest CreateRequest(
         IEnumerable<string>? permissions = null,
-        AuthorizationAttributes? resourceAttributes = null)
+        AuthorizationAttributes? resourceAttributes = null,
+        AuthorizationAttributes? subjectAttributes = null)
     {
         return new AuthorizationRequest(
             new AuthorizationSubject(
                 "user-1",
-                permissions: permissions),
+                permissions: permissions,
+                attributes: subjectAttributes),
 
             new AuthorizationResource(
                 "sample-resource",

@@ -14,7 +14,10 @@ public sealed record RequirementEvaluationDiagnostic
         TimeSpan duration,
         IEnumerable<string> failureCodes,
         AuthorizationAttributeSource? attributeSource = null,
-        string? attributeName = null)
+        string? attributeName = null,
+        AuthorizationAttributeSource?
+            comparedAttributeSource = null,
+        string? comparedAttributeName = null)
     {
         if (evaluationId == Guid.Empty)
         {
@@ -90,6 +93,22 @@ public sealed record RequirementEvaluationDiagnostic
                 attributeName);
         }
 
+        if (comparedAttributeSource is not null &&
+            !Enum.IsDefined(
+                comparedAttributeSource.Value))
+        {
+            throw new ArgumentOutOfRangeException(
+                nameof(comparedAttributeSource),
+                comparedAttributeSource,
+                "The compared authorization attribute source is not supported.");
+        }
+
+        if (comparedAttributeName is not null)
+        {
+            ArgumentException.ThrowIfNullOrWhiteSpace(
+                comparedAttributeName);
+        }
+
         EvaluationId = evaluationId;
         ParentEvaluationId = parentEvaluationId;
         RequirementId = requirementId;
@@ -100,6 +119,10 @@ public sealed record RequirementEvaluationDiagnostic
             Array.AsReadOnly(copiedFailureCodes);
         AttributeSource = attributeSource;
         AttributeName = attributeName;
+        ComparedAttributeSource =
+            comparedAttributeSource;
+        ComparedAttributeName =
+            comparedAttributeName;
     }
 
     public Guid EvaluationId { get; }
@@ -125,4 +148,12 @@ public sealed record RequirementEvaluationDiagnostic
     }
 
     public string? AttributeName { get; }
+
+    public AuthorizationAttributeSource?
+        ComparedAttributeSource
+    {
+        get;
+    }
+
+    public string? ComparedAttributeName { get; }
 }

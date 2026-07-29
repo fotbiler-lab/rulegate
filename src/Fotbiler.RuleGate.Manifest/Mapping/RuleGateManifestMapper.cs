@@ -109,6 +109,29 @@ public sealed class RuleGateManifestMapper
                 stringComparison);
         }
 
+        if (requirement.AttributeComparison is not null)
+        {
+            var comparison =
+                requirement.AttributeComparison;
+
+            ManifestAttributeRequirementConversions
+                .TryParseOperator(
+                    comparison.Operator,
+                    out var @operator);
+
+            ManifestAttributeRequirementConversions
+                .TryParseStringComparison(
+                    comparison.StringComparison,
+                    out var stringComparison);
+
+            return new AttributeComparisonRequirementDefinition(
+                MapOperand(comparison.Left!),
+                @operator,
+                MapOperand(comparison.Right!),
+                requirement.Id,
+                stringComparison);
+        }
+
         if (requirement.All is not null)
         {
             return new AllRequirementDefinition(
@@ -133,5 +156,31 @@ public sealed class RuleGateManifestMapper
             requirement:
                 MapRequirement(requirement.Not!),
             id: requirement.Id);
+    }
+
+    private static AuthorizationAttributeOperand MapOperand(
+        ManifestAttributeComparisonOperand operand)
+    {
+        if (operand.Source is not null ||
+            operand.Name is not null)
+        {
+            ManifestAttributeRequirementConversions
+                .TryParseSource(
+                    operand.Source,
+                    out var source);
+
+            return AuthorizationAttributeOperand.Attribute(
+                source,
+                operand.Name!);
+        }
+
+        ManifestAttributeRequirementConversions
+            .TryConvertValue(
+                operand.ValueType,
+                operand.Value,
+                operand.HasValue,
+                out var value);
+
+        return AuthorizationAttributeOperand.Literal(value);
     }
 }

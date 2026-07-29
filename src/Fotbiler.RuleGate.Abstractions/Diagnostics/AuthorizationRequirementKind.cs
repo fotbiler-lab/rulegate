@@ -8,5 +8,6 @@ public enum AuthorizationRequirementKind
     Attribute = 3,
     All = 4,
     Any = 5,
-    Not = 6
+    Not = 6,
+    AttributeComparison = 7
 }

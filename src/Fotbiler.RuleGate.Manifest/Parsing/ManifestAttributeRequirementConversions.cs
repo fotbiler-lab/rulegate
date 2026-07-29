@@ -333,6 +333,13 @@ internal static class
             return false;
         }
 
+        return OperatorSupportsStringComparison(
+            @operator);
+    }
+
+    internal static bool OperatorSupportsStringComparison(
+        AuthorizationAttributeOperator @operator)
+    {
         return @operator is
             AuthorizationAttributeOperator.Equal or
             AuthorizationAttributeOperator.NotEqual or
@@ -352,11 +359,24 @@ internal static class
     {
         ArgumentNullException.ThrowIfNull(requirement);
 
+        return TryConvertValue(
+            requirement.ValueType,
+            requirement.Value,
+            requirement.HasValue,
+            out value);
+    }
+
+    internal static bool TryConvertValue(
+        string? valueType,
+        object? rawValue,
+        bool hasValue,
+        out object? value)
+    {
         value = null;
 
-        if (!requirement.HasValue ||
+        if (!hasValue ||
             !TryParseValueType(
-                requirement.ValueType,
+                valueType,
                 out var kind))
         {
             return false;
@@ -366,57 +386,143 @@ internal static class
         {
             ManifestAttributeValueType.Null =>
                 TryConvertNull(
-                    requirement.Value,
+                    rawValue,
                     out value),
 
             ManifestAttributeValueType.String =>
                 TryConvertString(
-                    requirement.Value,
+                    rawValue,
                     out value),
 
             ManifestAttributeValueType.Boolean =>
                 TryConvertBoolean(
-                    requirement.Value,
+                    rawValue,
                     out value),
 
             ManifestAttributeValueType.Number =>
                 TryConvertNumber(
-                    requirement.Value,
+                    rawValue,
                     out value),
 
             ManifestAttributeValueType
                 .DateTimeOffset =>
                 TryConvertDateTimeOffset(
-                    requirement.Value,
+                    rawValue,
                     out value),
 
             ManifestAttributeValueType.StringCollection =>
                 TryConvertCollection(
-                    requirement.Value,
+                    rawValue,
                     TryConvertString,
                     out value),
 
             ManifestAttributeValueType.BooleanCollection =>
                 TryConvertCollection(
-                    requirement.Value,
+                    rawValue,
                     TryConvertBoolean,
                     out value),
 
             ManifestAttributeValueType.NumberCollection =>
                 TryConvertCollection(
-                    requirement.Value,
+                    rawValue,
                     TryConvertNumber,
                     out value),
 
             ManifestAttributeValueType
                 .DateTimeOffsetCollection =>
                 TryConvertCollection(
-                    requirement.Value,
+                    rawValue,
                     TryConvertDateTimeOffset,
                     out value),
 
             _ => false
         };
+    }
+
+    internal static bool IsLeftOperandTypeSupported(
+        AuthorizationAttributeOperator @operator,
+        ManifestAttributeValueType valueType)
+    {
+        return @operator switch
+        {
+            AuthorizationAttributeOperator.Equal or
+            AuthorizationAttributeOperator.NotEqual =>
+                IsScalar(valueType),
+
+            AuthorizationAttributeOperator.GreaterThan or
+            AuthorizationAttributeOperator
+                .GreaterThanOrEqual or
+            AuthorizationAttributeOperator.LessThan or
+            AuthorizationAttributeOperator
+                .LessThanOrEqual =>
+                valueType is
+                    ManifestAttributeValueType.Number or
+                    ManifestAttributeValueType.DateTimeOffset,
+
+            AuthorizationAttributeOperator.Contains =>
+                valueType == ManifestAttributeValueType.String ||
+                IsCollection(valueType),
+
+            AuthorizationAttributeOperator.StartsWith or
+            AuthorizationAttributeOperator.EndsWith =>
+                valueType == ManifestAttributeValueType.String,
+
+            AuthorizationAttributeOperator.ContainsAny or
+            AuthorizationAttributeOperator.ContainsAll or
+            AuthorizationAttributeOperator.Intersects =>
+                IsCollection(valueType),
+
+            AuthorizationAttributeOperator.In or
+            AuthorizationAttributeOperator.NotIn =>
+                IsScalar(valueType),
+
+            _ => false
+        };
+    }
+
+    internal static bool AreOperandTypesCompatible(
+        AuthorizationAttributeOperator @operator,
+        ManifestAttributeValueType left,
+        ManifestAttributeValueType right)
+    {
+        return @operator switch
+        {
+            AuthorizationAttributeOperator.Equal or
+            AuthorizationAttributeOperator.NotEqual or
+            AuthorizationAttributeOperator.GreaterThan or
+            AuthorizationAttributeOperator
+                .GreaterThanOrEqual or
+            AuthorizationAttributeOperator.LessThan or
+            AuthorizationAttributeOperator
+                .LessThanOrEqual or
+            AuthorizationAttributeOperator.StartsWith or
+            AuthorizationAttributeOperator.EndsWith =>
+                left == right,
+
+            AuthorizationAttributeOperator.Contains =>
+                left == ManifestAttributeValueType.String
+                    ? right == ManifestAttributeValueType.String
+                    : CollectionElementType(left) == right,
+
+            AuthorizationAttributeOperator.ContainsAny or
+            AuthorizationAttributeOperator.ContainsAll or
+            AuthorizationAttributeOperator.Intersects =>
+                left == right,
+
+            AuthorizationAttributeOperator.In or
+            AuthorizationAttributeOperator.NotIn =>
+                left == CollectionElementType(right),
+
+            _ => false
+        };
+    }
+
+    internal static bool IsStringValueType(
+        ManifestAttributeValueType valueType)
+    {
+        return valueType is
+            ManifestAttributeValueType.String or
+            ManifestAttributeValueType.StringCollection;
     }
 
     private static bool TryConvertCollection(
@@ -468,6 +574,29 @@ internal static class
             ManifestAttributeValueType.NumberCollection or
             ManifestAttributeValueType
                 .DateTimeOffsetCollection;
+    }
+
+    private static ManifestAttributeValueType?
+        CollectionElementType(
+            ManifestAttributeValueType valueType)
+    {
+        return valueType switch
+        {
+            ManifestAttributeValueType.StringCollection =>
+                ManifestAttributeValueType.String,
+
+            ManifestAttributeValueType.BooleanCollection =>
+                ManifestAttributeValueType.Boolean,
+
+            ManifestAttributeValueType.NumberCollection =>
+                ManifestAttributeValueType.Number,
+
+            ManifestAttributeValueType
+                .DateTimeOffsetCollection =>
+                ManifestAttributeValueType.DateTimeOffset,
+
+            _ => null
+        };
     }
 
     private static bool TryConvertNull(

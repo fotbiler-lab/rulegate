@@ -200,6 +200,9 @@ public sealed class RuleGateLoggingDiagnosticsTests
         const string sensitiveAttributeName =
             "internal-security-clearance";
 
+        const string sensitiveComparedAttributeName =
+            "internal-resource-owner";
+
         var recordingProvider =
             new RecordingLoggerProvider();
 
@@ -236,7 +239,9 @@ public sealed class RuleGateLoggingDiagnosticsTests
                 TimeSpan.Zero,
                 [],
                 AuthorizationAttributeSource.Resource,
-                sensitiveAttributeName);
+                sensitiveAttributeName,
+                AuthorizationAttributeSource.Subject,
+                sensitiveComparedAttributeName);
 
         await sink.WriteAsync(
             new AuthorizationEvaluationDiagnostic(
@@ -256,12 +261,19 @@ public sealed class RuleGateLoggingDiagnosticsTests
                     sensitiveAttributeName,
                     StringComparison.Ordinal));
 
+        Assert.DoesNotContain(
+            recordingProvider.Entries,
+            entry =>
+                entry.Message.Contains(
+                    sensitiveComparedAttributeName,
+                    StringComparison.Ordinal));
+
         Assert.Contains(
             recordingProvider.Entries,
             entry =>
                 entry.EventId.Id == 2001 &&
                 entry.Message.Contains(
-                    "Resource",
+                    "ComparedAttributeSource: Subject",
                     StringComparison.Ordinal));
     }
 

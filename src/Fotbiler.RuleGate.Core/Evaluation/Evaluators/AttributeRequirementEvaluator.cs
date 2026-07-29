@@ -96,7 +96,7 @@ public sealed class AttributeRequirementEvaluator
         }
 
         var comparison =
-            Compare(
+            CompareValues(
                 actualValue,
                 requirement.ExpectedValue,
                 requirement.Operator,
@@ -146,7 +146,7 @@ public sealed class AttributeRequirementEvaluator
                     requirement.Id));
     }
 
-    private static AuthorizationAttributes GetAttributes(
+    internal static AuthorizationAttributes GetAttributes(
         AuthorizationAttributeSource source,
         RequirementEvaluationContext context)
     {
@@ -169,7 +169,7 @@ public sealed class AttributeRequirementEvaluator
         };
     }
 
-    private static AttributeComparisonResult Compare(
+    internal static AttributeComparisonResult CompareValues(
         AuthorizationAttributeValue actual,
         AuthorizationAttributeValue expected,
         AuthorizationAttributeOperator @operator,
@@ -662,7 +662,7 @@ public sealed class AttributeRequirementEvaluator
             : AttributeComparisonResult.NotSatisfied;
     }
 
-    private enum AttributeComparisonResult
+    internal enum AttributeComparisonResult
     {
         NotSatisfied = 0,
         Satisfied = 1,

@@ -255,6 +255,10 @@ public sealed class RuleGateManifestValidator
             ? 0
             : 1;
 
+        kindCount += requirement.AttributeComparison is null
+            ? 0
+            : 1;
+
         kindCount += requirement.All is null
             ? 0
             : 1;
@@ -274,7 +278,7 @@ public sealed class RuleGateManifestValidator
                     ManifestValidationCodes
                         .RequirementKindInvalid,
                     path,
-                    "A requirement must define exactly one of permission, role, attribute, all, any, or not."));
+                    "A requirement must define exactly one of permission, role, attribute, attributeComparison, all, any, or not."));
         }
 
         if (requirement.Permission is not null &&
@@ -305,6 +309,14 @@ public sealed class RuleGateManifestValidator
             ValidateAttributeRequirement(
                 requirement.Attribute,
                 $"{path}.attribute",
+                errors);
+        }
+
+        if (requirement.AttributeComparison is not null)
+        {
+            ValidateAttributeComparisonRequirement(
+                requirement.AttributeComparison,
+                $"{path}.attributeComparison",
                 errors);
         }
 
@@ -555,6 +567,327 @@ public sealed class RuleGateManifestValidator
         }
     }
 
+    private static void
+        ValidateAttributeComparisonRequirement(
+            ManifestAttributeComparisonRequirement requirement,
+            string path,
+            ICollection<ManifestValidationError> errors)
+    {
+        var left = requirement.Left is null
+            ? OperandValidation.Invalid
+            : ValidateAttributeComparisonOperand(
+                requirement.Left,
+                $"{path}.left",
+                errors);
+
+        if (requirement.Left is null)
+        {
+            errors.Add(
+                new ManifestValidationError(
+                    ManifestValidationCodes
+                        .AttributeComparisonLeftRequired,
+                    $"{path}.left",
+                    "Left attribute-comparison operand is required."));
+        }
+
+        var right = requirement.Right is null
+            ? OperandValidation.Invalid
+            : ValidateAttributeComparisonOperand(
+                requirement.Right,
+                $"{path}.right",
+                errors);
+
+        if (requirement.Right is null)
+        {
+            errors.Add(
+                new ManifestValidationError(
+                    ManifestValidationCodes
+                        .AttributeComparisonRightRequired,
+                    $"{path}.right",
+                    "Right attribute-comparison operand is required."));
+        }
+
+        var operatorIsValid = false;
+        var operatorIsBinary = false;
+        var parsedOperator = default(
+            Fotbiler.RuleGate.Abstractions.Policies
+                .AuthorizationAttributeOperator);
+
+        if (string.IsNullOrWhiteSpace(
+                requirement.Operator))
+        {
+            errors.Add(
+                new ManifestValidationError(
+                    ManifestValidationCodes
+                        .AttributeComparisonOperatorRequired,
+                    $"{path}.operator",
+                    "Attribute-comparison operator is required."));
+        }
+        else
+        {
+            operatorIsValid =
+                ManifestAttributeRequirementConversions
+                    .TryParseOperator(
+                        requirement.Operator,
+                        out parsedOperator);
+
+            if (!operatorIsValid)
+            {
+                errors.Add(
+                    new ManifestValidationError(
+                        ManifestValidationCodes
+                            .AttributeComparisonOperatorInvalid,
+                        $"{path}.operator",
+                        $"Attribute-comparison operator '{requirement.Operator}' is not supported."));
+            }
+            else
+            {
+                operatorIsBinary =
+                    ManifestAttributeRequirementConversions
+                        .OperatorRequiresValue(
+                            parsedOperator);
+
+                if (!operatorIsBinary)
+                {
+                    errors.Add(
+                        new ManifestValidationError(
+                            ManifestValidationCodes
+                                .AttributeComparisonOperatorNotBinary,
+                            $"{path}.operator",
+                            $"Attribute-comparison operator '{requirement.Operator}' does not accept two operands."));
+                }
+            }
+        }
+
+        if (operatorIsValid &&
+            operatorIsBinary &&
+            !AreComparisonOperandsCompatible(
+                parsedOperator,
+                left,
+                right))
+        {
+            errors.Add(
+                new ManifestValidationError(
+                    ManifestValidationCodes
+                        .AttributeComparisonOperandTypeIncompatible,
+                    $"{path}.operator",
+                    $"Attribute-comparison operands are not compatible with operator '{requirement.Operator}'."));
+        }
+
+        if (requirement.StringComparison is null)
+        {
+            return;
+        }
+
+        var stringComparisonIsValid =
+            ManifestAttributeRequirementConversions
+                .TryParseStringComparison(
+                    requirement.StringComparison,
+                    out _);
+
+        if (!stringComparisonIsValid)
+        {
+            errors.Add(
+                new ManifestValidationError(
+                    ManifestValidationCodes
+                        .AttributeComparisonStringComparisonInvalid,
+                    $"{path}.stringComparison",
+                    $"Attribute-comparison string comparison '{requirement.StringComparison}' is not supported."));
+
+            return;
+        }
+
+        if (operatorIsValid &&
+            operatorIsBinary &&
+            (!ManifestAttributeRequirementConversions
+                .OperatorSupportsStringComparison(
+                    parsedOperator) ||
+             HasKnownNonStringLiteral(left) ||
+             HasKnownNonStringLiteral(right)))
+        {
+            errors.Add(
+                new ManifestValidationError(
+                    ManifestValidationCodes
+                        .AttributeComparisonStringComparisonNotAllowed,
+                    $"{path}.stringComparison",
+                    $"Attribute string comparison is not supported for operator '{requirement.Operator}' and the declared operand types."));
+        }
+    }
+
+    private static OperandValidation
+        ValidateAttributeComparisonOperand(
+            ManifestAttributeComparisonOperand operand,
+            string path,
+            ICollection<ManifestValidationError> errors)
+    {
+        var hasAttributeMembers =
+            operand.Source is not null ||
+            operand.Name is not null;
+
+        var hasLiteralMembers =
+            operand.ValueType is not null ||
+            operand.HasValue;
+
+        if (hasAttributeMembers == hasLiteralMembers)
+        {
+            errors.Add(
+                new ManifestValidationError(
+                    ManifestValidationCodes
+                        .AttributeComparisonOperandKindInvalid,
+                    path,
+                    "An attribute-comparison operand must define either source and name or valueType and value."));
+
+            return OperandValidation.Invalid;
+        }
+
+        if (hasAttributeMembers)
+        {
+            if (string.IsNullOrWhiteSpace(
+                    operand.Source))
+            {
+                errors.Add(
+                    new ManifestValidationError(
+                        ManifestValidationCodes
+                            .AttributeComparisonOperandSourceRequired,
+                        $"{path}.source",
+                        "Attribute-comparison operand source is required."));
+            }
+            else if (!ManifestAttributeRequirementConversions
+                         .TryParseSource(
+                             operand.Source,
+                             out _))
+            {
+                errors.Add(
+                    new ManifestValidationError(
+                        ManifestValidationCodes
+                            .AttributeComparisonOperandSourceInvalid,
+                        $"{path}.source",
+                        $"Attribute-comparison operand source '{operand.Source}' is not supported."));
+            }
+
+            if (string.IsNullOrWhiteSpace(
+                    operand.Name))
+            {
+                errors.Add(
+                    new ManifestValidationError(
+                        ManifestValidationCodes
+                            .AttributeComparisonOperandNameRequired,
+                        $"{path}.name",
+                        "Attribute-comparison operand name is required."));
+            }
+
+            return OperandValidation.Attribute;
+        }
+
+        var valueTypeIsValid = false;
+        var valueType = default(
+            ManifestAttributeValueType);
+
+        if (string.IsNullOrWhiteSpace(
+                operand.ValueType))
+        {
+            errors.Add(
+                new ManifestValidationError(
+                    ManifestValidationCodes
+                        .AttributeComparisonOperandValueTypeRequired,
+                    $"{path}.valueType",
+                    "Attribute-comparison literal value type is required."));
+        }
+        else
+        {
+            valueTypeIsValid =
+                ManifestAttributeRequirementConversions
+                    .TryParseValueType(
+                        operand.ValueType,
+                        out valueType);
+
+            if (!valueTypeIsValid)
+            {
+                errors.Add(
+                    new ManifestValidationError(
+                        ManifestValidationCodes
+                            .AttributeComparisonOperandValueTypeInvalid,
+                        $"{path}.valueType",
+                        $"Attribute-comparison literal value type '{operand.ValueType}' is not supported."));
+            }
+        }
+
+        if (!operand.HasValue)
+        {
+            errors.Add(
+                new ManifestValidationError(
+                    ManifestValidationCodes
+                        .AttributeComparisonOperandValueRequired,
+                    $"{path}.value",
+                    "Attribute-comparison literal value must be specified."));
+        }
+        else if (valueTypeIsValid &&
+                 !ManifestAttributeRequirementConversions
+                     .TryConvertValue(
+                         operand.ValueType,
+                         operand.Value,
+                         operand.HasValue,
+                         out _))
+        {
+            errors.Add(
+                new ManifestValidationError(
+                    ManifestValidationCodes
+                        .AttributeComparisonOperandValueInvalid,
+                    $"{path}.value",
+                    $"Attribute-comparison literal value is invalid for value type '{operand.ValueType}'."));
+        }
+
+        return valueTypeIsValid
+            ? OperandValidation.Literal(valueType)
+            : OperandValidation.Invalid;
+    }
+
+    private static bool AreComparisonOperandsCompatible(
+        Fotbiler.RuleGate.Abstractions.Policies
+            .AuthorizationAttributeOperator @operator,
+        OperandValidation left,
+        OperandValidation right)
+    {
+        if (!left.IsValid || !right.IsValid)
+        {
+            return true;
+        }
+
+        if (left.LiteralValueType is { } leftType &&
+            !ManifestAttributeRequirementConversions
+                .IsLeftOperandTypeSupported(
+                    @operator,
+                    leftType))
+        {
+            return false;
+        }
+
+        if (right.LiteralValueType is { } rightType &&
+            !ManifestAttributeRequirementConversions
+                .IsOperatorSupported(
+                    @operator,
+                    rightType))
+        {
+            return false;
+        }
+
+        return left.LiteralValueType is not { } knownLeft ||
+            right.LiteralValueType is not { } knownRight ||
+            ManifestAttributeRequirementConversions
+                .AreOperandTypesCompatible(
+                    @operator,
+                    knownLeft,
+                    knownRight);
+    }
+
+    private static bool HasKnownNonStringLiteral(
+        OperandValidation operand)
+    {
+        return operand.LiteralValueType is { } valueType &&
+            !ManifestAttributeRequirementConversions
+                .IsStringValueType(valueType);
+    }
+
     private static void ValidateRequirementCollection(
         IReadOnlyList<ManifestRequirement?> requirements,
         string path,
@@ -595,6 +928,25 @@ public sealed class RuleGateManifestValidator
                 child,
                 childPath,
                 errors);
+        }
+    }
+
+    private readonly record struct OperandValidation(
+        bool IsValid,
+        ManifestAttributeValueType? LiteralValueType)
+    {
+        internal static OperandValidation Invalid { get; } =
+            new(false, null);
+
+        internal static OperandValidation Attribute { get; } =
+            new(true, null);
+
+        internal static OperandValidation Literal(
+            ManifestAttributeValueType valueType)
+        {
+            return new OperandValidation(
+                true,
+                valueType);
         }
     }
 
