@@ -42,7 +42,7 @@ Development through 1.0 preserves five product properties:
 | Advanced Attribute Operators                 | ✅ Available |
 | Attribute-to-Attribute Comparison            | ✅ Available |
 | First-Class Time and Context Policies        | ✅ Available |
-| ASP.NET Core Enrichment Pipeline             | ⏳ Planned   |
+| ASP.NET Core Enrichment Pipeline             | ✅ Available |
 | Official Reference Applications              | ⏳ Planned   |
 | Policy Testing CLI                           | ⏳ Planned   |
 | Explain and Lint                             | ⏳ Planned   |
@@ -52,9 +52,9 @@ Development through 1.0 preserves five product properties:
 | API Freeze and Security Hardening            | ⏳ Planned   |
 | Stable Release                               | ⏳ Planned   |
 
-The latest RuleGate NuGet preview is `0.7.0-preview.1`. The independently
-versioned Angular npm package is also `0.7.0-preview.1`. The next feature
-milestone is ASP.NET Core Enrichment Pipeline in `0.7.0-preview.2`.
+The latest RuleGate NuGet preview is `0.7.0-preview.2`. The independently
+versioned Angular npm package remains at `0.7.0-preview.1`. The next feature
+milestone is Official Reference Applications in `0.8.0-preview.1`.
 
 All NuGet packages share one version and are published together for every
 NuGet release, including packages without code changes. npm packages are
@@ -197,11 +197,6 @@ verification describes compatibility only.
 - Deterministic `TimeProvider` testing and untrusted-by-default request context
 - Angular TypeScript generation compatibility with backend requirement kinds
 
-## Planned previews
-
-The compatibility track runs alongside these feature milestones and becomes a
-release criterion at `1.0.0-rc.1`.
-
 ### `0.7.0-preview.2` — ASP.NET Core Enrichment Pipeline
 
 - Subject, resource, and context attribute-provider abstractions
@@ -210,10 +205,12 @@ release criterion at `1.0.0-rc.1`.
 - Fail-closed provider exceptions and missing trusted data
 - Sensitive-value-safe diagnostics
 - Minimal-hosting and `Startup.cs` integration paths
+- [ASP.NET Core enrichment guide](enrichment.md)
 
-The pipeline provides a standard extension point for tenant, organization,
-clearance, ownership, MFA, network, and request-channel data without coupling
-the core engine to an identity or data provider.
+## Planned previews
+
+The compatibility track runs alongside these feature milestones and becomes a
+release criterion at `1.0.0-rc.1`.
 
 ### `0.8.0-preview.1` — Official Reference Applications
 

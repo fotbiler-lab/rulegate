@@ -18,7 +18,7 @@ fixes.
 | Package family      | Version                                                                                         | Supported |
 | ------------------- | ----------------------------------------------------------------------------------------------- | --------- |
 | Angular npm package | [`0.7.0-preview.1`](https://www.npmjs.com/package/@fotbiler/rulegate-angular/v/0.7.0-preview.1) | Yes       |
-| NuGet packages      | [`0.7.0-preview.1`](https://github.com/fotbiler-lab/rulegate/releases/tag/v0.7.0-preview.1)     | Yes       |
+| NuGet packages      | [`0.7.0-preview.2`](https://github.com/fotbiler-lab/rulegate/releases/tag/v0.7.0-preview.2)     | Yes       |
 | Older previews      | —                                                                                               | No        |
 
 This table is updated when a new preview or stable version is published.
