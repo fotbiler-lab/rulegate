@@ -39,7 +39,7 @@ Development through 1.0 preserves five product properties:
 | CLI validation and deterministic generation  | ✅ Available |
 | Angular SDK and TypeScript generation        | ✅ Available |
 | Optional Keycloak helpers                    | ✅ Available |
-| Advanced Attribute Operators                 | ⏳ Planned   |
+| Advanced Attribute Operators                 | ✅ Available |
 | Attribute-to-Attribute Comparison            | ⏳ Planned   |
 | First-Class Time and Context Policies        | ⏳ Planned   |
 | ASP.NET Core Enrichment Pipeline             | ⏳ Planned   |
@@ -52,9 +52,9 @@ Development through 1.0 preserves five product properties:
 | API Freeze and Security Hardening            | ⏳ Planned   |
 | Stable Release                               | ⏳ Planned   |
 
-The latest RuleGate NuGet preview is `0.5.0-preview.2`. The independently
+The latest RuleGate NuGet preview is `0.6.0-preview.1`. The independently
 versioned Angular npm package is `0.5.0-preview.1`. The next feature milestone
-is Advanced Attribute Operators in `0.6.0-preview.1`.
+is Attribute-to-Attribute Comparison in `0.6.0-preview.2`.
 
 All NuGet packages share one version and are published together for every
 NuGet release, including packages without code changes. npm packages are
@@ -170,32 +170,19 @@ verification describes compatibility only.
 - Complete six-package NuGet publishing and verification
 - Standardized NuGet package README product naming
 
-The release-cleanup work proposed for `0.5.0-preview.1` is complete. The
-original proposal assigned Advanced Attribute Operators to
-`0.5.0-preview.2`, but that immutable version is already published for NuGet
-alignment. The feature therefore moves to `0.6.0-preview.1`.
+### `0.6.0-preview.1` — Advanced Attribute Operators
+
+- String `contains`, `startsWith`, and `endsWith` operators
+- Explicit ordinal case-sensitive and case-insensitive behavior
+- Collection membership, set-intersection, and empty-state operators
+- Attribute presence and null-state operators
+- Homogeneous collection validation with a 256-element limit
+- Defined missing-versus-null semantics and fail-closed type handling
 
 ## Planned previews
 
 The compatibility track runs alongside these feature milestones and becomes a
 release criterion at `1.0.0-rc.1`.
-
-### `0.6.0-preview.1` — Advanced Attribute Operators
-
-- String `contains`, `startsWith`, and `endsWith` operators
-- Explicit ordinal case-sensitive and case-insensitive behavior
-- Collection `contains`, `containsAny`, `containsAll`, `in`, `notIn`, and
-  `intersects` operators
-- Collection `isEmpty` and `isNotEmpty` checks
-- `exists`, `notExists`, `isNull`, and `isNotNull` semantics
-- A defined distinction between missing and null attributes
-- Manifest validation, safe collection limits, and fail-closed type handling
-- Controlled regular-expression matching only if timeout and complexity limits
-  can be enforced
-
-Exact, ordinal, case-sensitive comparison remains the default. Unsupported
-operators, invalid operand types, and exceeded safety limits never produce an
-allow decision.
 
 ### `0.6.0-preview.2` — Attribute-to-Attribute Comparison
 

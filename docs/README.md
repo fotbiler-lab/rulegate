@@ -3,43 +3,44 @@
 Welcome to the RuleGate documentation.
 
 RuleGate is a local-first and provider-independent authorization framework for
-.NET applications. It supports permission, role, attribute, contextual, and
-resource-based authorization through one composable policy model.
+.NET and Angular applications. It supports permission, role, attribute,
+contextual, and resource-based authorization through one composable policy
+model.
 
 ## Start here
 
-| Goal | Document |
-|---|---|
-| Make your first authorization decision | [Getting started](getting-started.md) |
-| Understand subjects, resources, actions, policies, and requirements | [Authorization model](authorization-model.md) |
-| Define and validate `rulegate.yaml` policies | [Manifest guide](manifests.md) |
-| Validate manifests locally or in CI | [RuleGate CLI](cli.md) |
-| Generate C# constants and detect stale output | [C# code generation](code-generation.md) |
-| Integrate RuleGate with ASP.NET Core | [ASP.NET Core integration](aspnetcore.md) |
-| Add permission, policy, and role checks to Angular | [Angular SDK](angular.md) |
-| Map Keycloak roles on ASP.NET Core and Angular | [Keycloak integration](keycloak.md) |
-| Operate authorization diagnostics safely | [Diagnostics](diagnostics.md) |
-| Understand runtime and integration security | [Security model](security.md) |
-| Understand current and planned capabilities | [Roadmap](roadmap.md) |
-| Prepare and verify a NuGet preview | [NuGet release checklist](releases/preview-release-checklist.md) |
-| Prepare and verify an npm preview | [npm release checklist](releases/npm-preview-release-checklist.md) |
+| Goal                                                                | Document                                                           |
+| ------------------------------------------------------------------- | ------------------------------------------------------------------ |
+| Make your first authorization decision                              | [Getting started](getting-started.md)                              |
+| Understand subjects, resources, actions, policies, and requirements | [Authorization model](authorization-model.md)                      |
+| Define and validate `rulegate.yaml` policies                        | [Manifest guide](manifests.md)                                     |
+| Validate manifests locally or in CI                                 | [RuleGate CLI](cli.md)                                             |
+| Generate C# constants and detect stale output                       | [C# code generation](code-generation.md)                           |
+| Integrate RuleGate with ASP.NET Core                                | [ASP.NET Core integration](aspnetcore.md)                          |
+| Add permission, policy, and role checks to Angular                  | [Angular SDK](angular.md)                                          |
+| Map Keycloak roles on ASP.NET Core and Angular                      | [Keycloak integration](keycloak.md)                                |
+| Operate authorization diagnostics safely                            | [Diagnostics](diagnostics.md)                                      |
+| Understand runtime and integration security                         | [Security model](security.md)                                      |
+| Understand current and planned capabilities                         | [Roadmap](roadmap.md)                                              |
+| Prepare and verify a NuGet preview                                  | [NuGet release checklist](releases/preview-release-checklist.md)   |
+| Prepare and verify an npm preview                                   | [npm release checklist](releases/npm-preview-release-checklist.md) |
 
 ## Published packages
 
 The latest published RuleGate preview is
-[`0.5.0-preview.2`](https://github.com/fotbiler-lab/rulegate/releases/tag/v0.5.0-preview.2).
+[`0.6.0-preview.1`](https://github.com/fotbiler-lab/rulegate/releases/tag/v0.6.0-preview.1).
 
-| Package | Purpose |
-|---|---|
-| [`Fotbiler.RuleGate.Abstractions`](https://www.nuget.org/packages/Fotbiler.RuleGate.Abstractions) | Public authorization contracts and extension abstractions |
-| [`Fotbiler.RuleGate.Core`](https://www.nuget.org/packages/Fotbiler.RuleGate.Core) | Local fail-closed authorization engine and built-in evaluators |
-| [`Fotbiler.RuleGate.Manifest`](https://www.nuget.org/packages/Fotbiler.RuleGate.Manifest) | YAML manifest loading, validation, and compilation |
-| [`Fotbiler.RuleGate.AspNetCore`](https://www.nuget.org/packages/Fotbiler.RuleGate.AspNetCore) | ASP.NET Core integration |
-| [`Fotbiler.RuleGate.Cli`](https://www.nuget.org/packages/Fotbiler.RuleGate.Cli) | .NET tool for manifest validation, deterministic C# generation, stale-output checks, and CI usage |
-| [`Fotbiler.RuleGate.Keycloak`](https://www.nuget.org/packages/Fotbiler.RuleGate.Keycloak) | Optional Keycloak claim normalization and RuleGate subject mapping |
-| [`@fotbiler/rulegate-angular`](https://www.npmjs.com/package/@fotbiler/rulegate-angular) | Angular authorization client, route guards, UI directives, and TypeScript generation |
+| Package                                                                                           | Purpose                                                                                           |
+| ------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
+| [`Fotbiler.RuleGate.Abstractions`](https://www.nuget.org/packages/Fotbiler.RuleGate.Abstractions) | Public authorization contracts and extension abstractions                                         |
+| [`Fotbiler.RuleGate.Core`](https://www.nuget.org/packages/Fotbiler.RuleGate.Core)                 | Local fail-closed authorization engine and built-in evaluators                                    |
+| [`Fotbiler.RuleGate.Manifest`](https://www.nuget.org/packages/Fotbiler.RuleGate.Manifest)         | YAML manifest loading, validation, and compilation                                                |
+| [`Fotbiler.RuleGate.AspNetCore`](https://www.nuget.org/packages/Fotbiler.RuleGate.AspNetCore)     | ASP.NET Core integration                                                                          |
+| [`Fotbiler.RuleGate.Cli`](https://www.nuget.org/packages/Fotbiler.RuleGate.Cli)                   | .NET tool for manifest validation, deterministic C# generation, stale-output checks, and CI usage |
+| [`Fotbiler.RuleGate.Keycloak`](https://www.nuget.org/packages/Fotbiler.RuleGate.Keycloak)         | Optional Keycloak claim normalization and RuleGate subject mapping                                |
+| [`@fotbiler/rulegate-angular`](https://www.npmjs.com/package/@fotbiler/rulegate-angular)          | Angular authorization client, route guards, UI directives, and TypeScript generation              |
 
-All RuleGate NuGet packages are `0.5.0-preview.2`. The independently versioned
+All RuleGate NuGet packages are `0.6.0-preview.1`. The independently versioned
 Angular npm package remains at `0.5.0-preview.1`.
 
 ## Recommended learning path

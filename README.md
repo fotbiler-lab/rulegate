@@ -80,7 +80,7 @@ more than framework-level roles or ad hoc permission checks.
 
 | Package family          | Current preview   | Supported platform                                        | Distribution |
 | ----------------------- | ----------------- | --------------------------------------------------------- | ------------ |
-| RuleGate NuGet packages | `0.5.0-preview.2` | .NET 8 (`net8.0`), .NET 9 (`net9.0`), .NET 10 (`net10.0`) | NuGet        |
+| RuleGate NuGet packages | `0.6.0-preview.1` | .NET 8 (`net8.0`), .NET 9 (`net9.0`), .NET 10 (`net10.0`) | NuGet        |
 | RuleGate Angular SDK    | `0.5.0-preview.1` | Angular 22                                                | npm          |
 
 Every RuleGate NuGet package includes framework-specific assemblies for all
@@ -93,9 +93,11 @@ RuleGate currently provides:
 
 - Permission and role-based authorization
 - Subject, resource, and context attribute requirements
+- Advanced string, collection, presence, and null attribute operators
 - Composable `all`, `any`, and `not` requirements
 - Default-deny and fail-closed evaluation
-- Exact, ordinal, case-sensitive matching
+- Ordinal string matching with explicit case-insensitive opt-in
+- Homogeneous attribute collections with a 256-element safety limit
 - Immutable in-memory policy registration
 - YAML manifest loading, validation, and compilation
 - ASP.NET Core dependency injection and dynamic policies
@@ -124,28 +126,28 @@ previews.
 
 ## Documentation
 
-| Goal                                            | Guide                                              |
-| ----------------------------------------------- | -------------------------------------------------- |
-| Make the first authorization decision           | [Getting started](docs/getting-started.md)         |
-| Understand the authorization model              | [Authorization model](docs/authorization-model.md) |
-| Define `rulegate.yaml` policies                 | [Manifest guide](docs/manifests.md)                |
-| Protect ASP.NET Core applications               | [ASP.NET Core integration](docs/aspnetcore.md)     |
-| Configure logs and diagnostic sinks             | [Diagnostics](docs/diagnostics.md)                 |
-| Review trust boundaries and production controls | [Security model](docs/security.md)                 |
-| Use the RuleGate command-line tool              | [CLI guide](docs/cli.md)                           |
-| Generate deterministic C# constants             | [C# code generation](docs/code-generation.md)      |
-| Add frontend permission, policy, and role checks | [Angular SDK](docs/angular.md)                    |
-| Map Keycloak roles without coupling the engine  | [Keycloak integration](docs/keycloak.md)           |
-| Browse all documentation                        | [Documentation index](docs/README.md)              |
-| Review current and planned capabilities         | [Roadmap](docs/roadmap.md)                         |
+| Goal                                             | Guide                                              |
+| ------------------------------------------------ | -------------------------------------------------- |
+| Make the first authorization decision            | [Getting started](docs/getting-started.md)         |
+| Understand the authorization model               | [Authorization model](docs/authorization-model.md) |
+| Define `rulegate.yaml` policies                  | [Manifest guide](docs/manifests.md)                |
+| Protect ASP.NET Core applications                | [ASP.NET Core integration](docs/aspnetcore.md)     |
+| Configure logs and diagnostic sinks              | [Diagnostics](docs/diagnostics.md)                 |
+| Review trust boundaries and production controls  | [Security model](docs/security.md)                 |
+| Use the RuleGate command-line tool               | [CLI guide](docs/cli.md)                           |
+| Generate deterministic C# constants              | [C# code generation](docs/code-generation.md)      |
+| Add frontend permission, policy, and role checks | [Angular SDK](docs/angular.md)                     |
+| Map Keycloak roles without coupling the engine   | [Keycloak integration](docs/keycloak.md)           |
+| Browse all documentation                         | [Documentation index](docs/README.md)              |
+| Review current and planned capabilities          | [Roadmap](docs/roadmap.md)                         |
 
 ## Installation
 
 Install the ASP.NET Core and manifest packages:
 
 ```bash
-dotnet add package Fotbiler.RuleGate.AspNetCore --version 0.5.0-preview.2
-dotnet add package Fotbiler.RuleGate.Manifest --version 0.5.0-preview.2
+dotnet add package Fotbiler.RuleGate.AspNetCore --version 0.6.0-preview.1
+dotnet add package Fotbiler.RuleGate.Manifest --version 0.6.0-preview.1
 ```
 
 `Fotbiler.RuleGate.AspNetCore` references the core engine and abstractions
@@ -155,7 +157,7 @@ Applications using only RuleGate contracts may reference the abstractions
 package directly:
 
 ```bash
-dotnet add package Fotbiler.RuleGate.Abstractions --version 0.5.0-preview.2
+dotnet add package Fotbiler.RuleGate.Abstractions --version 0.6.0-preview.1
 ```
 
 Install the Angular SDK:
@@ -167,7 +169,7 @@ pnpm add @fotbiler/rulegate-angular@0.5.0-preview.1
 Install the optional Keycloak integration when Keycloak supplies the identity:
 
 ```bash
-dotnet add package Fotbiler.RuleGate.Keycloak --version 0.5.0-preview.2
+dotnet add package Fotbiler.RuleGate.Keycloak --version 0.6.0-preview.1
 ```
 
 ## Use the RuleGate CLI
@@ -178,7 +180,7 @@ Install the RuleGate command-line tool:
 dotnet tool install \
   --global \
   Fotbiler.RuleGate.Cli \
-  --version 0.5.0-preview.2
+  --version 0.6.0-preview.1
 ```
 
 Validate the default `rulegate.yaml` in the current directory:
@@ -197,7 +199,7 @@ rulegate validate --format json
 Use `rulegate --help`, `rulegate --version`, and `rulegate info` to inspect the
 installed tool.
 
-The installed `0.5.0-preview.2` tool provides deterministic C# generation:
+The installed `0.6.0-preview.1` tool provides deterministic C# generation:
 
 ```bash
 rulegate generate csharp \
@@ -401,11 +403,11 @@ Read the [security model](docs/security.md) before production integration.
 ## Project status
 
 The latest RuleGate preview is
-[`0.5.0-preview.2`](https://github.com/fotbiler-lab/rulegate/releases/tag/v0.5.0-preview.2).
-It aligns every RuleGate NuGet package at one version while preserving the
-provider-independent engine and optional Keycloak integration boundary.
+[`0.6.0-preview.1`](https://github.com/fotbiler-lab/rulegate/releases/tag/v0.6.0-preview.1).
+It adds advanced string, collection, presence, and null attribute operators
+with explicit ordinal string comparison and bounded collection evaluation.
 
-All NuGet packages are `0.5.0-preview.2`. The independently versioned Angular
+All NuGet packages are `0.6.0-preview.1`. The independently versioned Angular
 npm package remains at `0.5.0-preview.1`.
 
 See the [roadmap](docs/roadmap.md) for the complete release path.

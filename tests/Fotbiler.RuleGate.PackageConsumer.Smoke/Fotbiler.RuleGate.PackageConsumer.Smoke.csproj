@@ -11,11 +11,11 @@
   <ItemGroup>
     <PackageReference
       Include="Fotbiler.RuleGate.AspNetCore"
-      Version="0.5.0-preview.2" />
+      Version="0.6.0-preview.1" />
 
     <PackageReference
       Include="Fotbiler.RuleGate.Manifest"
-      Version="0.5.0-preview.2" />
+      Version="0.6.0-preview.1" />
   </ItemGroup>
 
 </Project>

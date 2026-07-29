@@ -11,7 +11,7 @@ stable release.
 
 ## Installation
 
-    dotnet add package Fotbiler.RuleGate.Abstractions --version 0.5.0-preview.2
+    dotnet add package Fotbiler.RuleGate.Abstractions --version 0.6.0-preview.1
 
 ## When to use this package
 
@@ -21,6 +21,7 @@ Reference Abstractions directly when you are:
 - Implementing a custom requirement evaluator
 - Sharing authorization contracts across assemblies
 - Depending on RuleGate contracts without the built-in engine
+- Defining typed scalar, collection, presence, and null attribute requirements
 - Creating diagnostic or policy-provider extensions
 
 Most applications should install
@@ -31,14 +32,14 @@ instead of referencing Abstractions directly.
 
 ## RuleGate packages
 
-| Package | Purpose |
-|---|---|
-| [Fotbiler.RuleGate.Abstractions](https://www.nuget.org/packages/Fotbiler.RuleGate.Abstractions) | Public authorization contracts and extension abstractions |
-| [Fotbiler.RuleGate.Core](https://www.nuget.org/packages/Fotbiler.RuleGate.Core) | Local fail-closed authorization engine and built-in evaluators |
-| [Fotbiler.RuleGate.Manifest](https://www.nuget.org/packages/Fotbiler.RuleGate.Manifest) | YAML manifest loading, validation, and compilation |
-| [Fotbiler.RuleGate.AspNetCore](https://www.nuget.org/packages/Fotbiler.RuleGate.AspNetCore) | ASP.NET Core integration |
-| [Fotbiler.RuleGate.Cli](https://www.nuget.org/packages/Fotbiler.RuleGate.Cli) | .NET tool for deterministic manifest validation and CI usage |
-| [Fotbiler.RuleGate.Keycloak](https://www.nuget.org/packages/Fotbiler.RuleGate.Keycloak) | Optional Keycloak claim normalization and subject mapping |
+| Package                                                                                         | Purpose                                                        |
+| ----------------------------------------------------------------------------------------------- | -------------------------------------------------------------- |
+| [Fotbiler.RuleGate.Abstractions](https://www.nuget.org/packages/Fotbiler.RuleGate.Abstractions) | Public authorization contracts and extension abstractions      |
+| [Fotbiler.RuleGate.Core](https://www.nuget.org/packages/Fotbiler.RuleGate.Core)                 | Local fail-closed authorization engine and built-in evaluators |
+| [Fotbiler.RuleGate.Manifest](https://www.nuget.org/packages/Fotbiler.RuleGate.Manifest)         | YAML manifest loading, validation, and compilation             |
+| [Fotbiler.RuleGate.AspNetCore](https://www.nuget.org/packages/Fotbiler.RuleGate.AspNetCore)     | ASP.NET Core integration                                       |
+| [Fotbiler.RuleGate.Cli](https://www.nuget.org/packages/Fotbiler.RuleGate.Cli)                   | .NET tool for deterministic manifest validation and CI usage   |
+| [Fotbiler.RuleGate.Keycloak](https://www.nuget.org/packages/Fotbiler.RuleGate.Keycloak)         | Optional Keycloak claim normalization and subject mapping      |
 
 ## Documentation
 
