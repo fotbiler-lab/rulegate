@@ -16,7 +16,7 @@ The `0.5.0-preview.1` npm release contains one package:
 
 The package is public and uses both the `latest` and `preview` distribution
 tags. npm packages have an independent version line from the synchronized
-NuGet package family, which is currently `0.5.0-preview.2`.
+NuGet package family, which is currently `0.6.0-preview.1`.
 
 ## Required security configuration
 

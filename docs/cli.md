@@ -8,15 +8,15 @@ The installed command is `rulegate`.
 
 ## Current release
 
-The current public tool package is `0.5.0-preview.2`.
+The current public tool package is `0.6.0-preview.1`.
 
 ## Supported runtimes
 
 | Runtime | Target framework |
-|---|---|
-| .NET 8 | `net8.0` |
-| .NET 9 | `net9.0` |
-| .NET 10 | `net10.0` |
+| ------- | ---------------- |
+| .NET 8  | `net8.0`         |
+| .NET 9  | `net9.0`         |
+| .NET 10 | `net10.0`        |
 
 The packaged tool, generated source, and generated-code consumers are verified
 on all three target frameworks.
@@ -37,7 +37,7 @@ GitHub Packages is not used as the public RuleGate package registry.
 dotnet tool install \
   --global \
   Fotbiler.RuleGate.Cli \
-  --version 0.5.0-preview.2
+  --version 0.6.0-preview.1
 ```
 
 Update an existing global installation:
@@ -46,7 +46,7 @@ Update an existing global installation:
 dotnet tool update \
   --global \
   Fotbiler.RuleGate.Cli \
-  --version 0.5.0-preview.2
+  --version 0.6.0-preview.1
 ```
 
 Verify the installation:
@@ -141,13 +141,13 @@ diagnostics, and security boundaries.
 
 ## Exit codes
 
-| Exit code | Name | Meaning |
-|---:|---|---|
-| `0` | Success | Validation, generation, file output, or stale check completed successfully |
-| `1` | Input or generated-output failure | Manifest loading/validation, generation, missing output, or stale output failed |
-| `2` | Usage error | The command or option combination is invalid |
-| `3` | Internal error | An unexpected failure occurred |
-| `130` | Cancelled | The operation was cancelled |
+| Exit code | Name                              | Meaning                                                                         |
+| --------: | --------------------------------- | ------------------------------------------------------------------------------- |
+|       `0` | Success                           | Validation, generation, file output, or stale check completed successfully      |
+|       `1` | Input or generated-output failure | Manifest loading/validation, generation, missing output, or stale output failed |
+|       `2` | Usage error                       | The command or option combination is invalid                                    |
+|       `3` | Internal error                    | An unexpected failure occurred                                                  |
+|     `130` | Cancelled                         | The operation was cancelled                                                     |
 
 ## CI example
 
@@ -159,7 +159,7 @@ TOOL_DIRECTORY="$PWD/.rulegate-tools"
 dotnet tool install \
   Fotbiler.RuleGate.Cli \
   --tool-path "$TOOL_DIRECTORY" \
-  --version 0.5.0-preview.2
+  --version 0.6.0-preview.1
 
 "$TOOL_DIRECTORY/rulegate" \
   validate \

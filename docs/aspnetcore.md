@@ -39,7 +39,7 @@ Install the ASP.NET Core integration:
 ```bash
 dotnet add package \
   Fotbiler.RuleGate.AspNetCore \
-  --version 0.5.0-preview.2
+  --version 0.6.0-preview.1
 ```
 
 Install the manifest package when policies are defined in `rulegate.yaml`:
@@ -47,7 +47,7 @@ Install the manifest package when policies are defined in `rulegate.yaml`:
 ```bash
 dotnet add package \
   Fotbiler.RuleGate.Manifest \
-  --version 0.5.0-preview.2
+  --version 0.6.0-preview.1
 ```
 
 `Fotbiler.RuleGate.AspNetCore` references the RuleGate core and abstractions
@@ -326,11 +326,11 @@ The default `IRuleGateSubjectFactory` converts the current
 
 Default claim types:
 
-| Subject member | Default claim type |
-|---|---|
+| Subject member     | Default claim type          |
+| ------------------ | --------------------------- |
 | Subject identifier | `ClaimTypes.NameIdentifier` |
-| Roles | `ClaimTypes.Role` |
-| Permissions | `permission` |
+| Roles              | `ClaimTypes.Role`           |
+| Permissions        | `permission`                |
 
 Example principal:
 
@@ -840,11 +840,11 @@ resource, action, and context construction.
 ASP.NET Core authentication and authorization use the normal framework
 semantics:
 
-| Situation | Result |
-|---|---|
-| Anonymous request | Challenge |
-| Authenticated but denied request | Forbid |
-| Allowed request | Endpoint executes |
+| Situation                        | Result            |
+| -------------------------------- | ----------------- |
+| Anonymous request                | Challenge         |
+| Authenticated but denied request | Forbid            |
+| Allowed request                  | Endpoint executes |
 
 Without optional RuleGate HTTP mapping, the configured authentication scheme
 and ASP.NET Core result handler determine the response body.

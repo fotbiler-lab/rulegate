@@ -13,7 +13,7 @@ Install the current RuleGate CLI preview:
 dotnet tool install \
   --global \
   Fotbiler.RuleGate.Cli \
-  --version 0.5.0-preview.2
+  --version 0.6.0-preview.1
 ```
 
 You need a complete manifest that passes `rulegate validate`:
@@ -35,11 +35,11 @@ rulegate generate csharp \
 
 The generated source contains three public static classes:
 
-| Class | Manifest values |
-|---|---|
-| `RuleGatePolicies` | Policy identifiers |
-| `RuleGateResourceTypes` | Resource types |
-| `RuleGateActions` | Actions |
+| Class                   | Manifest values    |
+| ----------------------- | ------------------ |
+| `RuleGatePolicies`      | Policy identifiers |
+| `RuleGateResourceTypes` | Resource types     |
+| `RuleGateActions`       | Actions            |
 
 Each constant exposes a valid C# identifier while preserving the exact string
 value used by RuleGate. Applications can therefore replace repeated string

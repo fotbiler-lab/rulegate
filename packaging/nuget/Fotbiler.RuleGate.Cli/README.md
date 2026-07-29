@@ -10,7 +10,7 @@ automation.
 dotnet tool install \
   --global \
   Fotbiler.RuleGate.Cli \
-  --version 0.5.0-preview.2
+  --version 0.6.0-preview.1
 ```
 
 The installed command is `rulegate`.
@@ -83,24 +83,24 @@ rulegate info
 
 ## Exit codes
 
-| Code | Meaning |
-|---:|---|
-| `0` | Command completed successfully |
-| `1` | Manifest, generation, missing-output, or stale-output failure |
-| `2` | Command-line usage error |
-| `3` | Unexpected internal error |
-| `130` | Operation canceled |
+|  Code | Meaning                                                       |
+| ----: | ------------------------------------------------------------- |
+|   `0` | Command completed successfully                                |
+|   `1` | Manifest, generation, missing-output, or stale-output failure |
+|   `2` | Command-line usage error                                      |
+|   `3` | Unexpected internal error                                     |
+| `130` | Operation canceled                                            |
 
 ## RuleGate packages
 
-| Package | Purpose |
-|---|---|
-| [Fotbiler.RuleGate.Abstractions](https://www.nuget.org/packages/Fotbiler.RuleGate.Abstractions) | Public authorization contracts and extension abstractions |
-| [Fotbiler.RuleGate.Core](https://www.nuget.org/packages/Fotbiler.RuleGate.Core) | Local fail-closed authorization engine and built-in evaluators |
-| [Fotbiler.RuleGate.Manifest](https://www.nuget.org/packages/Fotbiler.RuleGate.Manifest) | YAML manifest loading, validation, and compilation |
-| [Fotbiler.RuleGate.AspNetCore](https://www.nuget.org/packages/Fotbiler.RuleGate.AspNetCore) | ASP.NET Core integration |
-| [Fotbiler.RuleGate.Cli](https://www.nuget.org/packages/Fotbiler.RuleGate.Cli) | Manifest validation, deterministic C# generation, stale-output checks, and CI automation |
-| [Fotbiler.RuleGate.Keycloak](https://www.nuget.org/packages/Fotbiler.RuleGate.Keycloak) | Optional Keycloak claim normalization and subject mapping |
+| Package                                                                                         | Purpose                                                                                  |
+| ----------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| [Fotbiler.RuleGate.Abstractions](https://www.nuget.org/packages/Fotbiler.RuleGate.Abstractions) | Public authorization contracts and extension abstractions                                |
+| [Fotbiler.RuleGate.Core](https://www.nuget.org/packages/Fotbiler.RuleGate.Core)                 | Local fail-closed authorization engine and built-in evaluators                           |
+| [Fotbiler.RuleGate.Manifest](https://www.nuget.org/packages/Fotbiler.RuleGate.Manifest)         | YAML manifest loading, validation, and compilation                                       |
+| [Fotbiler.RuleGate.AspNetCore](https://www.nuget.org/packages/Fotbiler.RuleGate.AspNetCore)     | ASP.NET Core integration                                                                 |
+| [Fotbiler.RuleGate.Cli](https://www.nuget.org/packages/Fotbiler.RuleGate.Cli)                   | Manifest validation, deterministic C# generation, stale-output checks, and CI automation |
+| [Fotbiler.RuleGate.Keycloak](https://www.nuget.org/packages/Fotbiler.RuleGate.Keycloak)         | Optional Keycloak claim normalization and subject mapping                                |
 
 ## Documentation
 

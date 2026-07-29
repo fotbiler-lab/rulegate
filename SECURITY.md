@@ -15,11 +15,11 @@ RuleGate is currently in preview.
 Only the latest published preview in each package ecosystem receives security
 fixes.
 
-| Package family | Version | Supported |
-|---|---|---|
-| Angular npm package | [`0.5.0-preview.1`](https://www.npmjs.com/package/@fotbiler/rulegate-angular/v/0.5.0-preview.1) | Yes |
-| NuGet packages | [`0.5.0-preview.2`](https://github.com/fotbiler-lab/rulegate/releases/tag/v0.5.0-preview.2) | Yes |
-| Older previews | — | No |
+| Package family      | Version                                                                                         | Supported |
+| ------------------- | ----------------------------------------------------------------------------------------------- | --------- |
+| Angular npm package | [`0.5.0-preview.1`](https://www.npmjs.com/package/@fotbiler/rulegate-angular/v/0.5.0-preview.1) | Yes       |
+| NuGet packages      | [`0.6.0-preview.1`](https://github.com/fotbiler-lab/rulegate/releases/tag/v0.6.0-preview.1)     | Yes       |
+| Older previews      | —                                                                                               | No        |
 
 This table is updated when a new preview or stable version is published.
 

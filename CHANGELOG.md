@@ -6,6 +6,34 @@ The project follows Semantic Versioning. Preview releases may introduce breaking
 
 ## [Unreleased]
 
+## [0.6.0-preview.1] - 2026-07-29
+
+### Added
+
+- Added ordinal `contains`, `startsWith`, and `endsWith` string operators with
+  explicit case-sensitive and case-insensitive behavior.
+- Added collection `contains`, `containsAny`, `containsAll`, `in`, `notIn`,
+  `intersects`, `isEmpty`, and `isNotEmpty` operators.
+- Added `exists`, `notExists`, `isNull`, and `isNotNull` attribute-state
+  operators with defined missing-versus-null semantics.
+- Added typed manifest collections and `stringComparison` configuration.
+
+### Security
+
+- Attribute collections must be homogeneous, cannot contain null or nested
+  collections, and are limited to 256 elements.
+- Unsupported operators, invalid collection values, type mismatches, and
+  exceeded collection limits fail closed.
+- String comparison remains ordinal and case-sensitive unless
+  `ordinalIgnoreCase` is explicitly selected.
+
+### Verification
+
+- Added unit and integration coverage for the new operators across .NET 8,
+  .NET 9, and .NET 10.
+- Extended package-only consumers to compile and evaluate advanced attribute
+  policies from the packed NuGet artifacts.
+
 ## [0.5.0-preview.2] - 2026-07-29
 
 ### Changed
@@ -319,7 +347,8 @@ The project follows Semantic Versioning. Preview releases may introduce breaking
 - CLI, Angular, and Keycloak integration packages are not yet included.
 - Public APIs may change before the first stable release.
 
-[Unreleased]: https://github.com/fotbiler-lab/rulegate/compare/v0.5.0-preview.2...HEAD
+[Unreleased]: https://github.com/fotbiler-lab/rulegate/compare/v0.6.0-preview.1...HEAD
+[0.6.0-preview.1]: https://github.com/fotbiler-lab/rulegate/compare/v0.5.0-preview.2...v0.6.0-preview.1
 [0.5.0-preview.2]: https://github.com/fotbiler-lab/rulegate/compare/v0.5.0-preview.1...v0.5.0-preview.2
 [0.5.0-preview.1]: https://github.com/fotbiler-lab/rulegate/compare/v0.4.0-preview.2...v0.5.0-preview.1
 [0.4.0-preview.2]: https://github.com/fotbiler-lab/rulegate/compare/v0.4.0-preview.1...v0.4.0-preview.2
