@@ -234,6 +234,76 @@ public sealed class
 
     [Fact]
     public async Task
+        EvaluateAsync_records_time_and_context_requirement_metadata()
+    {
+        var sink = new RecordingDiagnosticsSink();
+
+        var engine = CreateEngine(
+            new AllRequirementDefinition(
+            [
+                new TimeWindowRequirementDefinition(
+                    [DayOfWeek.Thursday],
+                    new TimeOnly(0, 0),
+                    new TimeOnly(23, 59),
+                    TimeZoneInfo.Utc,
+                    "time"),
+                new DateTimeWindowRequirementDefinition(
+                    startsAt: DateTimeOffset.UnixEpoch,
+                    id: "date-time"),
+                new ContextAgeRequirementDefinition(
+                    AuthorizationContextTimestamp.AuthenticationTime,
+                    TimeSpan.FromHours(1),
+                    "age"),
+                new ContextRequirementDefinition(
+                    AuthorizationContextProperty.RequestChannel,
+                    AuthorizationAttributeOperator.Equal,
+                    "api",
+                    "context")
+            ]),
+            sink);
+
+        var decision = await engine.EvaluateAsync(
+            CreateRequest(
+                contextAttributes: new AuthorizationAttributes(
+                [
+                    new KeyValuePair<string, object?>(
+                        AuthorizationContextAttributeNames.AuthenticationTime,
+                        DateTimeOffset.UnixEpoch),
+                    new KeyValuePair<string, object?>(
+                        AuthorizationContextAttributeNames.RequestChannel,
+                        "api")
+                ])));
+
+        Assert.True(decision.IsAllowed);
+
+        var evaluations = Assert.Single(sink.Diagnostics)
+            .RequirementEvaluations;
+
+        Assert.Equal(
+            AuthorizationRequirementKind.TimeWindow,
+            evaluations[1].RequirementKind);
+        Assert.Equal(
+            AuthorizationRequirementKind.DateTimeWindow,
+            evaluations[2].RequirementKind);
+        Assert.Equal(
+            AuthorizationRequirementKind.ContextAge,
+            evaluations[3].RequirementKind);
+        Assert.Equal(
+            AuthorizationContextAttributeNames.AuthenticationTime,
+            evaluations[3].AttributeName);
+        Assert.Equal(
+            AuthorizationRequirementKind.Context,
+            evaluations[4].RequirementKind);
+        Assert.Equal(
+            AuthorizationAttributeSource.Context,
+            evaluations[4].AttributeSource);
+        Assert.Equal(
+            AuthorizationContextAttributeNames.RequestChannel,
+            evaluations[4].AttributeName);
+    }
+
+    [Fact]
+    public async Task
         EvaluateAsync_records_no_matching_policy()
     {
         var sink = new RecordingDiagnosticsSink();
@@ -340,6 +410,10 @@ public sealed class
             new RoleRequirementEvaluator(),
             new AttributeRequirementEvaluator(),
             new AttributeComparisonRequirementEvaluator(),
+            new TimeWindowRequirementEvaluator(),
+            new DateTimeWindowRequirementEvaluator(),
+            new ContextAgeRequirementEvaluator(),
+            new ContextRequirementEvaluator(),
             new AllRequirementEvaluator(),
             new AnyRequirementEvaluator(),
             new NotRequirementEvaluator()
@@ -349,7 +423,8 @@ public sealed class
     private static AuthorizationRequest CreateRequest(
         IEnumerable<string>? permissions = null,
         AuthorizationAttributes? resourceAttributes = null,
-        AuthorizationAttributes? subjectAttributes = null)
+        AuthorizationAttributes? subjectAttributes = null,
+        AuthorizationAttributes? contextAttributes = null)
     {
         return new AuthorizationRequest(
             new AuthorizationSubject(
@@ -365,7 +440,8 @@ public sealed class
             "read",
 
             new AuthorizationContext(
-                DateTimeOffset.UnixEpoch));
+                DateTimeOffset.UnixEpoch,
+                contextAttributes));
     }
 
     private static AuthorizationAttributes

@@ -132,6 +132,118 @@ public sealed class RuleGateManifestMapper
                 stringComparison);
         }
 
+        if (requirement.TimeWindow is not null)
+        {
+            var timeWindow = requirement.TimeWindow;
+
+            var days = timeWindow.Days!
+                .Select(static value =>
+                {
+                    ManifestTimeContextConversions.TryParseDay(
+                        value,
+                        out var day);
+                    return day;
+                });
+
+            ManifestTimeContextConversions.TryParseTime(
+                timeWindow.Start,
+                out var start);
+
+            ManifestTimeContextConversions.TryParseTime(
+                timeWindow.End,
+                out var end);
+
+            ManifestTimeContextConversions.TryParseTimeZone(
+                timeWindow.TimeZone,
+                out var timeZone);
+
+            return new TimeWindowRequirementDefinition(
+                days,
+                start,
+                end,
+                timeZone!,
+                requirement.Id);
+        }
+
+        if (requirement.DateTimeWindow is not null)
+        {
+            var dateTimeWindow = requirement.DateTimeWindow;
+
+            DateTimeOffset? startsAt = null;
+            DateTimeOffset? endsAt = null;
+
+            if (dateTimeWindow.StartsAt is not null)
+            {
+                ManifestTimeContextConversions.TryParseDateTimeOffset(
+                    dateTimeWindow.StartsAt,
+                    out var parsedStartsAt);
+                startsAt = parsedStartsAt;
+            }
+
+            if (dateTimeWindow.EndsAt is not null)
+            {
+                ManifestTimeContextConversions.TryParseDateTimeOffset(
+                    dateTimeWindow.EndsAt,
+                    out var parsedEndsAt);
+                endsAt = parsedEndsAt;
+            }
+
+            return new DateTimeWindowRequirementDefinition(
+                startsAt,
+                endsAt,
+                requirement.Id);
+        }
+
+        if (requirement.ContextAge is not null)
+        {
+            var contextAge = requirement.ContextAge;
+
+            ManifestTimeContextConversions
+                .TryParseContextTimestamp(
+                    contextAge.Timestamp,
+                    out var timestamp);
+
+            ManifestTimeContextConversions.TryParseMaximumAge(
+                contextAge.MaximumAge,
+                out var maximumAge);
+
+            return new ContextAgeRequirementDefinition(
+                timestamp,
+                maximumAge,
+                requirement.Id);
+        }
+
+        if (requirement.Context is not null)
+        {
+            var context = requirement.Context;
+
+            ManifestTimeContextConversions.TryParseContextProperty(
+                context.Property,
+                out var property);
+
+            ManifestAttributeRequirementConversions.TryParseOperator(
+                context.Operator,
+                out var @operator);
+
+            ManifestAttributeRequirementConversions.TryConvertValue(
+                context.ValueType,
+                context.Value,
+                context.HasValue,
+                out var value);
+
+            ManifestAttributeRequirementConversions
+                .TryParseStringComparison(
+                    context.StringComparison,
+                    out var stringComparison);
+
+            return new ContextRequirementDefinition(
+                property,
+                @operator,
+                value!,
+                requirement.Id,
+                stringComparison);
+        }
+
         if (requirement.All is not null)
         {
             return new AllRequirementDefinition(

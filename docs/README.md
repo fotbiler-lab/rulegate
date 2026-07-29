@@ -7,6 +7,9 @@ RuleGate is a local-first and provider-independent authorization framework for
 contextual, and resource-based authorization through one composable policy
 model.
 
+The policy model includes explicit-time-zone schedules, bounded date-time
+rules, authentication and MFA age, and canonical trusted request context.
+
 ## Start here
 
 | Goal                                                                | Document                                                           |

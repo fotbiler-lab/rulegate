@@ -31,4 +31,16 @@ public static class AuthorizationFailureCodes
 
     public const string AttributeOperatorNotSupported =
         "RULEGATE_ATTRIBUTE_OPERATOR_NOT_SUPPORTED";
+
+    public const string TimeWindowNotSatisfied =
+        "RULEGATE_TIME_WINDOW_NOT_SATISFIED";
+
+    public const string DateTimeWindowNotSatisfied =
+        "RULEGATE_DATE_TIME_WINDOW_NOT_SATISFIED";
+
+    public const string ContextAgeNotSatisfied =
+        "RULEGATE_CONTEXT_AGE_NOT_SATISFIED";
+
+    public const string ContextTimestampInFuture =
+        "RULEGATE_CONTEXT_TIMESTAMP_IN_FUTURE";
 }

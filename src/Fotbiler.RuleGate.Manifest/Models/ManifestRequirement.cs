@@ -21,6 +21,30 @@ public sealed class ManifestRequirement
         set;
     }
 
+    public ManifestTimeWindowRequirement? TimeWindow
+    {
+        get;
+        set;
+    }
+
+    public ManifestDateTimeWindowRequirement? DateTimeWindow
+    {
+        get;
+        set;
+    }
+
+    public ManifestContextAgeRequirement? ContextAge
+    {
+        get;
+        set;
+    }
+
+    public ManifestContextRequirement? Context
+    {
+        get;
+        set;
+    }
+
     public List<ManifestRequirement?>? All { get; set; }
 
     public List<ManifestRequirement?>? Any { get; set; }

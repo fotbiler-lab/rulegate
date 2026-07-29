@@ -185,6 +185,12 @@ TypeScript generator validates the identifier-bearing manifest shape needed
 for generation; generated constants reduce drift but do not prove that the
 current user is authorized.
 
+Backend-only requirement kinds such as attribute comparisons, time and
+date-time windows, context age, and canonical context policies are recognized
+without generating frontend grants from them. This lets the same manifest
+drive backend authorization and frontend identifiers while preserving the
+backend as the authorization boundary.
+
 ## Fail-closed behavior
 
 - Uninitialized and cleared state denies every check.

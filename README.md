@@ -95,6 +95,9 @@ RuleGate currently provides:
 - Subject, resource, and context attribute requirements
 - Advanced string, collection, presence, and null attribute operators
 - Attribute-to-attribute comparisons for ownership and organization scope
+- Explicit-time-zone workday and overnight time-window requirements
+- Before, after, and bounded date-time requirements
+- Authentication-age, MFA-age, and canonical trusted-context requirements
 - Composable `all`, `any`, and `not` requirements
 - Default-deny and fail-closed evaluation
 - Ordinal string matching with explicit case-insensitive opt-in

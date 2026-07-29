@@ -835,6 +835,17 @@ that constructs the required RuleGate context.
 The direct `IAuthorizationEngine` API provides full control over subject,
 resource, action, and context construction.
 
+First-class `timeWindow` and `dateTimeWindow` policies work with the default
+handler because it supplies evaluation time from `TimeProvider`. Register a
+controlled `TimeProvider` in tests to exercise schedule boundaries
+deterministically.
+
+`contextAge` and `context` policies require canonical trusted attributes such
+as `authenticationTime`, `multiFactorAuthenticationTime`,
+`authenticationMethod`, `networkZone`, or `trustedDevice`. The default handler
+does not infer these values. Until an application-specific context integration
+constructs them explicitly, such requirements deny access.
+
 ## HTTP authorization results
 
 ASP.NET Core authentication and authorization use the normal framework

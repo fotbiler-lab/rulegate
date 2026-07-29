@@ -595,6 +595,38 @@ the production clock.
 
 Use `DateTimeOffset` values with explicit offsets.
 
+First-class time requirements read only
+`AuthorizationContext.EvaluationTime`. Recurring windows require an explicit
+time zone, while one-time boundaries require explicit offsets and are
+normalized to UTC. Starts are inclusive and ends are exclusive. Overnight
+windows associate their early-morning portion with the preceding configured
+day.
+
+Time-zone identifiers and daylight-saving rules come from the platform time
+zone database. Keep production images and hosts updated, and test business
+boundaries around clock transitions when a selected zone observes daylight
+saving time.
+
+Authentication-age and MFA-age requirements read canonical `DateTimeOffset`
+attributes from the authorization context. A missing timestamp is not
+satisfied. An incompatible type or a timestamp later than evaluation time is
+indeterminate. These outcomes deny access and prevent absent or implausible
+authentication history from granting authorization.
+
+## First-class context policies
+
+RuleGate defines canonical context properties for authentication method,
+request channel, network zone, tenant, organization, trusted-device state, and
+identity type. This standardizes policy vocabulary; it does not establish
+trust in the value.
+
+The default ASP.NET Core integration does not derive these properties from
+headers, forwarded IP values, claims, cookies, or device assertions.
+Applications must validate the source and explicitly construct
+`AuthorizationContext.Attributes`. Missing properties deny the requirement.
+Never copy client-controlled input into a canonical context attribute merely
+because its name matches the policy.
+
 ## Attribute trust boundary
 
 Supported runtime attribute values are:
@@ -1449,6 +1481,8 @@ The current preview provides:
 - Fail-closed built-in requirements
 - Typed scalar attribute comparison
 - Attribute-to-attribute comparison
+- Explicit-time-zone and bounded date-time requirements
+- Authentication-age, MFA-age, and canonical context requirements
 - Declarative YAML manifests
 - Duplicate-key rejection
 - Unknown-property rejection

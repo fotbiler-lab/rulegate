@@ -59,6 +59,28 @@ internal sealed class AuthorizationDiagnosticsSession
                     comparisonRequirement.Right);
         }
 
+        if (requirement is
+            ContextRequirementDefinition
+                contextRequirement)
+        {
+            attributeSource =
+                AuthorizationAttributeSource.Context;
+
+            attributeName =
+                contextRequirement.AttributeName;
+        }
+
+        if (requirement is
+            ContextAgeRequirementDefinition
+                contextAgeRequirement)
+        {
+            attributeSource =
+                AuthorizationAttributeSource.Context;
+
+            attributeName =
+                contextAgeRequirement.AttributeName;
+        }
+
         int index;
 
         lock (_syncRoot)
@@ -142,6 +164,18 @@ internal sealed class AuthorizationDiagnosticsSession
             AttributeComparisonRequirementDefinition =>
                 AuthorizationRequirementKind
                     .AttributeComparison,
+
+            TimeWindowRequirementDefinition =>
+                AuthorizationRequirementKind.TimeWindow,
+
+            DateTimeWindowRequirementDefinition =>
+                AuthorizationRequirementKind.DateTimeWindow,
+
+            ContextAgeRequirementDefinition =>
+                AuthorizationRequirementKind.ContextAge,
+
+            ContextRequirementDefinition =>
+                AuthorizationRequirementKind.Context,
 
             AllRequirementDefinition =>
                 AuthorizationRequirementKind.All,

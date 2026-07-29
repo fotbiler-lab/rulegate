@@ -22,6 +22,8 @@ Use Core when you need:
 - Built-in role, permission, logical, scalar, collection, presence, and null
   attribute requirements
 - Attribute-to-attribute comparisons for ownership and organization scope
+- Recurring time-window, bounded date-time, authentication-age, and canonical
+  context policies
 - Custom policy-provider or evaluator composition
 - Direct control over authorization requests and decisions
 

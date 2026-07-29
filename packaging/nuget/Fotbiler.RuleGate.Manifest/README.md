@@ -44,6 +44,19 @@ change before the first stable release.
                 right:
                   source: subject
                   name: id
+            - timeWindow:
+                days: [monday, tuesday, wednesday, thursday, friday]
+                start: "08:00"
+                end: "18:00"
+                timeZone: Europe/Istanbul
+            - contextAge:
+                timestamp: mfa
+                maximumAge: "00:15:00"
+            - context:
+                property: trustedDevice
+                operator: equal
+                valueType: boolean
+                value: true
 
 The compiled policy collection can be registered with the RuleGate engine or
 the ASP.NET Core integration.
@@ -51,6 +64,8 @@ the ASP.NET Core integration.
 The manifest supports typed scalar and collection literals, ordinal string
 comparison, value-less presence, null and collection-state operators, and
 subject, resource, context, or literal operand comparisons.
+It also supports explicit-time-zone schedules, bounded date-time rules,
+authentication and MFA age, and canonical context-property requirements.
 
 ## RuleGate packages
 

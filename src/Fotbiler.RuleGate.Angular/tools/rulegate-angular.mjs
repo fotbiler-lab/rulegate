@@ -292,9 +292,19 @@ function collectRequirements(requirement, path, permissions, roles, diagnostics)
     return;
   }
 
-  const kinds = ['permission', 'role', 'attribute', 'all', 'any', 'not'].filter(
-    (kind) => requirement[kind] !== undefined && requirement[kind] !== null,
-  );
+  const kinds = [
+    'permission',
+    'role',
+    'attribute',
+    'attributeComparison',
+    'timeWindow',
+    'dateTimeWindow',
+    'contextAge',
+    'context',
+    'all',
+    'any',
+    'not',
+  ].filter((kind) => requirement[kind] !== undefined && requirement[kind] !== null);
 
   if (kinds.length !== 1) {
     diagnostics.push(`${path} must define exactly one requirement kind.`);
@@ -323,9 +333,16 @@ function collectRequirements(requirement, path, permissions, roles, diagnostics)
     return;
   }
 
-  if (kind === 'attribute') {
-    if (!isPlainObject(requirement.attribute)) {
-      diagnostics.push(`${path}.attribute must be an object.`);
+  if (
+    kind === 'attribute' ||
+    kind === 'attributeComparison' ||
+    kind === 'timeWindow' ||
+    kind === 'dateTimeWindow' ||
+    kind === 'contextAge' ||
+    kind === 'context'
+  ) {
+    if (!isPlainObject(requirement[kind])) {
+      diagnostics.push(`${path}.${kind} must be an object.`);
     }
 
     return;

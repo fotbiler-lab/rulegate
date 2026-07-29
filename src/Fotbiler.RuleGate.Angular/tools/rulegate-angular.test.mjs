@@ -114,6 +114,47 @@ policies:
   assert.match(invalidYaml.diagnostics.join('\n'), /YAML:/);
 });
 
+test('accepts backend requirement kinds while collecting frontend identifiers', () => {
+  const result = generateRuleGateTypeScript(`schemaVersion: 1
+policies:
+  - id: secure-access
+    resourceType: portal
+    action: access
+    requirement:
+      all:
+        - permission: portal.access
+        - attributeComparison:
+            left: { source: resource, name: ownerId }
+            operator: equal
+            right: { source: subject, name: id }
+        - timeWindow:
+            days: [monday]
+            start: "08:00"
+            end: "18:00"
+            timeZone: Europe/Istanbul
+        - dateTimeWindow:
+            endsAt: "2026-08-01T00:00:00Z"
+        - contextAge:
+            timestamp: mfa
+            maximumAge: "00:15:00"
+        - context:
+            property: trustedDevice
+            operator: equal
+            valueType: boolean
+            value: true
+`);
+
+  assert.equal(result.success, true);
+  assert.match(result.source, /portalAccess: "portal\.access"/);
+  assert.deepEqual(result.counts, {
+    policies: 1,
+    permissions: 1,
+    roles: 0,
+    resourceTypes: 1,
+    actions: 1,
+  });
+});
+
 test('writes atomically and checks byte-exact generated output', async () => {
   const directory = await mkdtemp(join(tmpdir(), 'rulegate-angular-generator-'));
   const manifestPath = join(directory, 'rulegate.yaml');
