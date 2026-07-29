@@ -1289,7 +1289,7 @@ Install the current preview:
 dotnet tool install \
   --global \
   Fotbiler.RuleGate.Cli \
-  --version 0.6.0-preview.1
+  --version 0.6.0-preview.2
 ```
 
 Validate `rulegate.yaml` in the current directory:

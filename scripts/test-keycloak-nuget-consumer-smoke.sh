@@ -17,7 +17,7 @@ SMOKE_DIRECTORY="$REPOSITORY_ROOT/tests/Fotbiler.RuleGate.Keycloak.PackageConsum
 SMOKE_PROJECT="$SMOKE_DIRECTORY/Fotbiler.RuleGate.Keycloak.PackageConsumer.Smoke.csproj"
 PACKAGE_DIRECTORY="$REPOSITORY_ROOT/artifacts/packages"
 CONSUMER_PACKAGE_CACHE="$REPOSITORY_ROOT/artifacts/keycloak-package-consumer-global-packages"
-PACKAGE_VERSION="0.6.0-preview.1"
+PACKAGE_VERSION="0.6.0-preview.2"
 
 EXPECTED_FRAMEWORKS=(
   "net8.0"

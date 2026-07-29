@@ -13,7 +13,7 @@ Install the current RuleGate CLI preview:
 dotnet tool install \
   --global \
   Fotbiler.RuleGate.Cli \
-  --version 0.6.0-preview.1
+  --version 0.6.0-preview.2
 ```
 
 You need a complete manifest that passes `rulegate validate`:

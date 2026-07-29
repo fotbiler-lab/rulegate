@@ -11,7 +11,7 @@ change before the first stable release.
 
 ## Installation
 
-    dotnet add package Fotbiler.RuleGate.Manifest --version 0.6.0-preview.1
+    dotnet add package Fotbiler.RuleGate.Manifest --version 0.6.0-preview.2
 
 ## Example manifest
 
@@ -36,12 +36,21 @@ change before the first stable release.
                 stringComparison: ordinalIgnoreCase
                 valueType: string
                 value: finance
+            - attributeComparison:
+                left:
+                  source: resource
+                  name: ownerId
+                operator: equal
+                right:
+                  source: subject
+                  name: id
 
 The compiled policy collection can be registered with the RuleGate engine or
 the ASP.NET Core integration.
 
 The manifest supports typed scalar and collection literals, ordinal string
-comparison, and value-less presence, null, and collection-state operators.
+comparison, value-less presence, null and collection-state operators, and
+subject, resource, context, or literal operand comparisons.
 
 ## RuleGate packages
 

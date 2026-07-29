@@ -6,6 +6,31 @@ The project follows Semantic Versioning. Preview releases may introduce breaking
 
 ## [Unreleased]
 
+## [0.6.0-preview.2] - 2026-07-29
+
+### Added
+
+- Added public subject, resource, context, and typed-literal operand contracts.
+- Added attribute-to-attribute comparison requirements for ownership,
+  organization scope, numeric, collection, and date/time policies.
+- Added validated `attributeComparison` YAML manifest syntax with explicit
+  left and right operands.
+
+### Security
+
+- Missing operands are denied as not satisfied; unsupported runtime values,
+  incompatible operand kinds, and unsupported operator/type combinations are
+  denied as indeterminate.
+- Diagnostics identify operand structure without exposing resolved attribute
+  or literal values. Built-in logging omits both attribute names.
+
+### Verification
+
+- Added public-contract, evaluator, manifest, diagnostics, and end-to-end
+  authorization coverage across .NET 8, .NET 9, and .NET 10.
+- Extended the package-only consumer to compile and evaluate ownership
+  policies from packed NuGet artifacts.
+
 ## [0.6.0-preview.1] - 2026-07-29
 
 ### Added
@@ -347,7 +372,8 @@ The project follows Semantic Versioning. Preview releases may introduce breaking
 - CLI, Angular, and Keycloak integration packages are not yet included.
 - Public APIs may change before the first stable release.
 
-[Unreleased]: https://github.com/fotbiler-lab/rulegate/compare/v0.6.0-preview.1...HEAD
+[Unreleased]: https://github.com/fotbiler-lab/rulegate/compare/v0.6.0-preview.2...HEAD
+[0.6.0-preview.2]: https://github.com/fotbiler-lab/rulegate/compare/v0.6.0-preview.1...v0.6.0-preview.2
 [0.6.0-preview.1]: https://github.com/fotbiler-lab/rulegate/compare/v0.5.0-preview.2...v0.6.0-preview.1
 [0.5.0-preview.2]: https://github.com/fotbiler-lab/rulegate/compare/v0.5.0-preview.1...v0.5.0-preview.2
 [0.5.0-preview.1]: https://github.com/fotbiler-lab/rulegate/compare/v0.4.0-preview.2...v0.5.0-preview.1
