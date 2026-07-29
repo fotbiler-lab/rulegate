@@ -1,10 +1,12 @@
 using System.Net;
 using System.Security.Claims;
 using System.Text.Encodings.Web;
+using Fotbiler.RuleGate.Abstractions.Attributes;
 using Fotbiler.RuleGate.Abstractions.Authorization;
 using Fotbiler.RuleGate.AspNetCore.Authorization;
 using Fotbiler.RuleGate.AspNetCore.DependencyInjection;
 using Fotbiler.RuleGate.AspNetCore.Endpoints;
+using Fotbiler.RuleGate.AspNetCore.Enrichment;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -155,6 +157,94 @@ public sealed class RuleGateAuthorizationPipelineTests
 
     [Fact]
     public async Task
+        MinimalApi_enrichment_providers_populate_request()
+    {
+        await using var application =
+            await CreateMinimalApiApplicationAsync(
+                request =>
+                    request.Subject.Attributes.TryGetValue(
+                        "tenant",
+                        out var tenant) &&
+                    Equals(tenant, "tenant-1") &&
+                    request.Resource.Attributes.TryGetValue(
+                        "ownerId",
+                        out var ownerId) &&
+                    Equals(ownerId, "user-1") &&
+                    request.Context.Attributes.TryGetValue(
+                        "requestChannel",
+                        out var requestChannel) &&
+                    Equals(requestChannel, "api")
+                        ? AuthorizationDecision.Allow()
+                        : AuthorizationDecision.Deny(
+                            new RuleGateAuthorizationFailure(
+                                "missing-enrichment")),
+                configureRuleGate:
+                    ruleGate =>
+                        ruleGate
+                            .AddSubjectAttributeProvider<
+                                PipelineSubjectAttributeProvider>()
+                            .AddResourceAttributeProvider<
+                                PipelineResourceAttributeProvider>()
+                            .AddContextAttributeProvider<
+                                PipelineContextAttributeProvider>());
+
+        using var response =
+            await application.SendAsync(
+                path: "/documents/document-1",
+                authenticated: true);
+
+        Assert.Equal(
+            HttpStatusCode.OK,
+            response.StatusCode);
+
+        var request = Assert.Single(
+            application.Engine.Requests);
+
+        Assert.Equal(
+            "tenant-1",
+            request.Subject.Attributes["tenant"]);
+
+        Assert.Equal(
+            "user-1",
+            request.Resource.Attributes["ownerId"]);
+
+        Assert.Equal(
+            "api",
+            request.Context.Attributes[
+                "requestChannel"]);
+    }
+
+    [Fact]
+    public async Task
+        MinimalApi_provider_exception_fails_closed()
+    {
+        await using var application =
+            await CreateMinimalApiApplicationAsync(
+                _ => AuthorizationDecision.Allow(),
+                configureRuleGate:
+                    ruleGate =>
+                        ruleGate
+                            .AddContextAttributeProvider<
+                                ThrowingPipelineContextAttributeProvider>());
+
+        using var response =
+            await application.SendAsync(
+                path: "/documents/document-1",
+                authenticated: true);
+
+        Assert.Equal(
+            HttpStatusCode.Forbidden,
+            response.StatusCode);
+
+        Assert.False(
+            application.Recorder.WasInvoked);
+
+        Assert.Empty(
+            application.Engine.Requests);
+    }
+
+    [Fact]
+    public async Task
         Controller_attribute_allowed_request_executes_action()
     {
         await using var application =
@@ -278,11 +368,14 @@ public sealed class RuleGateAuthorizationPipelineTests
         CreateMinimalApiApplicationAsync(
             Func<
                 AuthorizationRequest,
-                AuthorizationDecision> evaluate)
+                AuthorizationDecision> evaluate,
+            Action<RuleGateBuilder>?
+                configureRuleGate = null)
     {
         return CreateApplicationAsync(
             evaluate,
             addControllers: false,
+            configureRuleGate,
             configureEndpoints:
                 application =>
                 {
@@ -318,11 +411,14 @@ public sealed class RuleGateAuthorizationPipelineTests
         CreateControllerApplicationAsync(
             Func<
                 AuthorizationRequest,
-                AuthorizationDecision> evaluate)
+                AuthorizationDecision> evaluate,
+            Action<RuleGateBuilder>?
+                configureRuleGate = null)
     {
         return CreateApplicationAsync(
             evaluate,
             addControllers: true,
+            configureRuleGate,
             configureEndpoints:
                 application =>
                     application.MapControllers());
@@ -335,6 +431,8 @@ public sealed class RuleGateAuthorizationPipelineTests
                 AuthorizationRequest,
                 AuthorizationDecision> evaluate,
             bool addControllers,
+            Action<RuleGateBuilder>?
+                configureRuleGate,
             Action<WebApplication>
                 configureEndpoints)
     {
@@ -403,7 +501,10 @@ public sealed class RuleGateAuthorizationPipelineTests
                         .Assembly);
         }
 
-        builder.Services.AddRuleGate();
+        var ruleGate =
+            builder.Services.AddRuleGate();
+
+        configureRuleGate?.Invoke(ruleGate);
 
         var application =
             builder.Build();
@@ -579,6 +680,79 @@ public sealed class
     RuleGateEndpointInvocationRecorder
 {
     public bool WasInvoked { get; set; }
+}
+
+public sealed class PipelineSubjectAttributeProvider
+    : IRuleGateSubjectAttributeProvider
+{
+    public ValueTask<RuleGateAttributeProviderResult>
+        ProvideAttributesAsync(
+            RuleGateAttributeProviderContext context,
+            CancellationToken cancellationToken = default)
+    {
+        return ValueTask.FromResult(
+            RuleGateAttributeProviderResult.Success(
+                new AuthorizationAttributes(
+                [
+                    new KeyValuePair<string, object?>(
+                        "tenant",
+                        "tenant-1"),
+                ])));
+    }
+}
+
+public sealed class PipelineResourceAttributeProvider
+    : IRuleGateResourceAttributeProvider
+{
+    public ValueTask<RuleGateAttributeProviderResult>
+        ProvideAttributesAsync(
+            RuleGateAttributeProviderContext context,
+            CancellationToken cancellationToken = default)
+    {
+        return ValueTask.FromResult(
+            RuleGateAttributeProviderResult.Success(
+                new AuthorizationAttributes(
+                [
+                    new KeyValuePair<string, object?>(
+                        "ownerId",
+                        "user-1"),
+                ])));
+    }
+}
+
+public sealed class PipelineContextAttributeProvider
+    : IRuleGateContextAttributeProvider
+{
+    public ValueTask<RuleGateAttributeProviderResult>
+        ProvideAttributesAsync(
+            RuleGateAttributeProviderContext context,
+            CancellationToken cancellationToken = default)
+    {
+        Assert.NotNull(context.HttpContext);
+
+        return ValueTask.FromResult(
+            RuleGateAttributeProviderResult.Success(
+                new AuthorizationAttributes(
+                [
+                    new KeyValuePair<string, object?>(
+                        "requestChannel",
+                        "api"),
+                ])));
+    }
+}
+
+public sealed class
+    ThrowingPipelineContextAttributeProvider
+    : IRuleGateContextAttributeProvider
+{
+    public ValueTask<RuleGateAttributeProviderResult>
+        ProvideAttributesAsync(
+            RuleGateAttributeProviderContext context,
+            CancellationToken cancellationToken = default)
+    {
+        throw new InvalidOperationException(
+            "sensitive-provider-failure");
+    }
 }
 
 public sealed class

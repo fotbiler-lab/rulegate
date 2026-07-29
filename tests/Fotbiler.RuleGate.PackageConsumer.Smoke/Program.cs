@@ -6,6 +6,7 @@ using Fotbiler.RuleGate.Abstractions.Policies;
 using Fotbiler.RuleGate.AspNetCore.Authorization;
 using Fotbiler.RuleGate.AspNetCore.DependencyInjection;
 using Fotbiler.RuleGate.AspNetCore.Endpoints;
+using Fotbiler.RuleGate.AspNetCore.Enrichment;
 using Fotbiler.RuleGate.AspNetCore.Subjects;
 using Fotbiler.RuleGate.Manifest.Compilation;
 using Microsoft.AspNetCore.Authorization;
@@ -42,6 +43,17 @@ const string yaml = """
             operator: equal
             valueType: string
             value: finance
+
+      - id: enriched-resource-access
+        resourceType: enriched-resource
+        action: access
+        requirement:
+          attribute:
+            source: subject
+            name: tenant
+            operator: equal
+            valueType: string
+            value: tenant-1
 
       - id: advanced-attribute-access
         resourceType: advanced-attribute-resource
@@ -133,6 +145,8 @@ services
     .AddRuleGate()
     .AddLoggingDiagnostics()
     .AddHttpAuthorizationResultMapping()
+    .AddSubjectAttributeProvider<
+        PackageConsumerSubjectAttributeProvider>()
     .AddPolicies(compilation.Policies);
 
 using var serviceProvider =
@@ -142,6 +156,9 @@ using var serviceProvider =
             ValidateOnBuild = true,
             ValidateScopes = true,
         });
+
+using var serviceScope =
+    serviceProvider.CreateScope();
 
 var authorizationResultHandler =
     serviceProvider.GetRequiredService<
@@ -185,8 +202,19 @@ if (!ReferenceEquals(
 }
 
 var authorizationService =
-    serviceProvider.GetRequiredService<
+    serviceScope.ServiceProvider.GetRequiredService<
         IAuthorizationService>();
+
+var requestEnricher =
+    serviceScope.ServiceProvider.GetRequiredService<
+        IRuleGateAuthorizationRequestEnricher>();
+
+if (requestEnricher.GetType().Name !=
+    "RuleGateAuthorizationRequestEnricher")
+{
+    throw new InvalidOperationException(
+        "The packaged enrichment pipeline was not registered.");
+}
 
 var resource =
     new AuthorizationResource(
@@ -241,6 +269,20 @@ if (!frameworkAllowedResult.Succeeded)
 {
     throw new InvalidOperationException(
         "The ASP.NET Core authorization handler did not allow the valid request.");
+}
+
+var enrichmentResult =
+    await authorizationService.AuthorizeRuleGateAsync(
+        allowedPrincipal,
+        new AuthorizationResource(
+            type: "enriched-resource",
+            id: "enriched-resource-1"),
+        action: "access");
+
+if (!enrichmentResult.Succeeded)
+{
+    throw new InvalidOperationException(
+        "The packaged enrichment provider did not supply the required trusted subject attribute.");
 }
 
 var mismatchedResourceResult =
@@ -738,5 +780,27 @@ internal sealed class
         {
             convention(endpointBuilder);
         }
+    }
+}
+
+internal sealed class
+    PackageConsumerSubjectAttributeProvider
+    : IRuleGateSubjectAttributeProvider
+{
+    public ValueTask<RuleGateAttributeProviderResult>
+        ProvideAttributesAsync(
+            RuleGateAttributeProviderContext context,
+            CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        return ValueTask.FromResult(
+            RuleGateAttributeProviderResult.Success(
+                new AuthorizationAttributes(
+                [
+                    new KeyValuePair<string, object?>(
+                        "tenant",
+                        "tenant-1"),
+                ])));
     }
 }

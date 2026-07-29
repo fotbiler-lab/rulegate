@@ -1,7 +1,8 @@
 # RuleGate Diagnostics
 
-RuleGate diagnostics provide structured information about completed
-authorization evaluations and their requirement trees.
+RuleGate diagnostics provide structured information about ASP.NET Core
+attribute enrichment, completed authorization evaluations, and their
+requirement trees.
 
 Diagnostics are intended for:
 
@@ -52,8 +53,9 @@ builder.Services
 
 - Adds Microsoft.Extensions.Logging services
 - Registers one singleton `IAuthorizationDiagnosticsSink`
+- Registers one singleton `IRuleGateEnrichmentDiagnosticsSink`
 - Is idempotent
-- Preserves a custom sink registered earlier
+- Preserves custom sinks registered earlier
 
 Diagnostics are produced only when the sink's `IsEnabled` property returns
 `true`.
@@ -69,6 +71,12 @@ The current built-in logger category is:
 Fotbiler.RuleGate.AspNetCore.Diagnostics.LoggingAuthorizationDiagnosticsSink
 ```
 
+ASP.NET Core enrichment uses:
+
+```text
+Fotbiler.RuleGate.AspNetCore.Diagnostics.LoggingRuleGateEnrichmentDiagnosticsSink
+```
+
 Example `appsettings.json` configuration:
 
 ```json
@@ -76,7 +84,8 @@ Example `appsettings.json` configuration:
   "Logging": {
     "LogLevel": {
       "Default": "Information",
-      "Fotbiler.RuleGate.AspNetCore.Diagnostics.LoggingAuthorizationDiagnosticsSink": "Information"
+      "Fotbiler.RuleGate.AspNetCore.Diagnostics.LoggingAuthorizationDiagnosticsSink": "Information",
+      "Fotbiler.RuleGate.AspNetCore.Diagnostics.LoggingRuleGateEnrichmentDiagnosticsSink": "Warning"
     }
   }
 }
@@ -103,12 +112,63 @@ boundaries.
 
 ## Built-in logging events
 
-The built-in sink emits two structured event types.
+The built-in sinks emit four structured event types.
 
-| Event ID | Level       | Purpose                            |
-| -------: | ----------- | ---------------------------------- |
-|   `2000` | Information | Completed authorization evaluation |
-|   `2001` | Debug       | Completed requirement evaluation   |
+| Event ID | Level       | Purpose                                  |
+| -------: | ----------- | ---------------------------------------- |
+|   `2000` | Information | Completed authorization evaluation       |
+|   `2001` | Debug       | Completed requirement evaluation         |
+|   `2010` | Debug       | Successful attribute-enrichment provider |
+|   `2011` | Warning     | Fail-closed enrichment provider outcome  |
+
+## Enrichment events
+
+Events `2010` and `2011` describe one ASP.NET Core enrichment provider call.
+
+They contain:
+
+| Field               | Description                                   |
+| ------------------- | --------------------------------------------- |
+| `ProviderName`      | Provider implementation type                  |
+| `AttributeSource`   | Subject, Resource, or Context                 |
+| `Order`             | Provider execution order                      |
+| `CollisionBehavior` | Fail, KeepExisting, or ReplaceExisting        |
+| `Outcome`           | Safe structured provider outcome              |
+| `AttributeCount`    | Number of attributes returned by the provider |
+| `DurationMs`        | Provider execution and merge duration         |
+
+The possible failure outcomes are:
+
+- `MissingRequiredData`
+- `ProviderFailed`
+- `ProviderException`
+- `AttributeCollision`
+- `InvalidAttribute`
+- `Cancelled`
+
+Enrichment logs never include attribute names, attribute values, exception
+messages, or provider result payloads.
+
+Custom integrations can implement:
+
+```csharp
+using Fotbiler.RuleGate.AspNetCore.Enrichment;
+
+public interface IRuleGateEnrichmentDiagnosticsSink
+{
+    ValueTask WriteAsync(
+        RuleGateEnrichmentDiagnostic diagnostic,
+        CancellationToken cancellationToken = default);
+}
+```
+
+`RuleGateEnrichmentDiagnostic` intentionally exposes only provider type,
+source, order, collision behavior, outcome, attribute count, and duration.
+Diagnostic-sink exceptions are ignored so observability cannot change an
+authorization result.
+
+For provider contracts and pipeline behavior, read the
+[ASP.NET Core enrichment guide](enrichment.md).
 
 ## Authorization event
 

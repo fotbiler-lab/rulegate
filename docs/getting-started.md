@@ -353,6 +353,8 @@ Continue with:
 
 - The root [README](../README.md) for ASP.NET Core dynamic policies, Minimal
   API endpoints, controller attributes, diagnostics, and HTTP result mapping.
+- The [ASP.NET Core enrichment guide](enrichment.md) when subject, resource, or
+  context attributes must be loaded from trusted application services.
 - The [RuleGate CLI guide](cli.md) for deterministic manifest validation.
 - The [C# code-generation guide](code-generation.md) for generated constants
   and stale-output checks.
