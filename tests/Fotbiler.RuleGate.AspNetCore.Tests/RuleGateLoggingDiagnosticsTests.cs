@@ -1,9 +1,12 @@
 using System.Collections.Concurrent;
+using System.Security.Claims;
+using Fotbiler.RuleGate.Abstractions.Attributes;
 using Fotbiler.RuleGate.Abstractions.Authorization;
 using Fotbiler.RuleGate.Abstractions.Diagnostics;
 using Fotbiler.RuleGate.Abstractions.Evaluation;
 using Fotbiler.RuleGate.Abstractions.Policies;
 using Fotbiler.RuleGate.AspNetCore.DependencyInjection;
+using Fotbiler.RuleGate.AspNetCore.Enrichment;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -25,6 +28,13 @@ public sealed class RuleGateLoggingDiagnosticsTests
                 descriptor.ServiceType ==
                 typeof(
                     IAuthorizationDiagnosticsSink));
+
+        Assert.DoesNotContain(
+            services,
+            descriptor =>
+                descriptor.ServiceType ==
+                typeof(
+                    IRuleGateEnrichmentDiagnosticsSink));
     }
 
     [Fact]
@@ -66,6 +76,18 @@ public sealed class RuleGateLoggingDiagnosticsTests
             ServiceLifetime.Singleton,
             descriptor.Lifetime);
 
+        var enrichmentDescriptor =
+            Assert.Single(
+                services,
+                candidate =>
+                    candidate.ServiceType ==
+                    typeof(
+                        IRuleGateEnrichmentDiagnosticsSink));
+
+        Assert.Equal(
+            ServiceLifetime.Singleton,
+            enrichmentDescriptor.Lifetime);
+
         using var serviceProvider =
             services.BuildServiceProvider(
                 new ServiceProviderOptions
@@ -87,6 +109,23 @@ public sealed class RuleGateLoggingDiagnosticsTests
             firstSink.GetType().Name.Contains(
                 "LoggingAuthorizationDiagnosticsSink",
                 StringComparison.Ordinal));
+
+        var firstEnrichmentSink =
+            serviceProvider.GetRequiredService<
+                IRuleGateEnrichmentDiagnosticsSink>();
+
+        var secondEnrichmentSink =
+            serviceProvider.GetRequiredService<
+                IRuleGateEnrichmentDiagnosticsSink>();
+
+        Assert.Same(
+            firstEnrichmentSink,
+            secondEnrichmentSink);
+
+        Assert.Contains(
+            "LoggingRuleGateEnrichmentDiagnosticsSink",
+            firstEnrichmentSink.GetType().Name,
+            StringComparison.Ordinal);
     }
 
     [Fact]
@@ -95,9 +134,15 @@ public sealed class RuleGateLoggingDiagnosticsTests
     {
         var services = new ServiceCollection();
         var expected = new StubDiagnosticsSink();
+        var expectedEnrichment =
+            new StubEnrichmentDiagnosticsSink();
 
         services.AddSingleton<
             IAuthorizationDiagnosticsSink>(expected);
+
+        services.AddSingleton<
+            IRuleGateEnrichmentDiagnosticsSink>(
+                expectedEnrichment);
 
         services
             .AddRuleGate()
@@ -111,6 +156,11 @@ public sealed class RuleGateLoggingDiagnosticsTests
                 IAuthorizationDiagnosticsSink>();
 
         Assert.Same(expected, actual);
+
+        Assert.Same(
+            expectedEnrichment,
+            serviceProvider.GetRequiredService<
+                IRuleGateEnrichmentDiagnosticsSink>());
     }
 
     [Fact]
@@ -277,6 +327,109 @@ public sealed class RuleGateLoggingDiagnosticsTests
                     StringComparison.Ordinal));
     }
 
+    [Fact]
+    public async Task
+        LoggingDiagnostics_records_safe_enrichment_output()
+    {
+        const string sensitiveAttributeName =
+            "internal-security-clearance";
+
+        const string sensitiveAttributeValue =
+            "ultra-secret";
+
+        const string sensitiveExceptionMessage =
+            "database-secret-in-exception";
+
+        var recordingProvider =
+            new RecordingLoggerProvider();
+
+        var services = new ServiceCollection();
+
+        services.AddLogging(
+            logging =>
+            {
+                logging.ClearProviders();
+                logging.SetMinimumLevel(
+                    LogLevel.Debug);
+                logging.AddProvider(
+                    recordingProvider);
+            });
+
+        services
+            .AddRuleGate()
+            .AddLoggingDiagnostics()
+            .AddSubjectAttributeProvider<
+                LoggingSubjectAttributeProvider>()
+            .AddContextAttributeProvider<
+                ThrowingLoggingContextAttributeProvider>();
+
+        using var serviceProvider =
+            services.BuildServiceProvider(
+                new ServiceProviderOptions
+                {
+                    ValidateOnBuild = true,
+                    ValidateScopes = true,
+                });
+
+        using var scope =
+            serviceProvider.CreateScope();
+
+        var enricher =
+            scope.ServiceProvider.GetRequiredService<
+                IRuleGateAuthorizationRequestEnricher>();
+
+        var result = await enricher.EnrichAsync(
+            new AuthorizationRequest(
+                new AuthorizationSubject("user-1"),
+                new AuthorizationResource("document"),
+                "read",
+                new AuthorizationContext(
+                    DateTimeOffset.UnixEpoch)),
+            new ClaimsPrincipal(
+                new ClaimsIdentity(
+                    authenticationType: "Test")),
+            frameworkResource: null);
+
+        Assert.False(result.IsSuccessful);
+
+        Assert.Contains(
+            recordingProvider.Entries,
+            entry =>
+                entry.EventId.Id == 2010 &&
+                entry.Message.Contains(
+                    "AttributeSource: Subject",
+                    StringComparison.Ordinal) &&
+                entry.Message.Contains(
+                    "AttributeCount: 1",
+                    StringComparison.Ordinal));
+
+        Assert.Contains(
+            recordingProvider.Entries,
+            entry =>
+                entry.EventId.Id == 2011 &&
+                entry.Message.Contains(
+                    "ProviderException",
+                    StringComparison.Ordinal));
+
+        foreach (var entry in recordingProvider.Entries)
+        {
+            Assert.DoesNotContain(
+                sensitiveAttributeName,
+                entry.Message,
+                StringComparison.Ordinal);
+
+            Assert.DoesNotContain(
+                sensitiveAttributeValue,
+                entry.Message,
+                StringComparison.Ordinal);
+
+            Assert.DoesNotContain(
+                sensitiveExceptionMessage,
+                entry.Message,
+                StringComparison.Ordinal);
+        }
+    }
+
     private static AuthorizationRequest CreateRequest(
         IEnumerable<string> permissions)
     {
@@ -305,6 +458,50 @@ public sealed class RuleGateLoggingDiagnosticsTests
             CancellationToken cancellationToken = default)
         {
             return ValueTask.CompletedTask;
+        }
+    }
+
+    private sealed class StubEnrichmentDiagnosticsSink
+        : IRuleGateEnrichmentDiagnosticsSink
+    {
+        public ValueTask WriteAsync(
+            RuleGateEnrichmentDiagnostic diagnostic,
+            CancellationToken cancellationToken = default)
+        {
+            return ValueTask.CompletedTask;
+        }
+    }
+
+    private sealed class LoggingSubjectAttributeProvider
+        : IRuleGateSubjectAttributeProvider
+    {
+        public ValueTask<RuleGateAttributeProviderResult>
+            ProvideAttributesAsync(
+                RuleGateAttributeProviderContext context,
+                CancellationToken cancellationToken = default)
+        {
+            return ValueTask.FromResult(
+                RuleGateAttributeProviderResult.Success(
+                    new AuthorizationAttributes(
+                    [
+                        new KeyValuePair<string, object?>(
+                            "internal-security-clearance",
+                            "ultra-secret"),
+                    ])));
+        }
+    }
+
+    private sealed class
+        ThrowingLoggingContextAttributeProvider
+        : IRuleGateContextAttributeProvider
+    {
+        public ValueTask<RuleGateAttributeProviderResult>
+            ProvideAttributesAsync(
+                RuleGateAttributeProviderContext context,
+                CancellationToken cancellationToken = default)
+        {
+            throw new InvalidOperationException(
+                "database-secret-in-exception");
         }
     }
 

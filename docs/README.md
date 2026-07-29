@@ -20,6 +20,7 @@ rules, authentication and MFA age, and canonical trusted request context.
 | Validate manifests locally or in CI                                 | [RuleGate CLI](cli.md)                                             |
 | Generate C# constants and detect stale output                       | [C# code generation](code-generation.md)                           |
 | Integrate RuleGate with ASP.NET Core                                | [ASP.NET Core integration](aspnetcore.md)                          |
+| Supply trusted subject, resource, and context attributes            | [ASP.NET Core enrichment](enrichment.md)                           |
 | Add permission, policy, and role checks to Angular                  | [Angular SDK](angular.md)                                          |
 | Map Keycloak roles on ASP.NET Core and Angular                      | [Keycloak integration](keycloak.md)                                |
 | Operate authorization diagnostics safely                            | [Diagnostics](diagnostics.md)                                      |
@@ -38,7 +39,7 @@ The latest published RuleGate preview is
 | [`Fotbiler.RuleGate.Abstractions`](https://www.nuget.org/packages/Fotbiler.RuleGate.Abstractions) | Public authorization contracts and extension abstractions                                         |
 | [`Fotbiler.RuleGate.Core`](https://www.nuget.org/packages/Fotbiler.RuleGate.Core)                 | Local fail-closed authorization engine and built-in evaluators                                    |
 | [`Fotbiler.RuleGate.Manifest`](https://www.nuget.org/packages/Fotbiler.RuleGate.Manifest)         | YAML manifest loading, validation, and compilation                                                |
-| [`Fotbiler.RuleGate.AspNetCore`](https://www.nuget.org/packages/Fotbiler.RuleGate.AspNetCore)     | ASP.NET Core integration                                                                          |
+| [`Fotbiler.RuleGate.AspNetCore`](https://www.nuget.org/packages/Fotbiler.RuleGate.AspNetCore)     | ASP.NET Core integration and trusted attribute enrichment                                         |
 | [`Fotbiler.RuleGate.Cli`](https://www.nuget.org/packages/Fotbiler.RuleGate.Cli)                   | .NET tool for manifest validation, deterministic C# generation, stale-output checks, and CI usage |
 | [`Fotbiler.RuleGate.Keycloak`](https://www.nuget.org/packages/Fotbiler.RuleGate.Keycloak)         | Optional Keycloak claim normalization and RuleGate subject mapping                                |
 | [`@fotbiler/rulegate-angular`](https://www.npmjs.com/package/@fotbiler/rulegate-angular)          | Angular authorization client, route guards, UI directives, and TypeScript generation              |
@@ -70,15 +71,17 @@ After completing that guide:
    should consume manifest identifiers as constants.
 4. Follow the [ASP.NET Core integration](aspnetcore.md) guide to protect HTTP
    endpoints and map authenticated identities.
-5. Use the [Angular SDK guide](angular.md) for route and template visibility
+5. Add the [ASP.NET Core enrichment pipeline](enrichment.md) when trusted
+   authorization attributes come from application services.
+6. Use the [Angular SDK guide](angular.md) for route and template visibility
    after backend authorization is in place.
-6. Follow the [Keycloak integration](keycloak.md) guide when Keycloak supplies
+7. Follow the [Keycloak integration](keycloak.md) guide when Keycloak supplies
    the authenticated identity.
-7. Use the [diagnostics guide](diagnostics.md) to configure logging and custom
+8. Use the [diagnostics guide](diagnostics.md) to configure logging and custom
    observability safely.
-8. Review the [security model](security.md) before production integration.
-9. Use the root [README](../README.md) for the repository overview and current
-   package status.
+9. Review the [security model](security.md) before production integration.
+10. Use the root [README](../README.md) for the repository overview and current
+    package status.
 
 ## Documentation principles
 

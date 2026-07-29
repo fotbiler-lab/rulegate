@@ -3,6 +3,7 @@ using Fotbiler.RuleGate.Abstractions.Evaluation;
 using Fotbiler.RuleGate.Abstractions.Policies;
 using Fotbiler.RuleGate.AspNetCore.Authorization;
 using Fotbiler.RuleGate.AspNetCore.Diagnostics;
+using Fotbiler.RuleGate.AspNetCore.Enrichment;
 using Fotbiler.RuleGate.AspNetCore.Subjects;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Policy;
@@ -90,7 +91,59 @@ public static class RuleGateBuilderExtensions
             IAuthorizationDiagnosticsSink,
             LoggingAuthorizationDiagnosticsSink>();
 
+        builder.Services.TryAddSingleton<
+            IRuleGateEnrichmentDiagnosticsSink,
+            LoggingRuleGateEnrichmentDiagnosticsSink>();
+
         return builder;
+    }
+
+    public static RuleGateBuilder
+        AddSubjectAttributeProvider<TProvider>(
+            this RuleGateBuilder builder,
+            ServiceLifetime lifetime =
+                ServiceLifetime.Scoped)
+        where TProvider :
+            class,
+            IRuleGateSubjectAttributeProvider
+    {
+        return AddAttributeProvider<
+            IRuleGateSubjectAttributeProvider,
+            TProvider>(
+                builder,
+                lifetime);
+    }
+
+    public static RuleGateBuilder
+        AddResourceAttributeProvider<TProvider>(
+            this RuleGateBuilder builder,
+            ServiceLifetime lifetime =
+                ServiceLifetime.Scoped)
+        where TProvider :
+            class,
+            IRuleGateResourceAttributeProvider
+    {
+        return AddAttributeProvider<
+            IRuleGateResourceAttributeProvider,
+            TProvider>(
+                builder,
+                lifetime);
+    }
+
+    public static RuleGateBuilder
+        AddContextAttributeProvider<TProvider>(
+            this RuleGateBuilder builder,
+            ServiceLifetime lifetime =
+                ServiceLifetime.Scoped)
+        where TProvider :
+            class,
+            IRuleGateContextAttributeProvider
+    {
+        return AddAttributeProvider<
+            IRuleGateContextAttributeProvider,
+            TProvider>(
+                builder,
+                lifetime);
     }
 
     public static RuleGateBuilder
@@ -129,6 +182,32 @@ public static class RuleGateBuilderExtensions
         builder.Services.AddSingleton<
             IAuthorizationMiddlewareResultHandler,
             RuleGateAuthorizationMiddlewareResultHandler>();
+
+        return builder;
+    }
+
+    private static RuleGateBuilder
+        AddAttributeProvider<TProviderService, TProvider>(
+            RuleGateBuilder builder,
+            ServiceLifetime lifetime)
+        where TProviderService : class
+        where TProvider :
+            class,
+            TProviderService
+    {
+        ArgumentNullException.ThrowIfNull(builder);
+
+        if (!Enum.IsDefined(lifetime))
+        {
+            throw new ArgumentOutOfRangeException(
+                nameof(lifetime));
+        }
+
+        builder.Services.TryAddEnumerable(
+            ServiceDescriptor.Describe(
+                typeof(TProviderService),
+                typeof(TProvider),
+                lifetime));
 
         return builder;
     }

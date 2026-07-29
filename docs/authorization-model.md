@@ -281,6 +281,12 @@ timestamps through `AuthorizationContextAttributeNames`. Applications must
 populate these attributes from trusted server-side state; RuleGate never
 infers them from headers, IP addresses, or arbitrary claims.
 
+ASP.NET Core applications can populate subject, resource, and context
+attributes through the ordered, fail-closed
+[attribute enrichment pipeline](enrichment.md). The pipeline standardizes how
+trusted application services contribute data; it does not make an untrusted
+source authoritative.
+
 Long-lived requester properties belong on the subject. Long-lived object
 properties belong on the resource.
 

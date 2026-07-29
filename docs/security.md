@@ -150,6 +150,9 @@ RuleGate denies when:
 - No evaluator exists for a requirement type
 - Subject mapping fails
 - Resource mapping fails
+- A required enrichment provider cannot resolve trusted data
+- An enrichment provider throws, returns invalid data, or collides by default
+- Enrichment is cancelled
 - Required endpoint metadata is absent
 - Required route data is absent or empty
 - Policy and mapped resource types differ
@@ -575,7 +578,42 @@ It does not automatically map:
 - Correlation data
 
 Applications requiring these values must construct trusted context attributes
-explicitly.
+explicitly or supply them through a trusted ASP.NET Core context attribute
+provider.
+
+## ASP.NET Core enrichment trust boundary
+
+The optional ASP.NET Core enrichment pipeline provides standard extension
+points for trusted subject, resource, and context attributes.
+
+The pipeline does not make request-derived values trustworthy. A provider must
+validate and normalize data before returning it. Do not directly promote an
+arbitrary header, query value, route value, remote address, claim, cookie, or
+device assertion into authorization state.
+
+Providers run sequentially in subject, resource, and context stages. Lower
+`Order` values run first; equal values retain dependency-injection registration
+order. Existing attributes and earlier providers establish the initial
+precedence.
+
+Duplicate keys fail closed by default. `KeepExisting` and `ReplaceExisting`
+must be selected explicitly and tested as security-relevant precedence rules.
+
+The pipeline fails authorization before engine evaluation when:
+
+- A provider reports missing required data
+- A provider reports failure
+- A provider throws
+- Cancellation is requested
+- An attribute name is empty or whitespace
+- A provider returns an unsupported attribute value
+- A duplicate key uses the default collision behavior
+
+Provider exception messages, attribute names, and attribute values are not
+copied into built-in enrichment logs.
+
+For implementation guidance, read the
+[ASP.NET Core enrichment guide](enrichment.md).
 
 ## Time security
 
@@ -1121,6 +1159,21 @@ Custom factories should use documented expected exception types for invalid
 authorization input and reserve other exceptions for genuine operational
 failure.
 
+## ASP.NET Core enrichment exceptions
+
+The default enrichment pipeline converts provider exceptions into failed
+authorization and stops before the engine is invoked. A custom
+`IRuleGateAuthorizationRequestEnricher` that throws is also failed closed by
+the ASP.NET Core handler.
+
+Built-in enrichment diagnostics report only the `ProviderException` outcome.
+They do not expose the exception type, message, stack trace, returned
+attributes, or attribute names.
+
+Applications should still log and monitor infrastructure failures inside the
+provider at an appropriate trusted boundary. Do not return sensitive exception
+details through `RuleGateAttributeProviderResult`.
+
 ## Engine and evaluator exceptions
 
 Unexpected exceptions from:
@@ -1164,6 +1217,8 @@ A diagnostic failure cannot:
 The sink should monitor its own delivery failures when operational visibility
 is required.
 
+The same isolation applies to `IRuleGateEnrichmentDiagnosticsSink`.
+
 ## Cancellation behavior
 
 Core RuleGate APIs honor cancellation tokens supplied by the caller.
@@ -1181,18 +1236,16 @@ It is not converted into a deny decision.
 
 ## ASP.NET Core cancellation boundary
 
-The current preview's `RuleGateAuthorizationHandler` invokes the authorization
-engine without forwarding `HttpContext.RequestAborted`.
+The ASP.NET Core handler forwards `HttpContext.RequestAborted` to every
+attribute-enrichment provider and to the authorization engine.
 
-Therefore, the default ASP.NET Core handler does not currently provide request
-cancellation to custom policy providers or evaluators.
+Enrichment checks cancellation before starting each provider. Cancellation
+during enrichment stops the pipeline and fails authorization before engine
+evaluation. Providers must forward the token to database, network, and other
+asynchronous operations.
 
-Applications that require caller-controlled cancellation for authorization
-work should use the direct `IAuthorizationEngine` API and pass an appropriate
-token.
-
-This is a current preview boundary and should be included in custom evaluator
-performance planning.
+If cancellation occurs during core engine evaluation, the engine's normal
+`OperationCanceledException` behavior applies.
 
 ## Diagnostic publication cancellation
 
@@ -1208,6 +1261,10 @@ diagnostic write.
 
 The built-in logging sink still checks whichever token is supplied directly
 to it.
+
+Enrichment diagnostic sinks receive the request cancellation token. Their
+exceptions, including cancellation exceptions, are ignored so diagnostics do
+not alter authorization behavior.
 
 ## Availability and denial of service
 
@@ -1228,24 +1285,30 @@ Custom components should avoid:
 Manifest YAML recursion is limited, but custom policy providers and evaluators
 remain application responsibilities.
 
-## Singleton extension points
+## Extension-point lifetimes
 
-Default RuleGate extension points are registered as singletons.
-
-Custom implementations should assume concurrent access.
-
-This includes:
+These default RuleGate extension points are singletons and custom
+implementations must be concurrency-safe:
 
 - `IPolicyProvider`
 - `IRequirementEvaluator`
 - `IRuleGateSubjectFactory`
 - `IRuleGateAuthorizationResourceFactory`
 - `IAuthorizationDiagnosticsSink`
+- `IRuleGateEnrichmentDiagnosticsSink`
 - `TimeProvider`
 
 Avoid request-specific mutable state in singleton fields.
 
 Use method-local state or concurrency-safe structures.
+
+The ASP.NET Core authorization handler, authorization request enricher, and
+attribute providers are scoped. The builder registers attribute providers as
+scoped by default so they can depend on request-scoped application services.
+
+An application may explicitly choose another provider lifetime. A singleton
+provider must not capture scoped services and must remain safe under concurrent
+requests.
 
 ## Secrets and personal data
 
@@ -1342,6 +1405,16 @@ A secure deployment should:
 - [ ] Context attributes are server-derived.
 - [ ] Request headers are not trusted without validation.
 - [ ] Custom temporal logic handles time zones explicitly.
+
+### Attribute enrichment
+
+- [ ] Provider data comes from authoritative server-side components.
+- [ ] Missing trusted data fails closed.
+- [ ] Provider exceptions and cancellation do not invoke the engine.
+- [ ] Provider order is deterministic and covered by tests.
+- [ ] Every collision behavior is intentional.
+- [ ] Scoped providers do not leak request state across requests.
+- [ ] Enrichment logs omit names, values, and exception messages.
 
 ### HTTP responses
 
@@ -1471,6 +1544,20 @@ Test:
 - Concurrent evaluations
 - Diagnostic and audit separation
 
+### Attribute enrichment
+
+Test:
+
+- Subject, resource, and context stage order
+- Equal-order registration stability
+- Missing required data
+- Provider exceptions
+- Cancellation propagation
+- Fail, keep-existing, and replace-existing collision behavior
+- Unsupported attribute values
+- Sensitive-field omission from diagnostics
+- Scoped dependency isolation
+
 ## Current security boundaries
 
 The current preview provides:
@@ -1490,6 +1577,9 @@ The current preview provides:
 - All-or-nothing manifest compilation
 - Authenticated dynamic ASP.NET Core policies
 - Fail-closed subject and resource mapping
+- Ordered fail-closed ASP.NET Core attribute enrichment
+- Explicit attribute collision and precedence behavior
+- HTTP request cancellation propagation to enrichment and evaluation
 - Generic opt-in HTTP ProblemDetails
 - Opt-in structured diagnostics
 - Diagnostic sink failure isolation
@@ -1509,8 +1599,6 @@ The current preview does not provide:
 - Durable audit storage
 - OpenTelemetry integration
 - Built-in distributed rate limiting
-- Guaranteed request-cancellation propagation through the default ASP.NET Core
-  handler
 - Frontend security enforcement
 
 These responsibilities remain with the host application or planned future
@@ -1523,6 +1611,7 @@ Continue with:
 - [Authorization model](authorization-model.md) for policy concepts.
 - [Manifest guide](manifests.md) for complete YAML syntax.
 - [ASP.NET Core integration](aspnetcore.md) for HTTP integration.
+- [ASP.NET Core enrichment](enrichment.md) for trusted attribute providers.
 - [Angular SDK](angular.md) for client-side user-experience controls.
 - [Keycloak integration](keycloak.md) for optional identity claim mapping.
 - [Diagnostics](diagnostics.md) for diagnostic contracts.

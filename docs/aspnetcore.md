@@ -8,6 +8,7 @@ It covers:
 - Manifest policy registration
 - Dynamic ASP.NET Core policies
 - `ClaimsPrincipal` subject mapping
+- Ordered subject, resource, and context attribute enrichment
 - Minimal API endpoint authorization
 - Controller and action authorization
 - Imperative authorization
@@ -64,19 +65,28 @@ Authentication middleware
 ClaimsPrincipal
         |
         v
+Dynamic RuleGate policy and handler
+        |
+        v
 IRuleGateSubjectFactory
         |
         v
 AuthorizationSubject
         |
         v
-Dynamic RuleGate policy
-        |
-        v
 IRuleGateAuthorizationResourceFactory
         |
         v
 AuthorizationResource
+        |
+        v
+Subject attribute providers
+        |
+        v
+Resource attribute providers
+        |
+        v
+Context attribute providers
         |
         v
 IAuthorizationEngine
@@ -98,6 +108,7 @@ authorization on the protected backend operation.
 RuleGate supplies:
 
 - Subject mapping
+- Ordered trusted-attribute enrichment
 - Dynamic policy creation
 - Resource mapping
 - Authorization handling
@@ -198,6 +209,7 @@ builder.Services
 - RuleGate authorization handler
 - Claims-based subject factory
 - HTTP resource factory
+- Scoped authorization request enricher
 - System `TimeProvider`
 
 Registration is idempotent for the default services.
@@ -228,6 +240,50 @@ RuleGate's policy provider delegates ordinary policy names to the standard
 ASP.NET Core policy provider.
 
 This allows RuleGate policies and normal ASP.NET Core policies to coexist.
+
+## Enrich trusted authorization attributes
+
+Use the ASP.NET Core enrichment pipeline when policies need tenant,
+organization, clearance, ownership, MFA, trusted-device, network, or request
+channel data from application services.
+
+Register providers through the same builder in minimal-hosting applications:
+
+```csharp
+builder.Services
+    .AddRuleGate()
+    .AddSubjectAttributeProvider<TenantAttributeProvider>()
+    .AddResourceAttributeProvider<DocumentAttributeProvider>()
+    .AddContextAttributeProvider<RequestContextAttributeProvider>()
+    .AddPolicies(compilation.Policies);
+```
+
+The same registration chain can be used inside `Startup.ConfigureServices`.
+Providers are scoped by default and may depend on other scoped application
+services.
+
+Execution is deterministic:
+
+1. Subject providers run.
+2. Resource providers run with the enriched subject.
+3. Context providers run with the enriched subject and resource.
+4. The authorization engine evaluates the resulting immutable request.
+
+Within each stage, lower `Order` values run first. Equal-order providers retain
+registration order. Providers run sequentially and receive the HTTP
+`RequestAborted` cancellation token.
+
+Attribute collisions fail closed by default. A provider can explicitly select
+`KeepExisting` or `ReplaceExisting` when its precedence rule is intentional.
+Missing required data, provider exceptions, unsupported attribute values, and
+cancellation stop the pipeline before policy evaluation.
+
+RuleGate never trusts headers, addresses, claims, or device assertions merely
+because a provider can access `HttpContext`. Providers must validate and
+normalize request-derived data through trusted application components.
+
+See [ASP.NET Core attribute enrichment](enrichment.md) for provider contracts,
+complete examples, collision semantics, diagnostics, and security guidance.
 
 ## Configure the middleware
 

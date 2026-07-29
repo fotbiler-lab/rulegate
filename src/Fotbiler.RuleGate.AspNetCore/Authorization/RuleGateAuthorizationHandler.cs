@@ -1,6 +1,8 @@
 using Fotbiler.RuleGate.Abstractions.Authorization;
+using Fotbiler.RuleGate.AspNetCore.Enrichment;
 using Fotbiler.RuleGate.AspNetCore.Subjects;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using RuleGateAuthorizationContext =
     Fotbiler.RuleGate.Abstractions.Authorization.AuthorizationContext;
 
@@ -22,12 +24,17 @@ public sealed class RuleGateAuthorizationHandler
 
     private readonly TimeProvider _timeProvider;
 
+    private readonly IRuleGateAuthorizationRequestEnricher
+        _requestEnricher;
+
     public RuleGateAuthorizationHandler(
         IAuthorizationEngine authorizationEngine,
         IRuleGateSubjectFactory subjectFactory,
         IRuleGateAuthorizationResourceFactory
             resourceFactory,
-        TimeProvider timeProvider)
+        TimeProvider timeProvider,
+        IRuleGateAuthorizationRequestEnricher
+            requestEnricher)
     {
         ArgumentNullException.ThrowIfNull(
             authorizationEngine);
@@ -41,6 +48,9 @@ public sealed class RuleGateAuthorizationHandler
         ArgumentNullException.ThrowIfNull(
             timeProvider);
 
+        ArgumentNullException.ThrowIfNull(
+            requestEnricher);
+
         _authorizationEngine =
             authorizationEngine;
 
@@ -52,6 +62,9 @@ public sealed class RuleGateAuthorizationHandler
 
         _timeProvider =
             timeProvider;
+
+        _requestEnricher =
+            requestEnricher;
     }
 
     protected override async Task
@@ -104,9 +117,42 @@ public sealed class RuleGateAuthorizationHandler
                     new RuleGateAuthorizationContext(
                         _timeProvider.GetUtcNow()));
 
+        var cancellationToken =
+            context.Resource is HttpContext httpContext
+                ? httpContext.RequestAborted
+                : CancellationToken.None;
+
+        RuleGateAuthorizationRequestEnrichmentResult
+            enrichmentResult;
+
+        try
+        {
+            enrichmentResult = await _requestEnricher
+                .EnrichAsync(
+                    request,
+                    context.User,
+                    context.Resource,
+                    cancellationToken);
+        }
+        catch (Exception)
+        {
+            context.Fail();
+            return;
+        }
+
+        if (!enrichmentResult.IsSuccessful)
+        {
+            context.Fail();
+            return;
+        }
+
+        request = enrichmentResult.Request!;
+
         var decision =
             await _authorizationEngine
-                .EvaluateAsync(request);
+                .EvaluateAsync(
+                    request,
+                    cancellationToken);
 
         if (decision.IsAllowed)
         {

@@ -50,8 +50,8 @@ more than framework-level roles or ad hoc permission checks.
 - **Fail-closed:** Missing, malformed, unsupported, and indeterminate
   authorization inputs deny access.
 - **Framework-ready:** ASP.NET Core applications can use dynamic policies,
-  endpoint helpers, controller attributes, diagnostics, and safe HTTP result
-  mapping.
+  endpoint helpers, controller attributes, ordered attribute enrichment,
+  diagnostics, and safe HTTP result mapping.
 - **Manifest-enabled:** YAML policies can be loaded, validated, and compiled
   into immutable runtime policy definitions.
 - **CLI-ready:** manifests can be validated and converted into deterministic C#
@@ -66,15 +66,15 @@ more than framework-level roles or ad hoc permission checks.
 
 ## Packages
 
-| Package                                                                                           | Purpose                                                                                                                                           |
-| ------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [`Fotbiler.RuleGate.Abstractions`](https://www.nuget.org/packages/Fotbiler.RuleGate.Abstractions) | Authorization contracts, policy definitions, requests, decisions, and evaluation abstractions                                                     |
-| [`Fotbiler.RuleGate.Core`](https://www.nuget.org/packages/Fotbiler.RuleGate.Core)                 | Policy engine, built-in requirement evaluators, dispatcher, and in-memory policy provider                                                         |
-| [`Fotbiler.RuleGate.Manifest`](https://www.nuget.org/packages/Fotbiler.RuleGate.Manifest)         | YAML manifest loading, validation, compilation, and domain mapping                                                                                |
-| [`Fotbiler.RuleGate.AspNetCore`](https://www.nuget.org/packages/Fotbiler.RuleGate.AspNetCore)     | ASP.NET Core dependency injection, claims mapping, dynamic policies, endpoint helpers, authorization attributes, and resource-based authorization |
-| [`Fotbiler.RuleGate.Cli`](https://www.nuget.org/packages/Fotbiler.RuleGate.Cli)                   | .NET tool for manifest validation, deterministic C# constant generation, stale-output checks, stable exit codes, and CI usage                     |
-| [`Fotbiler.RuleGate.Keycloak`](https://www.nuget.org/packages/Fotbiler.RuleGate.Keycloak)         | Optional Keycloak claim normalization and RuleGate subject mapping                                                                                |
-| [`@fotbiler/rulegate-angular`](https://www.npmjs.com/package/@fotbiler/rulegate-angular)          | Angular 22 authorization client, declarative route guards, UI directives, and TypeScript identifier generation                                    |
+| Package                                                                                           | Purpose                                                                                                                                         |
+| ------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`Fotbiler.RuleGate.Abstractions`](https://www.nuget.org/packages/Fotbiler.RuleGate.Abstractions) | Authorization contracts, policy definitions, requests, decisions, and evaluation abstractions                                                   |
+| [`Fotbiler.RuleGate.Core`](https://www.nuget.org/packages/Fotbiler.RuleGate.Core)                 | Policy engine, built-in requirement evaluators, dispatcher, and in-memory policy provider                                                       |
+| [`Fotbiler.RuleGate.Manifest`](https://www.nuget.org/packages/Fotbiler.RuleGate.Manifest)         | YAML manifest loading, validation, compilation, and domain mapping                                                                              |
+| [`Fotbiler.RuleGate.AspNetCore`](https://www.nuget.org/packages/Fotbiler.RuleGate.AspNetCore)     | ASP.NET Core dependency injection, claims mapping, ordered attribute enrichment, dynamic policies, endpoint helpers, and resource authorization |
+| [`Fotbiler.RuleGate.Cli`](https://www.nuget.org/packages/Fotbiler.RuleGate.Cli)                   | .NET tool for manifest validation, deterministic C# constant generation, stale-output checks, stable exit codes, and CI usage                   |
+| [`Fotbiler.RuleGate.Keycloak`](https://www.nuget.org/packages/Fotbiler.RuleGate.Keycloak)         | Optional Keycloak claim normalization and RuleGate subject mapping                                                                              |
+| [`@fotbiler/rulegate-angular`](https://www.npmjs.com/package/@fotbiler/rulegate-angular)          | Angular 22 authorization client, declarative route guards, UI directives, and TypeScript identifier generation                                  |
 
 ## Supported .NET and Angular versions
 
@@ -107,6 +107,8 @@ RuleGate currently provides:
 - ASP.NET Core dependency injection and dynamic policies
 - Minimal API and controller authorization
 - Configurable claims-to-subject mapping
+- Ordered asynchronous subject, resource, and context attribute enrichment
+- Explicit fail, keep-existing, and replace-existing collision behavior
 - Resource-based authorization
 - Opt-in safe HTTP authorization results
 - Opt-in structured authorization diagnostics
@@ -136,6 +138,7 @@ previews.
 | Understand the authorization model               | [Authorization model](docs/authorization-model.md) |
 | Define `rulegate.yaml` policies                  | [Manifest guide](docs/manifests.md)                |
 | Protect ASP.NET Core applications                | [ASP.NET Core integration](docs/aspnetcore.md)     |
+| Supply trusted authorization attributes          | [ASP.NET Core enrichment](docs/enrichment.md)      |
 | Configure logs and diagnostic sinks              | [Diagnostics](docs/diagnostics.md)                 |
 | Review trust boundaries and production controls  | [Security model](docs/security.md)                 |
 | Use the RuleGate command-line tool               | [CLI guide](docs/cli.md)                           |
@@ -388,7 +391,9 @@ RuleGate:<resource-type>:<action>
 
 The [ASP.NET Core integration guide](docs/aspnetcore.md) covers authentication,
 claims mapping, domain resources, imperative authorization, endpoint metadata,
-controllers, diagnostics, and HTTP result mapping.
+controllers, diagnostics, and HTTP result mapping. The dedicated
+[enrichment guide](docs/enrichment.md) covers ordered trusted subject,
+resource, and context attribute providers.
 
 ## Security behavior
 
@@ -408,8 +413,8 @@ Read the [security model](docs/security.md) before production integration.
 
 The latest RuleGate preview is
 [`0.7.0-preview.1`](https://github.com/fotbiler-lab/rulegate/releases/tag/v0.7.0-preview.1).
-It adds subject, resource, context, and literal operand comparisons for
-ownership, organization-scope, numeric, and date/time policies.
+It adds explicit-time-zone schedules, bounded date-time rules, authentication
+and MFA age, and canonical trusted-context requirements.
 
 All NuGet packages are `0.7.0-preview.1`. The independently versioned Angular
 npm package is also `0.7.0-preview.1` for this coordinated release.

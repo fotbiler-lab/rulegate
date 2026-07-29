@@ -1,6 +1,7 @@
 using Fotbiler.RuleGate.Abstractions.Authorization;
 using Fotbiler.RuleGate.AspNetCore.Authorization;
 using Fotbiler.RuleGate.AspNetCore.DependencyInjection;
+using Fotbiler.RuleGate.AspNetCore.Enrichment;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -46,8 +47,25 @@ public sealed class
                         RuleGateAuthorizationHandler));
 
         Assert.Equal(
-            ServiceLifetime.Singleton,
+            ServiceLifetime.Scoped,
             handlerDescriptor.Lifetime);
+
+        var enricherDescriptor =
+            Assert.Single(
+                services,
+                descriptor =>
+                    descriptor.ServiceType ==
+                    typeof(
+                        IRuleGateAuthorizationRequestEnricher));
+
+        Assert.Equal(
+            ServiceLifetime.Scoped,
+            enricherDescriptor.Lifetime);
+
+        Assert.Equal(
+            typeof(
+                RuleGateAuthorizationRequestEnricher),
+            enricherDescriptor.ImplementationType);
 
         var timeProviderDescriptor =
             Assert.Single(
@@ -79,13 +97,21 @@ public sealed class
                     .GetRequiredService<
                         IRuleGateAuthorizationResourceFactory>());
 
+        using var scope =
+            serviceProvider.CreateScope();
+
         Assert.Contains(
-            serviceProvider
-                .GetServices<
-                    IAuthorizationHandler>(),
+            scope.ServiceProvider
+                .GetServices<IAuthorizationHandler>(),
             handler =>
                 handler is
                     RuleGateAuthorizationHandler);
+
+        Assert.IsType<
+            RuleGateAuthorizationRequestEnricher>(
+                scope.ServiceProvider
+                    .GetRequiredService<
+                        IRuleGateAuthorizationRequestEnricher>());
 
         Assert.Same(
             TimeProvider.System,
@@ -124,6 +150,13 @@ public sealed class
                 descriptor.ImplementationType ==
                 typeof(
                     RuleGateAuthorizationHandler));
+
+        Assert.Single(
+            services,
+            descriptor =>
+                descriptor.ServiceType ==
+                typeof(
+                    IRuleGateAuthorizationRequestEnricher));
     }
 
     [Fact]

@@ -1,8 +1,10 @@
 using System.Security.Claims;
 using Fotbiler.RuleGate.Abstractions.Authorization;
 using Fotbiler.RuleGate.AspNetCore.Authorization;
+using Fotbiler.RuleGate.AspNetCore.Enrichment;
 using Fotbiler.RuleGate.AspNetCore.Subjects;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using RuleGateAuthorizationFailure =
     Fotbiler.RuleGate.Abstractions.Authorization.AuthorizationFailure;
 
@@ -208,6 +210,57 @@ public sealed class RuleGateAuthorizationHandlerTests
 
     [Fact]
     public async Task
+        HandleAsync_fails_cancelled_http_request_before_engine()
+    {
+        var engineCalled = false;
+
+        var subject =
+            new AuthorizationSubject("user-1");
+
+        var resource =
+            new AuthorizationResource(
+                "document",
+                "document-1");
+
+        var requirement =
+            new RuleGateAuthorizationRequirement(
+                resourceType: "document",
+                action: "read");
+
+        using var cancellationSource =
+            new CancellationTokenSource();
+
+        cancellationSource.Cancel();
+
+        var httpContext =
+            new DefaultHttpContext
+            {
+                RequestAborted =
+                    cancellationSource.Token,
+            };
+
+        var handler = CreateHandler(
+            evaluate: _ =>
+            {
+                engineCalled = true;
+
+                return AuthorizationDecision.Allow();
+            },
+            createSubject: _ => subject,
+            createResource: _ => resource);
+
+        var context = CreateContext(
+            requirement,
+            httpContext);
+
+        await handler.HandleAsync(context);
+
+        Assert.True(context.HasFailed);
+        Assert.False(engineCalled);
+    }
+
+    [Fact]
+    public async Task
         HandleAsync_CreatesExpectedRequest()
     {
         var evaluationTime =
@@ -282,6 +335,54 @@ public sealed class RuleGateAuthorizationHandlerTests
 
     [Fact]
     public async Task
+        HandleAsync_forwards_http_request_cancellation()
+    {
+        var subject =
+            new AuthorizationSubject("user-1");
+
+        var resource =
+            new AuthorizationResource("document");
+
+        var requirement =
+            new RuleGateAuthorizationRequirement(
+                resourceType: "document",
+                action: "read");
+
+        using var cancellationSource =
+            new CancellationTokenSource();
+
+        var httpContext =
+            new DefaultHttpContext
+            {
+                RequestAborted =
+                    cancellationSource.Token,
+            };
+
+        var observedCancellationToken =
+            CancellationToken.None;
+
+        var handler = CreateHandler(
+            evaluate: _ =>
+                AuthorizationDecision.Allow(),
+            createSubject: _ => subject,
+            createResource: _ => resource,
+            observeEngineCancellation:
+                cancellationToken =>
+                    observedCancellationToken =
+                        cancellationToken);
+
+        await handler.HandleAsync(
+            CreateContext(
+                requirement,
+                httpContext));
+
+        Assert.Equal(
+            cancellationSource.Token,
+            observedCancellationToken);
+    }
+
+    [Fact]
+    public async Task
         HandleAsync_PropagatesEngineFailure()
     {
         var subject =
@@ -324,12 +425,15 @@ public sealed class RuleGateAuthorizationHandlerTests
             Func<
                 object?,
                 AuthorizationResource> createResource,
-            TimeProvider? timeProvider = null)
+            TimeProvider? timeProvider = null,
+            Action<CancellationToken>?
+                observeEngineCancellation = null)
     {
         return new RuleGateAuthorizationHandler(
             authorizationEngine:
                 new StubAuthorizationEngine(
-                    evaluate),
+                    evaluate,
+                    observeEngineCancellation),
             subjectFactory:
                 new StubSubjectFactory(
                     createSubject),
@@ -338,7 +442,13 @@ public sealed class RuleGateAuthorizationHandlerTests
                     createResource),
             timeProvider:
                 timeProvider
-                ?? TimeProvider.System);
+                ?? TimeProvider.System,
+            requestEnricher:
+                new RuleGateAuthorizationRequestEnricher(
+                    subjectProviders: [],
+                    resourceProviders: [],
+                    contextProviders: [],
+                    diagnosticsSinks: []));
     }
 
     private static AuthorizationHandlerContext
@@ -368,12 +478,19 @@ public sealed class RuleGateAuthorizationHandlerTests
             AuthorizationRequest,
             AuthorizationDecision> _evaluate;
 
+        private readonly Action<CancellationToken>?
+            _observeCancellation;
+
         public StubAuthorizationEngine(
             Func<
                 AuthorizationRequest,
-                AuthorizationDecision> evaluate)
+                AuthorizationDecision> evaluate,
+            Action<CancellationToken>?
+                observeCancellation = null)
         {
             _evaluate = evaluate;
+            _observeCancellation =
+                observeCancellation;
         }
 
         public ValueTask<AuthorizationDecision>
@@ -382,6 +499,9 @@ public sealed class RuleGateAuthorizationHandlerTests
                 CancellationToken
                     cancellationToken = default)
         {
+            _observeCancellation?.Invoke(
+                cancellationToken);
+
             return ValueTask.FromResult(
                 _evaluate(request));
         }

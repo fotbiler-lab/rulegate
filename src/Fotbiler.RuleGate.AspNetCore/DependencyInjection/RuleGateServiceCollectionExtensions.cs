@@ -2,6 +2,7 @@ using Fotbiler.RuleGate.Abstractions.Authorization;
 using Fotbiler.RuleGate.Abstractions.Evaluation;
 using Fotbiler.RuleGate.Abstractions.Policies;
 using Fotbiler.RuleGate.AspNetCore.Authorization;
+using Fotbiler.RuleGate.AspNetCore.Enrichment;
 using Fotbiler.RuleGate.AspNetCore.Subjects;
 using Fotbiler.RuleGate.Core.Engine;
 using Fotbiler.RuleGate.Core.Evaluation;
@@ -40,8 +41,12 @@ public static class RuleGateServiceCollectionExtensions
             IRuleGateAuthorizationResourceFactory,
             RuleGateAuthorizationResourceFactory>();
 
+        services.TryAddScoped<
+            IRuleGateAuthorizationRequestEnricher,
+            RuleGateAuthorizationRequestEnricher>();
+
         services.TryAddEnumerable(
-            ServiceDescriptor.Singleton<
+            ServiceDescriptor.Scoped<
                 IAuthorizationHandler,
                 RuleGateAuthorizationHandler>());
 
