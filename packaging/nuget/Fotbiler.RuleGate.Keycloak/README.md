@@ -10,7 +10,7 @@ bearer tokens before RuleGate maps the authenticated `ClaimsPrincipal`.
 ## Installation
 
 ```bash
-dotnet add package Fotbiler.RuleGate.Keycloak --version 0.6.0-preview.2
+dotnet add package Fotbiler.RuleGate.Keycloak --version 0.7.0-preview.1
 ```
 
 ## Register the integration

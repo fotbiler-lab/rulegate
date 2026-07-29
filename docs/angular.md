@@ -6,7 +6,7 @@ frontend authorization projection.
 Install the current preview from npm:
 
 ```bash
-pnpm add @fotbiler/rulegate-angular@0.5.0-preview.1
+pnpm add @fotbiler/rulegate-angular@0.7.0-preview.1
 ```
 
 > [!IMPORTANT]

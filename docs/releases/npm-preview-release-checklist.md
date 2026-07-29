@@ -8,7 +8,7 @@ published version or move an existing release tag.
 
 ## Release inventory
 
-The `0.5.0-preview.1` npm release contains one package:
+The `0.7.0-preview.1` npm release contains one package:
 
 ```text
 @fotbiler/rulegate-angular
@@ -16,7 +16,8 @@ The `0.5.0-preview.1` npm release contains one package:
 
 The package is public and uses both the `latest` and `preview` distribution
 tags. npm packages have an independent version line from the synchronized
-NuGet package family, which is currently `0.6.0-preview.2`.
+NuGet package family. Both package families are `0.7.0-preview.1` for this
+coordinated release.
 
 ## Required security configuration
 
