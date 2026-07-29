@@ -251,10 +251,10 @@ Allowed
 
 The request is allowed because all three policy inputs match:
 
-| Policy input | Request value |
-|---|---|
-| Resource type | `document` |
-| Action | `read` |
+| Policy input        | Request value   |
+| ------------------- | --------------- |
+| Resource type       | `document`      |
+| Action              | `read`          |
 | Required permission | `document.read` |
 
 ## 6. Verify denial behavior
@@ -358,5 +358,5 @@ Continue with:
   and stale-output checks.
 - The [Angular SDK guide](angular.md) for frontend route and template checks.
 - The [Keycloak integration guide](keycloak.md) for optional provider mapping.
-- The [roadmap](roadmap.md) for upcoming OpenTelemetry work.
+- The [roadmap](roadmap.md) for planned capabilities and releases.
 - The [documentation index](README.md) to navigate all available guides.
