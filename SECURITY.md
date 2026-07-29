@@ -1,6 +1,6 @@
 # Security Policy
 
-Fotbiler RuleGate is an authorization framework. Security reports are taken
+RuleGate is an authorization framework. Security reports are taken
 seriously, especially when they involve authorization bypasses, fail-open
 behavior, information disclosure, policy confusion, unsafe diagnostics, or
 package integrity.
@@ -17,8 +17,8 @@ fixes.
 
 | Package family | Version | Supported |
 |---|---|---|
-| Angular npm package | [`0.4.0-preview.1`](https://www.npmjs.com/package/@fotbiler/rulegate-angular/v/0.4.0-preview.1) | Yes |
-| NuGet packages | [`0.3.0-preview.2`](https://github.com/fotbiler-lab/rulegate/releases/tag/v0.3.0-preview.2) | Yes |
+| Angular npm package | [`0.5.0-preview.1`](https://www.npmjs.com/package/@fotbiler/rulegate-angular/v/0.5.0-preview.1) | Yes |
+| NuGet packages | [`0.5.0-preview.2`](https://github.com/fotbiler-lab/rulegate/releases/tag/v0.5.0-preview.2) | Yes |
 | Older previews | — | No |
 
 This table is updated when a new preview or stable version is published.

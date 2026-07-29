@@ -17,8 +17,7 @@ SMOKE_DIRECTORY="$REPOSITORY_ROOT/tests/Fotbiler.RuleGate.Keycloak.PackageConsum
 SMOKE_PROJECT="$SMOKE_DIRECTORY/Fotbiler.RuleGate.Keycloak.PackageConsumer.Smoke.csproj"
 PACKAGE_DIRECTORY="$REPOSITORY_ROOT/artifacts/packages"
 CONSUMER_PACKAGE_CACHE="$REPOSITORY_ROOT/artifacts/keycloak-package-consumer-global-packages"
-KEYCLOAK_PACKAGE_VERSION="0.5.0-preview.1"
-BASE_PACKAGE_VERSION="0.3.0-preview.2"
+PACKAGE_VERSION="0.5.0-preview.2"
 
 EXPECTED_FRAMEWORKS=(
   "net8.0"
@@ -64,10 +63,10 @@ then
 fi
 
 for package in \
-  "Fotbiler.RuleGate.Keycloak/$KEYCLOAK_PACKAGE_VERSION" \
-  "Fotbiler.RuleGate.AspNetCore/$BASE_PACKAGE_VERSION" \
-  "Fotbiler.RuleGate.Core/$BASE_PACKAGE_VERSION" \
-  "Fotbiler.RuleGate.Abstractions/$BASE_PACKAGE_VERSION"
+  "Fotbiler.RuleGate.Keycloak/$PACKAGE_VERSION" \
+  "Fotbiler.RuleGate.AspNetCore/$PACKAGE_VERSION" \
+  "Fotbiler.RuleGate.Core/$PACKAGE_VERSION" \
+  "Fotbiler.RuleGate.Abstractions/$PACKAGE_VERSION"
 do
   package_id="${package%%/*}"
   package_version="${package#*/}"
@@ -94,10 +93,10 @@ dotnet restore \
 ASSETS_FILE="$SMOKE_DIRECTORY/obj/project.assets.json"
 
 for dependency in \
-  "Fotbiler.RuleGate.Keycloak/$KEYCLOAK_PACKAGE_VERSION" \
-  "Fotbiler.RuleGate.AspNetCore/$BASE_PACKAGE_VERSION" \
-  "Fotbiler.RuleGate.Core/$BASE_PACKAGE_VERSION" \
-  "Fotbiler.RuleGate.Abstractions/$BASE_PACKAGE_VERSION"
+  "Fotbiler.RuleGate.Keycloak/$PACKAGE_VERSION" \
+  "Fotbiler.RuleGate.AspNetCore/$PACKAGE_VERSION" \
+  "Fotbiler.RuleGate.Core/$PACKAGE_VERSION" \
+  "Fotbiler.RuleGate.Abstractions/$PACKAGE_VERSION"
 do
   if ! grep -F "\"$dependency\"" "$ASSETS_FILE" >/dev/null
   then

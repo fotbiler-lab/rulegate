@@ -14,8 +14,8 @@
     <Nullable>enable</Nullable>
 
     <PackageId>Fotbiler.RuleGate.Manifest</PackageId>
-    <Title>Fotbiler RuleGate Manifest</Title>
-    <Description>YAML manifest loading, validation, compilation, and policy domain mapping for Fotbiler RuleGate, including typed attribute requirement compilation.</Description>
+    <Title>RuleGate Manifest</Title>
+    <Description>YAML manifest loading, validation, compilation, and policy domain mapping for RuleGate, including typed attribute requirement compilation.</Description>
   </PropertyGroup>
 
   <ItemGroup>

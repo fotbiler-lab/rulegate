@@ -30,10 +30,9 @@ case "${1:-}" in
     ;;
 esac
 
-EXPECTED_VERSION_PREFIX="0.3.0"
+EXPECTED_VERSION_PREFIX="0.5.0"
 EXPECTED_VERSION_SUFFIX="preview.2"
 EXPECTED_VERSION="$EXPECTED_VERSION_PREFIX-$EXPECTED_VERSION_SUFFIX"
-EXPECTED_KEYCLOAK_VERSION="0.5.0-preview.1"
 
 EXPECTED_REPOSITORY_URL="https://github.com/fotbiler-lab/rulegate"
 EXPECTED_LICENSE="Apache-2.0"
@@ -64,6 +63,15 @@ PACKAGE_IDS=(
   "Fotbiler.RuleGate.AspNetCore"
   "Fotbiler.RuleGate.Cli"
   "Fotbiler.RuleGate.Keycloak"
+)
+
+declare -A EXPECTED_PACKAGE_TITLES=(
+  ["Fotbiler.RuleGate.Abstractions"]="RuleGate Abstractions"
+  ["Fotbiler.RuleGate.Core"]="RuleGate Core"
+  ["Fotbiler.RuleGate.Manifest"]="RuleGate Manifest"
+  ["Fotbiler.RuleGate.AspNetCore"]="RuleGate ASP.NET Core"
+  ["Fotbiler.RuleGate.Cli"]="RuleGate CLI"
+  ["Fotbiler.RuleGate.Keycloak"]="RuleGate Keycloak Integration"
 )
 
 EXPECTED_PACKAGE_COUNT="${#PACKAGE_IDS[@]}"
@@ -118,6 +126,27 @@ HEAD_COMMIT="$(
 printf 'Commit: %s\n' "$HEAD_COMMIT"
 
 printf '\n== Verify central version ==\n'
+
+if grep -RInE \
+  --include='*.csproj' \
+  '<Version(Prefix|Suffix)>' \
+  src
+then
+  echo "ERROR: Package-specific versions are not allowed."
+  echo "All RuleGate NuGet packages must inherit the central version."
+  exit 1
+fi
+
+if grep -RInF \
+  --include='README.md' \
+  --include='*.csproj' \
+  'Fotbiler RuleGate' \
+  packaging/nuget \
+  src
+then
+  echo "ERROR: NuGet package metadata and READMEs must use RuleGate as the product name."
+  exit 1
+fi
 
 ACTUAL_VERSION_PREFIX="$(
   read_property VersionPrefix
@@ -282,11 +311,6 @@ for package_id in "${PACKAGE_IDS[@]}"
 do
   package_version="$EXPECTED_VERSION"
 
-  if [[ "$package_id" == "Fotbiler.RuleGate.Keycloak" ]]
-  then
-    package_version="$EXPECTED_KEYCLOAK_VERSION"
-  fi
-
   package_path="$PACKAGE_DIRECTORY/$package_id.$package_version.nupkg"
   symbol_path="$PACKAGE_DIRECTORY/$package_id.$package_version.snupkg"
 
@@ -364,6 +388,11 @@ do
     "$nuspec_content" \
     "<version>$package_version</version>" \
     "$package_id has an unexpected package version."
+
+  assert_contains \
+    "$nuspec_content" \
+    "<title>${EXPECTED_PACKAGE_TITLES[$package_id]}</title>" \
+    "$package_id has an unexpected package title."
 
   assert_contains \
     "$nuspec_content" \
@@ -535,7 +564,6 @@ echo "No release or publishing configuration found in the normal CI workflow."
 printf '\n== Release verification succeeded ==\n'
 
 printf 'Version: %s\n' "$EXPECTED_VERSION"
-printf 'Keycloak version: %s\n' "$EXPECTED_KEYCLOAK_VERSION"
 printf 'Commit:  %s\n' "$HEAD_COMMIT"
 printf 'Packages: %s nupkg + %s snupkg\n' \
   "$EXPECTED_PACKAGE_COUNT" \

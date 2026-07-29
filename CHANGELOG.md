@@ -1,10 +1,27 @@
 # Changelog
 
-All notable changes to Fotbiler RuleGate are documented in this file.
+All notable changes to RuleGate are documented in this file.
 
 The project follows Semantic Versioning. Preview releases may introduce breaking changes before the first stable release.
 
 ## [Unreleased]
+
+## [0.5.0-preview.2] - 2026-07-29
+
+### Changed
+
+- Synchronized all six RuleGate NuGet packages at `0.5.0-preview.2`, including
+  package-to-package dependency versions.
+- Centralized the NuGet release version and made release verification reject
+  package-specific version overrides.
+- Updated Trusted Publishing to verify and publish the complete NuGet package
+  family for every release, including packages without code changes.
+
+### Documentation
+
+- Standardized the product name as RuleGate across every NuGet package README.
+- Aligned NuGet installation examples and package inventories with the shared
+  release version.
 
 ## [0.5.0-preview.1] - 2026-07-28
 
@@ -302,7 +319,8 @@ The project follows Semantic Versioning. Preview releases may introduce breaking
 - CLI, Angular, and Keycloak integration packages are not yet included.
 - Public APIs may change before the first stable release.
 
-[Unreleased]: https://github.com/fotbiler-lab/rulegate/compare/v0.5.0-preview.1...HEAD
+[Unreleased]: https://github.com/fotbiler-lab/rulegate/compare/v0.5.0-preview.2...HEAD
+[0.5.0-preview.2]: https://github.com/fotbiler-lab/rulegate/compare/v0.5.0-preview.1...v0.5.0-preview.2
 [0.5.0-preview.1]: https://github.com/fotbiler-lab/rulegate/compare/v0.4.0-preview.2...v0.5.0-preview.1
 [0.4.0-preview.2]: https://github.com/fotbiler-lab/rulegate/compare/v0.4.0-preview.1...v0.4.0-preview.2
 [0.4.0-preview.1]: https://github.com/fotbiler-lab/rulegate/compare/v0.3.0-preview.2...v0.4.0-preview.1

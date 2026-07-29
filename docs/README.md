@@ -1,6 +1,6 @@
 # RuleGate Documentation
 
-Welcome to the Fotbiler RuleGate documentation.
+Welcome to the RuleGate documentation.
 
 RuleGate is a local-first and provider-independent authorization framework for
 .NET applications. It supports permission, role, attribute, contextual, and
@@ -27,7 +27,7 @@ resource-based authorization through one composable policy model.
 ## Published packages
 
 The latest published RuleGate preview is
-[`0.5.0-preview.1`](https://github.com/fotbiler-lab/rulegate/releases/tag/v0.5.0-preview.1).
+[`0.5.0-preview.2`](https://github.com/fotbiler-lab/rulegate/releases/tag/v0.5.0-preview.2).
 
 | Package | Purpose |
 |---|---|
@@ -39,8 +39,8 @@ The latest published RuleGate preview is
 | [`Fotbiler.RuleGate.Keycloak`](https://www.nuget.org/packages/Fotbiler.RuleGate.Keycloak) | Optional Keycloak claim normalization and RuleGate subject mapping |
 | [`@fotbiler/rulegate-angular`](https://www.npmjs.com/package/@fotbiler/rulegate-angular) | Angular authorization client, route guards, UI directives, and TypeScript generation |
 
-The foundational NuGet packages remain at `0.3.0-preview.2`. The Angular npm
-package and optional Keycloak NuGet package are `0.5.0-preview.1`.
+All RuleGate NuGet packages are `0.5.0-preview.2`. The independently versioned
+Angular npm package remains at `0.5.0-preview.1`.
 
 ## Recommended learning path
 

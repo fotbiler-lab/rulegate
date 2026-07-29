@@ -10,10 +10,9 @@
     <CreateRidSpecificToolPackages>false</CreateRidSpecificToolPackages>
 
     <PackageId>Fotbiler.RuleGate.Cli</PackageId>
-    <Title>Fotbiler RuleGate CLI</Title>
-    <Description>Command-line manifest validation, deterministic C# constant generation, stale-output checks, diagnostics, and automation tooling for Fotbiler RuleGate.</Description>
+    <Title>RuleGate CLI</Title>
+    <Description>Command-line manifest validation, deterministic C# constant generation, stale-output checks, diagnostics, and automation tooling for RuleGate.</Description>
     <PackageTags>$(PackageTags);cli;dotnet-tool;manifest;validation;code-generation;generator</PackageTags>
-    <PackageReleaseNotes>Adds deterministic manifest-derived C# policy, resource-type, and action constants; atomic file output; byte-exact stale-output checks; fail-closed generation diagnostics; and generated-code compilation smoke coverage across .NET 8, .NET 9, and .NET 10.</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>

@@ -1,7 +1,6 @@
 # RuleGate Manifest
 
-YAML manifest loading, validation, and policy compilation for Fotbiler
-RuleGate.
+YAML manifest loading, validation, and policy compilation for RuleGate.
 
 Manifest converts `rulegate.yaml` documents into immutable RuleGate policy
 definitions. Loading and validation failures are structured, and failed
@@ -12,7 +11,7 @@ change before the first stable release.
 
 ## Installation
 
-    dotnet add package Fotbiler.RuleGate.Manifest --version 0.3.0-preview.2
+    dotnet add package Fotbiler.RuleGate.Manifest --version 0.5.0-preview.2
 
 ## Example manifest
 
@@ -43,6 +42,7 @@ the ASP.NET Core integration.
 | [Fotbiler.RuleGate.Manifest](https://www.nuget.org/packages/Fotbiler.RuleGate.Manifest) | YAML manifest loading, validation, and compilation |
 | [Fotbiler.RuleGate.AspNetCore](https://www.nuget.org/packages/Fotbiler.RuleGate.AspNetCore) | ASP.NET Core integration |
 | [Fotbiler.RuleGate.Cli](https://www.nuget.org/packages/Fotbiler.RuleGate.Cli) | .NET tool for deterministic manifest validation and CI usage |
+| [Fotbiler.RuleGate.Keycloak](https://www.nuget.org/packages/Fotbiler.RuleGate.Keycloak) | Optional Keycloak claim normalization and subject mapping |
 
 ## Documentation
 
@@ -64,5 +64,5 @@ Report suspected vulnerabilities through the
 
 ## License
 
-Fotbiler RuleGate is licensed under the
+RuleGate is licensed under the
 [Apache License 2.0](https://github.com/fotbiler-lab/rulegate/blob/main/LICENSE).

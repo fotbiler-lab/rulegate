@@ -1,6 +1,6 @@
 # RuleGate ASP.NET Core
 
-ASP.NET Core integration for the Fotbiler RuleGate authorization framework.
+ASP.NET Core integration for the RuleGate authorization framework.
 
 This package provides dependency injection, configurable claims mapping,
 dynamic policies, Minimal API endpoint helpers, controller and action
@@ -12,11 +12,11 @@ stable release.
 
 ## Installation
 
-    dotnet add package Fotbiler.RuleGate.AspNetCore --version 0.3.0-preview.2
+    dotnet add package Fotbiler.RuleGate.AspNetCore --version 0.5.0-preview.2
 
 Install the manifest package as well when policies are defined in YAML:
 
-    dotnet add package Fotbiler.RuleGate.Manifest --version 0.3.0-preview.2
+    dotnet add package Fotbiler.RuleGate.Manifest --version 0.5.0-preview.2
 
 ## Register RuleGate
 
@@ -61,6 +61,7 @@ Dynamic policy names use this form:
 | [Fotbiler.RuleGate.Manifest](https://www.nuget.org/packages/Fotbiler.RuleGate.Manifest) | YAML manifest loading, validation, and compilation |
 | [Fotbiler.RuleGate.AspNetCore](https://www.nuget.org/packages/Fotbiler.RuleGate.AspNetCore) | ASP.NET Core integration |
 | [Fotbiler.RuleGate.Cli](https://www.nuget.org/packages/Fotbiler.RuleGate.Cli) | .NET tool for deterministic manifest validation and CI usage |
+| [Fotbiler.RuleGate.Keycloak](https://www.nuget.org/packages/Fotbiler.RuleGate.Keycloak) | Optional Keycloak claim normalization and subject mapping |
 
 ## Documentation
 
@@ -82,5 +83,5 @@ Report suspected vulnerabilities through the
 
 ## License
 
-Fotbiler RuleGate is licensed under the
+RuleGate is licensed under the
 [Apache License 2.0](https://github.com/fotbiler-lab/rulegate/blob/main/LICENSE).

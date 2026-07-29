@@ -78,11 +78,10 @@ more than framework-level roles or ad hoc permission checks.
 
 ## Supported .NET and Angular versions
 
-| Package family                  | Current preview     | Supported platform                                      | Distribution |
-| ------------------------------- | ------------------- | ------------------------------------------------------- | ------------ |
-| Foundational RuleGate packages  | `0.3.0-preview.2`   | .NET 8 (`net8.0`), .NET 9 (`net9.0`), .NET 10 (`net10.0`) | NuGet        |
-| RuleGate Keycloak integration   | `0.5.0-preview.1`   | .NET 8 (`net8.0`), .NET 9 (`net9.0`), .NET 10 (`net10.0`) | NuGet        |
-| RuleGate Angular SDK            | `0.5.0-preview.1`   | Angular 22                                              | npm          |
+| Package family          | Current preview   | Supported platform                                        | Distribution |
+| ----------------------- | ----------------- | --------------------------------------------------------- | ------------ |
+| RuleGate NuGet packages | `0.5.0-preview.2` | .NET 8 (`net8.0`), .NET 9 (`net9.0`), .NET 10 (`net10.0`) | NuGet        |
+| RuleGate Angular SDK    | `0.5.0-preview.1` | Angular 22                                                | npm          |
 
 Every RuleGate NuGet package includes framework-specific assemblies for all
 three .NET targets. The source, test suites, package assets, and package-only
@@ -145,8 +144,8 @@ previews.
 Install the ASP.NET Core and manifest packages:
 
 ```bash
-dotnet add package Fotbiler.RuleGate.AspNetCore --version 0.3.0-preview.2
-dotnet add package Fotbiler.RuleGate.Manifest --version 0.3.0-preview.2
+dotnet add package Fotbiler.RuleGate.AspNetCore --version 0.5.0-preview.2
+dotnet add package Fotbiler.RuleGate.Manifest --version 0.5.0-preview.2
 ```
 
 `Fotbiler.RuleGate.AspNetCore` references the core engine and abstractions
@@ -156,7 +155,7 @@ Applications using only RuleGate contracts may reference the abstractions
 package directly:
 
 ```bash
-dotnet add package Fotbiler.RuleGate.Abstractions --version 0.3.0-preview.2
+dotnet add package Fotbiler.RuleGate.Abstractions --version 0.5.0-preview.2
 ```
 
 Install the Angular SDK:
@@ -168,7 +167,7 @@ pnpm add @fotbiler/rulegate-angular@0.5.0-preview.1
 Install the optional Keycloak integration when Keycloak supplies the identity:
 
 ```bash
-dotnet add package Fotbiler.RuleGate.Keycloak --version 0.5.0-preview.1
+dotnet add package Fotbiler.RuleGate.Keycloak --version 0.5.0-preview.2
 ```
 
 ## Use the RuleGate CLI
@@ -179,7 +178,7 @@ Install the RuleGate command-line tool:
 dotnet tool install \
   --global \
   Fotbiler.RuleGate.Cli \
-  --version 0.3.0-preview.2
+  --version 0.5.0-preview.2
 ```
 
 Validate the default `rulegate.yaml` in the current directory:
@@ -198,7 +197,7 @@ rulegate validate --format json
 Use `rulegate --help`, `rulegate --version`, and `rulegate info` to inspect the
 installed tool.
 
-The installed `0.3.0-preview.2` tool provides deterministic C# generation:
+The installed `0.5.0-preview.2` tool provides deterministic C# generation:
 
 ```bash
 rulegate generate csharp \
@@ -402,12 +401,12 @@ Read the [security model](docs/security.md) before production integration.
 ## Project status
 
 The latest RuleGate preview is
-[`0.5.0-preview.1`](https://github.com/fotbiler-lab/rulegate/releases/tag/v0.5.0-preview.1).
-It adds optional, provider-specific Keycloak adapters while keeping the
-authorization engine and primary Angular entrypoint provider-independent.
+[`0.5.0-preview.2`](https://github.com/fotbiler-lab/rulegate/releases/tag/v0.5.0-preview.2).
+It aligns every RuleGate NuGet package at one version while preserving the
+provider-independent engine and optional Keycloak integration boundary.
 
-The Angular npm package and Keycloak NuGet package are `0.5.0-preview.1`. The
-foundational NuGet packages remain at `0.3.0-preview.2`.
+All NuGet packages are `0.5.0-preview.2`. The independently versioned Angular
+npm package remains at `0.5.0-preview.1`.
 
 See the [roadmap](docs/roadmap.md) for the complete release path.
 
