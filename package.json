@@ -7,7 +7,10 @@
     "angular:build": "./scripts/build-angular-package.sh",
     "angular:format:check": "prettier --check angular.json package.json pnpm-workspace.yaml tsconfig.json src/Fotbiler.RuleGate.Angular",
     "angular:package:smoke": "./scripts/test-angular-package-smoke.sh",
-    "angular:test": "ng test rulegate-angular --watch=false && node --test src/Fotbiler.RuleGate.Angular/tools/rulegate-angular.test.mjs"
+    "angular:test": "ng test rulegate-angular --watch=false && node --test src/Fotbiler.RuleGate.Angular/tools/rulegate-angular.test.mjs",
+    "samples:build": "pnpm --filter rulegate-document-approval-web build",
+    "samples:format:check": "prettier --check samples",
+    "samples:generate:check": "pnpm --filter rulegate-document-approval-web generate:check"
   },
   "devDependencies": {
     "@angular/build": "22.0.8",

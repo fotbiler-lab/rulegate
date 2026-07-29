@@ -1,0 +1,7 @@
+{
+  "apiUrl": "http://localhost:5088",
+  "keycloakUrl": "https://keycloak.erengaygusuz.com.tr",
+  "keycloakRealm": "ebys-dys",
+  "keycloakClientId": "ebys-dys-frontend",
+  "ruleGateClientId": "ebys-dys-api"
+}

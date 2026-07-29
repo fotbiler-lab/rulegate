@@ -58,6 +58,12 @@ jobs:
       - name: Test npm package consumer
         run: ./scripts/test-angular-package-smoke.sh --package-ready
 
+      - name: Verify reference Angular application
+        run: |
+          pnpm samples:format:check
+          pnpm samples:generate:check
+          pnpm samples:build
+
       - name: Upload npm package
         uses: actions/upload-artifact@v6
         with:
@@ -142,6 +148,9 @@ jobs:
         run: |
           ./scripts/test-generated-code-smoke.sh \
             --packages-ready
+
+      - name: Test reference applications
+        run: ./scripts/test-reference-applications.sh --no-build
 
       - name: Upload NuGet packages
         uses: actions/upload-artifact@v6

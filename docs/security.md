@@ -29,6 +29,9 @@ For diagnostic fields and sinks, read the
 For client-side route and template APIs, read the
 [Angular SDK guide](angular.md).
 
+For package-consuming compositions and concrete trust boundaries, read the
+[reference applications guide](reference-applications.md).
+
 ## Security boundary
 
 The protected backend operation is the security boundary.

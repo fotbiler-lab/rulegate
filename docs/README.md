@@ -23,6 +23,7 @@ rules, authentication and MFA age, and canonical trusted request context.
 | Supply trusted subject, resource, and context attributes            | [ASP.NET Core enrichment](enrichment.md)                           |
 | Add permission, policy, and role checks to Angular                  | [Angular SDK](angular.md)                                          |
 | Map Keycloak roles on ASP.NET Core and Angular                      | [Keycloak integration](keycloak.md)                                |
+| Run the official package-consuming samples                          | [Reference applications](reference-applications.md)                |
 | Operate authorization diagnostics safely                            | [Diagnostics](diagnostics.md)                                      |
 | Understand runtime and integration security                         | [Security model](security.md)                                      |
 | Understand current and planned capabilities                         | [Roadmap](roadmap.md)                                              |
@@ -79,8 +80,10 @@ After completing that guide:
    the authenticated identity.
 8. Use the [diagnostics guide](diagnostics.md) to configure logging and custom
    observability safely.
-9. Review the [security model](security.md) before production integration.
-10. Use the root [README](../README.md) for the repository overview and current
+9. Run the [reference applications](reference-applications.md) to see the
+   packages composed in minimal and full-stack hosts.
+10. Review the [security model](security.md) before production integration.
+11. Use the root [README](../README.md) for the repository overview and current
     package status.
 
 ## Documentation principles

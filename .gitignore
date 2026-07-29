@@ -7,6 +7,9 @@ TestResults/
 *.suo
 *.nupkg
 *.snupkg
+*.db
+*.db-shm
+*.db-wal
 
 # Node and frontend
 node_modules/

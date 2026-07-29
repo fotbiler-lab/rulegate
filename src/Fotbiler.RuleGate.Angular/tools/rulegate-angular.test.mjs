@@ -1,14 +1,19 @@
 import assert from 'node:assert/strict';
-import { mkdtemp, readFile, writeFile } from 'node:fs/promises';
+import { execFile } from 'node:child_process';
+import { mkdtemp, readFile, symlink, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { dirname, join } from 'node:path';
 import test from 'node:test';
+import { fileURLToPath } from 'node:url';
+import { promisify } from 'node:util';
 
 import {
   generateRuleGateTypeScript,
   ruleGateAngularExitCodes,
   runRuleGateAngularCli,
 } from './rulegate-angular.mjs';
+
+const execFileAsync = promisify(execFile);
 
 const manifest = `schemaVersion: 1
 application:
@@ -197,6 +202,17 @@ test('returns usage errors without reading files', async () => {
 
   assert.equal(result, ruleGateAngularExitCodes.usage);
   assert.match(io.errorText(), /--check requires --output/);
+});
+
+test('runs when a package-manager shim invokes a symbolic link', async () => {
+  const directory = await mkdtemp(join(tmpdir(), 'rulegate-angular-symlink-'));
+  const executablePath = join(directory, 'rulegate-angular.mjs');
+  const modulePath = join(dirname(fileURLToPath(import.meta.url)), 'rulegate-angular.mjs');
+  await symlink(modulePath, executablePath);
+
+  const { stdout } = await execFileAsync(process.execPath, [executablePath, '--help']);
+
+  assert.match(stdout, /RuleGate Angular identifier generator/);
 });
 
 function createIo() {

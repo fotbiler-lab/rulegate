@@ -1,0 +1,12 @@
+schemaVersion: 1
+
+application:
+  id: rulegate-minimal-api
+  name: RuleGate Minimal API
+
+policies:
+  - id: document-read
+    resourceType: document
+    action: read
+    requirement:
+      permission: DOC.READ

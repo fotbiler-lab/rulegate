@@ -132,21 +132,22 @@ previews.
 
 ## Documentation
 
-| Goal                                             | Guide                                              |
-| ------------------------------------------------ | -------------------------------------------------- |
-| Make the first authorization decision            | [Getting started](docs/getting-started.md)         |
-| Understand the authorization model               | [Authorization model](docs/authorization-model.md) |
-| Define `rulegate.yaml` policies                  | [Manifest guide](docs/manifests.md)                |
-| Protect ASP.NET Core applications                | [ASP.NET Core integration](docs/aspnetcore.md)     |
-| Supply trusted authorization attributes          | [ASP.NET Core enrichment](docs/enrichment.md)      |
-| Configure logs and diagnostic sinks              | [Diagnostics](docs/diagnostics.md)                 |
-| Review trust boundaries and production controls  | [Security model](docs/security.md)                 |
-| Use the RuleGate command-line tool               | [CLI guide](docs/cli.md)                           |
-| Generate deterministic C# constants              | [C# code generation](docs/code-generation.md)      |
-| Add frontend permission, policy, and role checks | [Angular SDK](docs/angular.md)                     |
-| Map Keycloak roles without coupling the engine   | [Keycloak integration](docs/keycloak.md)           |
-| Browse all documentation                         | [Documentation index](docs/README.md)              |
-| Review current and planned capabilities          | [Roadmap](docs/roadmap.md)                         |
+| Goal                                             | Guide                                                    |
+| ------------------------------------------------ | -------------------------------------------------------- |
+| Make the first authorization decision            | [Getting started](docs/getting-started.md)               |
+| Understand the authorization model               | [Authorization model](docs/authorization-model.md)       |
+| Define `rulegate.yaml` policies                  | [Manifest guide](docs/manifests.md)                      |
+| Protect ASP.NET Core applications                | [ASP.NET Core integration](docs/aspnetcore.md)           |
+| Supply trusted authorization attributes          | [ASP.NET Core enrichment](docs/enrichment.md)            |
+| Configure logs and diagnostic sinks              | [Diagnostics](docs/diagnostics.md)                       |
+| Review trust boundaries and production controls  | [Security model](docs/security.md)                       |
+| Use the RuleGate command-line tool               | [CLI guide](docs/cli.md)                                 |
+| Generate deterministic C# constants              | [C# code generation](docs/code-generation.md)            |
+| Add frontend permission, policy, and role checks | [Angular SDK](docs/angular.md)                           |
+| Map Keycloak roles without coupling the engine   | [Keycloak integration](docs/keycloak.md)                 |
+| Run package-consuming reference applications     | [Reference applications](docs/reference-applications.md) |
+| Browse all documentation                         | [Documentation index](docs/README.md)                    |
+| Review current and planned capabilities          | [Roadmap](docs/roadmap.md)                               |
 
 ## Installation
 
@@ -394,6 +395,15 @@ claims mapping, domain resources, imperative authorization, endpoint metadata,
 controllers, diagnostics, and HTTP result mapping. The dedicated
 [enrichment guide](docs/enrichment.md) covers ordered trusted subject,
 resource, and context attribute providers.
+
+## Reference applications
+
+The repository includes a
+[minimal ASP.NET Core sample](samples/aspnetcore-minimal/README.md) and a
+[full-stack document-approval sample](samples/document-approval/README.md).
+The full-stack sample is also the Angular reference and combines PrimeNG,
+Keycloak, SQLite, generated identifiers, guards, directives, and backend
+resource authorization without source-project shortcuts.
 
 ## Security behavior
 
