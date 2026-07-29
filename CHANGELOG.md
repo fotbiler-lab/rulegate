@@ -6,6 +6,44 @@ The project follows Semantic Versioning. Preview releases may introduce breaking
 
 ## [Unreleased]
 
+## [0.7.0-preview.2] - 2026-07-29
+
+### Added
+
+- Added public subject, resource, and context attribute-provider contracts for
+  ASP.NET Core applications.
+- Added deterministic asynchronous enrichment in subject, resource, and
+  context order with configurable provider ordering.
+- Added explicit fail, keep-existing, and replace-existing collision behavior.
+- Added scoped dependency-injection registration helpers for enrichment
+  providers and safe structured enrichment diagnostics.
+
+### Changed
+
+- ASP.NET Core authorization now forwards HTTP request cancellation through
+  enrichment and authorization evaluation.
+- The ASP.NET Core authorization handler and default request enricher use
+  scoped lifetimes so providers can safely depend on scoped application
+  services.
+- Published all six synchronized NuGet packages at `0.7.0-preview.2`. The
+  independently versioned Angular npm package remains at `0.7.0-preview.1`.
+
+### Security
+
+- Provider exceptions, missing required trusted data, invalid attributes,
+  cancellation, and default attribute collisions fail closed before the
+  authorization engine runs.
+- Built-in enrichment diagnostics omit attribute names, attribute values, and
+  exception messages, and diagnostic sink failures cannot alter decisions.
+
+### Verification
+
+- Added contract, ordering, collision, cancellation, diagnostics,
+  dependency-injection, Minimal API, and package-consumer coverage across .NET
+  8, .NET 9, and .NET 10.
+- Audited every repository and package README, Markdown formatting, and local
+  documentation link.
+
 ## [0.7.0-preview.1] - 2026-07-29
 
 ### Added
@@ -413,7 +451,8 @@ The project follows Semantic Versioning. Preview releases may introduce breaking
 - CLI, Angular, and Keycloak integration packages are not yet included.
 - Public APIs may change before the first stable release.
 
-[Unreleased]: https://github.com/fotbiler-lab/rulegate/compare/v0.7.0-preview.1...HEAD
+[Unreleased]: https://github.com/fotbiler-lab/rulegate/compare/v0.7.0-preview.2...HEAD
+[0.7.0-preview.2]: https://github.com/fotbiler-lab/rulegate/compare/v0.7.0-preview.1...v0.7.0-preview.2
 [0.7.0-preview.1]: https://github.com/fotbiler-lab/rulegate/compare/v0.6.0-preview.2...v0.7.0-preview.1
 [0.6.0-preview.2]: https://github.com/fotbiler-lab/rulegate/compare/v0.6.0-preview.1...v0.6.0-preview.2
 [0.6.0-preview.1]: https://github.com/fotbiler-lab/rulegate/compare/v0.5.0-preview.2...v0.6.0-preview.1

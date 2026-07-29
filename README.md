@@ -80,7 +80,7 @@ more than framework-level roles or ad hoc permission checks.
 
 | Package family          | Current preview   | Supported platform                                        | Distribution |
 | ----------------------- | ----------------- | --------------------------------------------------------- | ------------ |
-| RuleGate NuGet packages | `0.7.0-preview.1` | .NET 8 (`net8.0`), .NET 9 (`net9.0`), .NET 10 (`net10.0`) | NuGet        |
+| RuleGate NuGet packages | `0.7.0-preview.2` | .NET 8 (`net8.0`), .NET 9 (`net9.0`), .NET 10 (`net10.0`) | NuGet        |
 | RuleGate Angular SDK    | `0.7.0-preview.1` | Angular 22                                                | npm          |
 
 Every RuleGate NuGet package includes framework-specific assemblies for all
@@ -153,8 +153,8 @@ previews.
 Install the ASP.NET Core and manifest packages:
 
 ```bash
-dotnet add package Fotbiler.RuleGate.AspNetCore --version 0.7.0-preview.1
-dotnet add package Fotbiler.RuleGate.Manifest --version 0.7.0-preview.1
+dotnet add package Fotbiler.RuleGate.AspNetCore --version 0.7.0-preview.2
+dotnet add package Fotbiler.RuleGate.Manifest --version 0.7.0-preview.2
 ```
 
 `Fotbiler.RuleGate.AspNetCore` references the core engine and abstractions
@@ -164,7 +164,7 @@ Applications using only RuleGate contracts may reference the abstractions
 package directly:
 
 ```bash
-dotnet add package Fotbiler.RuleGate.Abstractions --version 0.7.0-preview.1
+dotnet add package Fotbiler.RuleGate.Abstractions --version 0.7.0-preview.2
 ```
 
 Install the Angular SDK:
@@ -176,7 +176,7 @@ pnpm add @fotbiler/rulegate-angular@0.7.0-preview.1
 Install the optional Keycloak integration when Keycloak supplies the identity:
 
 ```bash
-dotnet add package Fotbiler.RuleGate.Keycloak --version 0.7.0-preview.1
+dotnet add package Fotbiler.RuleGate.Keycloak --version 0.7.0-preview.2
 ```
 
 ## Use the RuleGate CLI
@@ -187,7 +187,7 @@ Install the RuleGate command-line tool:
 dotnet tool install \
   --global \
   Fotbiler.RuleGate.Cli \
-  --version 0.7.0-preview.1
+  --version 0.7.0-preview.2
 ```
 
 Validate the default `rulegate.yaml` in the current directory:
@@ -206,7 +206,7 @@ rulegate validate --format json
 Use `rulegate --help`, `rulegate --version`, and `rulegate info` to inspect the
 installed tool.
 
-The installed `0.7.0-preview.1` tool provides deterministic C# generation:
+The installed `0.7.0-preview.2` tool provides deterministic C# generation:
 
 ```bash
 rulegate generate csharp \
@@ -411,13 +411,13 @@ Read the [security model](docs/security.md) before production integration.
 
 ## Project status
 
-The latest RuleGate preview is
-[`0.7.0-preview.1`](https://github.com/fotbiler-lab/rulegate/releases/tag/v0.7.0-preview.1).
-It adds explicit-time-zone schedules, bounded date-time rules, authentication
-and MFA age, and canonical trusted-context requirements.
+The latest RuleGate NuGet preview is
+[`0.7.0-preview.2`](https://github.com/fotbiler-lab/rulegate/releases/tag/v0.7.0-preview.2).
+It adds ordered ASP.NET Core subject, resource, and context attribute
+enrichment with explicit collision behavior and fail-closed providers.
 
-All NuGet packages are `0.7.0-preview.1`. The independently versioned Angular
-npm package is also `0.7.0-preview.1` for this coordinated release.
+All NuGet packages are `0.7.0-preview.2`. The independently versioned Angular
+npm package remains at `0.7.0-preview.1`.
 
 See the [roadmap](docs/roadmap.md) for the complete release path.
 
