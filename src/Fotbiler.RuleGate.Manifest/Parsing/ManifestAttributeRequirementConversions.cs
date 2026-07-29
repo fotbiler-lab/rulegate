@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Globalization;
 using Fotbiler.RuleGate.Abstractions.Attributes;
 using Fotbiler.RuleGate.Abstractions.Policies;
@@ -88,6 +89,76 @@ internal static class
                         .LessThanOrEqual;
                 return true;
 
+            case "contains":
+                @operator =
+                    AuthorizationAttributeOperator.Contains;
+                return true;
+
+            case "startsWith":
+                @operator =
+                    AuthorizationAttributeOperator.StartsWith;
+                return true;
+
+            case "endsWith":
+                @operator =
+                    AuthorizationAttributeOperator.EndsWith;
+                return true;
+
+            case "containsAny":
+                @operator =
+                    AuthorizationAttributeOperator.ContainsAny;
+                return true;
+
+            case "containsAll":
+                @operator =
+                    AuthorizationAttributeOperator.ContainsAll;
+                return true;
+
+            case "in":
+                @operator =
+                    AuthorizationAttributeOperator.In;
+                return true;
+
+            case "notIn":
+                @operator =
+                    AuthorizationAttributeOperator.NotIn;
+                return true;
+
+            case "intersects":
+                @operator =
+                    AuthorizationAttributeOperator.Intersects;
+                return true;
+
+            case "isEmpty":
+                @operator =
+                    AuthorizationAttributeOperator.IsEmpty;
+                return true;
+
+            case "isNotEmpty":
+                @operator =
+                    AuthorizationAttributeOperator.IsNotEmpty;
+                return true;
+
+            case "exists":
+                @operator =
+                    AuthorizationAttributeOperator.Exists;
+                return true;
+
+            case "notExists":
+                @operator =
+                    AuthorizationAttributeOperator.NotExists;
+                return true;
+
+            case "isNull":
+                @operator =
+                    AuthorizationAttributeOperator.IsNull;
+                return true;
+
+            case "isNotNull":
+                @operator =
+                    AuthorizationAttributeOperator.IsNotNull;
+                return true;
+
             default:
                 @operator = default;
                 return false;
@@ -96,53 +167,113 @@ internal static class
 
     internal static bool TryParseValueType(
         string? value,
-        out AuthorizationAttributeValueKind kind)
+        out ManifestAttributeValueType valueType)
     {
         switch (value)
         {
             case "nullValue":
-                kind =
-                    AuthorizationAttributeValueKind.Null;
+                valueType =
+                    ManifestAttributeValueType.Null;
                 return true;
 
             case "string":
-                kind =
-                    AuthorizationAttributeValueKind.String;
+                valueType =
+                    ManifestAttributeValueType.String;
                 return true;
 
             case "boolean":
-                kind =
-                    AuthorizationAttributeValueKind.Boolean;
+                valueType =
+                    ManifestAttributeValueType.Boolean;
                 return true;
 
             case "number":
-                kind =
-                    AuthorizationAttributeValueKind.Number;
+                valueType =
+                    ManifestAttributeValueType.Number;
                 return true;
 
             case "dateTimeOffset":
-                kind =
-                    AuthorizationAttributeValueKind
+                valueType =
+                    ManifestAttributeValueType
                         .DateTimeOffset;
                 return true;
 
+            case "stringCollection":
+                valueType =
+                    ManifestAttributeValueType
+                        .StringCollection;
+                return true;
+
+            case "booleanCollection":
+                valueType =
+                    ManifestAttributeValueType
+                        .BooleanCollection;
+                return true;
+
+            case "numberCollection":
+                valueType =
+                    ManifestAttributeValueType
+                        .NumberCollection;
+                return true;
+
+            case "dateTimeOffsetCollection":
+                valueType =
+                    ManifestAttributeValueType
+                        .DateTimeOffsetCollection;
+                return true;
+
             default:
-                kind = default;
+                valueType = default;
                 return false;
         }
     }
 
+    internal static bool TryParseStringComparison(
+        string? value,
+        out AuthorizationStringComparison comparison)
+    {
+        switch (value)
+        {
+            case null:
+            case "ordinal":
+                comparison =
+                    AuthorizationStringComparison.Ordinal;
+                return true;
+
+            case "ordinalIgnoreCase":
+                comparison =
+                    AuthorizationStringComparison
+                        .OrdinalIgnoreCase;
+                return true;
+
+            default:
+                comparison = default;
+                return false;
+        }
+    }
+
+    internal static bool OperatorRequiresValue(
+        AuthorizationAttributeOperator @operator)
+    {
+        return @operator is not (
+            AuthorizationAttributeOperator.IsEmpty or
+            AuthorizationAttributeOperator.IsNotEmpty or
+            AuthorizationAttributeOperator.Exists or
+            AuthorizationAttributeOperator.NotExists or
+            AuthorizationAttributeOperator.IsNull or
+            AuthorizationAttributeOperator.IsNotNull);
+    }
+
     internal static bool IsOperatorSupported(
         AuthorizationAttributeOperator @operator,
-        AuthorizationAttributeValueKind valueKind)
+        ManifestAttributeValueType valueType)
     {
         return @operator switch
         {
             AuthorizationAttributeOperator.Equal =>
-                true,
+                IsScalar(valueType),
 
             AuthorizationAttributeOperator.NotEqual =>
-                true,
+                IsScalar(valueType),
 
             AuthorizationAttributeOperator.GreaterThan or
             AuthorizationAttributeOperator
@@ -150,13 +281,69 @@ internal static class
             AuthorizationAttributeOperator.LessThan or
             AuthorizationAttributeOperator
                 .LessThanOrEqual =>
-                valueKind is
-                    AuthorizationAttributeValueKind.Number or
-                    AuthorizationAttributeValueKind
+                valueType is
+                    ManifestAttributeValueType.Number or
+                    ManifestAttributeValueType
                         .DateTimeOffset,
+
+            AuthorizationAttributeOperator.Contains =>
+                valueType is not (
+                    ManifestAttributeValueType.Null or
+                    ManifestAttributeValueType
+                        .StringCollection or
+                    ManifestAttributeValueType
+                        .BooleanCollection or
+                    ManifestAttributeValueType
+                        .NumberCollection or
+                    ManifestAttributeValueType
+                        .DateTimeOffsetCollection),
+
+            AuthorizationAttributeOperator.StartsWith or
+            AuthorizationAttributeOperator.EndsWith =>
+                valueType ==
+                    ManifestAttributeValueType.String,
+
+            AuthorizationAttributeOperator.ContainsAny or
+            AuthorizationAttributeOperator.ContainsAll or
+            AuthorizationAttributeOperator.In or
+            AuthorizationAttributeOperator.NotIn or
+            AuthorizationAttributeOperator.Intersects =>
+                IsCollection(valueType),
+
+            AuthorizationAttributeOperator.IsEmpty or
+            AuthorizationAttributeOperator.IsNotEmpty or
+            AuthorizationAttributeOperator.Exists or
+            AuthorizationAttributeOperator.NotExists or
+            AuthorizationAttributeOperator.IsNull or
+            AuthorizationAttributeOperator.IsNotNull =>
+                true,
 
             _ => false
         };
+    }
+
+    internal static bool SupportsStringComparison(
+        AuthorizationAttributeOperator @operator,
+        ManifestAttributeValueType valueType)
+    {
+        if (valueType is not (
+            ManifestAttributeValueType.String or
+            ManifestAttributeValueType.StringCollection))
+        {
+            return false;
+        }
+
+        return @operator is
+            AuthorizationAttributeOperator.Equal or
+            AuthorizationAttributeOperator.NotEqual or
+            AuthorizationAttributeOperator.Contains or
+            AuthorizationAttributeOperator.StartsWith or
+            AuthorizationAttributeOperator.EndsWith or
+            AuthorizationAttributeOperator.ContainsAny or
+            AuthorizationAttributeOperator.ContainsAll or
+            AuthorizationAttributeOperator.In or
+            AuthorizationAttributeOperator.NotIn or
+            AuthorizationAttributeOperator.Intersects;
     }
 
     internal static bool TryConvertValue(
@@ -177,34 +364,110 @@ internal static class
 
         return kind switch
         {
-            AuthorizationAttributeValueKind.Null =>
+            ManifestAttributeValueType.Null =>
                 TryConvertNull(
                     requirement.Value,
                     out value),
 
-            AuthorizationAttributeValueKind.String =>
+            ManifestAttributeValueType.String =>
                 TryConvertString(
                     requirement.Value,
                     out value),
 
-            AuthorizationAttributeValueKind.Boolean =>
+            ManifestAttributeValueType.Boolean =>
                 TryConvertBoolean(
                     requirement.Value,
                     out value),
 
-            AuthorizationAttributeValueKind.Number =>
+            ManifestAttributeValueType.Number =>
                 TryConvertNumber(
                     requirement.Value,
                     out value),
 
-            AuthorizationAttributeValueKind
+            ManifestAttributeValueType
                 .DateTimeOffset =>
                 TryConvertDateTimeOffset(
                     requirement.Value,
                     out value),
 
+            ManifestAttributeValueType.StringCollection =>
+                TryConvertCollection(
+                    requirement.Value,
+                    TryConvertString,
+                    out value),
+
+            ManifestAttributeValueType.BooleanCollection =>
+                TryConvertCollection(
+                    requirement.Value,
+                    TryConvertBoolean,
+                    out value),
+
+            ManifestAttributeValueType.NumberCollection =>
+                TryConvertCollection(
+                    requirement.Value,
+                    TryConvertNumber,
+                    out value),
+
+            ManifestAttributeValueType
+                .DateTimeOffsetCollection =>
+                TryConvertCollection(
+                    requirement.Value,
+                    TryConvertDateTimeOffset,
+                    out value),
+
             _ => false
         };
+    }
+
+    private static bool TryConvertCollection(
+        object? rawValue,
+        TryConvertScalar tryConvertScalar,
+        out object? value)
+    {
+        if (rawValue is string or IDictionary ||
+            rawValue is not IEnumerable values)
+        {
+            value = null;
+            return false;
+        }
+
+        var converted = new List<object?>();
+
+        foreach (var item in values)
+        {
+            if (converted.Count >=
+                    AuthorizationAttributeValue
+                        .MaximumCollectionElementCount ||
+                !tryConvertScalar(
+                    item,
+                    out var convertedItem))
+            {
+                value = null;
+                return false;
+            }
+
+            converted.Add(convertedItem);
+        }
+
+        value = converted.ToArray();
+        return true;
+    }
+
+    private static bool IsScalar(
+        ManifestAttributeValueType valueType)
+    {
+        return !IsCollection(valueType);
+    }
+
+    private static bool IsCollection(
+        ManifestAttributeValueType valueType)
+    {
+        return valueType is
+            ManifestAttributeValueType.StringCollection or
+            ManifestAttributeValueType.BooleanCollection or
+            ManifestAttributeValueType.NumberCollection or
+            ManifestAttributeValueType
+                .DateTimeOffsetCollection;
     }
 
     private static bool TryConvertNull(
@@ -360,4 +623,8 @@ internal static class
             value.Trim(),
             StringComparison.Ordinal);
     }
+
+    private delegate bool TryConvertScalar(
+        object? rawValue,
+        out object? value);
 }

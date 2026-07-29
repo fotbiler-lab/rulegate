@@ -84,17 +84,29 @@ public sealed class RuleGateManifestMapper
                     attribute.Operator,
                     out var @operator);
 
+            object? value = null;
+
+            if (ManifestAttributeRequirementConversions
+                .OperatorRequiresValue(@operator))
+            {
+                ManifestAttributeRequirementConversions
+                    .TryConvertValue(
+                        attribute,
+                        out value);
+            }
+
             ManifestAttributeRequirementConversions
-                .TryConvertValue(
-                    attribute,
-                    out var value);
+                .TryParseStringComparison(
+                    attribute.StringComparison,
+                    out var stringComparison);
 
             return new AttributeRequirementDefinition(
                 source,
                 attribute.Name!,
                 @operator,
                 value,
-                requirement.Id);
+                requirement.Id,
+                stringComparison);
         }
 
         if (requirement.All is not null)

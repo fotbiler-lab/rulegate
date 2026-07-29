@@ -80,6 +80,18 @@ public static class ManifestValidationCodes
     public const string AttributeOperatorValueTypeInvalid =
         "MANIFEST_ATTRIBUTE_OPERATOR_VALUE_TYPE_INVALID";
 
+    public const string AttributeValueTypeNotAllowed =
+        "MANIFEST_ATTRIBUTE_VALUE_TYPE_NOT_ALLOWED";
+
+    public const string AttributeValueNotAllowed =
+        "MANIFEST_ATTRIBUTE_VALUE_NOT_ALLOWED";
+
+    public const string AttributeStringComparisonInvalid =
+        "MANIFEST_ATTRIBUTE_STRING_COMPARISON_INVALID";
+
+    public const string AttributeStringComparisonNotAllowed =
+        "MANIFEST_ATTRIBUTE_STRING_COMPARISON_NOT_ALLOWED";
+
     public const string RequirementChildrenRequired =
         "MANIFEST_REQUIREMENT_CHILDREN_REQUIRED";
 

@@ -164,11 +164,11 @@ Unexpected exceptions are discussed separately in
 
 A requirement evaluation has three possible outcomes.
 
-| Outcome | Meaning | Final authorization |
-|---|---|---|
-| `Satisfied` | The requirement passed | May allow |
-| `NotSatisfied` | The requirement evaluated normally but did not pass | Deny |
-| `Indeterminate` | The requirement could not produce a reliable answer | Deny |
+| Outcome         | Meaning                                             | Final authorization |
+| --------------- | --------------------------------------------------- | ------------------- |
+| `Satisfied`     | The requirement passed                              | May allow           |
+| `NotSatisfied`  | The requirement evaluated normally but did not pass | Deny                |
+| `Indeterminate` | The requirement could not produce a reliable answer | Deny                |
 
 A non-successful requirement result must contain at least one structured
 failure.
@@ -253,10 +253,10 @@ value when no safe alternative succeeds.
 
 `not` behaves as follows:
 
-| Child outcome | `not` outcome |
-|---|---|
-| `Satisfied` | `NotSatisfied` |
-| `NotSatisfied` | `Satisfied` |
+| Child outcome   | `not` outcome   |
+| --------------- | --------------- |
+| `Satisfied`     | `NotSatisfied`  |
+| `NotSatisfied`  | `Satisfied`     |
 | `Indeterminate` | `Indeterminate` |
 
 Negation does not turn uncertainty into success.
@@ -357,11 +357,11 @@ The default ASP.NET Core subject factory maps:
 
 Default claim types are:
 
-| Value | Default claim type |
-|---|---|
+| Value      | Default claim type          |
+| ---------- | --------------------------- |
 | Subject ID | `ClaimTypes.NameIdentifier` |
-| Role | `ClaimTypes.Role` |
-| Permission | `permission` |
+| Role       | `ClaimTypes.Role`           |
+| Permission | `permission`                |
 
 The configured authentication and claims-transformation pipeline must ensure
 these claims are trustworthy.
@@ -597,7 +597,7 @@ Use `DateTimeOffset` values with explicit offsets.
 
 ## Attribute trust boundary
 
-Supported runtime scalar values are:
+Supported runtime attribute values are:
 
 - `null`
 - `string`
@@ -605,11 +605,16 @@ Supported runtime scalar values are:
 - Integral numeric types
 - `decimal`
 - `DateTimeOffset`
+- Homogeneous collections of supported non-null scalar values
+
+Collections cannot be nested, cannot contain null elements, and cannot exceed
+256 elements.
 
 Runtime values outside the supported set produce an indeterminate result.
 
 Examples of unsupported runtime inputs include application-specific objects
-that have not been mapped into a supported scalar.
+that have not been mapped into a supported value and heterogeneous or nested
+collections.
 
 RuleGate does not serialize arbitrary objects to create authorization values.
 
@@ -619,14 +624,22 @@ Attribute comparison is strict.
 
 RuleGate does not perform:
 
-- Case-insensitive string comparison
+- Culture-sensitive string comparison
 - Implicit string-to-number conversion
 - Implicit string-to-boolean conversion
 - Arbitrary object conversion
 - Culture-sensitive numeric parsing
 - Attribute-to-attribute comparison in the built-in evaluator
 
-A missing attribute is `NotSatisfied`.
+String matching is ordinal and case-sensitive by default. A policy must
+explicitly select `ordinalIgnoreCase` when case-insensitive comparison is
+required.
+
+Missing and null attributes remain distinct. `exists` is satisfied for any
+present key, including a null value. `notExists` is satisfied only for a missing
+key. `isNull` and `isNotNull` require the key to be present.
+
+A missing required attribute is `NotSatisfied`.
 
 An unsupported value, type mismatch, or unsupported operator/type combination
 is `Indeterminate`.
@@ -784,11 +797,11 @@ YAML loader.
 
 Manifest compilation is atomic from the consumer's perspective.
 
-| Result | Compiled policies |
-|---|---:|
-| Success | Complete policy collection |
-| Load failure | Empty |
-| Validation failure | Empty |
+| Result             |          Compiled policies |
+| ------------------ | -------------------------: |
+| Success            | Complete policy collection |
+| Load failure       |                      Empty |
+| Validation failure |                      Empty |
 
 A failed compilation never returns a partial policy set.
 
@@ -819,11 +832,11 @@ Use atomic replacement and record the active policy version.
 
 ASP.NET Core keeps normal authentication and authorization semantics:
 
-| Situation | Framework result |
-|---|---|
-| Anonymous protected request | Challenge |
-| Authenticated denied request | Forbid |
-| Allowed request | Endpoint executes |
+| Situation                    | Framework result  |
+| ---------------------------- | ----------------- |
+| Anonymous protected request  | Challenge         |
+| Authenticated denied request | Forbid            |
+| Allowed request              | Endpoint executes |
 
 RuleGate's ProblemDetails mapping is opt-in.
 

@@ -318,14 +318,14 @@ A requirement defines a condition that must be satisfied.
 
 RuleGate currently provides these built-in requirement categories:
 
-| Requirement | Purpose |
-|---|---|
-| Permission | Require a subject permission |
-| Role | Require a subject role |
-| Attribute | Compare a subject, resource, or context attribute with a typed literal |
-| `all` | Require every child requirement |
-| `any` | Require at least one child requirement |
-| `not` | Negate one child requirement |
+| Requirement | Purpose                                                                |
+| ----------- | ---------------------------------------------------------------------- |
+| Permission  | Require a subject permission                                           |
+| Role        | Require a subject role                                                 |
+| Attribute   | Compare a subject, resource, or context attribute with a typed literal |
+| `all`       | Require every child requirement                                        |
+| `any`       | Require at least one child requirement                                 |
+| `not`       | Negate one child requirement                                           |
 
 ### Permission
 
@@ -359,7 +359,8 @@ The built-in attribute requirement reads an attribute from:
 - `resource`
 - `context`
 
-It compares that attribute with a typed literal value declared in the policy.
+It checks attribute state or compares the attribute with a typed scalar or
+collection literal declared in the policy.
 
 Supported examples:
 
@@ -367,7 +368,15 @@ Supported examples:
 Resource.status equals pending-approval
 Subject.clearanceLevel greaterThanOrEqual 3
 Context.authenticationMethod equals mfa
+Subject.department startsWith finance
+Subject.permissions containsAll [document.read, document.approve]
+Resource.ownerId exists
 ```
+
+String comparison is ordinal and case-sensitive by default. Policies may
+explicitly select ordinal case-insensitive comparison. Collection values are
+homogeneous, cannot contain null or nested collections, and are limited to 256
+elements.
 
 It does not currently compare one attribute directly with another:
 
@@ -430,13 +439,13 @@ one decision.
 
 RuleGate uses one policy model for multiple authorization approaches.
 
-| Approach | Example |
-|---|---|
-| Permission-based | Subject has `document.read` |
-| Role-based access control | Subject has `finance.approver` |
-| Attribute-based access control | Subject department equals `finance` |
-| Context-based access control | Authentication method equals `mfa` |
-| Resource-based authorization | Resource status equals `pending-approval` |
+| Approach                       | Example                                   |
+| ------------------------------ | ----------------------------------------- |
+| Permission-based               | Subject has `document.read`               |
+| Role-based access control      | Subject has `finance.approver`            |
+| Attribute-based access control | Subject department equals `finance`       |
+| Context-based access control   | Authentication method equals `mfa`        |
+| Resource-based authorization   | Resource status equals `pending-approval` |
 
 A policy can combine them:
 

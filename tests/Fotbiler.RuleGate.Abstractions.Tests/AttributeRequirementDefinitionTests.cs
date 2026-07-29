@@ -139,6 +139,136 @@ public sealed class AttributeRequirementDefinitionTests
             requirement.ExpectedValue.Value);
     }
 
+    [Fact]
+    public void Constructor_preserves_string_comparison()
+    {
+        var requirement =
+            new AttributeRequirementDefinition(
+                AuthorizationAttributeSource.Subject,
+                name: "department",
+                AuthorizationAttributeOperator.Equal,
+                value: "finance",
+                stringComparison:
+                    AuthorizationStringComparison
+                        .OrdinalIgnoreCase);
+
+        Assert.Equal(
+            AuthorizationStringComparison.OrdinalIgnoreCase,
+            requirement.StringComparison);
+    }
+
+    [Fact]
+    public void Constructor_normalizes_collection_values()
+    {
+        var requirement =
+            CreateRequirement(
+                new[]
+                {
+                    1,
+                    2,
+                    3
+                });
+
+        Assert.Equal(
+            AuthorizationAttributeValueKind.Collection,
+            requirement.ExpectedValue.Kind);
+
+        Assert.Equal(
+            AuthorizationAttributeValueKind.Number,
+            requirement.ExpectedValue
+                .CollectionElementKind);
+
+        Assert.Equal(
+            new[]
+            {
+                1m,
+                2m,
+                3m
+            },
+            requirement.ExpectedValue
+                .CollectionItems
+                .Select(
+                    static item =>
+                        Assert.IsType<decimal>(
+                            item.Value)));
+    }
+
+    [Fact]
+    public void Constructor_supports_empty_collection()
+    {
+        var requirement =
+            CreateRequirement(
+                Array.Empty<string>());
+
+        Assert.Equal(
+            AuthorizationAttributeValueKind.Collection,
+            requirement.ExpectedValue.Kind);
+
+        Assert.Null(
+            requirement.ExpectedValue
+                .CollectionElementKind);
+
+        Assert.Empty(
+            requirement.ExpectedValue
+                .CollectionItems);
+    }
+
+    [Fact]
+    public void Constructor_rejects_mixed_collection()
+    {
+        Assert.Throws<ArgumentException>(
+            () =>
+                CreateRequirement(
+                    new object[]
+                    {
+                        "finance",
+                        1
+                    }));
+    }
+
+    [Fact]
+    public void Constructor_rejects_null_collection_item()
+    {
+        Assert.Throws<ArgumentException>(
+            () =>
+                CreateRequirement(
+                    new string?[]
+                    {
+                        "finance",
+                        null
+                    }));
+    }
+
+    [Fact]
+    public void Constructor_rejects_nested_collection()
+    {
+        Assert.Throws<ArgumentException>(
+            () =>
+                CreateRequirement(
+                    new object[]
+                    {
+                        new[]
+                        {
+                            "finance"
+                        }
+                    }));
+    }
+
+    [Fact]
+    public void Constructor_rejects_oversized_collection()
+    {
+        var values =
+            Enumerable.Range(
+                start: 0,
+                count:
+                    AuthorizationAttributeValue
+                        .MaximumCollectionElementCount +
+                    1);
+
+        Assert.Throws<ArgumentException>(
+            () => CreateRequirement(values));
+    }
+
     [Theory]
     [InlineData("")]
     [InlineData(" ")]
@@ -181,6 +311,20 @@ public sealed class AttributeRequirementDefinitionTests
                     name: "department",
                     (AuthorizationAttributeOperator)999,
                     value: "finance"));
+    }
+
+    [Fact]
+    public void Constructor_rejects_unknown_string_comparison()
+    {
+        Assert.Throws<ArgumentOutOfRangeException>(
+            () =>
+                new AttributeRequirementDefinition(
+                    AuthorizationAttributeSource.Subject,
+                    name: "department",
+                    AuthorizationAttributeOperator.Equal,
+                    value: "finance",
+                    stringComparison:
+                        (AuthorizationStringComparison)999));
     }
 
     [Fact]

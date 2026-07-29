@@ -10,7 +10,10 @@ public sealed record AttributeRequirementDefinition
         string name,
         AuthorizationAttributeOperator @operator,
         object? value,
-        string? id = null)
+        string? id = null,
+        AuthorizationStringComparison
+            stringComparison =
+                AuthorizationStringComparison.Ordinal)
         : base(id)
     {
         if (!Enum.IsDefined(source))
@@ -31,9 +34,18 @@ public sealed record AttributeRequirementDefinition
                 "The authorization attribute operator is not supported.");
         }
 
+        if (!Enum.IsDefined(stringComparison))
+        {
+            throw new ArgumentOutOfRangeException(
+                nameof(stringComparison),
+                stringComparison,
+                "The authorization string comparison is not supported.");
+        }
+
         Source = source;
         Name = name;
         Operator = @operator;
+        StringComparison = stringComparison;
         ExpectedValue =
             AuthorizationAttributeValue.Create(value);
     }
@@ -43,6 +55,10 @@ public sealed record AttributeRequirementDefinition
     public string Name { get; }
 
     public AuthorizationAttributeOperator Operator { get; }
+
+    public AuthorizationStringComparison
+        StringComparison
+    { get; }
 
     public AuthorizationAttributeValue ExpectedValue { get; }
 }

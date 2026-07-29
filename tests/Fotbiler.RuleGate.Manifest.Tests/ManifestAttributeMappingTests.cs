@@ -156,6 +156,97 @@ public sealed class ManifestAttributeMappingTests
     }
 
     [Fact]
+    public void Map_maps_string_comparison()
+    {
+        var attribute =
+            CreateAttribute(
+                source: "subject",
+                name: "department",
+                @operator: "contains",
+                valueType: "string",
+                value: "finance");
+
+        attribute.StringComparison =
+            "ordinalIgnoreCase";
+
+        var requirement = Map(attribute);
+
+        Assert.Equal(
+            AuthorizationAttributeOperator.Contains,
+            requirement.Operator);
+
+        Assert.Equal(
+            AuthorizationStringComparison
+                .OrdinalIgnoreCase,
+            requirement.StringComparison);
+    }
+
+    [Fact]
+    public void Map_maps_collection_attribute()
+    {
+        var requirement =
+            Map(
+                CreateAttribute(
+                    source: "subject",
+                    name: "organizationUnits",
+                    @operator: "containsAll",
+                    valueType: "numberCollection",
+                    value:
+                        new object[]
+                        {
+                            "10",
+                            20
+                        }));
+
+        Assert.Equal(
+            AuthorizationAttributeOperator.ContainsAll,
+            requirement.Operator);
+
+        Assert.Equal(
+            AuthorizationAttributeValueKind.Collection,
+            requirement.ExpectedValue.Kind);
+
+        Assert.Equal(
+            AuthorizationAttributeValueKind.Number,
+            requirement.ExpectedValue
+                .CollectionElementKind);
+
+        Assert.Equal(
+            new[]
+            {
+                10m,
+                20m
+            },
+            requirement.ExpectedValue
+                .CollectionItems
+                .Select(
+                    static item =>
+                        Assert.IsType<decimal>(
+                            item.Value)));
+    }
+
+    [Fact]
+    public void Map_maps_value_less_attribute()
+    {
+        var requirement =
+            Map(
+                new ManifestAttributeRequirement
+                {
+                    Source = "resource",
+                    Name = "ownerId",
+                    Operator = "exists"
+                });
+
+        Assert.Equal(
+            AuthorizationAttributeOperator.Exists,
+            requirement.Operator);
+
+        Assert.Equal(
+            AuthorizationAttributeValueKind.Null,
+            requirement.ExpectedValue.Kind);
+    }
+
+    [Fact]
     public void
         Map_maps_attribute_inside_logical_requirement()
     {

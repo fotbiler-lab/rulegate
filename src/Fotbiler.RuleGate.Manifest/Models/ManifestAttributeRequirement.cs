@@ -12,6 +12,8 @@ public sealed class ManifestAttributeRequirement
 
     public string? Operator { get; set; }
 
+    public string? StringComparison { get; set; }
+
     public string? ValueType { get; set; }
 
     public object? Value
