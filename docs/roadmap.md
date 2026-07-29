@@ -1,6 +1,6 @@
 # RuleGate Roadmap
 
-This document describes the planned development direction of Fotbiler RuleGate.
+This document describes the planned development direction of RuleGate.
 
 The roadmap is outcome-oriented. Planned scope may change as public APIs,
 security boundaries, package structure, and consumer feedback evolve during
@@ -30,7 +30,7 @@ the preview releases.
 | OpenTelemetry integration                    | ⏳ Planned   |
 | Decision visualization                       | ⏳ Planned   |
 
-The latest preview is `0.5.0-preview.1`. The next product milestone is the
+The latest preview is `0.5.0-preview.2`. The next product milestone is the
 OpenTelemetry integration work in `0.6.0-preview.1`.
 
 ## Published previews
@@ -114,6 +114,13 @@ OpenTelemetry integration work in `0.6.0-preview.1`.
 - Optional Angular secondary entrypoint
 - Package-only npm and NuGet consumer verification
 - [Keycloak integration guide](keycloak.md)
+
+### `0.5.0-preview.2` — NuGet Version Alignment
+
+- One synchronized version for all RuleGate NuGet packages
+- Aligned package-to-package dependency versions
+- Complete six-package NuGet publishing and verification
+- Standardized NuGet package README product naming
 
 ## Later milestones
 

@@ -1,7 +1,6 @@
 # RuleGate Security Model
 
-This guide describes the runtime and integration security model of Fotbiler
-RuleGate.
+This guide describes the runtime and integration security model of RuleGate.
 
 It explains:
 

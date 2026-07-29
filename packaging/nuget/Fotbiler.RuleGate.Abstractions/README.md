@@ -1,6 +1,6 @@
 # RuleGate Abstractions
 
-Public authorization contracts for the Fotbiler RuleGate ecosystem.
+Public authorization contracts for the RuleGate ecosystem.
 
 This package contains policy definitions, authorization requests and
 decisions, typed attribute values, requirement evaluation abstractions, and
@@ -11,7 +11,7 @@ stable release.
 
 ## Installation
 
-    dotnet add package Fotbiler.RuleGate.Abstractions --version 0.3.0-preview.2
+    dotnet add package Fotbiler.RuleGate.Abstractions --version 0.5.0-preview.2
 
 ## When to use this package
 
@@ -38,6 +38,7 @@ instead of referencing Abstractions directly.
 | [Fotbiler.RuleGate.Manifest](https://www.nuget.org/packages/Fotbiler.RuleGate.Manifest) | YAML manifest loading, validation, and compilation |
 | [Fotbiler.RuleGate.AspNetCore](https://www.nuget.org/packages/Fotbiler.RuleGate.AspNetCore) | ASP.NET Core integration |
 | [Fotbiler.RuleGate.Cli](https://www.nuget.org/packages/Fotbiler.RuleGate.Cli) | .NET tool for deterministic manifest validation and CI usage |
+| [Fotbiler.RuleGate.Keycloak](https://www.nuget.org/packages/Fotbiler.RuleGate.Keycloak) | Optional Keycloak claim normalization and subject mapping |
 
 ## Documentation
 
@@ -58,5 +59,5 @@ Report suspected vulnerabilities through the
 
 ## License
 
-Fotbiler RuleGate is licensed under the
+RuleGate is licensed under the
 [Apache License 2.0](https://github.com/fotbiler-lab/rulegate/blob/main/LICENSE).

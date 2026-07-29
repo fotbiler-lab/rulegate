@@ -14,9 +14,9 @@ The `0.5.0-preview.1` npm release contains one package:
 @fotbiler/rulegate-angular
 ```
 
-The package is public and uses the `preview` distribution tag. The optional
-Keycloak NuGet package uses the shared `0.5.0-preview.1` release tag, while the
-foundational NuGet packages remain at `0.3.0-preview.2`.
+The package is public and uses both the `latest` and `preview` distribution
+tags. npm packages have an independent version line from the synchronized
+NuGet package family, which is currently `0.5.0-preview.2`.
 
 ## Required security configuration
 
@@ -41,14 +41,14 @@ Use the normal release order:
 2. Create a dedicated release-preparation branch from clean `main`.
 3. Update the changelog, roadmap, package README, public documentation,
    workflow guardrails, and this checklist.
-4. Run both npm and full existing NuGet validation.
+4. Run npm validation and the relevant repository validation.
 5. Push the release branch and open a pull request.
 6. Merge only after every required check passes.
 7. Delete the release branch and update clean `main`.
 8. Re-run release verification from the final merge commit.
 9. Create and push an annotated release tag.
-10. Publish and verify both npm and NuGet artifacts before creating the GitHub
-    prerelease.
+10. Publish and verify the npm artifact before creating its GitHub prerelease.
+    For a coordinated cross-ecosystem release, verify both registries first.
 
 Do not publish from a feature or release-preparation branch.
 

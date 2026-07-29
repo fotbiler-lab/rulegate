@@ -6,8 +6,8 @@
     <Nullable>enable</Nullable>
 
     <PackageId>Fotbiler.RuleGate.Abstractions</PackageId>
-    <Title>Fotbiler RuleGate Abstractions</Title>
-    <Description>Public authorization contracts, typed attribute values, policy definitions, requests, decisions, requirement evaluation abstractions, and diagnostics contracts for Fotbiler RuleGate.</Description>
+    <Title>RuleGate Abstractions</Title>
+    <Description>Public authorization contracts, typed attribute values, policy definitions, requests, decisions, requirement evaluation abstractions, and diagnostics contracts for RuleGate.</Description>
   </PropertyGroup>
 
   <ItemGroup>

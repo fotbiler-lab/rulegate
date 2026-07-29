@@ -44,11 +44,11 @@ Install the ASP.NET Core integration and manifest packages:
 ```bash
 dotnet add package \
   Fotbiler.RuleGate.AspNetCore \
-  --version 0.3.0-preview.2
+  --version 0.5.0-preview.2
 
 dotnet add package \
   Fotbiler.RuleGate.Manifest \
-  --version 0.3.0-preview.2
+  --version 0.5.0-preview.2
 ```
 
 `Fotbiler.RuleGate.AspNetCore` brings in the authorization engine and public
@@ -62,7 +62,7 @@ preview version used by this guide:
 dotnet tool install \
   --global \
   Fotbiler.RuleGate.Cli \
-  --version 0.3.0-preview.2
+  --version 0.5.0-preview.2
 ```
 
 ## 3. Create the policy manifest

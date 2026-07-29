@@ -9,12 +9,12 @@
     <Deterministic>true</Deterministic>
     <DebugType>portable</DebugType>
 
-    <VersionPrefix>0.3.0</VersionPrefix>
+    <VersionPrefix>0.5.0</VersionPrefix>
     <VersionSuffix>preview.2</VersionSuffix>
 
     <Authors>Fotbiler</Authors>
     <Company>Fotbiler</Company>
-    <Product>Fotbiler RuleGate</Product>
+    <Product>RuleGate</Product>
     <Copyright>Copyright © 2026 Fotbiler</Copyright>
 
     <RepositoryType>git</RepositoryType>
@@ -29,7 +29,7 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
 
     <PackageTags>authorization;rbac;policy;security;access-control;rulegate</PackageTags>
-    <PackageReleaseNotes>Adds deterministic manifest-derived C# policy, resource-type, and action constants through the RuleGate CLI. Adds atomic UTF-8 file output, byte-exact stale-output checks, fail-closed generation diagnostics, and generated-code compilation and execution verification across .NET 8, .NET 9, and .NET 10.</PackageReleaseNotes>
+    <PackageReleaseNotes>Synchronizes every RuleGate NuGet package at 0.5.0-preview.2 and includes the optional Keycloak integration across .NET 8, .NET 9, and .NET 10.</PackageReleaseNotes>
 
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>

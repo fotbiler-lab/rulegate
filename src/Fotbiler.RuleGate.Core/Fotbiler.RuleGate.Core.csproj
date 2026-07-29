@@ -10,8 +10,8 @@
     <Nullable>enable</Nullable>
 
     <PackageId>Fotbiler.RuleGate.Core</PackageId>
-    <Title>Fotbiler RuleGate Core</Title>
-    <Description>Fail-closed policy authorization engine, role, permission, logical, and typed attribute evaluators, dispatcher, in-memory policy provider, and opt-in diagnostics instrumentation for Fotbiler RuleGate.</Description>
+    <Title>RuleGate Core</Title>
+    <Description>Fail-closed policy authorization engine, role, permission, logical, and typed attribute evaluators, dispatcher, in-memory policy provider, and opt-in diagnostics instrumentation for RuleGate.</Description>
   </PropertyGroup>
 
   <ItemGroup>

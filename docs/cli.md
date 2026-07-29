@@ -8,7 +8,7 @@ The installed command is `rulegate`.
 
 ## Current release
 
-The current public tool package is `0.3.0-preview.2`.
+The current public tool package is `0.5.0-preview.2`.
 
 ## Supported runtimes
 
@@ -37,7 +37,7 @@ GitHub Packages is not used as the public RuleGate package registry.
 dotnet tool install \
   --global \
   Fotbiler.RuleGate.Cli \
-  --version 0.3.0-preview.2
+  --version 0.5.0-preview.2
 ```
 
 Update an existing global installation:
@@ -46,7 +46,7 @@ Update an existing global installation:
 dotnet tool update \
   --global \
   Fotbiler.RuleGate.Cli \
-  --version 0.3.0-preview.2
+  --version 0.5.0-preview.2
 ```
 
 Verify the installation:
@@ -159,7 +159,7 @@ TOOL_DIRECTORY="$PWD/.rulegate-tools"
 dotnet tool install \
   Fotbiler.RuleGate.Cli \
   --tool-path "$TOOL_DIRECTORY" \
-  --version 0.3.0-preview.2
+  --version 0.5.0-preview.2
 
 "$TOOL_DIRECTORY/rulegate" \
   validate \

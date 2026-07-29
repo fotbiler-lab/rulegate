@@ -1,6 +1,6 @@
 # Contributing to RuleGate
 
-Thank you for considering a contribution to Fotbiler RuleGate.
+Thank you for considering a contribution to RuleGate.
 
 RuleGate is a security-sensitive authorization framework. Contributions must
 preserve default-deny and fail-closed behavior, stable public contracts,
