@@ -6,6 +6,8 @@ This package provides dependency injection, configurable claims mapping,
 dynamic policies, Minimal API endpoint helpers, controller and action
 attributes, imperative authorization extensions, resource mapping, structured
 diagnostics, and opt-in safe HTTP authorization results.
+The default handler supplies deterministic evaluation time through the
+registered `TimeProvider`; trusted context values remain application-owned.
 
 RuleGate is currently in preview. Public APIs may change before the first
 stable release.

@@ -108,6 +108,11 @@ The generator fails on malformed identifier-bearing manifest shapes and name
 collisions, writes atomically, and checks output byte-for-byte. Use the backend
 RuleGate CLI for authoritative full-manifest validation.
 
+Backend-only requirement kinds, including attribute comparisons, time
+windows, date-time windows, context age, and canonical context policies, are
+accepted while the generator collects frontend policy, permission, role,
+resource-type, and action identifiers.
+
 ## Security behavior
 
 - Uninitialized state denies every check.

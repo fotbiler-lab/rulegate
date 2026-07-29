@@ -140,6 +140,93 @@ public static class ManifestValidationCodes
     public const string AttributeComparisonStringComparisonNotAllowed =
         "MANIFEST_ATTRIBUTE_COMPARISON_STRING_COMPARISON_NOT_ALLOWED";
 
+    public const string TimeWindowDaysRequired =
+        "MANIFEST_TIME_WINDOW_DAYS_REQUIRED";
+
+    public const string TimeWindowDayInvalid =
+        "MANIFEST_TIME_WINDOW_DAY_INVALID";
+
+    public const string TimeWindowDayDuplicate =
+        "MANIFEST_TIME_WINDOW_DAY_DUPLICATE";
+
+    public const string TimeWindowStartRequired =
+        "MANIFEST_TIME_WINDOW_START_REQUIRED";
+
+    public const string TimeWindowStartInvalid =
+        "MANIFEST_TIME_WINDOW_START_INVALID";
+
+    public const string TimeWindowEndRequired =
+        "MANIFEST_TIME_WINDOW_END_REQUIRED";
+
+    public const string TimeWindowEndInvalid =
+        "MANIFEST_TIME_WINDOW_END_INVALID";
+
+    public const string TimeWindowRangeInvalid =
+        "MANIFEST_TIME_WINDOW_RANGE_INVALID";
+
+    public const string TimeWindowTimeZoneRequired =
+        "MANIFEST_TIME_WINDOW_TIME_ZONE_REQUIRED";
+
+    public const string TimeWindowTimeZoneInvalid =
+        "MANIFEST_TIME_WINDOW_TIME_ZONE_INVALID";
+
+    public const string DateTimeWindowBoundaryRequired =
+        "MANIFEST_DATE_TIME_WINDOW_BOUNDARY_REQUIRED";
+
+    public const string DateTimeWindowStartsAtInvalid =
+        "MANIFEST_DATE_TIME_WINDOW_STARTS_AT_INVALID";
+
+    public const string DateTimeWindowEndsAtInvalid =
+        "MANIFEST_DATE_TIME_WINDOW_ENDS_AT_INVALID";
+
+    public const string DateTimeWindowRangeInvalid =
+        "MANIFEST_DATE_TIME_WINDOW_RANGE_INVALID";
+
+    public const string ContextAgeTimestampRequired =
+        "MANIFEST_CONTEXT_AGE_TIMESTAMP_REQUIRED";
+
+    public const string ContextAgeTimestampInvalid =
+        "MANIFEST_CONTEXT_AGE_TIMESTAMP_INVALID";
+
+    public const string ContextAgeMaximumAgeRequired =
+        "MANIFEST_CONTEXT_AGE_MAXIMUM_AGE_REQUIRED";
+
+    public const string ContextAgeMaximumAgeInvalid =
+        "MANIFEST_CONTEXT_AGE_MAXIMUM_AGE_INVALID";
+
+    public const string ContextPropertyRequired =
+        "MANIFEST_CONTEXT_PROPERTY_REQUIRED";
+
+    public const string ContextPropertyInvalid =
+        "MANIFEST_CONTEXT_PROPERTY_INVALID";
+
+    public const string ContextOperatorRequired =
+        "MANIFEST_CONTEXT_OPERATOR_REQUIRED";
+
+    public const string ContextOperatorInvalid =
+        "MANIFEST_CONTEXT_OPERATOR_INVALID";
+
+    public const string ContextValueTypeRequired =
+        "MANIFEST_CONTEXT_VALUE_TYPE_REQUIRED";
+
+    public const string ContextValueTypeInvalid =
+        "MANIFEST_CONTEXT_VALUE_TYPE_INVALID";
+
+    public const string ContextValueRequired =
+        "MANIFEST_CONTEXT_VALUE_REQUIRED";
+
+    public const string ContextValueInvalid =
+        "MANIFEST_CONTEXT_VALUE_INVALID";
+
+    public const string ContextPropertyOperatorValueInvalid =
+        "MANIFEST_CONTEXT_PROPERTY_OPERATOR_VALUE_INVALID";
+
+    public const string ContextStringComparisonInvalid =
+        "MANIFEST_CONTEXT_STRING_COMPARISON_INVALID";
+
+    public const string ContextStringComparisonNotAllowed =
+        "MANIFEST_CONTEXT_STRING_COMPARISON_NOT_ALLOWED";
+
     public const string RequirementChildrenRequired =
         "MANIFEST_REQUIREMENT_CHILDREN_REQUIRED";
 

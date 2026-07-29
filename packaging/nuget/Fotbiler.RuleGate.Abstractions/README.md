@@ -23,6 +23,8 @@ Reference Abstractions directly when you are:
 - Depending on RuleGate contracts without the built-in engine
 - Defining typed scalar, collection, presence, and null attribute requirements
 - Defining subject, resource, context, and literal operand comparisons
+- Defining explicit-time-zone, date-time, authentication-age, and canonical
+  context requirements
 - Creating diagnostic or policy-provider extensions
 
 Most applications should install

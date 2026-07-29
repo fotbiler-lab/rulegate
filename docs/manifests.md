@@ -212,6 +212,10 @@ Supported kinds are:
 - `role`
 - `attribute`
 - `attributeComparison`
+- `timeWindow`
+- `dateTimeWindow`
+- `contextAge`
+- `context`
 - `all`
 - `any`
 - `not`
@@ -720,6 +724,105 @@ Diagnostics identify operand structure through attribute sources and names,
 but never contain resolved attribute or literal values. The built-in logging
 sink omits attribute names as well.
 
+## Time-window requirements
+
+Use `timeWindow` for recurring local schedules:
+
+```yaml
+requirement:
+  timeWindow:
+    days: [monday, tuesday, wednesday, thursday, friday]
+    start: '08:00'
+    end: '18:00'
+    timeZone: Europe/Istanbul
+```
+
+| Member     | Required | Contract                                              |
+| ---------- | -------: | ----------------------------------------------------- |
+| `days`     |      Yes | Non-empty, unique lowercase day tokens                |
+| `start`    |      Yes | Local time in exact `HH:mm` format                    |
+| `end`      |      Yes | Local time in exact `HH:mm` format                    |
+| `timeZone` |      Yes | Time-zone identifier available through `TimeZoneInfo` |
+
+Day tokens are `sunday`, `monday`, `tuesday`, `wednesday`, `thursday`,
+`friday`, and `saturday`.
+
+The start is inclusive and the end is exclusive. Equal boundaries are
+invalid. When `start` is later than `end`, the interval crosses midnight and
+the listed day is the day on which the interval starts. Time-zone conversion
+uses the platform time-zone database and therefore observes its daylight
+saving rules.
+
+## Date-time-window requirements
+
+Use `dateTimeWindow` for one-time before, after, or bounded rules:
+
+```yaml
+requirement:
+  dateTimeWindow:
+    startsAt: '2026-07-29T09:00:00Z'
+    endsAt: '2026-08-01T18:00:00+03:00'
+```
+
+At least one boundary is required. Declare only `startsAt` for an after rule,
+only `endsAt` for a before rule, or both for a bounded interval. `startsAt` is
+inclusive and `endsAt` is exclusive. Values must use ISO 8601 with `Z` or an
+explicit numeric offset; local date-time values are rejected.
+
+## Context-age requirements
+
+Use `contextAge` to limit the age of authentication or MFA:
+
+```yaml
+requirement:
+  contextAge:
+    timestamp: mfa
+    maximumAge: '00:15:00'
+```
+
+| `timestamp` token | Context attribute read          |
+| ----------------- | ------------------------------- |
+| `authentication`  | `authenticationTime`            |
+| `mfa`             | `multiFactorAuthenticationTime` |
+
+`maximumAge` is a positive invariant `TimeSpan` value such as `00:15:00` or
+`1.00:00:00`. Runtime timestamp values must be `DateTimeOffset`. Missing,
+unsupported, incompatible, and future timestamp inputs deny access.
+
+## Context requirements
+
+Use `context` for common request and identity context instead of repeating
+free-form attribute names:
+
+```yaml
+requirement:
+  context:
+    property: networkZone
+    operator: in
+    valueType: stringCollection
+    value: [internal, vpn]
+```
+
+| Property token         | Runtime kind | Supported operators                                                      |
+| ---------------------- | ------------ | ------------------------------------------------------------------------ |
+| `authenticationMethod` | String       | `equal`, `notEqual`, `contains`, `startsWith`, `endsWith`, `in`, `notIn` |
+| `requestChannel`       | String       | Same string operators                                                    |
+| `networkZone`          | String       | Same string operators                                                    |
+| `tenantId`             | String       | Same string operators                                                    |
+| `organizationId`       | String       | Same string operators                                                    |
+| `identityType`         | String       | Same string operators                                                    |
+| `trustedDevice`        | Boolean      | `equal`, `notEqual`                                                      |
+
+`in` and `notIn` require `stringCollection`; other string operations require
+`string`. `trustedDevice` requires `boolean`. String comparison is ordinal and
+case-sensitive by default and may be set to `ordinalIgnoreCase` only for a
+supported string operation.
+
+The property tokens map to canonical names in
+`AuthorizationContextAttributeNames`. RuleGate does not populate them from
+headers, IP addresses, claims, or device assertions. The application must add
+only values it has established as trusted.
+
 ## Logical requirements
 
 Logical requirements form nested requirement trees.
@@ -1088,6 +1191,40 @@ policies[0].requirement.all[1].attribute.operator
 | `MANIFEST_ATTRIBUTE_COMPARISON_STRING_COMPARISON_INVALID`     | Attribute comparison `.stringComparison` |
 | `MANIFEST_ATTRIBUTE_COMPARISON_STRING_COMPARISON_NOT_ALLOWED` | Attribute comparison `.stringComparison` |
 
+### Time and context codes
+
+| Code                                               | Typical path                 |
+| -------------------------------------------------- | ---------------------------- |
+| `MANIFEST_TIME_WINDOW_DAYS_REQUIRED`               | Time window `.days`          |
+| `MANIFEST_TIME_WINDOW_DAY_INVALID`                 | Time window day              |
+| `MANIFEST_TIME_WINDOW_DAY_DUPLICATE`               | Time window day              |
+| `MANIFEST_TIME_WINDOW_START_REQUIRED`              | Time window `.start`         |
+| `MANIFEST_TIME_WINDOW_START_INVALID`               | Time window `.start`         |
+| `MANIFEST_TIME_WINDOW_END_REQUIRED`                | Time window `.end`           |
+| `MANIFEST_TIME_WINDOW_END_INVALID`                 | Time window `.end`           |
+| `MANIFEST_TIME_WINDOW_RANGE_INVALID`               | Time window                  |
+| `MANIFEST_TIME_WINDOW_TIME_ZONE_REQUIRED`          | Time window `.timeZone`      |
+| `MANIFEST_TIME_WINDOW_TIME_ZONE_INVALID`           | Time window `.timeZone`      |
+| `MANIFEST_DATE_TIME_WINDOW_BOUNDARY_REQUIRED`      | Date-time window             |
+| `MANIFEST_DATE_TIME_WINDOW_STARTS_AT_INVALID`      | Date-time window `.startsAt` |
+| `MANIFEST_DATE_TIME_WINDOW_ENDS_AT_INVALID`        | Date-time window `.endsAt`   |
+| `MANIFEST_DATE_TIME_WINDOW_RANGE_INVALID`          | Date-time window             |
+| `MANIFEST_CONTEXT_AGE_TIMESTAMP_REQUIRED`          | Context age `.timestamp`     |
+| `MANIFEST_CONTEXT_AGE_TIMESTAMP_INVALID`           | Context age `.timestamp`     |
+| `MANIFEST_CONTEXT_AGE_MAXIMUM_AGE_REQUIRED`        | Context age `.maximumAge`    |
+| `MANIFEST_CONTEXT_AGE_MAXIMUM_AGE_INVALID`         | Context age `.maximumAge`    |
+| `MANIFEST_CONTEXT_PROPERTY_REQUIRED`               | Context `.property`          |
+| `MANIFEST_CONTEXT_PROPERTY_INVALID`                | Context `.property`          |
+| `MANIFEST_CONTEXT_OPERATOR_REQUIRED`               | Context `.operator`          |
+| `MANIFEST_CONTEXT_OPERATOR_INVALID`                | Context `.operator`          |
+| `MANIFEST_CONTEXT_VALUE_TYPE_REQUIRED`             | Context `.valueType`         |
+| `MANIFEST_CONTEXT_VALUE_TYPE_INVALID`              | Context `.valueType`         |
+| `MANIFEST_CONTEXT_VALUE_REQUIRED`                  | Context `.value`             |
+| `MANIFEST_CONTEXT_VALUE_INVALID`                   | Context `.value`             |
+| `MANIFEST_CONTEXT_PROPERTY_OPERATOR_VALUE_INVALID` | Context requirement          |
+| `MANIFEST_CONTEXT_STRING_COMPARISON_INVALID`       | Context `.stringComparison`  |
+| `MANIFEST_CONTEXT_STRING_COMPARISON_NOT_ALLOWED`   | Context `.stringComparison`  |
+
 Applications may use stable codes and paths for tooling. Human-facing messages
 may evolve during preview releases.
 
@@ -1236,6 +1373,9 @@ The current manifest format supports:
 - Role requirements
 - Typed attribute-to-literal requirements
 - Attribute-to-attribute and attribute-to-literal comparison requirements
+- Recurring time-window and bounded date-time requirements
+- Authentication-age and MFA-age requirements
+- Canonical request and identity context requirements
 - Nested `all`, `any`, and `not` requirements
 - Structured load errors
 - Structured validation errors

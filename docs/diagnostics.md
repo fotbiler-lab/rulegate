@@ -256,16 +256,20 @@ The built-in logging sink does not emit `AttributeName`.
 
 `AuthorizationRequirementKind` contains:
 
-| Value                 | Meaning                          |
-| --------------------- | -------------------------------- |
-| `Permission`          | Permission requirement           |
-| `Role`                | Role requirement                 |
-| `Attribute`           | Attribute requirement            |
-| `AttributeComparison` | Attribute comparison requirement |
-| `All`                 | Logical all requirement          |
-| `Any`                 | Logical any requirement          |
-| `Not`                 | Logical negation requirement     |
-| `Custom`              | Application-specific requirement |
+| Value                 | Meaning                                         |
+| --------------------- | ----------------------------------------------- |
+| `Permission`          | Permission requirement                          |
+| `Role`                | Role requirement                                |
+| `Attribute`           | Attribute requirement                           |
+| `AttributeComparison` | Attribute comparison requirement                |
+| `TimeWindow`          | Recurring local time-window requirement         |
+| `DateTimeWindow`      | Before, after, or bounded date-time requirement |
+| `ContextAge`          | Authentication- or MFA-age requirement          |
+| `Context`             | Canonical context-property requirement          |
+| `All`                 | Logical all requirement                         |
+| `Any`                 | Logical any requirement                         |
+| `Not`                 | Logical negation requirement                    |
+| `Custom`              | Application-specific requirement                |
 
 Custom requirement definitions are reported as `Custom` unless RuleGate knows
 their built-in category.
@@ -286,6 +290,8 @@ Examples of `NotSatisfied`:
 - Missing role
 - Missing attribute
 - Literal comparison returned false
+- Time or date-time window was not satisfied
+- Context timestamp exceeded its maximum age
 - A negated child was satisfied
 
 Examples of `Indeterminate`:
@@ -293,6 +299,7 @@ Examples of `Indeterminate`:
 - Requirement evaluator not found
 - Unsupported runtime attribute type
 - Attribute type mismatch
+- Context timestamp is in the future
 - Unsupported operator and type combination
 
 Both `NotSatisfied` and `Indeterminate` lead to a denied authorization decision
@@ -358,6 +365,10 @@ RULEGATE_ATTRIBUTE_TYPE_NOT_SUPPORTED
 RULEGATE_ATTRIBUTE_TYPE_MISMATCH
 RULEGATE_ATTRIBUTE_OPERATOR_NOT_SUPPORTED
 RULEGATE_ATTRIBUTE_COMPARISON_NOT_SATISFIED
+RULEGATE_TIME_WINDOW_NOT_SATISFIED
+RULEGATE_DATE_TIME_WINDOW_NOT_SATISFIED
+RULEGATE_CONTEXT_AGE_NOT_SATISFIED
+RULEGATE_CONTEXT_TIMESTAMP_IN_FUTURE
 ```
 
 A requirement diagnostic can contain its local failure codes.

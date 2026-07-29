@@ -97,6 +97,10 @@ rulegate validate ./policies/rulegate.yaml
 Relative paths are resolved from the current working directory. Absolute paths
 may also be supplied.
 
+Validation covers the complete manifest requirement model, including typed
+attributes, attribute comparisons, explicit-time-zone schedules, bounded
+date-time rules, authentication age, and canonical context policies.
+
 ## Validation output
 
 Text is the default interactive format:

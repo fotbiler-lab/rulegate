@@ -9,5 +9,9 @@ public enum AuthorizationRequirementKind
     All = 4,
     Any = 5,
     Not = 6,
-    AttributeComparison = 7
+    AttributeComparison = 7,
+    TimeWindow = 8,
+    DateTimeWindow = 9,
+    ContextAge = 10,
+    Context = 11
 }

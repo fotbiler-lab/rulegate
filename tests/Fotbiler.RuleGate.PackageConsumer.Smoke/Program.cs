@@ -81,6 +81,33 @@ const string yaml = """
             right:
               source: subject
               name: id
+
+      - id: secure-context-access
+        resourceType: secure-context-resource
+        action: access
+        requirement:
+          all:
+            - timeWindow:
+                days: [thursday]
+                start: "00:00"
+                end: "01:00"
+                timeZone: UTC
+            - dateTimeWindow:
+                startsAt: "1969-12-31T00:00:00Z"
+                endsAt: "1970-01-02T00:00:00Z"
+            - contextAge:
+                timestamp: authentication
+                maximumAge: "00:05:00"
+            - context:
+                property: requestChannel
+                operator: equal
+                valueType: string
+                value: api
+            - context:
+                property: trustedDevice
+                operator: equal
+                valueType: boolean
+                value: true
     """;
 
 var compiler =
@@ -430,6 +457,53 @@ if (!ownershipDecision.IsAllowed)
         "The packaged attribute-comparison evaluator did not allow the matching owner.");
 }
 
+var secureContextDecision = await firstEngine.EvaluateAsync(
+    CreateRequest(
+        new AuthorizationSubject("context-user"),
+        new AuthorizationResource(
+            "secure-context-resource",
+            "secure-context-resource-1"),
+        "access",
+        new AuthorizationContext(
+            DateTimeOffset.UnixEpoch,
+            new AuthorizationAttributes(
+            [
+                new KeyValuePair<string, object?>(
+                    AuthorizationContextAttributeNames.AuthenticationTime,
+                    DateTimeOffset.UnixEpoch),
+                new KeyValuePair<string, object?>(
+                    AuthorizationContextAttributeNames.RequestChannel,
+                    "api"),
+                new KeyValuePair<string, object?>(
+                    AuthorizationContextAttributeNames.TrustedDevice,
+                    true)
+            ]))));
+
+if (!secureContextDecision.IsAllowed)
+{
+    throw new InvalidOperationException(
+        "The packaged time and context evaluators did not allow the trusted request.");
+}
+
+var publicTimeRequirement = new TimeWindowRequirementDefinition(
+    [DayOfWeek.Thursday],
+    new TimeOnly(0, 0),
+    new TimeOnly(1, 0),
+    TimeZoneInfo.Utc);
+
+var publicContextRequirement = new ContextRequirementDefinition(
+    AuthorizationContextProperty.IdentityType,
+    AuthorizationAttributeOperator.Equal,
+    "service");
+
+if (publicTimeRequirement.CrossesMidnight ||
+    publicContextRequirement.AttributeName !=
+        AuthorizationContextAttributeNames.IdentityType)
+{
+    throw new InvalidOperationException(
+        "The packaged time and context public APIs did not preserve their contracts.");
+}
+
 var publicComparisonRequirement =
     new AttributeComparisonRequirementDefinition(
         AuthorizationAttributeOperand.Resource(
@@ -625,14 +699,15 @@ static ClaimsPrincipal CreatePrincipal(
 static AuthorizationRequest CreateRequest(
     AuthorizationSubject subject,
     AuthorizationResource resource,
-    string action = "read")
+    string action = "read",
+    AuthorizationContext? context = null)
 {
     return new AuthorizationRequest(
         subject: subject,
         resource: resource,
         action,
         context:
-            new AuthorizationContext(
+            context ?? new AuthorizationContext(
                 DateTimeOffset.UnixEpoch));
 }
 

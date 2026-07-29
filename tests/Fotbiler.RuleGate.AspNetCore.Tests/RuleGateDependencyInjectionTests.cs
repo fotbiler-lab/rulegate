@@ -57,7 +57,7 @@ public sealed class RuleGateDependencyInjectionTests
                     typeof(IRequirementEvaluator))
             .ToArray();
 
-        Assert.Equal(7, evaluatorDescriptors.Length);
+        Assert.Equal(11, evaluatorDescriptors.Length);
 
         Assert.All(
             evaluatorDescriptors,
@@ -84,6 +84,22 @@ public sealed class RuleGateDependencyInjectionTests
 
         Assert.Contains(
             typeof(AttributeComparisonRequirementEvaluator),
+            evaluatorTypes);
+
+        Assert.Contains(
+            typeof(TimeWindowRequirementEvaluator),
+            evaluatorTypes);
+
+        Assert.Contains(
+            typeof(DateTimeWindowRequirementEvaluator),
+            evaluatorTypes);
+
+        Assert.Contains(
+            typeof(ContextAgeRequirementEvaluator),
+            evaluatorTypes);
+
+        Assert.Contains(
+            typeof(ContextRequirementEvaluator),
             evaluatorTypes);
 
         Assert.Contains(
@@ -121,7 +137,7 @@ public sealed class RuleGateDependencyInjectionTests
                         IRequirementEvaluationDispatcher));
 
         Assert.Equal(
-            7,
+            11,
             services.Count(
                 descriptor =>
                     descriptor.ServiceType ==
@@ -203,7 +219,7 @@ public sealed class RuleGateDependencyInjectionTests
         Assert.IsType<RequirementEvaluationDispatcher>(
             dispatcher);
 
-        Assert.Equal(7, evaluators.Length);
+        Assert.Equal(11, evaluators.Length);
     }
 
     [Fact]

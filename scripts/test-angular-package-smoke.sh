@@ -304,6 +304,30 @@ policies:
     action: list
     requirement:
       role: keycloak:realm:documents.reader
+  - id: secure-context-access
+    resourceType: portal
+    action: access
+    requirement:
+      all:
+        - attributeComparison:
+            left: { source: resource, name: ownerId }
+            operator: equal
+            right: { source: subject, name: id }
+        - timeWindow:
+            days: [monday]
+            start: "08:00"
+            end: "18:00"
+            timeZone: Europe/Istanbul
+        - dateTimeWindow:
+            endsAt: "2026-08-01T00:00:00Z"
+        - contextAge:
+            timestamp: mfa
+            maximumAge: "00:15:00"
+        - context:
+            property: trustedDevice
+            operator: equal
+            valueType: boolean
+            value: true
 EOF_MANIFEST
 
 cat >"$CONSUMER_DIRECTORY/src/main.ts" <<'EOF_TYPESCRIPT'

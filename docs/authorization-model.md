@@ -268,10 +268,18 @@ Context attributes are appropriate for temporary or request-specific
 conditions such as:
 
 - Authentication method
+- Authentication time and MFA time
 - Network zone
 - Request channel
-- Time window
+- Tenant and organization
+- Trusted-device state
+- User or service identity type
 - Operational mode
+
+RuleGate defines canonical names for the built-in context properties and
+timestamps through `AuthorizationContextAttributeNames`. Applications must
+populate these attributes from trusted server-side state; RuleGate never
+infers them from headers, IP addresses, or arbitrary claims.
 
 Long-lived requester properties belong on the subject. Long-lived object
 properties belong on the resource.
@@ -318,15 +326,19 @@ A requirement defines a condition that must be satisfied.
 
 RuleGate currently provides these built-in requirement categories:
 
-| Requirement          | Purpose                                                                |
-| -------------------- | ---------------------------------------------------------------------- |
-| Permission           | Require a subject permission                                           |
-| Role                 | Require a subject role                                                 |
-| Attribute            | Compare a subject, resource, or context attribute with a typed literal |
-| Attribute comparison | Compare two attribute or typed-literal operands                        |
-| `all`                | Require every child requirement                                        |
-| `any`                | Require at least one child requirement                                 |
-| `not`                | Negate one child requirement                                           |
+| Requirement          | Purpose                                                                  |
+| -------------------- | ------------------------------------------------------------------------ |
+| Permission           | Require a subject permission                                             |
+| Role                 | Require a subject role                                                   |
+| Attribute            | Compare a subject, resource, or context attribute with a typed literal   |
+| Attribute comparison | Compare two attribute or typed-literal operands                          |
+| Time window          | Require configured days and local clock hours in an explicit time zone   |
+| Date-time window     | Require an instant to be before, after, or between UTC-normalized bounds |
+| Context age          | Limit the age of authentication or MFA                                   |
+| Context              | Check a canonical request or identity context property                   |
+| `all`                | Require every child requirement                                          |
+| `any`                | Require at least one child requirement                                   |
+| `not`                | Negate one child requirement                                             |
 
 ### Permission
 
@@ -410,6 +422,75 @@ requirement. Missing, unsupported, and incompatible values deny access.
 
 The [manifest reference](manifests.md#attribute-comparison-requirements)
 documents the complete operand and operator surface.
+
+### Time and date-time windows
+
+A `timeWindow` expresses recurring local hours with an explicit time zone:
+
+```yaml
+requirement:
+  timeWindow:
+    days: [monday, tuesday, wednesday, thursday, friday]
+    start: '08:00'
+    end: '18:00'
+    timeZone: Europe/Istanbul
+```
+
+The start is inclusive and the end is exclusive. A start later than the end
+creates an overnight window, so Friday `22:00` to `02:00` includes early
+Saturday. The listed day identifies the day on which the window starts.
+
+A `dateTimeWindow` expresses one-time before, after, or bounded rules:
+
+```yaml
+requirement:
+  dateTimeWindow:
+    startsAt: '2026-07-29T09:00:00Z'
+    endsAt: '2026-08-01T18:00:00+03:00'
+```
+
+At least one boundary is required. `startsAt` is inclusive, `endsAt` is
+exclusive, and both require an explicit UTC marker or numeric offset.
+
+Both requirements evaluate `AuthorizationContext.EvaluationTime`. ASP.NET
+Core creates it from the registered `TimeProvider`, which keeps tests
+deterministic without introducing a separate RuleGate clock abstraction.
+
+### Context age
+
+`contextAge` limits how long an authentication event remains acceptable:
+
+```yaml
+requirement:
+  contextAge:
+    timestamp: mfa
+    maximumAge: '00:15:00'
+```
+
+The supported timestamp tokens are `authentication` and `mfa`. They read the
+canonical `authenticationTime` and `multiFactorAuthenticationTime` context
+attributes as `DateTimeOffset` values. A missing timestamp is not satisfied;
+an incompatible or future timestamp is indeterminate. Both deny access.
+
+### Canonical context policies
+
+A `context` requirement checks a defined request or identity property:
+
+```yaml
+requirement:
+  context:
+    property: networkZone
+    operator: in
+    valueType: stringCollection
+    value: [internal, vpn]
+```
+
+Supported properties are `authenticationMethod`, `requestChannel`,
+`networkZone`, `tenantId`, `organizationId`, `trustedDevice`, and
+`identityType`. `trustedDevice` is a boolean and accepts only `equal` or
+`notEqual`. The other properties are strings and accept equality, string
+matching, or membership operations. Missing or untrusted values never receive
+defaults.
 
 ### Logical composition
 
@@ -680,6 +761,8 @@ The current preview includes:
 - Role requirements
 - Typed attribute-to-literal comparison
 - Attribute-to-attribute comparison
+- Explicit-time-zone and bounded date-time requirements
+- Authentication-age, MFA-age, and canonical context requirements
 - Logical requirement trees
 - YAML manifest compilation
 - ASP.NET Core integration

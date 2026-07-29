@@ -29,6 +29,10 @@ rulegate validate ./policies/rulegate.yaml
 rulegate validate --format json
 ```
 
+Validation covers the complete manifest requirement model, including typed
+attributes, attribute comparisons, explicit-time-zone schedules, bounded
+date-time rules, authentication age, and canonical context policies.
+
 ## Generate C# constants
 
 ```bash

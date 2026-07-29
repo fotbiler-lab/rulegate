@@ -259,6 +259,22 @@ public sealed class RuleGateManifestValidator
             ? 0
             : 1;
 
+        kindCount += requirement.TimeWindow is null
+            ? 0
+            : 1;
+
+        kindCount += requirement.DateTimeWindow is null
+            ? 0
+            : 1;
+
+        kindCount += requirement.ContextAge is null
+            ? 0
+            : 1;
+
+        kindCount += requirement.Context is null
+            ? 0
+            : 1;
+
         kindCount += requirement.All is null
             ? 0
             : 1;
@@ -278,7 +294,7 @@ public sealed class RuleGateManifestValidator
                     ManifestValidationCodes
                         .RequirementKindInvalid,
                     path,
-                    "A requirement must define exactly one of permission, role, attribute, attributeComparison, all, any, or not."));
+                    "A requirement must define exactly one of permission, role, attribute, attributeComparison, timeWindow, dateTimeWindow, contextAge, context, all, any, or not."));
         }
 
         if (requirement.Permission is not null &&
@@ -317,6 +333,38 @@ public sealed class RuleGateManifestValidator
             ValidateAttributeComparisonRequirement(
                 requirement.AttributeComparison,
                 $"{path}.attributeComparison",
+                errors);
+        }
+
+        if (requirement.TimeWindow is not null)
+        {
+            ValidateTimeWindowRequirement(
+                requirement.TimeWindow,
+                $"{path}.timeWindow",
+                errors);
+        }
+
+        if (requirement.DateTimeWindow is not null)
+        {
+            ValidateDateTimeWindowRequirement(
+                requirement.DateTimeWindow,
+                $"{path}.dateTimeWindow",
+                errors);
+        }
+
+        if (requirement.ContextAge is not null)
+        {
+            ValidateContextAgeRequirement(
+                requirement.ContextAge,
+                $"{path}.contextAge",
+                errors);
+        }
+
+        if (requirement.Context is not null)
+        {
+            ValidateContextRequirement(
+                requirement.Context,
+                $"{path}.context",
                 errors);
         }
 
@@ -712,6 +760,453 @@ public sealed class RuleGateManifestValidator
                     $"{path}.stringComparison",
                     $"Attribute string comparison is not supported for operator '{requirement.Operator}' and the declared operand types."));
         }
+    }
+
+    private static void ValidateTimeWindowRequirement(
+        ManifestTimeWindowRequirement requirement,
+        string path,
+        ICollection<ManifestValidationError> errors)
+    {
+        if (requirement.Days is null ||
+            requirement.Days.Count == 0)
+        {
+            errors.Add(
+                new ManifestValidationError(
+                    ManifestValidationCodes.TimeWindowDaysRequired,
+                    $"{path}.days",
+                    "At least one time-window day is required."));
+        }
+        else
+        {
+            var days = new HashSet<DayOfWeek>();
+
+            for (var index = 0;
+                 index < requirement.Days.Count;
+                 index++)
+            {
+                var value = requirement.Days[index];
+
+                if (!ManifestTimeContextConversions.TryParseDay(
+                        value,
+                        out var day))
+                {
+                    errors.Add(
+                        new ManifestValidationError(
+                            ManifestValidationCodes.TimeWindowDayInvalid,
+                            $"{path}.days[{index}]",
+                            $"Time-window day '{value}' is not supported."));
+                }
+                else if (!days.Add(day))
+                {
+                    errors.Add(
+                        new ManifestValidationError(
+                            ManifestValidationCodes.TimeWindowDayDuplicate,
+                            $"{path}.days[{index}]",
+                            $"Time-window day '{value}' is duplicated."));
+                }
+            }
+        }
+
+        var startIsValid = false;
+        var endIsValid = false;
+        var start = default(TimeOnly);
+        var end = default(TimeOnly);
+
+        if (string.IsNullOrWhiteSpace(requirement.Start))
+        {
+            errors.Add(
+                new ManifestValidationError(
+                    ManifestValidationCodes.TimeWindowStartRequired,
+                    $"{path}.start",
+                    "Time-window start is required."));
+        }
+        else
+        {
+            startIsValid =
+                ManifestTimeContextConversions.TryParseTime(
+                    requirement.Start,
+                    out start);
+
+            if (!startIsValid)
+            {
+                errors.Add(
+                    new ManifestValidationError(
+                        ManifestValidationCodes.TimeWindowStartInvalid,
+                        $"{path}.start",
+                        "Time-window start must use the HH:mm format."));
+            }
+        }
+
+        if (string.IsNullOrWhiteSpace(requirement.End))
+        {
+            errors.Add(
+                new ManifestValidationError(
+                    ManifestValidationCodes.TimeWindowEndRequired,
+                    $"{path}.end",
+                    "Time-window end is required."));
+        }
+        else
+        {
+            endIsValid =
+                ManifestTimeContextConversions.TryParseTime(
+                    requirement.End,
+                    out end);
+
+            if (!endIsValid)
+            {
+                errors.Add(
+                    new ManifestValidationError(
+                        ManifestValidationCodes.TimeWindowEndInvalid,
+                        $"{path}.end",
+                        "Time-window end must use the HH:mm format."));
+            }
+        }
+
+        if (startIsValid && endIsValid && start == end)
+        {
+            errors.Add(
+                new ManifestValidationError(
+                    ManifestValidationCodes.TimeWindowRangeInvalid,
+                    path,
+                    "Time-window start and end cannot be equal."));
+        }
+
+        if (string.IsNullOrWhiteSpace(requirement.TimeZone))
+        {
+            errors.Add(
+                new ManifestValidationError(
+                    ManifestValidationCodes.TimeWindowTimeZoneRequired,
+                    $"{path}.timeZone",
+                    "Time-window time zone is required."));
+        }
+        else if (!ManifestTimeContextConversions.TryParseTimeZone(
+                     requirement.TimeZone,
+                     out _))
+        {
+            errors.Add(
+                new ManifestValidationError(
+                    ManifestValidationCodes.TimeWindowTimeZoneInvalid,
+                    $"{path}.timeZone",
+                    $"Time zone '{requirement.TimeZone}' is not available."));
+        }
+    }
+
+    private static void ValidateDateTimeWindowRequirement(
+        ManifestDateTimeWindowRequirement requirement,
+        string path,
+        ICollection<ManifestValidationError> errors)
+    {
+        if (requirement.StartsAt is null &&
+            requirement.EndsAt is null)
+        {
+            errors.Add(
+                new ManifestValidationError(
+                    ManifestValidationCodes.DateTimeWindowBoundaryRequired,
+                    path,
+                    "A date-time window must define startsAt, endsAt, or both."));
+            return;
+        }
+
+        DateTimeOffset? startsAt = null;
+        DateTimeOffset? endsAt = null;
+
+        if (requirement.StartsAt is not null)
+        {
+            if (ManifestTimeContextConversions.TryParseDateTimeOffset(
+                    requirement.StartsAt,
+                    out var parsed))
+            {
+                startsAt = parsed;
+            }
+            else
+            {
+                errors.Add(
+                    new ManifestValidationError(
+                        ManifestValidationCodes.DateTimeWindowStartsAtInvalid,
+                        $"{path}.startsAt",
+                        "Date-time window startsAt must be an ISO 8601 timestamp with an explicit offset."));
+            }
+        }
+
+        if (requirement.EndsAt is not null)
+        {
+            if (ManifestTimeContextConversions.TryParseDateTimeOffset(
+                    requirement.EndsAt,
+                    out var parsed))
+            {
+                endsAt = parsed;
+            }
+            else
+            {
+                errors.Add(
+                    new ManifestValidationError(
+                        ManifestValidationCodes.DateTimeWindowEndsAtInvalid,
+                        $"{path}.endsAt",
+                        "Date-time window endsAt must be an ISO 8601 timestamp with an explicit offset."));
+            }
+        }
+
+        if (startsAt is not null &&
+            endsAt is not null &&
+            startsAt >= endsAt)
+        {
+            errors.Add(
+                new ManifestValidationError(
+                    ManifestValidationCodes.DateTimeWindowRangeInvalid,
+                    path,
+                    "Date-time window startsAt must be earlier than endsAt."));
+        }
+    }
+
+    private static void ValidateContextAgeRequirement(
+        ManifestContextAgeRequirement requirement,
+        string path,
+        ICollection<ManifestValidationError> errors)
+    {
+        if (string.IsNullOrWhiteSpace(requirement.Timestamp))
+        {
+            errors.Add(
+                new ManifestValidationError(
+                    ManifestValidationCodes.ContextAgeTimestampRequired,
+                    $"{path}.timestamp",
+                    "Context-age timestamp is required."));
+        }
+        else if (!ManifestTimeContextConversions
+                     .TryParseContextTimestamp(
+                         requirement.Timestamp,
+                         out _))
+        {
+            errors.Add(
+                new ManifestValidationError(
+                    ManifestValidationCodes.ContextAgeTimestampInvalid,
+                    $"{path}.timestamp",
+                    $"Context-age timestamp '{requirement.Timestamp}' is not supported."));
+        }
+
+        if (string.IsNullOrWhiteSpace(requirement.MaximumAge))
+        {
+            errors.Add(
+                new ManifestValidationError(
+                    ManifestValidationCodes.ContextAgeMaximumAgeRequired,
+                    $"{path}.maximumAge",
+                    "Context-age maximumAge is required."));
+        }
+        else if (!ManifestTimeContextConversions.TryParseMaximumAge(
+                     requirement.MaximumAge,
+                     out _))
+        {
+            errors.Add(
+                new ManifestValidationError(
+                    ManifestValidationCodes.ContextAgeMaximumAgeInvalid,
+                    $"{path}.maximumAge",
+                    "Context-age maximumAge must be a positive invariant TimeSpan value."));
+        }
+    }
+
+    private static void ValidateContextRequirement(
+        ManifestContextRequirement requirement,
+        string path,
+        ICollection<ManifestValidationError> errors)
+    {
+        var propertyIsValid = false;
+        var property = default(
+            Fotbiler.RuleGate.Abstractions.Authorization
+                .AuthorizationContextProperty);
+
+        if (string.IsNullOrWhiteSpace(requirement.Property))
+        {
+            errors.Add(
+                new ManifestValidationError(
+                    ManifestValidationCodes.ContextPropertyRequired,
+                    $"{path}.property",
+                    "Context property is required."));
+        }
+        else
+        {
+            propertyIsValid =
+                ManifestTimeContextConversions.TryParseContextProperty(
+                    requirement.Property,
+                    out property);
+
+            if (!propertyIsValid)
+            {
+                errors.Add(
+                    new ManifestValidationError(
+                        ManifestValidationCodes.ContextPropertyInvalid,
+                        $"{path}.property",
+                        $"Context property '{requirement.Property}' is not supported."));
+            }
+        }
+
+        var operatorIsValid = false;
+        var @operator = default(
+            Fotbiler.RuleGate.Abstractions.Policies
+                .AuthorizationAttributeOperator);
+
+        if (string.IsNullOrWhiteSpace(requirement.Operator))
+        {
+            errors.Add(
+                new ManifestValidationError(
+                    ManifestValidationCodes.ContextOperatorRequired,
+                    $"{path}.operator",
+                    "Context operator is required."));
+        }
+        else
+        {
+            operatorIsValid =
+                ManifestAttributeRequirementConversions.TryParseOperator(
+                    requirement.Operator,
+                    out @operator);
+
+            if (!operatorIsValid)
+            {
+                errors.Add(
+                    new ManifestValidationError(
+                        ManifestValidationCodes.ContextOperatorInvalid,
+                        $"{path}.operator",
+                        $"Context operator '{requirement.Operator}' is not supported."));
+            }
+        }
+
+        var valueTypeIsValid = false;
+        var valueType = default(ManifestAttributeValueType);
+
+        if (string.IsNullOrWhiteSpace(requirement.ValueType))
+        {
+            errors.Add(
+                new ManifestValidationError(
+                    ManifestValidationCodes.ContextValueTypeRequired,
+                    $"{path}.valueType",
+                    "Context value type is required."));
+        }
+        else
+        {
+            valueTypeIsValid =
+                ManifestAttributeRequirementConversions.TryParseValueType(
+                    requirement.ValueType,
+                    out valueType);
+
+            if (!valueTypeIsValid)
+            {
+                errors.Add(
+                    new ManifestValidationError(
+                        ManifestValidationCodes.ContextValueTypeInvalid,
+                        $"{path}.valueType",
+                        $"Context value type '{requirement.ValueType}' is not supported."));
+            }
+        }
+
+        if (!requirement.HasValue)
+        {
+            errors.Add(
+                new ManifestValidationError(
+                    ManifestValidationCodes.ContextValueRequired,
+                    $"{path}.value",
+                    "Context value must be specified."));
+        }
+        else if (valueTypeIsValid &&
+                 !ManifestAttributeRequirementConversions.TryConvertValue(
+                     requirement.ValueType,
+                     requirement.Value,
+                     requirement.HasValue,
+                     out _))
+        {
+            errors.Add(
+                new ManifestValidationError(
+                    ManifestValidationCodes.ContextValueInvalid,
+                    $"{path}.value",
+                    $"Context value is invalid for value type '{requirement.ValueType}'."));
+        }
+
+        if (propertyIsValid &&
+            operatorIsValid &&
+            valueTypeIsValid &&
+            !IsContextCombinationSupported(
+                property,
+                @operator,
+                valueType))
+        {
+            errors.Add(
+                new ManifestValidationError(
+                    ManifestValidationCodes.ContextPropertyOperatorValueInvalid,
+                    path,
+                    "The context property, operator, and value type are not compatible."));
+        }
+
+        if (requirement.StringComparison is not null)
+        {
+            if (!ManifestAttributeRequirementConversions
+                    .TryParseStringComparison(
+                        requirement.StringComparison,
+                        out _))
+            {
+                errors.Add(
+                    new ManifestValidationError(
+                        ManifestValidationCodes.ContextStringComparisonInvalid,
+                        $"{path}.stringComparison",
+                        $"Context string comparison '{requirement.StringComparison}' is not supported."));
+            }
+            else if (!propertyIsValid ||
+                     property ==
+                     Fotbiler.RuleGate.Abstractions.Authorization
+                         .AuthorizationContextProperty.TrustedDevice ||
+                     !operatorIsValid ||
+                     !valueTypeIsValid ||
+                     !ManifestAttributeRequirementConversions
+                         .SupportsStringComparison(
+                             @operator,
+                             valueType))
+            {
+                errors.Add(
+                    new ManifestValidationError(
+                        ManifestValidationCodes.ContextStringComparisonNotAllowed,
+                        $"{path}.stringComparison",
+                        "String comparison is not supported for the declared context property, operator, and value type."));
+            }
+        }
+    }
+
+    private static bool IsContextCombinationSupported(
+        Fotbiler.RuleGate.Abstractions.Authorization
+            .AuthorizationContextProperty property,
+        Fotbiler.RuleGate.Abstractions.Policies
+            .AuthorizationAttributeOperator @operator,
+        ManifestAttributeValueType valueType)
+    {
+        if (property ==
+            Fotbiler.RuleGate.Abstractions.Authorization
+                .AuthorizationContextProperty.TrustedDevice)
+        {
+            return @operator is
+                    Fotbiler.RuleGate.Abstractions.Policies
+                        .AuthorizationAttributeOperator.Equal or
+                    Fotbiler.RuleGate.Abstractions.Policies
+                        .AuthorizationAttributeOperator.NotEqual &&
+                valueType == ManifestAttributeValueType.Boolean;
+        }
+
+        return @operator switch
+        {
+            Fotbiler.RuleGate.Abstractions.Policies
+                .AuthorizationAttributeOperator.Equal or
+            Fotbiler.RuleGate.Abstractions.Policies
+                .AuthorizationAttributeOperator.NotEqual or
+            Fotbiler.RuleGate.Abstractions.Policies
+                .AuthorizationAttributeOperator.Contains or
+            Fotbiler.RuleGate.Abstractions.Policies
+                .AuthorizationAttributeOperator.StartsWith or
+            Fotbiler.RuleGate.Abstractions.Policies
+                .AuthorizationAttributeOperator.EndsWith =>
+                valueType == ManifestAttributeValueType.String,
+
+            Fotbiler.RuleGate.Abstractions.Policies
+                .AuthorizationAttributeOperator.In or
+            Fotbiler.RuleGate.Abstractions.Policies
+                .AuthorizationAttributeOperator.NotIn =>
+                valueType == ManifestAttributeValueType.StringCollection,
+
+            _ => false
+        };
     }
 
     private static OperandValidation
