@@ -21,9 +21,33 @@ public sealed class AttributeRequirementEvaluator
                 requirement.Source,
                 context);
 
-        if (!attributes.TryGetValue(
+        var attributeExists =
+            attributes.TryGetValue(
                 requirement.Name,
-                out var actualRawValue))
+                out var actualRawValue);
+
+        if (requirement.Operator is
+            AuthorizationAttributeOperator.Exists or
+            AuthorizationAttributeOperator.NotExists)
+        {
+            var isSatisfied =
+                requirement.Operator ==
+                AuthorizationAttributeOperator.Exists
+                    ? attributeExists
+                    : !attributeExists;
+
+            return ValueTask.FromResult(
+                CreateBooleanResult(
+                    isSatisfied,
+                    requirement,
+                    attributeExists
+                        ? AuthorizationFailureCodes
+                            .AttributeComparisonNotSatisfied
+                        : AuthorizationFailureCodes
+                            .AttributeNotFound));
+        }
+
+        if (!attributeExists)
         {
             return ValueTask.FromResult(
                 RequirementEvaluationResult.NotSatisfied(
@@ -31,6 +55,26 @@ public sealed class AttributeRequirementEvaluator
                         AuthorizationFailureCodes
                             .AttributeNotFound,
                         requirement.Id)));
+        }
+
+        if (requirement.Operator is
+            AuthorizationAttributeOperator.IsNull or
+            AuthorizationAttributeOperator.IsNotNull)
+        {
+            var isNull = actualRawValue is null;
+
+            var isSatisfied =
+                requirement.Operator ==
+                AuthorizationAttributeOperator.IsNull
+                    ? isNull
+                    : !isNull;
+
+            return ValueTask.FromResult(
+                CreateBooleanResult(
+                    isSatisfied,
+                    requirement,
+                    AuthorizationFailureCodes
+                        .AttributeComparisonNotSatisfied));
         }
 
         AuthorizationAttributeValue actualValue;
@@ -51,40 +95,55 @@ public sealed class AttributeRequirementEvaluator
                         requirement.Id)));
         }
 
-        if (actualValue.Kind !=
-            requirement.ExpectedValue.Kind)
+        var comparison =
+            Compare(
+                actualValue,
+                requirement.ExpectedValue,
+                requirement.Operator,
+                requirement.StringComparison);
+
+        var result = comparison switch
         {
-            return ValueTask.FromResult(
+            AttributeComparisonResult.Satisfied =>
+                RequirementEvaluationResult.Satisfied(),
+
+            AttributeComparisonResult.NotSatisfied =>
+                RequirementEvaluationResult.NotSatisfied(
+                    new AuthorizationFailure(
+                        AuthorizationFailureCodes
+                            .AttributeComparisonNotSatisfied,
+                        requirement.Id)),
+
+            AttributeComparisonResult.TypeMismatch =>
                 RequirementEvaluationResult.Indeterminate(
                     new AuthorizationFailure(
                         AuthorizationFailureCodes
                             .AttributeTypeMismatch,
-                        requirement.Id)));
-        }
+                        requirement.Id)),
 
-        if (!TryCompare(
-                actualValue,
-                requirement.ExpectedValue,
-                requirement.Operator,
-                out var isSatisfied))
-        {
-            return ValueTask.FromResult(
+            _ =>
                 RequirementEvaluationResult.Indeterminate(
                     new AuthorizationFailure(
                         AuthorizationFailureCodes
                             .AttributeOperatorNotSupported,
-                        requirement.Id)));
-        }
+                        requirement.Id))
+        };
 
-        var result = isSatisfied
+        return ValueTask.FromResult(result);
+    }
+
+    private static RequirementEvaluationResult
+        CreateBooleanResult(
+            bool isSatisfied,
+            AttributeRequirementDefinition requirement,
+            string failureCode)
+    {
+        return isSatisfied
             ? RequirementEvaluationResult.Satisfied()
             : RequirementEvaluationResult.NotSatisfied(
                 new AuthorizationFailure(
-                    AuthorizationFailureCodes
-                        .AttributeComparisonNotSatisfied,
+                    failureCode,
                     requirement.Id));
-
-        return ValueTask.FromResult(result);
     }
 
     private static AuthorizationAttributes GetAttributes(
@@ -110,26 +169,145 @@ public sealed class AttributeRequirementEvaluator
         };
     }
 
-    private static bool TryCompare(
+    private static AttributeComparisonResult Compare(
         AuthorizationAttributeValue actual,
         AuthorizationAttributeValue expected,
         AuthorizationAttributeOperator @operator,
-        out bool isSatisfied)
+        AuthorizationStringComparison stringComparison)
     {
-        if (@operator is
-            AuthorizationAttributeOperator.Equal or
-            AuthorizationAttributeOperator.NotEqual)
+        return @operator switch
         {
-            var areEqual =
-                AreEqual(actual, expected);
+            AuthorizationAttributeOperator.Equal =>
+                CompareEquality(
+                    actual,
+                    expected,
+                    stringComparison,
+                    negate: false),
 
-            isSatisfied =
-                @operator ==
-                AuthorizationAttributeOperator.Equal
-                    ? areEqual
-                    : !areEqual;
+            AuthorizationAttributeOperator.NotEqual =>
+                CompareEquality(
+                    actual,
+                    expected,
+                    stringComparison,
+                    negate: true),
 
-            return true;
+            AuthorizationAttributeOperator.GreaterThan or
+            AuthorizationAttributeOperator
+                .GreaterThanOrEqual or
+            AuthorizationAttributeOperator.LessThan or
+            AuthorizationAttributeOperator.LessThanOrEqual =>
+                CompareOrdering(
+                    actual,
+                    expected,
+                    @operator),
+
+            AuthorizationAttributeOperator.Contains =>
+                CompareContains(
+                    actual,
+                    expected,
+                    stringComparison),
+
+            AuthorizationAttributeOperator.StartsWith =>
+                CompareStringOperation(
+                    actual,
+                    expected,
+                    stringComparison,
+                    static (value, candidate, comparison) =>
+                        value.StartsWith(
+                            candidate,
+                            comparison)),
+
+            AuthorizationAttributeOperator.EndsWith =>
+                CompareStringOperation(
+                    actual,
+                    expected,
+                    stringComparison,
+                    static (value, candidate, comparison) =>
+                        value.EndsWith(
+                            candidate,
+                            comparison)),
+
+            AuthorizationAttributeOperator.ContainsAny or
+            AuthorizationAttributeOperator.Intersects =>
+                CompareCollectionIntersection(
+                    actual,
+                    expected,
+                    stringComparison),
+
+            AuthorizationAttributeOperator.ContainsAll =>
+                CompareCollectionContainsAll(
+                    actual,
+                    expected,
+                    stringComparison),
+
+            AuthorizationAttributeOperator.In =>
+                CompareMembership(
+                    actual,
+                    expected,
+                    stringComparison,
+                    negate: false),
+
+            AuthorizationAttributeOperator.NotIn =>
+                CompareMembership(
+                    actual,
+                    expected,
+                    stringComparison,
+                    negate: true),
+
+            AuthorizationAttributeOperator.IsEmpty =>
+                CompareCollectionEmpty(
+                    actual,
+                    negate: false),
+
+            AuthorizationAttributeOperator.IsNotEmpty =>
+                CompareCollectionEmpty(
+                    actual,
+                    negate: true),
+
+            _ =>
+                AttributeComparisonResult
+                    .OperatorNotSupported
+        };
+    }
+
+    private static AttributeComparisonResult
+        CompareEquality(
+            AuthorizationAttributeValue actual,
+            AuthorizationAttributeValue expected,
+            AuthorizationStringComparison stringComparison,
+            bool negate)
+    {
+        if (actual.Kind != expected.Kind)
+        {
+            return AttributeComparisonResult.TypeMismatch;
+        }
+
+        if (actual.Kind ==
+            AuthorizationAttributeValueKind.Collection)
+        {
+            return AttributeComparisonResult
+                .OperatorNotSupported;
+        }
+
+        var areEqual =
+            AreEqual(
+                actual,
+                expected,
+                stringComparison);
+
+        return ToComparisonResult(
+            negate ? !areEqual : areEqual);
+    }
+
+    private static AttributeComparisonResult
+        CompareOrdering(
+            AuthorizationAttributeValue actual,
+            AuthorizationAttributeValue expected,
+            AuthorizationAttributeOperator @operator)
+    {
+        if (actual.Kind != expected.Kind)
+        {
+            return AttributeComparisonResult.TypeMismatch;
         }
 
         if (!TryGetOrderingComparison(
@@ -137,42 +315,268 @@ public sealed class AttributeRequirementEvaluator
                 expected,
                 out var comparison))
         {
-            isSatisfied = false;
+            return AttributeComparisonResult
+                .OperatorNotSupported;
+        }
+
+        var isSatisfied = @operator switch
+        {
+            AuthorizationAttributeOperator.GreaterThan =>
+                comparison > 0,
+
+            AuthorizationAttributeOperator
+                .GreaterThanOrEqual =>
+                comparison >= 0,
+
+            AuthorizationAttributeOperator.LessThan =>
+                comparison < 0,
+
+            AuthorizationAttributeOperator.LessThanOrEqual =>
+                comparison <= 0,
+
+            _ => false
+        };
+
+        return ToComparisonResult(isSatisfied);
+    }
+
+    private static AttributeComparisonResult
+        CompareContains(
+            AuthorizationAttributeValue actual,
+            AuthorizationAttributeValue expected,
+            AuthorizationStringComparison stringComparison)
+    {
+        if (actual.Kind ==
+            AuthorizationAttributeValueKind.String)
+        {
+            return CompareStringOperation(
+                actual,
+                expected,
+                stringComparison,
+                static (value, candidate, comparison) =>
+                    value.Contains(
+                        candidate,
+                        comparison));
+        }
+
+        if (actual.Kind !=
+            AuthorizationAttributeValueKind.Collection ||
+            expected.Kind ==
+            AuthorizationAttributeValueKind.Collection)
+        {
+            return AttributeComparisonResult
+                .OperatorNotSupported;
+        }
+
+        return CollectionContains(
+            actual,
+            expected,
+            stringComparison,
+            out var contains)
+                ? ToComparisonResult(contains)
+                : AttributeComparisonResult.TypeMismatch;
+    }
+
+    private static AttributeComparisonResult
+        CompareStringOperation(
+            AuthorizationAttributeValue actual,
+            AuthorizationAttributeValue expected,
+            AuthorizationStringComparison stringComparison,
+            Func<string, string, StringComparison, bool>
+                operation)
+    {
+        if (actual.Kind != expected.Kind)
+        {
+            return AttributeComparisonResult.TypeMismatch;
+        }
+
+        if (actual.Kind !=
+            AuthorizationAttributeValueKind.String)
+        {
+            return AttributeComparisonResult
+                .OperatorNotSupported;
+        }
+
+        return ToComparisonResult(
+            operation(
+                (string)actual.Value!,
+                (string)expected.Value!,
+                ToStringComparison(stringComparison)));
+    }
+
+    private static AttributeComparisonResult
+        CompareCollectionIntersection(
+            AuthorizationAttributeValue actual,
+            AuthorizationAttributeValue expected,
+            AuthorizationStringComparison stringComparison)
+    {
+        if (!AreCollections(actual, expected))
+        {
+            return AttributeComparisonResult
+                .OperatorNotSupported;
+        }
+
+        if (!AreCollectionKindsCompatible(
+                actual,
+                expected))
+        {
+            return AttributeComparisonResult.TypeMismatch;
+        }
+
+        var isSatisfied =
+            expected.CollectionItems.Any(
+                expectedItem =>
+                    CollectionContains(
+                        actual,
+                        expectedItem,
+                        stringComparison,
+                        out var contains) &&
+                    contains);
+
+        return ToComparisonResult(isSatisfied);
+    }
+
+    private static AttributeComparisonResult
+        CompareCollectionContainsAll(
+            AuthorizationAttributeValue actual,
+            AuthorizationAttributeValue expected,
+            AuthorizationStringComparison stringComparison)
+    {
+        if (!AreCollections(actual, expected))
+        {
+            return AttributeComparisonResult
+                .OperatorNotSupported;
+        }
+
+        if (!AreCollectionKindsCompatible(
+                actual,
+                expected))
+        {
+            return AttributeComparisonResult.TypeMismatch;
+        }
+
+        var isSatisfied =
+            expected.CollectionItems.All(
+                expectedItem =>
+                    CollectionContains(
+                        actual,
+                        expectedItem,
+                        stringComparison,
+                        out var contains) &&
+                    contains);
+
+        return ToComparisonResult(isSatisfied);
+    }
+
+    private static AttributeComparisonResult
+        CompareMembership(
+            AuthorizationAttributeValue actual,
+            AuthorizationAttributeValue expected,
+            AuthorizationStringComparison stringComparison,
+            bool negate)
+    {
+        if (actual.Kind ==
+                AuthorizationAttributeValueKind.Collection ||
+            expected.Kind !=
+                AuthorizationAttributeValueKind.Collection)
+        {
+            return AttributeComparisonResult
+                .OperatorNotSupported;
+        }
+
+        if (!CollectionContains(
+                expected,
+                actual,
+                stringComparison,
+                out var contains))
+        {
+            return AttributeComparisonResult.TypeMismatch;
+        }
+
+        return ToComparisonResult(
+            negate ? !contains : contains);
+    }
+
+    private static AttributeComparisonResult
+        CompareCollectionEmpty(
+            AuthorizationAttributeValue actual,
+            bool negate)
+    {
+        if (actual.Kind !=
+            AuthorizationAttributeValueKind.Collection)
+        {
+            return AttributeComparisonResult
+                .OperatorNotSupported;
+        }
+
+        var isEmpty =
+            actual.CollectionItems.Count == 0;
+
+        return ToComparisonResult(
+            negate ? !isEmpty : isEmpty);
+    }
+
+    private static bool CollectionContains(
+        AuthorizationAttributeValue collection,
+        AuthorizationAttributeValue candidate,
+        AuthorizationStringComparison stringComparison,
+        out bool contains)
+    {
+        if (collection.Kind !=
+            AuthorizationAttributeValueKind.Collection)
+        {
+            contains = false;
             return false;
         }
 
-        switch (@operator)
+        if (collection.CollectionElementKind is not null &&
+            collection.CollectionElementKind != candidate.Kind)
         {
-            case AuthorizationAttributeOperator
-                .GreaterThan:
-                isSatisfied = comparison > 0;
-                return true;
-
-            case AuthorizationAttributeOperator
-                .GreaterThanOrEqual:
-                isSatisfied = comparison >= 0;
-                return true;
-
-            case AuthorizationAttributeOperator
-                .LessThan:
-                isSatisfied = comparison < 0;
-                return true;
-
-            case AuthorizationAttributeOperator
-                .LessThanOrEqual:
-                isSatisfied = comparison <= 0;
-                return true;
-
-            default:
-                isSatisfied = false;
-                return false;
+            contains = false;
+            return false;
         }
+
+        contains =
+            collection.CollectionItems.Any(
+                item =>
+                    AreEqual(
+                        item,
+                        candidate,
+                        stringComparison));
+
+        return true;
+    }
+
+    private static bool AreCollections(
+        AuthorizationAttributeValue actual,
+        AuthorizationAttributeValue expected)
+    {
+        return actual.Kind ==
+                AuthorizationAttributeValueKind.Collection &&
+            expected.Kind ==
+                AuthorizationAttributeValueKind.Collection;
+    }
+
+    private static bool AreCollectionKindsCompatible(
+        AuthorizationAttributeValue actual,
+        AuthorizationAttributeValue expected)
+    {
+        return actual.CollectionElementKind is null ||
+            expected.CollectionElementKind is null ||
+            actual.CollectionElementKind ==
+                expected.CollectionElementKind;
     }
 
     private static bool AreEqual(
         AuthorizationAttributeValue actual,
-        AuthorizationAttributeValue expected)
+        AuthorizationAttributeValue expected,
+        AuthorizationStringComparison stringComparison)
     {
+        if (actual.Kind != expected.Kind)
+        {
+            return false;
+        }
+
         return actual.Kind switch
         {
             AuthorizationAttributeValueKind.Null =>
@@ -182,7 +586,8 @@ public sealed class AttributeRequirementEvaluator
                 string.Equals(
                     (string)actual.Value!,
                     (string)expected.Value!,
-                    StringComparison.Ordinal),
+                    ToStringComparison(
+                        stringComparison)),
 
             AuthorizationAttributeValueKind.Boolean =>
                 (bool)actual.Value! ==
@@ -227,5 +632,41 @@ public sealed class AttributeRequirementEvaluator
                 comparison = 0;
                 return false;
         }
+    }
+
+    private static StringComparison ToStringComparison(
+        AuthorizationStringComparison comparison)
+    {
+        return comparison switch
+        {
+            AuthorizationStringComparison.Ordinal =>
+                StringComparison.Ordinal,
+
+            AuthorizationStringComparison.OrdinalIgnoreCase =>
+                StringComparison.OrdinalIgnoreCase,
+
+            _ =>
+                throw new ArgumentOutOfRangeException(
+                    nameof(comparison),
+                    comparison,
+                    "The authorization string comparison is not supported.")
+        };
+    }
+
+    private static AttributeComparisonResult
+        ToComparisonResult(
+            bool isSatisfied)
+    {
+        return isSatisfied
+            ? AttributeComparisonResult.Satisfied
+            : AttributeComparisonResult.NotSatisfied;
+    }
+
+    private enum AttributeComparisonResult
+    {
+        NotSatisfied = 0,
+        Satisfied = 1,
+        TypeMismatch = 2,
+        OperatorNotSupported = 3
     }
 }

@@ -6,5 +6,6 @@ public enum AuthorizationAttributeValueKind
     String = 1,
     Boolean = 2,
     Number = 3,
-    DateTimeOffset = 4
+    DateTimeOffset = 4,
+    Collection = 5
 }

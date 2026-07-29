@@ -28,6 +28,38 @@ public sealed class ManifestAttributeValidationTests
                     "dateTimeOffset",
                     "2026-07-27T10:30:00.1234567+03:00"
                 },
+                {
+                    "stringCollection",
+                    new[]
+                    {
+                        "finance",
+                        "operations"
+                    }
+                },
+                {
+                    "booleanCollection",
+                    new object[]
+                    {
+                        "true",
+                        false
+                    }
+                },
+                {
+                    "numberCollection",
+                    new object[]
+                    {
+                        "3.25",
+                        4
+                    }
+                },
+                {
+                    "dateTimeOffsetCollection",
+                    new[]
+                    {
+                        "2026-07-27T10:30:00+03:00",
+                        "2026-07-27T07:30:00Z"
+                    }
+                },
                 { "nullValue", null }
             };
         }
@@ -51,6 +83,22 @@ public sealed class ManifestAttributeValidationTests
                     "dateTimeOffset",
                     "2026-07-27"
                 },
+                {
+                    "stringCollection",
+                    new object[]
+                    {
+                        "finance",
+                        1
+                    }
+                },
+                {
+                    "numberCollection",
+                    new object[]
+                    {
+                        1,
+                        "not-a-number"
+                    }
+                },
                 { "nullValue", "null" }
             };
         }
@@ -63,11 +111,19 @@ public sealed class ManifestAttributeValidationTests
             string valueType,
             object? value)
     {
-        var result =
-            Validate(
-                CreateAttribute(
-                    valueType: valueType,
-                    value: value));
+        var attribute =
+            CreateAttribute(
+                valueType: valueType,
+                value: value);
+
+        if (valueType.EndsWith(
+                "Collection",
+                StringComparison.Ordinal))
+        {
+            attribute.Operator = "containsAny";
+        }
+
+        var result = Validate(attribute);
 
         Assert.True(result.IsValid);
         Assert.Empty(result.Errors);
@@ -129,13 +185,159 @@ public sealed class ManifestAttributeValidationTests
     public void Validate_rejects_unknown_attribute_operator()
     {
         var attribute = CreateAttribute();
-        attribute.Operator = "contains";
+        attribute.Operator = "matches";
 
         AssertError(
             Validate(attribute),
             ManifestValidationCodes
                 .AttributeOperatorInvalid,
             AttributePath("operator"));
+    }
+
+    [Theory]
+    [InlineData("contains", "string")]
+    [InlineData("startsWith", "string")]
+    [InlineData("endsWith", "string")]
+    [InlineData("containsAny", "stringCollection")]
+    [InlineData("containsAll", "stringCollection")]
+    [InlineData("in", "stringCollection")]
+    [InlineData("notIn", "stringCollection")]
+    [InlineData("intersects", "stringCollection")]
+    public void Validate_accepts_advanced_operator(
+        string @operator,
+        string valueType)
+    {
+        object value =
+            valueType == "string"
+                ? "finance"
+                : new[]
+                {
+                    "finance",
+                    "operations"
+                };
+
+        var attribute =
+            CreateAttribute(
+                valueType,
+                value);
+
+        attribute.Operator = @operator;
+
+        var result = Validate(attribute);
+
+        Assert.True(result.IsValid);
+        Assert.Empty(result.Errors);
+    }
+
+    [Theory]
+    [InlineData("isEmpty")]
+    [InlineData("isNotEmpty")]
+    [InlineData("exists")]
+    [InlineData("notExists")]
+    [InlineData("isNull")]
+    [InlineData("isNotNull")]
+    public void Validate_accepts_value_less_operator(
+        string @operator)
+    {
+        var attribute =
+            new ManifestAttributeRequirement
+            {
+                Source = "subject",
+                Name = "department",
+                Operator = @operator
+            };
+
+        var result = Validate(attribute);
+
+        Assert.True(result.IsValid);
+        Assert.Empty(result.Errors);
+    }
+
+    [Fact]
+    public void Validate_rejects_value_for_value_less_operator()
+    {
+        var attribute = CreateAttribute();
+        attribute.Operator = "exists";
+
+        var result = Validate(attribute);
+
+        AssertError(
+            result,
+            ManifestValidationCodes
+                .AttributeValueTypeNotAllowed,
+            AttributePath("valueType"));
+
+        AssertError(
+            result,
+            ManifestValidationCodes
+                .AttributeValueNotAllowed,
+            AttributePath("value"));
+    }
+
+    [Theory]
+    [InlineData("ordinal")]
+    [InlineData("ordinalIgnoreCase")]
+    public void Validate_accepts_string_comparison(
+        string comparison)
+    {
+        var attribute = CreateAttribute();
+        attribute.StringComparison = comparison;
+
+        var result = Validate(attribute);
+
+        Assert.True(result.IsValid);
+        Assert.Empty(result.Errors);
+    }
+
+    [Fact]
+    public void Validate_rejects_unknown_string_comparison()
+    {
+        var attribute = CreateAttribute();
+        attribute.StringComparison = "currentCulture";
+
+        AssertError(
+            Validate(attribute),
+            ManifestValidationCodes
+                .AttributeStringComparisonInvalid,
+            AttributePath("stringComparison"));
+    }
+
+    [Fact]
+    public void Validate_rejects_string_comparison_for_number()
+    {
+        var attribute =
+            CreateAttribute(
+                valueType: "number",
+                value: "3");
+
+        attribute.StringComparison =
+            "ordinalIgnoreCase";
+
+        AssertError(
+            Validate(attribute),
+            ManifestValidationCodes
+                .AttributeStringComparisonNotAllowed,
+            AttributePath("stringComparison"));
+    }
+
+    [Fact]
+    public void Validate_rejects_oversized_collection()
+    {
+        var values =
+            Enumerable.Range(
+                    start: 0,
+                    count: 257)
+                .Cast<object>()
+                .ToArray();
+
+        AssertError(
+            Validate(
+                CreateAttribute(
+                    valueType: "numberCollection",
+                    value: values)),
+            ManifestValidationCodes
+                .AttributeValueInvalid,
+            AttributePath("value"));
     }
 
     [Fact]

@@ -52,6 +52,34 @@ public sealed class
                 operator: equal
                 valueType: boolean
                 value: true
+
+          - id: advanced-access
+            resourceType: document
+            action: advanced
+            requirement:
+              all:
+                - id: finance-department-prefix
+                  attribute:
+                    source: subject
+                    name: department
+                    operator: startsWith
+                    stringComparison: ordinalIgnoreCase
+                    valueType: string
+                    value: finance
+                - id: required-scopes
+                  attribute:
+                    source: subject
+                    name: scopes
+                    operator: containsAll
+                    valueType: stringCollection
+                    value:
+                      - document.read
+                      - document.approve
+                - id: optional-claim-absent
+                  attribute:
+                    source: context
+                    name: blocked
+                    operator: notExists
         """;
 
     [Fact]
@@ -195,6 +223,34 @@ public sealed class
                         CreateAttributes(
                             "trustedNetwork",
                             true)));
+
+        Assert.True(decision.IsAllowed);
+        Assert.Empty(decision.Failures);
+    }
+
+    [Fact]
+    public async Task
+        EvaluateAsync_allows_advanced_manifest_operators()
+    {
+        var decision =
+            await CreateEngine().EvaluateAsync(
+                CreateRequest(
+                    action: "advanced",
+                    subjectAttributes:
+                        new AuthorizationAttributes(
+                        [
+                            new KeyValuePair<string, object?>(
+                                "department",
+                                "Finance-Europe"),
+                            new KeyValuePair<string, object?>(
+                                "scopes",
+                                new[]
+                                {
+                                    "document.approve",
+                                    "document.read",
+                                    "document.archive"
+                                })
+                        ])));
 
         Assert.True(decision.IsAllowed);
         Assert.Empty(decision.Failures);

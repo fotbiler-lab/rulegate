@@ -280,35 +280,433 @@ public sealed class AttributeRequirementEvaluatorTests
             Assert.Single(result.Failures).Code);
     }
 
+    [Fact]
+    public async Task
+        String_equality_can_use_ordinal_ignore_case()
+    {
+        var result =
+            await EvaluateAsync(
+                CreateRequirement(
+                    AuthorizationAttributeSource.Subject,
+                    AuthorizationAttributeOperator.Equal,
+                    value: "finance",
+                    stringComparison:
+                        AuthorizationStringComparison
+                            .OrdinalIgnoreCase),
+                subjectAttributes:
+                    CreateAttributes(
+                        "department",
+                        "Finance"));
+
+        Assert.True(result.IsSatisfied);
+    }
+
+    [Theory]
+    [InlineData(
+        AuthorizationAttributeOperator.Contains,
+        "Finance Department",
+        "Finance")]
+    [InlineData(
+        AuthorizationAttributeOperator.StartsWith,
+        "Finance Department",
+        "Finance")]
+    [InlineData(
+        AuthorizationAttributeOperator.EndsWith,
+        "Finance Department",
+        "Department")]
+    public async Task
+        String_operators_succeed(
+            AuthorizationAttributeOperator @operator,
+            string actual,
+            string expected)
+    {
+        var result =
+            await EvaluateAsync(
+                CreateRequirement(
+                    AuthorizationAttributeSource.Subject,
+                    @operator,
+                    expected),
+                subjectAttributes:
+                    CreateAttributes(
+                        "department",
+                        actual));
+
+        Assert.True(result.IsSatisfied);
+    }
+
+    [Fact]
+    public async Task
+        String_contains_is_case_sensitive_by_default()
+    {
+        var result =
+            await EvaluateAsync(
+                CreateRequirement(
+                    AuthorizationAttributeSource.Subject,
+                    AuthorizationAttributeOperator.Contains,
+                    value: "finance"),
+                subjectAttributes:
+                    CreateAttributes(
+                        "department",
+                        "Finance Department"));
+
+        Assert.True(result.IsNotSatisfied);
+    }
+
+    [Fact]
+    public async Task
+        Collection_contains_uses_ordinal_ignore_case()
+    {
+        var result =
+            await EvaluateAsync(
+                CreateRequirement(
+                    AuthorizationAttributeSource.Subject,
+                    AuthorizationAttributeOperator.Contains,
+                    value: "finance.approver",
+                    stringComparison:
+                        AuthorizationStringComparison
+                            .OrdinalIgnoreCase),
+                subjectAttributes:
+                    CreateAttributes(
+                        "department",
+                        new[]
+                        {
+                            "Finance.Approver",
+                            "document.reader"
+                        }));
+
+        Assert.True(result.IsSatisfied);
+    }
+
+    [Theory]
+    [InlineData(
+        AuthorizationAttributeOperator.ContainsAny)]
+    [InlineData(
+        AuthorizationAttributeOperator.Intersects)]
+    public async Task
+        Collection_intersection_operators_succeed(
+            AuthorizationAttributeOperator @operator)
+    {
+        var result =
+            await EvaluateAsync(
+                CreateRequirement(
+                    AuthorizationAttributeSource.Subject,
+                    @operator,
+                    value:
+                        new[]
+                        {
+                            "document.approver",
+                            "document.reader"
+                        }),
+                subjectAttributes:
+                    CreateAttributes(
+                        "department",
+                        new[]
+                        {
+                            "finance.user",
+                            "document.reader"
+                        }));
+
+        Assert.True(result.IsSatisfied);
+    }
+
+    [Fact]
+    public async Task
+        Collection_contains_all_succeeds()
+    {
+        var result =
+            await EvaluateAsync(
+                CreateRequirement(
+                    AuthorizationAttributeSource.Subject,
+                    AuthorizationAttributeOperator.ContainsAll,
+                    value:
+                        new[]
+                        {
+                            "document.read",
+                            "document.approve"
+                        }),
+                subjectAttributes:
+                    CreateAttributes(
+                        "department",
+                        new[]
+                        {
+                            "document.approve",
+                            "document.read",
+                            "document.archive"
+                        }));
+
+        Assert.True(result.IsSatisfied);
+    }
+
+    [Theory]
+    [InlineData(
+        AuthorizationAttributeOperator.In,
+        "finance",
+        true)]
+    [InlineData(
+        AuthorizationAttributeOperator.NotIn,
+        "legal",
+        true)]
+    [InlineData(
+        AuthorizationAttributeOperator.In,
+        "legal",
+        false)]
+    public async Task
+        Collection_membership_operators_are_deterministic(
+            AuthorizationAttributeOperator @operator,
+            string actual,
+            bool expectedSatisfied)
+    {
+        var result =
+            await EvaluateAsync(
+                CreateRequirement(
+                    AuthorizationAttributeSource.Subject,
+                    @operator,
+                    value:
+                        new[]
+                        {
+                            "finance",
+                            "operations"
+                        }),
+                subjectAttributes:
+                    CreateAttributes(
+                        "department",
+                        actual));
+
+        Assert.Equal(
+            expectedSatisfied,
+            result.IsSatisfied);
+    }
+
+    [Theory]
+    [InlineData(
+        AuthorizationAttributeOperator.IsEmpty,
+        0,
+        true)]
+    [InlineData(
+        AuthorizationAttributeOperator.IsEmpty,
+        1,
+        false)]
+    [InlineData(
+        AuthorizationAttributeOperator.IsNotEmpty,
+        1,
+        true)]
+    public async Task
+        Collection_empty_operators_are_deterministic(
+            AuthorizationAttributeOperator @operator,
+            int itemCount,
+            bool expectedSatisfied)
+    {
+        var actual =
+            Enumerable.Range(
+                    start: 1,
+                    count: itemCount)
+                .ToArray();
+
+        var result =
+            await EvaluateAsync(
+                CreateRequirement(
+                    AuthorizationAttributeSource.Subject,
+                    @operator,
+                    value: null),
+                subjectAttributes:
+                    CreateAttributes(
+                        "department",
+                        actual));
+
+        Assert.Equal(
+            expectedSatisfied,
+            result.IsSatisfied);
+    }
+
+    [Theory]
+    [InlineData(
+        AuthorizationAttributeOperator.Exists,
+        true,
+        true)]
+    [InlineData(
+        AuthorizationAttributeOperator.Exists,
+        false,
+        false)]
+    [InlineData(
+        AuthorizationAttributeOperator.NotExists,
+        true,
+        false)]
+    [InlineData(
+        AuthorizationAttributeOperator.NotExists,
+        false,
+        true)]
+    public async Task
+        Presence_operators_distinguish_missing_attributes(
+            AuthorizationAttributeOperator @operator,
+            bool attributeExists,
+            bool expectedSatisfied)
+    {
+        var attributes = attributeExists
+            ? CreateAttributes(
+                "department",
+                value: null)
+            : AuthorizationAttributes.Empty;
+
+        var result =
+            await EvaluateAsync(
+                CreateRequirement(
+                    AuthorizationAttributeSource.Subject,
+                    @operator,
+                    value: null),
+                subjectAttributes: attributes);
+
+        Assert.Equal(
+            expectedSatisfied,
+            result.IsSatisfied);
+    }
+
+    [Theory]
+    [InlineData(
+        AuthorizationAttributeOperator.IsNull,
+        null,
+        true)]
+    [InlineData(
+        AuthorizationAttributeOperator.IsNull,
+        "finance",
+        false)]
+    [InlineData(
+        AuthorizationAttributeOperator.IsNotNull,
+        "finance",
+        true)]
+    public async Task
+        Null_operators_inspect_present_attributes(
+            AuthorizationAttributeOperator @operator,
+            object? actual,
+            bool expectedSatisfied)
+    {
+        var result =
+            await EvaluateAsync(
+                CreateRequirement(
+                    AuthorizationAttributeSource.Subject,
+                    @operator,
+                    value: null),
+                subjectAttributes:
+                    CreateAttributes(
+                        "department",
+                        actual));
+
+        Assert.Equal(
+            expectedSatisfied,
+            result.IsSatisfied);
+    }
+
+    [Fact]
+    public async Task
+        Null_operator_does_not_treat_missing_as_null()
+    {
+        var result =
+            await EvaluateAsync(
+                CreateRequirement(
+                    AuthorizationAttributeSource.Subject,
+                    AuthorizationAttributeOperator.IsNull,
+                    value: null));
+
+        Assert.True(result.IsNotSatisfied);
+
+        Assert.Equal(
+            AuthorizationFailureCodes.AttributeNotFound,
+            Assert.Single(result.Failures).Code);
+    }
+
+    [Fact]
+    public async Task
+        Collection_type_mismatch_is_indeterminate()
+    {
+        var result =
+            await EvaluateAsync(
+                CreateRequirement(
+                    AuthorizationAttributeSource.Subject,
+                    AuthorizationAttributeOperator.Contains,
+                    value: "1"),
+                subjectAttributes:
+                    CreateAttributes(
+                        "department",
+                        new[]
+                        {
+                            1,
+                            2
+                        }));
+
+        Assert.True(result.IsIndeterminate);
+
+        Assert.Equal(
+            AuthorizationFailureCodes.AttributeTypeMismatch,
+            Assert.Single(result.Failures).Code);
+    }
+
+    [Fact]
+    public async Task
+        Oversized_actual_collection_is_indeterminate()
+    {
+        var actual =
+            Enumerable.Range(
+                start: 0,
+                count:
+                    AuthorizationAttributeValue
+                        .MaximumCollectionElementCount +
+                    1);
+
+        var result =
+            await EvaluateAsync(
+                CreateRequirement(
+                    AuthorizationAttributeSource.Subject,
+                    AuthorizationAttributeOperator.Contains,
+                    value: 1),
+                subjectAttributes:
+                    CreateAttributes(
+                        "department",
+                        actual));
+
+        Assert.True(result.IsIndeterminate);
+
+        Assert.Equal(
+            AuthorizationFailureCodes
+                .AttributeTypeNotSupported,
+            Assert.Single(result.Failures).Code);
+    }
+
     private static AttributeRequirementDefinition
         CreateRequirement(
-            AuthorizationAttributeSource source,
-            AuthorizationAttributeOperator @operator,
-            object? value,
-            string? id = null)
+        AuthorizationAttributeSource source,
+        AuthorizationAttributeOperator @operator,
+        object? value,
+        string? id = null,
+        AuthorizationStringComparison
+            stringComparison =
+                AuthorizationStringComparison.Ordinal)
     {
         return CreateRequirement(
             source,
             @operator,
             value,
             attributeName: "department",
-            id);
+            id,
+            stringComparison);
     }
 
     private static AttributeRequirementDefinition
         CreateRequirement(
             AuthorizationAttributeSource source,
-            AuthorizationAttributeOperator @operator,
-            object? value,
-            string attributeName,
-            string? id = null)
+        AuthorizationAttributeOperator @operator,
+        object? value,
+        string attributeName,
+        string? id = null,
+        AuthorizationStringComparison
+            stringComparison =
+                AuthorizationStringComparison.Ordinal)
     {
         return new AttributeRequirementDefinition(
             source,
             attributeName,
             @operator,
             value,
-            id);
+            id,
+            stringComparison);
     }
 
     private static AuthorizationAttributes
@@ -341,7 +739,8 @@ public sealed class AttributeRequirementEvaluatorTests
                     attributeName,
                     requirement.Operator,
                     requirement.ExpectedValue.Value,
-                    requirement.Id);
+                    requirement.Id,
+                    requirement.StringComparison);
         }
 
         var request =

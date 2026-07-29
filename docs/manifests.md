@@ -70,11 +70,11 @@ them.
 
 A manifest contains three root members:
 
-| Member | Required | Description |
-|---|---:|---|
-| `schemaVersion` | Yes | Manifest schema version |
-| `application` | Yes | Application identity and display information |
-| `policies` | Yes | Authorization policy collection |
+| Member          | Required | Description                                  |
+| --------------- | -------: | -------------------------------------------- |
+| `schemaVersion` |      Yes | Manifest schema version                      |
+| `application`   |      Yes | Application identity and display information |
+| `policies`      |      Yes | Authorization policy collection              |
 
 Unknown YAML properties are rejected.
 
@@ -113,10 +113,10 @@ application:
   name: Document Service
 ```
 
-| Member | Required | Purpose |
-|---|---:|---|
-| `id` | Yes | Stable application identifier |
-| `name` | Yes | Human-readable application name |
+| Member | Required | Purpose                         |
+| ------ | -------: | ------------------------------- |
+| `id`   |      Yes | Stable application identifier   |
+| `name` |      Yes | Human-readable application name |
 
 Both values must contain non-whitespace text.
 
@@ -138,12 +138,12 @@ policies:
 
 A policy requires:
 
-| Member | Required | Purpose |
-|---|---:|---|
-| `id` | Yes | Stable policy identifier |
-| `resourceType` | Yes | Protected resource category |
-| `action` | Yes | Protected business operation |
-| `requirement` | Yes | Root authorization condition |
+| Member         | Required | Purpose                      |
+| -------------- | -------: | ---------------------------- |
+| `id`           |      Yes | Stable policy identifier     |
+| `resourceType` |      Yes | Protected resource category  |
+| `action`       |      Yes | Protected business operation |
+| `requirement`  |      Yes | Root authorization condition |
 
 ### Policy identifier uniqueness
 
@@ -245,7 +245,7 @@ When an `id` member is present, it cannot be empty or whitespace.
 
 ```yaml
 requirement:
-  id: ""
+  id: ''
   permission: document.read
 ```
 
@@ -293,7 +293,8 @@ A blank role is invalid.
 
 ## Attribute requirements
 
-An attribute requirement compares one attribute with one typed literal value.
+An attribute requirement checks the state of one attribute or compares it with
+a typed literal value.
 
 ```yaml
 requirement:
@@ -305,15 +306,19 @@ requirement:
     value: pending-approval
 ```
 
-Every attribute requirement needs:
+Attribute members are:
 
-| Member | Required | Purpose |
-|---|---:|---|
-| `source` | Yes | Attribute model to read |
-| `name` | Yes | Attribute name |
-| `operator` | Yes | Comparison operator |
-| `valueType` | Yes | Literal scalar type |
-| `value` | Yes | Literal comparison value |
+| Member             |           Required | Purpose                                                          |
+| ------------------ | -----------------: | ---------------------------------------------------------------- |
+| `source`           |                Yes | Attribute model to read                                          |
+| `name`             |                Yes | Exact attribute name                                             |
+| `operator`         |                Yes | Attribute operation                                              |
+| `stringComparison` |                 No | `ordinal` or `ordinalIgnoreCase` for supported string operations |
+| `valueType`        | Operator-dependent | Literal scalar or collection type                                |
+| `value`            | Operator-dependent | Literal scalar or collection value                               |
+
+`exists`, `notExists`, `isNull`, `isNotNull`, `isEmpty`, and `isNotEmpty` do
+not accept `valueType` or `value`. Every other operator requires both members.
 
 The built-in attribute requirement does not compare one attribute directly
 with another attribute.
@@ -331,11 +336,11 @@ kind of rule.
 
 Supported `source` values are:
 
-| Token | Reads from |
-|---|---|
-| `subject` | `AuthorizationSubject.Attributes` |
+| Token      | Reads from                         |
+| ---------- | ---------------------------------- |
+| `subject`  | `AuthorizationSubject.Attributes`  |
 | `resource` | `AuthorizationResource.Attributes` |
-| `context` | `AuthorizationContext.Attributes` |
+| `context`  | `AuthorizationContext.Attributes`  |
 
 Tokens are exact and case-sensitive.
 
@@ -345,35 +350,55 @@ For example, `Subject` is not the same token as `subject`.
 
 Supported operators are:
 
-| Operator | Meaning |
-|---|---|
-| `equal` | Values must be equal |
-| `notEqual` | Values must be different |
-| `greaterThan` | Runtime value must be greater |
-| `greaterThanOrEqual` | Runtime value must be greater or equal |
-| `lessThan` | Runtime value must be less |
-| `lessThanOrEqual` | Runtime value must be less or equal |
+| Operator             | Expected value      | Meaning                                                                   |
+| -------------------- | ------------------- | ------------------------------------------------------------------------- |
+| `equal`              | Scalar              | Values are equal                                                          |
+| `notEqual`           | Scalar              | Values are different                                                      |
+| `greaterThan`        | Number or date/time | Runtime value is greater                                                  |
+| `greaterThanOrEqual` | Number or date/time | Runtime value is greater or equal                                         |
+| `lessThan`           | Number or date/time | Runtime value is less                                                     |
+| `lessThanOrEqual`    | Number or date/time | Runtime value is less or equal                                            |
+| `contains`           | Scalar              | Runtime string contains a string, or runtime collection contains a scalar |
+| `startsWith`         | String              | Runtime string starts with the value                                      |
+| `endsWith`           | String              | Runtime string ends with the value                                        |
+| `containsAny`        | Collection          | Runtime collection contains at least one expected item                    |
+| `containsAll`        | Collection          | Runtime collection contains every expected item                           |
+| `in`                 | Collection          | Runtime scalar occurs in the expected collection                          |
+| `notIn`              | Collection          | Runtime scalar does not occur in the expected collection                  |
+| `intersects`         | Collection          | Runtime and expected collections share an item                            |
+| `isEmpty`            | None                | Runtime collection is empty                                               |
+| `isNotEmpty`         | None                | Runtime collection is not empty                                           |
+| `exists`             | None                | Attribute key is present, including with a null value                     |
+| `notExists`          | None                | Attribute key is absent                                                   |
+| `isNull`             | None                | Present attribute value is null                                           |
+| `isNotNull`          | None                | Present attribute value is not null                                       |
 
 ### Attribute value types
 
 Supported `valueType` tokens are:
 
-| Token | Runtime scalar kind |
-|---|---|
-| `nullValue` | Explicit null |
-| `string` | String |
-| `boolean` | Boolean |
-| `number` | Invariant decimal number |
-| `dateTimeOffset` | Date and time with UTC marker or numeric offset |
+| Token                      | Runtime kind                                    |
+| -------------------------- | ----------------------------------------------- |
+| `nullValue`                | Explicit null                                   |
+| `string`                   | String                                          |
+| `boolean`                  | Boolean                                         |
+| `number`                   | Invariant decimal number                        |
+| `dateTimeOffset`           | Date and time with UTC marker or numeric offset |
+| `stringCollection`         | String collection                               |
+| `booleanCollection`        | Boolean collection                              |
+| `numberCollection`         | Invariant decimal-number collection             |
+| `dateTimeOffsetCollection` | Date/time collection                            |
 
 ### Operator compatibility
 
-`equal` and `notEqual` support every scalar value kind.
+`equal` and `notEqual` support every scalar value kind. String operations
+require strings. Ordering operators support only `number` and
+`dateTimeOffset`.
 
-Ordering operators support only:
-
-- `number`
-- `dateTimeOffset`
+Collection-to-collection operators require a collection `valueType`. `in` and
+`notIn` compare a runtime scalar with the declared collection. `contains`
+accepts a scalar because the runtime attribute determines whether it performs
+a string operation or collection membership.
 
 This is invalid because booleans are not ordered:
 
@@ -392,20 +417,110 @@ It produces:
 MANIFEST_ATTRIBUTE_OPERATOR_VALUE_TYPE_INVALID
 ```
 
+### String comparison
+
+String comparison defaults to exact `ordinal` matching. Opt in to
+case-insensitive ordinal matching explicitly:
+
+```yaml
+attribute:
+  source: subject
+  name: department
+  operator: startsWith
+  stringComparison: ordinalIgnoreCase
+  valueType: string
+  value: finance
+```
+
+Only these tokens are valid:
+
+- `ordinal`
+- `ordinalIgnoreCase`
+
+The setting also applies to string membership within collections. It is invalid
+for numeric, boolean, date/time, and value-less operations. RuleGate does not
+perform culture-sensitive comparison, trimming, or Unicode normalization.
+
 ### String values
 
 ```yaml
 attribute:
   source: subject
   name: department
-  operator: equal
+  operator: contains
   valueType: string
   value: finance
 ```
 
-String comparison follows RuleGate's strict scalar comparison behavior.
-
 Do not rely on implicit casing or whitespace normalization.
+
+### Collection values
+
+Collection values are YAML sequences:
+
+```yaml
+attribute:
+  source: subject
+  name: permissions
+  operator: containsAll
+  valueType: stringCollection
+  value:
+    - document.read
+    - document.approve
+```
+
+The equivalent scalar-membership form is:
+
+```yaml
+attribute:
+  source: subject
+  name: department
+  operator: in
+  valueType: stringCollection
+  value:
+    - finance
+    - operations
+```
+
+Runtime and manifest collections:
+
+- contain at most 256 elements;
+- contain one supported element kind;
+- cannot contain null elements;
+- cannot contain nested collections.
+
+An empty collection is valid. `containsAll` with an empty expected collection
+is satisfied; intersection and membership checks against an empty collection
+are not satisfied.
+
+### Presence, missing, and null
+
+Presence operators have no literal value:
+
+```yaml
+attribute:
+  source: resource
+  name: ownerId
+  operator: exists
+```
+
+Missing and null are different states:
+
+| Runtime state               | `exists` | `notExists` | `isNull` | `isNotNull` |
+| --------------------------- | -------: | ----------: | -------: | ----------: |
+| Missing key                 |       No |         Yes |       No |          No |
+| Present with null           |      Yes |          No |      Yes |          No |
+| Present with non-null value |      Yes |          No |       No |         Yes |
+
+For a missing key, `exists`, `isNull`, and `isNotNull` report the existing
+attribute-not-found failure. Missing input never becomes an implicit null.
+
+Supplying a literal to a value-less operator is invalid and produces:
+
+```text
+MANIFEST_ATTRIBUTE_VALUE_TYPE_NOT_ALLOWED
+MANIFEST_ATTRIBUTE_VALUE_NOT_ALLOWED
+```
 
 ### Boolean values
 
@@ -488,6 +603,15 @@ The `value` member is required even for null comparison.
 
 Omitting it is different from explicitly declaring a null value.
 
+For a state check, prefer the value-less `isNull` operator:
+
+```yaml
+attribute:
+  source: resource
+  name: parentId
+  operator: isNull
+```
+
 ### Runtime attribute behavior
 
 When the requested runtime attribute is missing, the requirement is not
@@ -497,8 +621,9 @@ The following conditions produce an indeterminate requirement result:
 
 - Runtime value has an unsupported type
 - Runtime value cannot be normalized
-- Runtime value and literal value have incompatible scalar kinds
-- Operator and scalar kind are incompatible
+- Runtime and literal values have incompatible kinds
+- Operator and value kind are incompatible
+- A collection is heterogeneous, nested, contains null, or exceeds 256 items
 
 Both not-satisfied and indeterminate outcomes deny access through the
 fail-closed engine.
@@ -737,11 +862,11 @@ Do not register policies when `IsSuccess` is `false`.
 - Load errors
 - Validation errors
 
-| Result | Policies | Load errors | Validation errors |
-|---|---:|---:|---:|
-| Success | Compiled collection | Empty | Empty |
-| Load failure | Empty | One or more | Empty |
-| Validation failure | Empty | Empty | One or more |
+| Result             |            Policies | Load errors | Validation errors |
+| ------------------ | ------------------: | ----------: | ----------------: |
+| Success            | Compiled collection |       Empty |             Empty |
+| Load failure       |               Empty | One or more |             Empty |
+| Validation failure |               Empty |       Empty |       One or more |
 
 A failed compilation never exposes policies successfully mapped before the
 error.
@@ -753,13 +878,13 @@ subset of the intended authorization policy set.
 
 Load errors describe file access and YAML parsing failures.
 
-| Code | Meaning |
-|---|---|
-| `MANIFEST_YAML_EMPTY_CONTENT` | YAML text is empty or whitespace |
-| `MANIFEST_YAML_ROOT_REQUIRED` | YAML does not contain a root object |
-| `MANIFEST_YAML_INVALID` | YAML is malformed or cannot map to the manifest model |
-| `MANIFEST_FILE_NOT_FOUND` | File or containing directory does not exist |
-| `MANIFEST_FILE_READ_FAILED` | File cannot be read |
+| Code                          | Meaning                                               |
+| ----------------------------- | ----------------------------------------------------- |
+| `MANIFEST_YAML_EMPTY_CONTENT` | YAML text is empty or whitespace                      |
+| `MANIFEST_YAML_ROOT_REQUIRED` | YAML does not contain a root object                   |
+| `MANIFEST_YAML_INVALID`       | YAML is malformed or cannot map to the manifest model |
+| `MANIFEST_FILE_NOT_FOUND`     | File or containing directory does not exist           |
+| `MANIFEST_FILE_READ_FAILED`   | File cannot be read                                   |
 
 A `ManifestLoadError` contains:
 
@@ -800,51 +925,51 @@ policies[0].requirement.all[1].attribute.operator
 
 ### Root and application codes
 
-| Code | Path |
-|---|---|
-| `MANIFEST_UNSUPPORTED_SCHEMA_VERSION` | `schemaVersion` |
-| `MANIFEST_APPLICATION_REQUIRED` | `application` |
-| `MANIFEST_APPLICATION_ID_REQUIRED` | `application.id` |
-| `MANIFEST_APPLICATION_NAME_REQUIRED` | `application.name` |
-| `MANIFEST_POLICIES_REQUIRED` | `policies` |
+| Code                                  | Path               |
+| ------------------------------------- | ------------------ |
+| `MANIFEST_UNSUPPORTED_SCHEMA_VERSION` | `schemaVersion`    |
+| `MANIFEST_APPLICATION_REQUIRED`       | `application`      |
+| `MANIFEST_APPLICATION_ID_REQUIRED`    | `application.id`   |
+| `MANIFEST_APPLICATION_NAME_REQUIRED`  | `application.name` |
+| `MANIFEST_POLICIES_REQUIRED`          | `policies`         |
 
 ### Policy codes
 
-| Code | Typical path |
-|---|---|
-| `MANIFEST_POLICY_REQUIRED` | `policies[index]` |
-| `MANIFEST_POLICY_ID_REQUIRED` | `policies[index].id` |
+| Code                                     | Typical path                   |
+| ---------------------------------------- | ------------------------------ |
+| `MANIFEST_POLICY_REQUIRED`               | `policies[index]`              |
+| `MANIFEST_POLICY_ID_REQUIRED`            | `policies[index].id`           |
 | `MANIFEST_POLICY_RESOURCE_TYPE_REQUIRED` | `policies[index].resourceType` |
-| `MANIFEST_POLICY_ACTION_REQUIRED` | `policies[index].action` |
-| `MANIFEST_POLICY_REQUIREMENT_REQUIRED` | `policies[index].requirement` |
-| `MANIFEST_DUPLICATE_POLICY_ID` | `policies[index].id` |
-| `MANIFEST_DUPLICATE_POLICY_ROUTE` | `policies[index]` |
+| `MANIFEST_POLICY_ACTION_REQUIRED`        | `policies[index].action`       |
+| `MANIFEST_POLICY_REQUIREMENT_REQUIRED`   | `policies[index].requirement`  |
+| `MANIFEST_DUPLICATE_POLICY_ID`           | `policies[index].id`           |
+| `MANIFEST_DUPLICATE_POLICY_ROUTE`        | `policies[index]`              |
 
 ### Requirement codes
 
-| Code | Typical path |
-|---|---|
-| `MANIFEST_REQUIREMENT_ID_INVALID` | Requirement `.id` |
-| `MANIFEST_REQUIREMENT_KIND_INVALID` | Requirement object |
-| `MANIFEST_PERMISSION_REQUIRED` | Requirement `.permission` |
-| `MANIFEST_ROLE_REQUIRED` | Requirement `.role` |
-| `MANIFEST_REQUIREMENT_CHILDREN_REQUIRED` | Empty `.all` or `.any` |
-| `MANIFEST_REQUIREMENT_REQUIRED` | Null logical child |
+| Code                                     | Typical path              |
+| ---------------------------------------- | ------------------------- |
+| `MANIFEST_REQUIREMENT_ID_INVALID`        | Requirement `.id`         |
+| `MANIFEST_REQUIREMENT_KIND_INVALID`      | Requirement object        |
+| `MANIFEST_PERMISSION_REQUIRED`           | Requirement `.permission` |
+| `MANIFEST_ROLE_REQUIRED`                 | Requirement `.role`       |
+| `MANIFEST_REQUIREMENT_CHILDREN_REQUIRED` | Empty `.all` or `.any`    |
+| `MANIFEST_REQUIREMENT_REQUIRED`          | Null logical child        |
 
 ### Attribute codes
 
-| Code | Typical path |
-|---|---|
-| `MANIFEST_ATTRIBUTE_SOURCE_REQUIRED` | Attribute `.source` |
-| `MANIFEST_ATTRIBUTE_SOURCE_INVALID` | Attribute `.source` |
-| `MANIFEST_ATTRIBUTE_NAME_REQUIRED` | Attribute `.name` |
-| `MANIFEST_ATTRIBUTE_OPERATOR_REQUIRED` | Attribute `.operator` |
-| `MANIFEST_ATTRIBUTE_OPERATOR_INVALID` | Attribute `.operator` |
-| `MANIFEST_ATTRIBUTE_VALUE_TYPE_REQUIRED` | Attribute `.valueType` |
-| `MANIFEST_ATTRIBUTE_VALUE_TYPE_INVALID` | Attribute `.valueType` |
-| `MANIFEST_ATTRIBUTE_VALUE_REQUIRED` | Attribute `.value` |
-| `MANIFEST_ATTRIBUTE_VALUE_INVALID` | Attribute `.value` |
-| `MANIFEST_ATTRIBUTE_OPERATOR_VALUE_TYPE_INVALID` | Attribute `.operator` |
+| Code                                             | Typical path           |
+| ------------------------------------------------ | ---------------------- |
+| `MANIFEST_ATTRIBUTE_SOURCE_REQUIRED`             | Attribute `.source`    |
+| `MANIFEST_ATTRIBUTE_SOURCE_INVALID`              | Attribute `.source`    |
+| `MANIFEST_ATTRIBUTE_NAME_REQUIRED`               | Attribute `.name`      |
+| `MANIFEST_ATTRIBUTE_OPERATOR_REQUIRED`           | Attribute `.operator`  |
+| `MANIFEST_ATTRIBUTE_OPERATOR_INVALID`            | Attribute `.operator`  |
+| `MANIFEST_ATTRIBUTE_VALUE_TYPE_REQUIRED`         | Attribute `.valueType` |
+| `MANIFEST_ATTRIBUTE_VALUE_TYPE_INVALID`          | Attribute `.valueType` |
+| `MANIFEST_ATTRIBUTE_VALUE_REQUIRED`              | Attribute `.value`     |
+| `MANIFEST_ATTRIBUTE_VALUE_INVALID`               | Attribute `.value`     |
+| `MANIFEST_ATTRIBUTE_OPERATOR_VALUE_TYPE_INVALID` | Attribute `.operator`  |
 
 Applications may use stable codes and paths for tooling. Human-facing messages
 may evolve during preview releases.
@@ -1047,7 +1172,7 @@ Install the current preview:
 dotnet tool install \
   --global \
   Fotbiler.RuleGate.Cli \
-  --version 0.5.0-preview.2
+  --version 0.6.0-preview.1
 ```
 
 Validate `rulegate.yaml` in the current directory:
@@ -1079,13 +1204,13 @@ The CLI preserves the same fail-closed guarantees as
 
 The process exit-code contract is:
 
-| Exit code | Meaning |
-|---:|---|
-| `0` | Manifest is valid |
-| `1` | File loading, YAML, schema, structural, or semantic validation failed |
-| `2` | Command-line usage is invalid |
-| `3` | An unexpected internal failure occurred |
-| `130` | Validation was cancelled |
+| Exit code | Meaning                                                               |
+| --------: | --------------------------------------------------------------------- |
+|       `0` | Manifest is valid                                                     |
+|       `1` | File loading, YAML, schema, structural, or semantic validation failed |
+|       `2` | Command-line usage is invalid                                         |
+|       `3` | An unexpected internal failure occurred                               |
+|     `130` | Validation was cancelled                                              |
 
 See the [RuleGate CLI guide](cli.md) for installation, validation, C#
 generation, stale-output detection, automation, CI, and operational details.

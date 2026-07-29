@@ -42,6 +42,31 @@ const string yaml = """
             operator: equal
             valueType: string
             value: finance
+
+      - id: advanced-attribute-access
+        resourceType: advanced-attribute-resource
+        action: access
+        requirement:
+          all:
+            - attribute:
+                source: subject
+                name: department
+                operator: startsWith
+                stringComparison: ordinalIgnoreCase
+                valueType: string
+                value: finance
+            - attribute:
+                source: subject
+                name: scopes
+                operator: containsAll
+                valueType: stringCollection
+                value:
+                  - document.read
+                  - document.approve
+            - attribute:
+                source: context
+                name: blocked
+                operator: notExists
     """;
 
 var compiler =
@@ -317,6 +342,64 @@ if (attributeFailure.Code !=
         "The packaged attribute evaluator did not return the expected failure.");
 }
 
+var advancedAttributeSubject =
+    new AuthorizationSubject(
+        id: "advanced-attribute-user",
+        attributes:
+            new AuthorizationAttributes(
+            [
+                new KeyValuePair<string, object?>(
+                    "department",
+                    "Finance-Europe"),
+                new KeyValuePair<string, object?>(
+                    "scopes",
+                    new[]
+                    {
+                        "document.approve",
+                        "document.read",
+                        "document.archive"
+                    })
+            ]));
+
+var advancedAttributeResource =
+    new AuthorizationResource(
+        type: "advanced-attribute-resource",
+        id: "advanced-attribute-resource-1");
+
+var advancedAttributeDecision =
+    await firstEngine.EvaluateAsync(
+        CreateRequest(
+            advancedAttributeSubject,
+            advancedAttributeResource,
+            action: "access"));
+
+if (!advancedAttributeDecision.IsAllowed ||
+    advancedAttributeDecision.Failures.Count != 0)
+{
+    throw new InvalidOperationException(
+        "The packaged advanced attribute operators did not allow the valid request.");
+}
+
+var publicRequirement =
+    new AttributeRequirementDefinition(
+        AuthorizationAttributeSource.Subject,
+        name: "department",
+        AuthorizationAttributeOperator.Contains,
+        value: "FINANCE",
+        stringComparison:
+            AuthorizationStringComparison
+                .OrdinalIgnoreCase);
+
+if (publicRequirement.StringComparison !=
+        AuthorizationStringComparison
+            .OrdinalIgnoreCase ||
+    publicRequirement.Operator !=
+        AuthorizationAttributeOperator.Contains)
+{
+    throw new InvalidOperationException(
+        "The packaged advanced attribute public API did not preserve its configuration.");
+}
+
 var ruleGateAttribute =
     new RuleGateAuthorizeAttribute(
         resourceType: "package-resource",
@@ -474,12 +557,13 @@ static ClaimsPrincipal CreatePrincipal(
 
 static AuthorizationRequest CreateRequest(
     AuthorizationSubject subject,
-    AuthorizationResource resource)
+    AuthorizationResource resource,
+    string action = "read")
 {
     return new AuthorizationRequest(
         subject: subject,
         resource: resource,
-        action: "read",
+        action,
         context:
             new AuthorizationContext(
                 DateTimeOffset.UnixEpoch));

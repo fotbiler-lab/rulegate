@@ -237,4 +237,97 @@ public sealed class ManifestAttributeYamlLoadingTests
         Assert.True(attribute.HasValue);
         Assert.Null(attribute.Value);
     }
+
+    [Fact]
+    public void
+        LoadFromText_loads_collection_and_string_comparison()
+    {
+        const string yaml = """
+            schemaVersion: 1
+
+            application:
+              id: collection-example
+              name: Collection Example
+
+            policies:
+              - id: document-read
+                resourceType: document
+                action: read
+                requirement:
+                  attribute:
+                    source: subject
+                    name: permissions
+                    operator: containsAny
+                    stringComparison: ordinalIgnoreCase
+                    valueType: stringCollection
+                    value:
+                      - document.read
+                      - document.approve
+            """;
+
+        var result = _loader.LoadFromText(yaml);
+
+        Assert.True(result.IsSuccess);
+
+        var attribute =
+            result.Manifest!
+                .Policies![0]!
+                .Requirement!
+                .Attribute!;
+
+        Assert.Equal(
+            "ordinalIgnoreCase",
+            attribute.StringComparison);
+
+        Assert.Equal(
+            "stringCollection",
+            attribute.ValueType);
+
+        Assert.Equal(
+            new[]
+            {
+                "document.read",
+                "document.approve"
+            },
+            Assert.IsAssignableFrom<IEnumerable<object>>(
+                attribute.Value)
+                .Cast<string>());
+    }
+
+    [Fact]
+    public void
+        LoadFromText_preserves_absent_value_for_unary_operator()
+    {
+        const string yaml = """
+            schemaVersion: 1
+
+            application:
+              id: presence-example
+              name: Presence Example
+
+            policies:
+              - id: document-read
+                resourceType: document
+                action: read
+                requirement:
+                  attribute:
+                    source: resource
+                    name: ownerId
+                    operator: exists
+            """;
+
+        var result = _loader.LoadFromText(yaml);
+
+        Assert.True(result.IsSuccess);
+
+        var attribute =
+            result.Manifest!
+                .Policies![0]!
+                .Requirement!
+                .Attribute!;
+
+        Assert.False(attribute.HasValue);
+        Assert.Null(attribute.ValueType);
+        Assert.Null(attribute.Value);
+    }
 }
