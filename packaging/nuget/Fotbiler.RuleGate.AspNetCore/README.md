@@ -91,6 +91,8 @@ Dynamic policy names use this form:
 - [Security model](https://github.com/fotbiler-lab/rulegate/blob/main/docs/security.md)
 - [RuleGate CLI](https://github.com/fotbiler-lab/rulegate/blob/main/docs/cli.md)
 - [Documentation index](https://github.com/fotbiler-lab/rulegate/blob/main/docs/README.md)
+- [Minimal ASP.NET Core reference](https://github.com/fotbiler-lab/rulegate/tree/main/samples/aspnetcore-minimal)
+- [Full-stack document approval reference](https://github.com/fotbiler-lab/rulegate/tree/main/samples/document-approval)
 
 ## Security
 

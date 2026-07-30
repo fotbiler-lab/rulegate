@@ -127,6 +127,11 @@ See the full
 [RuleGate Angular guide](https://github.com/fotbiler-lab/rulegate/blob/main/docs/angular.md)
 and [security model](https://github.com/fotbiler-lab/rulegate/blob/main/docs/security.md).
 
+The
+[document-approval reference application](https://github.com/fotbiler-lab/rulegate/tree/main/samples/document-approval)
+shows generated identifiers, guards, visibility and disabled-state directives,
+Keycloak integration, and backend enforcement in one package-consuming host.
+
 ## Optional Keycloak adapter
 
 Import `@fotbiler/rulegate-angular/keycloak` when the host application uses

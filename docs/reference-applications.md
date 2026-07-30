@@ -50,6 +50,21 @@ Angular consumes generated manifest identifiers. Route guards, structural
 visibility, and disabled-state directives improve the experience, but each
 write operation is protected again by a resource-aware backend policy.
 
+### Prerequisites and Compose scope
+
+The document-approval sample requires:
+
+- an accessible Keycloak instance;
+- the manually configured realm, clients, roles, mappers, and test users from
+  the [Keycloak setup guide](../samples/document-approval/keycloak/README.md);
+- a local PrimeUI license for the PrimeNG 22 application.
+
+The checked-in Docker Compose file builds and starts the API and web
+application and persists the SQLite database. It does not start Keycloak,
+import a realm, create identities, or inject the local UI license. Use an
+untracked deployment-specific configuration or run the licensed web
+application locally.
+
 ## Package-only verification
 
 The .NET projects reference published NuGet versions. The Angular workspace
@@ -62,13 +77,13 @@ CI verifies:
 - the generated TypeScript file is byte-exact and current;
 - the production Angular application build;
 - minimal allowed and denied HTTP decisions;
-- deterministic allow and deny decisions for the document sample's PBAC,
-  RBAC, ABAC, CBAC, and time-window matrix;
+- deterministic allow and deny decisions for permission-, role-, attribute-,
+  context-, resource-, and time-based rules;
 - database-backed organization schedule calculation and context enrichment;
 - SQLite database creation and API startup.
 
 Docker Compose builds the API and web images from the same package-only
-projects. It does not provision or mutate Keycloak.
+projects. Keycloak configuration remains an explicit external prerequisite.
 
 ## Framework-independent TypeScript feasibility
 

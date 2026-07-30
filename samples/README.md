@@ -14,5 +14,6 @@ directives, and the optional Keycloak adapter. Browser checks only shape the
 experience; every protected operation is authorized again by the API.
 
 Use its [manual verification guide](document-approval/verification.md) to
-reproduce the dedicated Keycloak configuration and test the complete PBAC,
-RBAC, ABAC, CBAC, time-window, and resource-authorization matrix.
+reproduce the dedicated Keycloak configuration and test the complete
+permission-, role-, attribute-, context-, time-, and resource-based
+authorization matrix.

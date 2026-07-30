@@ -16,12 +16,24 @@ It demonstrates:
   directives;
 - ASP.NET Core bearer-token validation and optional Keycloak subject mapping;
 - local YAML policies with subject and resource attribute enrichment;
-- layered PBAC, RBAC, ABAC, and CBAC decisions;
+- layered permission-, role-, attribute-, and context-based decisions;
 - a SQLite document, user-profile, and organization-schedule store;
 - backend enforcement for every protected operation.
 
 The sample does not use Keycloak Admin API, remote policy evaluation, Redis,
 Hangfire, object storage, a gateway, or a background worker.
+
+## Prerequisites
+
+- .NET 10 SDK, Node.js, and pnpm 11;
+- an accessible Keycloak instance;
+- the dedicated realm, clients, roles, mappers, and test users described in
+  [Dedicated Keycloak setup](keycloak/README.md);
+- a valid PrimeUI license stored only in the ignored local configuration file.
+
+The checked-in `compose.yaml` builds the API and web application and persists
+SQLite data. It does not start Keycloak, import the realm, create test users,
+or inject the local PrimeUI license.
 
 ## Run
 
