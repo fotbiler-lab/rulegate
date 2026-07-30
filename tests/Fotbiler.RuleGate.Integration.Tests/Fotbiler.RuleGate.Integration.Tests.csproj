@@ -27,6 +27,9 @@
   <ItemGroup>
     <None Update="Fixtures\rulegate.integration.yaml"
           CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\..\samples\document-approval\api\rulegate.yaml"
+          Link="Fixtures\document-approval.rulegate.yaml"
+          CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
 </Project>

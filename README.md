@@ -125,6 +125,8 @@ RuleGate currently provides:
 - Optional Keycloak realm-role and selected client-role normalization for
   ASP.NET Core and Angular
 - Package-only Angular npm tarball verification
+- Package-consuming minimal ASP.NET Core and full-stack Angular reference
+  applications
 - .NET 8, .NET 9, and .NET 10 packages
 
 See the [roadmap](docs/roadmap.md) for published milestones and upcoming

@@ -82,15 +82,20 @@ permissions in the top-level `permission` array.
 
 Create users without storing their passwords in this repository:
 
-| Username                | Realm role         | Local sample organization |
-| ----------------------- | ------------------ | ------------------------- |
-| `sample-viewer`         | `VIEWER`           | `records`                 |
-| `sample-manager`        | `DOCUMENT_MANAGER` | `records`                 |
-| `sample-approver`       | `APPROVER`         | `records`                 |
-| `sample-legal-approver` | `APPROVER`         | `legal`                   |
+| Username                | Realm role         | Local organization | Local clearance |
+| ----------------------- | ------------------ | ------------------ | --------------- |
+| `sample-viewer`         | `VIEWER`           | `records`          | `public`        |
+| `sample-manager`        | `DOCUMENT_MANAGER` | `records`          | `internal`      |
+| `sample-approver`       | `APPROVER`         | `records`          | `confidential`  |
+| `sample-legal-approver` | `APPROVER`         | `legal`            | `confidential`  |
+| `sample-admin`          | `ADMIN`            | `records`          | `confidential`  |
 
-These four usernames are part of the deterministic SQLite seed data after the
-dedicated realm replaces the temporary development realm.
+These five usernames are part of the deterministic SQLite seed data.
+
+After provisioning the realm, follow the
+[document-approval verification guide](../verification.md) to confirm effective
+roles, permissions, organization isolation, clearance, workflow, and temporal
+resource rules with all five users.
 
 ## Token verification
 

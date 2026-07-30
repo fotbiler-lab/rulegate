@@ -14,7 +14,6 @@ export class AuthService {
   readonly username = computed(() => this.usernameState());
 
   async initialize(): Promise<void> {
-    await this.settings.load();
     const config = this.settings.value;
     this.keycloak = new Keycloak({
       url: config.keycloakUrl,

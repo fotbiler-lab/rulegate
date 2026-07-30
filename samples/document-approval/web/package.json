@@ -19,6 +19,7 @@
     "@fotbiler/rulegate-angular": "0.7.0-preview.1",
     "@primeuix/themes": "3.0.0",
     "keycloak-js": "26.2.4",
+    "primeflex": "4.0.0",
     "primeicons": "8.0.0",
     "primeng": "22.0.0",
     "rxjs": "7.8.2",

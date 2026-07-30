@@ -43,7 +43,7 @@ Development through 1.0 preserves five product properties:
 | Attribute-to-Attribute Comparison            | ✅ Available |
 | First-Class Time and Context Policies        | ✅ Available |
 | ASP.NET Core Enrichment Pipeline             | ✅ Available |
-| Official Reference Applications              | ⏳ Planned   |
+| Official Reference Applications              | ✅ Available |
 | Policy Testing CLI                           | ⏳ Planned   |
 | Explain and Lint                             | ⏳ Planned   |
 | Policy Sources and Atomic Reload             | ⏳ Planned   |
@@ -53,8 +53,9 @@ Development through 1.0 preserves five product properties:
 | Stable Release                               | ⏳ Planned   |
 
 The latest RuleGate NuGet preview is `0.7.0-preview.2`. The independently
-versioned Angular npm package remains at `0.7.0-preview.1`. The next feature
-milestone is Official Reference Applications in `0.8.0-preview.1`.
+versioned Angular npm package remains at `0.7.0-preview.1`. Official Reference
+Applications are available in the repository. The next feature milestone is
+the Policy Testing CLI in `0.8.0-preview.2`.
 
 All NuGet packages share one version and are published together for every
 NuGet release, including packages without code changes. npm packages are
@@ -207,10 +208,7 @@ verification describes compatibility only.
 - Minimal-hosting and `Startup.cs` integration paths
 - [ASP.NET Core enrichment guide](enrichment.md)
 
-## Planned previews
-
-The compatibility track runs alongside these feature milestones and becomes a
-release criterion at `1.0.0-rc.1`.
+## Available in the repository
 
 ### `0.8.0-preview.1` — Official Reference Applications
 
@@ -226,6 +224,11 @@ release criterion at `1.0.0-rc.1`.
 The full-stack sample uses the current stable .NET, Angular, and Keycloak
 versions at implementation time. Smaller compatibility samples cover legacy
 hosting and Angular patterns.
+
+## Planned previews
+
+The compatibility track runs alongside these feature milestones and becomes a
+release criterion at `1.0.0-rc.1`.
 
 ### `0.8.0-preview.2` — Policy Testing CLI
 

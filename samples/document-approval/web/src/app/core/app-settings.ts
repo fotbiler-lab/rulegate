@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable, InjectionToken } from '@angular/core';
 
 export interface AppConfiguration {
   readonly apiUrl: string;
@@ -6,27 +6,34 @@ export interface AppConfiguration {
   readonly keycloakRealm: string;
   readonly keycloakClientId: string;
   readonly ruleGateClientId: string;
+  readonly primeNgLicense?: string;
+}
+
+export const APP_CONFIGURATION = new InjectionToken<AppConfiguration>('APP_CONFIGURATION');
+
+export async function loadAppConfiguration(): Promise<AppConfiguration> {
+  const response = await fetch('/app-config.json', { cache: 'no-store' });
+
+  if (!response.ok) {
+    throw new Error(`Could not load app-config.json (${response.status}).`);
+  }
+
+  const base = (await response.json()) as AppConfiguration;
+  const local = await loadLocalConfiguration();
+  return { ...base, ...local };
 }
 
 @Injectable({ providedIn: 'root' })
 export class AppSettings {
-  private configuration: AppConfiguration | null = null;
+  constructor(@Inject(APP_CONFIGURATION) readonly value: AppConfiguration) {}
+}
 
-  get value(): AppConfiguration {
-    if (this.configuration === null) {
-      throw new Error('Application configuration has not been loaded.');
-    }
+async function loadLocalConfiguration(): Promise<Partial<AppConfiguration>> {
+  const response = await fetch('/app-config.local.json', { cache: 'no-store' });
 
-    return this.configuration;
+  if (!response.ok || !response.headers.get('content-type')?.includes('application/json')) {
+    return {};
   }
 
-  async load(): Promise<void> {
-    const response = await fetch('/app-config.json', { cache: 'no-store' });
-
-    if (!response.ok) {
-      throw new Error(`Could not load app-config.json (${response.status}).`);
-    }
-
-    this.configuration = (await response.json()) as AppConfiguration;
-  }
+  return (await response.json()) as Partial<AppConfiguration>;
 }

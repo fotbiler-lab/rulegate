@@ -53,6 +53,21 @@ curl --fail --silent \
   -H "X-Demo-Permissions: DOC.READ" \
   "$MINIMAL_URL/documents/doc-1" >/dev/null
 
+curl --fail --silent \
+  -H "X-Demo-User: sample-user" \
+  -H "X-Demo-Roles: DOCUMENT.READER" \
+  "$MINIMAL_URL/documents/doc-1" >/dev/null
+
+anonymous_status="$(
+  curl --silent --output /dev/null --write-out "%{http_code}" \
+    "$MINIMAL_URL/documents/doc-1"
+)"
+
+if [[ "$anonymous_status" != "401" ]]; then
+  echo "Expected the minimal sample to challenge with 401; received $anonymous_status." >&2
+  exit 1
+fi
+
 denied_status="$(
   curl --silent --output /dev/null --write-out "%{http_code}" \
     -H "X-Demo-User: sample-user" \
@@ -61,6 +76,19 @@ denied_status="$(
 
 if [[ "$denied_status" != "403" ]]; then
   echo "Expected the minimal sample to deny with 403; received $denied_status." >&2
+  exit 1
+fi
+
+blocked_status="$(
+  curl --silent --output /dev/null --write-out "%{http_code}" \
+    -H "X-Demo-User: sample-user" \
+    -H "X-Demo-Permissions: DOC.READ" \
+    -H "X-Demo-Roles: DOCUMENT.BLOCKED" \
+    "$MINIMAL_URL/documents/doc-1"
+)"
+
+if [[ "$blocked_status" != "403" ]]; then
+  echo "Expected the blocked role to deny with 403; received $blocked_status." >&2
   exit 1
 fi
 

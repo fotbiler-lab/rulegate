@@ -72,6 +72,14 @@ public sealed class DemoAuthenticationHandler(
             claims.Add(new Claim("permission", permission));
         }
 
+        foreach (var role in Request.Headers["X-Demo-Roles"]
+                     .ToString()
+                     .Split(',', StringSplitOptions.RemoveEmptyEntries |
+                                 StringSplitOptions.TrimEntries))
+        {
+            claims.Add(new Claim(ClaimTypes.Role, role));
+        }
+
         var principal = new ClaimsPrincipal(new ClaimsIdentity(claims, Scheme.Name));
         return Task.FromResult(
             AuthenticateResult.Success(new AuthenticationTicket(principal, Scheme.Name)));

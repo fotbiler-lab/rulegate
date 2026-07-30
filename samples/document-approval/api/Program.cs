@@ -1,9 +1,13 @@
 using System.Security.Claims;
+using Fotbiler.RuleGate.Abstractions.Attributes;
+using Fotbiler.RuleGate.Abstractions.Authorization;
+using Fotbiler.RuleGate.AspNetCore.Authorization;
 using Fotbiler.RuleGate.AspNetCore.DependencyInjection;
 using Fotbiler.RuleGate.AspNetCore.Endpoints;
 using Fotbiler.RuleGate.Keycloak.DependencyInjection;
 using Fotbiler.RuleGate.Manifest.Compilation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using RuleGate.DocumentApproval.Api.Authorization;
@@ -98,16 +102,32 @@ var documents = app.MapGroup("/api/documents");
 
 documents.MapGet(
         "/",
-        async (ClaimsPrincipal principal, SampleDbContext database, CancellationToken cancellationToken) =>
+        async (ClaimsPrincipal principal, IAuthorizationService authorizationService,
+            SampleDbContext database, CancellationToken cancellationToken) =>
         {
             var username = principal.FindFirstValue("preferred_username") ?? principal.Identity?.Name;
             var profile = await database.UserProfiles.AsNoTracking()
                 .SingleAsync(item => item.Username == username, cancellationToken);
             var items = await database.Documents.AsNoTracking()
                 .Where(item => item.OrganizationId == profile.OrganizationId)
-                .OrderByDescending(item => item.UpdatedAt)
                 .ToListAsync(cancellationToken);
-            return Results.Ok(items);
+
+            var visibleItems = new List<DocumentRecord>();
+
+            foreach (var item in items.OrderByDescending(item => item.UpdatedAt))
+            {
+                var result = await authorizationService.AuthorizeRuleGateAsync(
+                    principal,
+                    new AuthorizationResource("document", item.Id.ToString()),
+                    action: "read");
+
+                if (result.Succeeded)
+                {
+                    visibleItems.Add(item);
+                }
+            }
+
+            return Results.Ok(visibleItems);
         })
     .RequireRuleGate("document", "list");
 
@@ -124,11 +144,21 @@ documents.MapGet(
 documents.MapPost(
         "/",
         async (CreateDocumentRequest request, ClaimsPrincipal principal, SampleDbContext database,
-            CancellationToken cancellationToken) =>
+            IAuthorizationService authorizationService, CancellationToken cancellationToken) =>
         {
             if (!IsValidDocumentInput(request.Title, request.Classification))
             {
                 return Results.BadRequest(new { detail = "A title and a supported classification are required." });
+            }
+
+            var classificationAuthorization = await AuthorizeClassificationAsync(
+                authorizationService,
+                principal,
+                request.Classification);
+
+            if (!classificationAuthorization.Succeeded)
+            {
+                return AccessForbidden();
             }
 
             var username = principal.FindFirstValue("preferred_username") ?? principal.Identity?.Name;
@@ -151,12 +181,23 @@ documents.MapPost(
 
 documents.MapPut(
         "/{id:int}",
-        async (int id, UpdateDocumentRequest request, SampleDbContext database,
+        async (int id, UpdateDocumentRequest request, ClaimsPrincipal principal,
+            IAuthorizationService authorizationService, SampleDbContext database,
             CancellationToken cancellationToken) =>
         {
             if (!IsValidDocumentInput(request.Title, request.Classification))
             {
                 return Results.BadRequest(new { detail = "A title and a supported classification are required." });
+            }
+
+            var classificationAuthorization = await AuthorizeClassificationAsync(
+                authorizationService,
+                principal,
+                request.Classification);
+
+            if (!classificationAuthorization.Succeeded)
+            {
+                return AccessForbidden();
             }
 
             var document = await database.Documents.SingleAsync(item => item.Id == id, cancellationToken);
@@ -193,7 +234,39 @@ static bool IsValidDocumentInput(string title, string classification)
 {
     return !string.IsNullOrWhiteSpace(title) &&
            title.Length <= 200 &&
-           classification is "public" or "internal" or "confidential";
+           DocumentClassifications.TryGetLevel(classification, out _);
+}
+
+static IResult AccessForbidden()
+{
+    return Results.Problem(
+        type: RuleGateHttpAuthorizationProblemTypes.AccessForbidden,
+        title: "Access is forbidden.",
+        statusCode: StatusCodes.Status403Forbidden,
+        detail: "The authenticated identity is not authorized to access this resource.",
+        extensions: new Dictionary<string, object?>
+        {
+            ["code"] = RuleGateHttpAuthorizationProblemCodes.AccessForbidden,
+        });
+}
+
+static Task<AuthorizationResult> AuthorizeClassificationAsync(
+    IAuthorizationService authorizationService,
+    ClaimsPrincipal principal,
+    string classification)
+{
+    DocumentClassifications.TryGetLevel(classification, out var classificationLevel);
+    var resource = new AuthorizationResource(
+        type: "document",
+        attributes: new AuthorizationAttributes(
+        [
+            new("classificationLevel", classificationLevel),
+        ]));
+
+    return authorizationService.AuthorizeRuleGateAsync(
+        principal,
+        resource,
+        action: "classify");
 }
 
 public sealed record CreateDocumentRequest(string Title, string Classification);

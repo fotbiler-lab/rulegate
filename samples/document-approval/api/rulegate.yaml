@@ -25,6 +25,33 @@ policies:
             right:
               source: resource
               name: organizationId
+        - attributeComparison:
+            left:
+              source: subject
+              name: clearanceLevel
+            operator: greaterThanOrEqual
+            right:
+              source: resource
+              name: classificationLevel
+        - any:
+            - attribute:
+                source: resource
+                name: classificationLevel
+                operator: lessThan
+                valueType: number
+                value: 3
+            - all:
+                - timeWindow:
+                    days: [monday, tuesday, wednesday, thursday, friday]
+                    start: '05:00'
+                    end: '22:00'
+                    timeZone: Europe/Istanbul
+                - attribute:
+                    source: context
+                    name: organizationBusinessHoursOpen
+                    operator: equal
+                    valueType: boolean
+                    value: true
 
   - id: document-create
     resourceType: document
@@ -37,6 +64,23 @@ policies:
             operator: equal
             valueType: string
             value: api
+
+  - id: document-classify
+    resourceType: document
+    action: classify
+    requirement:
+      all:
+        - any:
+            - permission: DOC.CREATE
+            - permission: DOC.UPDATE
+        - attributeComparison:
+            left:
+              source: subject
+              name: clearanceLevel
+            operator: greaterThanOrEqual
+            right:
+              source: resource
+              name: classificationLevel
 
   - id: document-update
     resourceType: document
@@ -58,6 +102,14 @@ policies:
             right:
               source: resource
               name: ownerUsername
+        - attributeComparison:
+            left:
+              source: subject
+              name: clearanceLevel
+            operator: greaterThanOrEqual
+            right:
+              source: resource
+              name: classificationLevel
 
   - id: document-submit
     resourceType: document
@@ -79,6 +131,14 @@ policies:
             right:
               source: resource
               name: ownerUsername
+        - attributeComparison:
+            left:
+              source: subject
+              name: clearanceLevel
+            operator: greaterThanOrEqual
+            right:
+              source: resource
+              name: classificationLevel
 
   - id: document-approve
     resourceType: document
@@ -101,6 +161,14 @@ policies:
             right:
               source: resource
               name: organizationId
+        - attributeComparison:
+            left:
+              source: subject
+              name: clearanceLevel
+            operator: greaterThanOrEqual
+            right:
+              source: resource
+              name: classificationLevel
         - not:
             attributeComparison:
               left:
@@ -132,6 +200,14 @@ policies:
             right:
               source: resource
               name: organizationId
+        - attributeComparison:
+            left:
+              source: subject
+              name: clearanceLevel
+            operator: greaterThanOrEqual
+            right:
+              source: resource
+              name: classificationLevel
         - not:
             attributeComparison:
               left:

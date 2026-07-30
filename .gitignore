@@ -34,6 +34,7 @@ Thumbs.db
 .env.*
 !.env.example
 secrets.json
+samples/document-approval/web/public/app-config.local.json
 
 # Local RuleGate configuration
 rulegate.local.yaml
