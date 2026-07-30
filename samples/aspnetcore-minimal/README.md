@@ -7,8 +7,8 @@ manifest:
 - register immutable policies;
 - protect a Minimal API endpoint;
 - return fail-closed `401` and `403` responses;
-- provide copyable PBAC, RBAC, ABAC, CBAC, resource, time, and logical policy
-  examples.
+- provide copyable permission-, role-, attribute-, context-, resource-, time-,
+  and logical-policy examples.
 
 Run it:
 

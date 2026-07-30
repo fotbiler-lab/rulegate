@@ -7,7 +7,7 @@
 </p>
 
 <p align="center">
-  RBAC · ABAC · CBAC · Resource-based authorization · ASP.NET Core · Angular · YAML manifests · RuleGate CLI
+  Role-based authorization · Attribute-based authorization · Context-based authorization · Resource-based authorization · ASP.NET Core · Angular · YAML manifests · RuleGate CLI
 </p>
 
 <p align="center">
@@ -26,6 +26,8 @@
   ·
   <a href="#packages">Packages</a>
   ·
+  <a href="#reference-applications">Samples</a>
+  ·
   <a href="docs/roadmap.md">Roadmap</a>
   ·
   <a href="#security-behavior">Security</a>
@@ -36,6 +38,28 @@
 > [!WARNING]
 > RuleGate is currently in preview. Public APIs may change before the first
 > stable release, and the packages are not yet recommended for production use.
+
+## Authorization, not authentication
+
+RuleGate does not authenticate users, issue tokens, or manage identities. The
+host application validates an identity and supplies trusted subject, resource,
+and request-context data. RuleGate then decides whether that subject may
+perform an action on a resource.
+
+```mermaid
+flowchart LR
+    IdP[Identity provider] -->|Validated identity| Host[Host application]
+    Data[Application data] -->|Trusted attributes| Host
+    Host --> Subject[Subject]
+    Host --> Resource[Resource]
+    Host --> Context[Context]
+    Subject --> Engine[RuleGate policy engine]
+    Resource --> Engine
+    Context --> Engine
+    Engine --> Decision[Allow or deny]
+    Decision --> API[ASP.NET Core enforcement]
+    Host -. Frontend authorization snapshot .-> UI[Angular UX projection]
+```
 
 ## Why RuleGate?
 
@@ -63,6 +87,29 @@ more than framework-level roles or ad hoc permission checks.
 - **Provider integrations:** optional adapters normalize provider claims
   without coupling the RuleGate engine or primary Angular entrypoint to an
   identity provider.
+
+One policy can combine several authorization styles without moving evaluation
+to a remote service:
+
+| Style                          | Typical RuleGate input                                   |
+| ------------------------------ | -------------------------------------------------------- |
+| Permission-based authorization | Exact application permissions such as `document.update`  |
+| Role-based authorization       | Effective roles such as `finance.approver`               |
+| Attribute-based authorization  | Department, clearance, classification, or workflow state |
+| Context-based authorization    | Time, network zone, request channel, or trusted device   |
+| Resource-based authorization   | Ownership, organization scope, state, or resource value  |
+
+## Which package should I install?
+
+| Need                                       | Start with                                                    |
+| ------------------------------------------ | ------------------------------------------------------------- |
+| ASP.NET Core application                   | `Fotbiler.RuleGate.AspNetCore` + `Fotbiler.RuleGate.Manifest` |
+| Framework-independent authorization engine | `Fotbiler.RuleGate.Core`                                      |
+| Custom contracts or evaluators             | `Fotbiler.RuleGate.Abstractions`                              |
+| YAML policy loading and compilation        | `Fotbiler.RuleGate.Manifest`                                  |
+| Keycloak claim normalization               | `Fotbiler.RuleGate.Keycloak`                                  |
+| Manifest validation and code generation    | `Fotbiler.RuleGate.Cli`                                       |
+| Angular route and template projection      | `@fotbiler/rulegate-angular`                                  |
 
 ## Packages
 
@@ -263,6 +310,40 @@ policies:
             - role: sample.administrator
 ```
 
+Even a small real-world rule can combine a permission, resource ownership,
+workflow state, and trusted request context:
+
+```yaml
+- id: document-update
+  resourceType: document
+  action: update
+  requirement:
+    all:
+      - permission: document.update
+      - attributeComparison:
+          left:
+            source: resource
+            name: ownerId
+          operator: equal
+          right:
+            source: subject
+            name: id
+      - attribute:
+          source: resource
+          name: status
+          operator: in
+          valueType: stringCollection
+          value: [draft, returned]
+      - context:
+          property: trustedDevice
+          operator: equal
+          valueType: boolean
+          value: true
+```
+
+The host must derive `ownerId`, `status`, and `trustedDevice` from trusted
+application sources. Missing or incompatible input denies access.
+
 ### 2. Compile the complete manifest
 
 ```csharp
@@ -406,6 +487,13 @@ The repository includes a
 The full-stack sample is also the Angular reference and combines PrimeNG,
 Keycloak, SQLite, generated identifiers, guards, directives, and backend
 resource authorization without source-project shortcuts.
+
+The document-approval sample requires an accessible Keycloak instance, the
+[documented realm and client configuration](samples/document-approval/keycloak/README.md),
+and a [local PrimeUI license](samples/document-approval/README.md#prerequisites).
+Its checked-in Docker Compose file builds the API and web application only; it
+does not provision Keycloak, import a realm, create test users, or supply a UI
+license.
 
 ## Security behavior
 

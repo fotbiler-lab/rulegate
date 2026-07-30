@@ -24,8 +24,24 @@ services
     });
 ```
 
+The mapping keeps identity-provider details outside the policy engine:
+
+| Validated token input                   | RuleGate subject output              |
+| --------------------------------------- | ------------------------------------ |
+| `sub`                                   | Subject identifier                   |
+| `realm_access.roles`                    | `keycloak:realm:<role>`              |
+| Selected `resource_access` client roles | `keycloak:client:<client-id>:<role>` |
+| Explicit `permission` claims            | Provider-independent permissions     |
+
+Only selected client IDs are mapped. RuleGate does not contact Keycloak to
+expand roles or infer permissions absent from the validated token.
+
 See the [Keycloak integration guide](https://github.com/fotbiler-lab/rulegate/blob/main/docs/keycloak.md)
 for role naming, client-role selection, and security boundaries.
+
+See the
+[document-approval reference application](https://github.com/fotbiler-lab/rulegate/tree/main/samples/document-approval)
+for the complete ASP.NET Core, Angular, Keycloak, SQLite, and YAML composition.
 
 ## RuleGate packages
 

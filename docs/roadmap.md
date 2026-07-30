@@ -216,7 +216,8 @@ verification describes compatibility only.
 - A modern Angular sample using generated identifiers, guards, and directives
 - A full-stack document-approval sample with ASP.NET Core, Angular, Keycloak,
   YAML policies, and a sample data store
-- Repeatable Docker Compose setup, test identities, and authorization scenarios
+- Docker Compose setup for the API and web application, with documented
+  Keycloak configuration, test identities, and authorization scenarios
 - Package-consuming examples rather than source-project shortcuts
 - Initial framework-independent TypeScript client and legacy-adapter feasibility
   work required by the compatibility track
