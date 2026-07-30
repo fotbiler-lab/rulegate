@@ -1,0 +1,28 @@
+services:
+  api:
+    build:
+      context: ../..
+      dockerfile: samples/document-approval/api/Dockerfile
+    environment:
+      ASPNETCORE_URLS: http://+:8080
+      ConnectionStrings__SampleDatabase: Data Source=/data/rulegate-sample.db
+      Keycloak__Authority: https://keycloak.erengaygusuz.com.tr/realms/rulegate-samples
+      Keycloak__Audience: rulegate-document-approval-api
+      Keycloak__ClientId: rulegate-document-approval-api
+      Web__Origin: http://localhost:4200
+    ports:
+      - '5088:8080'
+    volumes:
+      - rulegate-sample-data:/data
+
+  web:
+    build:
+      context: ../..
+      dockerfile: samples/document-approval/web/Dockerfile
+    depends_on:
+      - api
+    ports:
+      - '4200:80'
+
+volumes:
+  rulegate-sample-data:

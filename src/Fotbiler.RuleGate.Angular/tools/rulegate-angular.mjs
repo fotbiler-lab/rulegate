@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 
 import { randomUUID } from 'node:crypto';
-import { mkdir, readFile, rename, rm, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, realpath, rename, rm, writeFile } from 'node:fs/promises';
 import { basename, dirname, resolve } from 'node:path';
-import { pathToFileURL } from 'node:url';
+import { fileURLToPath } from 'node:url';
 
 import { parseDocument } from 'yaml';
 
@@ -523,9 +523,20 @@ async function writeAtomically(outputPath, source) {
 
 class RuleGateAngularUsageError extends Error {}
 
-const isEntryPoint =
-  process.argv[1] !== undefined && import.meta.url === pathToFileURL(resolve(process.argv[1])).href;
+async function isEntryPoint() {
+  if (process.argv[1] === undefined) {
+    return false;
+  }
 
-if (isEntryPoint) {
+  try {
+    const modulePath = await realpath(fileURLToPath(import.meta.url));
+    const invokedPath = await realpath(resolve(process.argv[1]));
+    return modulePath === invokedPath;
+  } catch {
+    return false;
+  }
+}
+
+if (await isEntryPoint()) {
   process.exitCode = await runRuleGateAngularCli(process.argv.slice(2));
 }

@@ -1,0 +1,248 @@
+# This manifest is intentionally broader than the HTTP host. Program.cs binds
+# document/read to a runnable endpoint; the remaining policies form a valid,
+# copyable catalog of RuleGate requirement kinds. Applications must populate
+# every referenced subject, resource, and context attribute from trusted data.
+
+schemaVersion: 1
+
+application:
+  id: rulegate-minimal-api
+  name: RuleGate Minimal API
+
+policies:
+  # PBAC + RBAC + logical all/any/not. This policy protects the sample endpoint.
+  - id: document-read
+    resourceType: document
+    action: read
+    requirement:
+      id: readable-and-not-blocked
+      all:
+        - id: reader-capability
+          any:
+            - id: direct-read-permission
+              permission: DOC.READ
+            - id: document-reader-role
+              role: DOCUMENT.READER
+        - id: blocked-role-denied
+          not:
+            role: DOCUMENT.BLOCKED
+
+  # ABAC + resource-based authorization + attribute-to-attribute comparison.
+  - id: document-update
+    resourceType: document
+    action: update
+    requirement:
+      all:
+        - permission: DOC.UPDATE
+        - attribute:
+            source: resource
+            name: status
+            operator: in
+            valueType: stringCollection
+            value: [draft, returned]
+        - attributeComparison:
+            left:
+              source: subject
+              name: userId
+            operator: equal
+            right:
+              source: resource
+              name: ownerId
+        - attributeComparison:
+            left:
+              source: subject
+              name: organizationId
+            operator: equal
+            right:
+              source: resource
+              name: organizationId
+        - attributeComparison:
+            left:
+              source: subject
+              name: clearanceLevel
+            operator: greaterThanOrEqual
+            right:
+              source: resource
+              name: classificationLevel
+
+  # RBAC + PBAC + ABAC + CBAC + first-class time and fresh-MFA requirements.
+  - id: document-approve
+    resourceType: document
+    action: approve
+    requirement:
+      all:
+        - permission: DOC.APPROVE
+        - role: DOCUMENT.APPROVER
+        - attribute:
+            source: resource
+            name: status
+            operator: equal
+            valueType: string
+            value: submitted
+        - attributeComparison:
+            left:
+              source: resource
+              name: totalAmount
+            operator: lessThanOrEqual
+            right:
+              source: subject
+              name: approvalLimit
+        - not:
+            attributeComparison:
+              left:
+                source: subject
+                name: userId
+              operator: equal
+              right:
+                source: resource
+                name: ownerId
+        - context:
+            property: networkZone
+            operator: in
+            valueType: stringCollection
+            value: [internal, vpn]
+        - context:
+            property: trustedDevice
+            operator: equal
+            valueType: boolean
+            value: true
+        - contextAge:
+            timestamp: mfa
+            maximumAge: '00:15:00'
+        - timeWindow:
+            days: [monday, tuesday, wednesday, thursday, friday]
+            start: '08:00'
+            end: '18:00'
+            timeZone: Europe/Istanbul
+
+  # Canonical request context + a stable one-time availability window.
+  - id: document-publish
+    resourceType: document
+    action: publish
+    requirement:
+      all:
+        - permission: DOC.PUBLISH
+        - context:
+            property: requestChannel
+            operator: equal
+            valueType: string
+            value: api
+        - dateTimeWindow:
+            startsAt: '2026-01-01T00:00:00Z'
+            endsAt: '2099-01-01T00:00:00Z'
+
+  # String, collection, presence, and free-form context attribute operators.
+  - id: document-share
+    resourceType: document
+    action: share
+    requirement:
+      all:
+        - permission: DOC.SHARE
+        - attribute:
+            source: subject
+            name: department
+            operator: startsWith
+            stringComparison: ordinalIgnoreCase
+            valueType: string
+            value: operations
+        - attribute:
+            source: subject
+            name: groups
+            operator: containsAny
+            stringComparison: ordinalIgnoreCase
+            valueType: stringCollection
+            value: [records, legal, compliance]
+        - attribute:
+            source: resource
+            name: labels
+            operator: containsAll
+            valueType: stringCollection
+            value: [reviewed, shareable]
+        - attribute:
+            source: resource
+            name: regions
+            operator: intersects
+            valueType: stringCollection
+            value: [tr, eu]
+        - attribute:
+            source: context
+            name: correlationId
+            operator: exists
+        - attribute:
+            source: context
+            name: riskScore
+            operator: lessThan
+            valueType: number
+            value: 40
+
+  # Missing, null, and empty are distinct states in RuleGate.
+  - id: document-archive
+    resourceType: document
+    action: archive
+    requirement:
+      all:
+        - permission: DOC.ARCHIVE
+        - attribute:
+            source: resource
+            name: archivedAt
+            operator: isNull
+        - attribute:
+            source: resource
+            name: retentionHold
+            operator: notExists
+        - attribute:
+            source: resource
+            name: activeReviewers
+            operator: isEmpty
+
+  - id: document-restore
+    resourceType: document
+    action: restore
+    requirement:
+      all:
+        - permission: DOC.RESTORE
+        - attribute:
+            source: resource
+            name: archivedAt
+            operator: isNotNull
+        - attribute:
+            source: resource
+            name: auditEvents
+            operator: isNotEmpty
+
+  # Literal scalar and collection checks with explicit ordinal semantics.
+  - id: report-export
+    resourceType: report
+    action: export
+    requirement:
+      all:
+        - permission: REPORT.EXPORT
+        - attribute:
+            source: subject
+            name: employmentType
+            operator: notIn
+            valueType: stringCollection
+            value: [contractor, guest]
+        - attribute:
+            source: subject
+            name: email
+            operator: endsWith
+            stringComparison: ordinalIgnoreCase
+            valueType: string
+            value: '@example.com'
+        - attribute:
+            source: resource
+            name: title
+            operator: contains
+            stringComparison: ordinalIgnoreCase
+            valueType: string
+            value: quarterly
+        - attribute:
+            source: context
+            name: multiFactorAuthenticated
+            operator: notEqual
+            valueType: boolean
+            value: false
+        - contextAge:
+            timestamp: authentication
+            maximumAge: '08:00:00'

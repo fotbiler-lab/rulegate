@@ -7,6 +7,9 @@ TestResults/
 *.suo
 *.nupkg
 *.snupkg
+*.db
+*.db-shm
+*.db-wal
 
 # Node and frontend
 node_modules/
@@ -31,6 +34,7 @@ Thumbs.db
 .env.*
 !.env.example
 secrets.json
+samples/document-approval/web/public/app-config.local.json
 
 # Local RuleGate configuration
 rulegate.local.yaml

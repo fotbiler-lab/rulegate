@@ -1,0 +1,219 @@
+schemaVersion: 1
+
+application:
+  id: rulegate-document-approval
+  name: RuleGate Document Approval
+
+policies:
+  - id: documents-list
+    resourceType: document
+    action: list
+    requirement:
+      permission: DOC.READ
+
+  - id: document-read
+    resourceType: document
+    action: read
+    requirement:
+      all:
+        - permission: DOC.READ
+        - attributeComparison:
+            left:
+              source: subject
+              name: organizationId
+            operator: equal
+            right:
+              source: resource
+              name: organizationId
+        - attributeComparison:
+            left:
+              source: subject
+              name: clearanceLevel
+            operator: greaterThanOrEqual
+            right:
+              source: resource
+              name: classificationLevel
+        - any:
+            - attribute:
+                source: resource
+                name: classificationLevel
+                operator: lessThan
+                valueType: number
+                value: 3
+            - all:
+                - timeWindow:
+                    days: [monday, tuesday, wednesday, thursday, friday]
+                    start: '05:00'
+                    end: '22:00'
+                    timeZone: Europe/Istanbul
+                - attribute:
+                    source: context
+                    name: organizationBusinessHoursOpen
+                    operator: equal
+                    valueType: boolean
+                    value: true
+
+  - id: document-create
+    resourceType: document
+    action: create
+    requirement:
+      all:
+        - permission: DOC.CREATE
+        - context:
+            property: requestChannel
+            operator: equal
+            valueType: string
+            value: api
+
+  - id: document-classify
+    resourceType: document
+    action: classify
+    requirement:
+      all:
+        - any:
+            - permission: DOC.CREATE
+            - permission: DOC.UPDATE
+        - attributeComparison:
+            left:
+              source: subject
+              name: clearanceLevel
+            operator: greaterThanOrEqual
+            right:
+              source: resource
+              name: classificationLevel
+
+  - id: document-update
+    resourceType: document
+    action: update
+    requirement:
+      all:
+        - permission: DOC.UPDATE
+        - attribute:
+            source: resource
+            name: status
+            operator: equal
+            valueType: string
+            value: draft
+        - attributeComparison:
+            left:
+              source: subject
+              name: username
+            operator: equal
+            right:
+              source: resource
+              name: ownerUsername
+        - attributeComparison:
+            left:
+              source: subject
+              name: clearanceLevel
+            operator: greaterThanOrEqual
+            right:
+              source: resource
+              name: classificationLevel
+
+  - id: document-submit
+    resourceType: document
+    action: submit
+    requirement:
+      all:
+        - permission: WFL.START
+        - attribute:
+            source: resource
+            name: status
+            operator: equal
+            valueType: string
+            value: draft
+        - attributeComparison:
+            left:
+              source: subject
+              name: username
+            operator: equal
+            right:
+              source: resource
+              name: ownerUsername
+        - attributeComparison:
+            left:
+              source: subject
+              name: clearanceLevel
+            operator: greaterThanOrEqual
+            right:
+              source: resource
+              name: classificationLevel
+
+  - id: document-approve
+    resourceType: document
+    action: approve
+    requirement:
+      all:
+        - permission: WFL.APPROVE
+        - role: keycloak:realm:APPROVER
+        - attribute:
+            source: resource
+            name: status
+            operator: equal
+            valueType: string
+            value: submitted
+        - attributeComparison:
+            left:
+              source: subject
+              name: organizationId
+            operator: equal
+            right:
+              source: resource
+              name: organizationId
+        - attributeComparison:
+            left:
+              source: subject
+              name: clearanceLevel
+            operator: greaterThanOrEqual
+            right:
+              source: resource
+              name: classificationLevel
+        - not:
+            attributeComparison:
+              left:
+                source: subject
+                name: username
+              operator: equal
+              right:
+                source: resource
+                name: ownerUsername
+
+  - id: document-reject
+    resourceType: document
+    action: reject
+    requirement:
+      all:
+        - permission: WFL.REJECT
+        - role: keycloak:realm:APPROVER
+        - attribute:
+            source: resource
+            name: status
+            operator: equal
+            valueType: string
+            value: submitted
+        - attributeComparison:
+            left:
+              source: subject
+              name: organizationId
+            operator: equal
+            right:
+              source: resource
+              name: organizationId
+        - attributeComparison:
+            left:
+              source: subject
+              name: clearanceLevel
+            operator: greaterThanOrEqual
+            right:
+              source: resource
+              name: classificationLevel
+        - not:
+            attributeComparison:
+              left:
+                source: subject
+                name: username
+              operator: equal
+              right:
+                source: resource
+                name: ownerUsername

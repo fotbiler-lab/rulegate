@@ -6,6 +6,36 @@ The project follows Semantic Versioning. Preview releases may introduce breaking
 
 ## [Unreleased]
 
+### Added
+
+- Added a package-consuming Minimal API reference with a detailed manifest
+  catalog covering every RuleGate requirement family and automated 401, 403,
+  permission, role, and blocked-role checks.
+- Added a package-consuming document-approval reference application combining
+  Angular 22, PrimeNG 22, ASP.NET Core 10, Keycloak, SQLite, generated
+  identifiers, and local YAML policy evaluation.
+- Added deterministic policy and sample tests for permissions, effective roles,
+  ownership, organization scope, classification, workflow state, time windows,
+  request context, and SQLite-backed organization schedules.
+- Added reproducible Keycloak setup and manual five-user verification guides.
+
+### Security
+
+- Kept identity-provider integration optional and enforced every protected
+  document operation again at the API boundary.
+- Derived subject, resource, and organization-schedule attributes from trusted
+  application data, with missing or invalid enrichment inputs failing closed.
+- Kept test credentials, tokens, local databases, realm exports, and the local
+  PrimeUI license out of the repository.
+
+### Verification
+
+- Added package-only .NET and Angular builds, byte-exact TypeScript generation
+  checks, reference-application startup smoke tests, and deterministic policy
+  matrices to CI.
+- Documented framework-independent TypeScript feasibility without introducing
+  a premature additional package or compatibility promise.
+
 ## [0.7.0-preview.2] - 2026-07-29
 
 ### Added

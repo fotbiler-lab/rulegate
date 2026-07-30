@@ -1,0 +1,35 @@
+{
+  "name": "rulegate-document-approval-web",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "ng serve",
+    "build": "ng build",
+    "format:check": "prettier --check .",
+    "generate": "rulegate-angular generate ../api/rulegate.yaml --output src/app/generated/rulegate.ts",
+    "generate:check": "rulegate-angular generate ../api/rulegate.yaml --output src/app/generated/rulegate.ts --check"
+  },
+  "dependencies": {
+    "@angular/cdk": "22.0.0",
+    "@angular/common": "22.0.8",
+    "@angular/core": "22.0.8",
+    "@angular/forms": "22.0.8",
+    "@angular/platform-browser": "22.0.8",
+    "@angular/router": "22.0.8",
+    "@fotbiler/rulegate-angular": "0.7.0-preview.1",
+    "@primeuix/themes": "3.0.0",
+    "keycloak-js": "26.2.4",
+    "primeflex": "4.0.0",
+    "primeicons": "8.0.0",
+    "primeng": "22.0.0",
+    "rxjs": "7.8.2",
+    "tslib": "2.8.1"
+  },
+  "devDependencies": {
+    "@angular/build": "22.0.8",
+    "@angular/cli": "22.0.8",
+    "@angular/compiler-cli": "22.0.8",
+    "prettier": "3.6.2",
+    "typescript": "6.0.3"
+  }
+}

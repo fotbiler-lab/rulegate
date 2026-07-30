@@ -1,0 +1,7 @@
+@use 'assets/layout/layout';
+
+[data-rulegate-disabled],
+button:disabled {
+  cursor: not-allowed !important;
+  opacity: 0.42 !important;
+}

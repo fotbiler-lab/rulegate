@@ -1,0 +1,96 @@
+.layout-sidebar {
+  position: fixed;
+  z-index: 999;
+  top: 6rem;
+  left: 2rem;
+  display: flex;
+  flex-direction: column;
+  width: 20rem;
+  height: calc(100vh - 8rem);
+  padding: 0.5rem 1.5rem;
+  overflow-y: auto;
+  border-radius: var(--content-border-radius);
+  background: var(--surface-overlay);
+  user-select: none;
+  transition:
+    transform var(--layout-section-transition-duration),
+    left var(--layout-section-transition-duration);
+}
+
+.layout-sidebar nav {
+  flex: 1;
+}
+
+.layout-menu,
+.layout-menu ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.layout-menuitem-root-text {
+  margin: 0.75rem 0;
+  color: var(--text-color);
+  font-size: 0.857rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.layout-menu a {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  border-radius: var(--content-border-radius);
+  color: var(--text-color);
+  cursor: pointer;
+  outline: 0;
+  transition:
+    background-color var(--element-transition-duration),
+    color var(--element-transition-duration);
+}
+
+.layout-menu a:hover {
+  background: var(--surface-hover);
+}
+
+.layout-menu a:focus-visible {
+  outline: var(--focus-ring-width) var(--focus-ring-style) var(--focus-ring-color);
+  outline-offset: -1px;
+  box-shadow: inset var(--focus-ring-shadow);
+}
+
+.layout-menu a.active-route {
+  background: color-mix(in srgb, var(--primary-color) 12%, transparent);
+  color: var(--primary-color);
+  font-weight: 700;
+}
+
+.layout-menuitem-icon {
+  margin-right: 0.65rem;
+}
+
+.security-note {
+  display: flex;
+  gap: 0.75rem;
+  margin: 1rem 0 0.5rem;
+  padding: 1rem;
+  border: 1px solid var(--surface-border);
+  border-radius: var(--content-border-radius);
+  background: color-mix(in srgb, var(--primary-color) 6%, var(--surface-card));
+}
+
+.security-note > i {
+  color: var(--primary-color);
+}
+
+.security-note div {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.security-note span {
+  color: var(--text-color-secondary);
+  font-size: 0.75rem;
+  line-height: 1.4;
+}

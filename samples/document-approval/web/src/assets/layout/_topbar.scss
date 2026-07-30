@@ -1,0 +1,86 @@
+.layout-topbar {
+  position: fixed;
+  z-index: 997;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 4rem;
+  padding: 0 2rem;
+  background: var(--surface-card);
+  transition: left var(--layout-section-transition-duration);
+}
+
+.layout-topbar-logo-container {
+  display: flex;
+  align-items: center;
+  width: 20rem;
+}
+
+.layout-topbar-logo {
+  display: inline-flex;
+  align-items: center;
+}
+
+.layout-topbar-logo img {
+  display: block;
+  width: 9.5rem;
+  height: auto;
+}
+
+.layout-topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-left: auto;
+}
+
+.layout-user-name {
+  color: var(--text-color-secondary);
+  font-size: 0.9rem;
+}
+
+.layout-topbar-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--text-color);
+  cursor: pointer;
+  transition: background-color var(--element-transition-duration);
+}
+
+.layout-topbar-action:hover {
+  background: var(--surface-hover);
+}
+
+.layout-topbar-action:focus-visible,
+.layout-topbar-logo:focus-visible {
+  outline: var(--focus-ring-width) var(--focus-ring-style) var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--focus-ring-shadow);
+}
+
+.layout-topbar-action i {
+  font-size: 1.25rem;
+}
+
+.layout-menu-button {
+  margin-right: 0.5rem;
+}
+
+.logout-action {
+  width: auto;
+  gap: 0.5rem;
+  padding: 0 0.85rem;
+  border-radius: var(--content-border-radius);
+}
+
+.logout-action span {
+  font-size: 0.9rem;
+}

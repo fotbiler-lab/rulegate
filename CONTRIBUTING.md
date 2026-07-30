@@ -121,6 +121,13 @@ pnpm angular:test
 ./scripts/test-angular-package-smoke.sh \
   --package-ready
 
+pnpm samples:format:check
+pnpm samples:generate:check
+pnpm samples:build
+
+./scripts/test-reference-applications.sh \
+  --no-build
+
 git diff --check
 ```
 

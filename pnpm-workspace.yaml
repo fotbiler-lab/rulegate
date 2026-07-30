@@ -1,8 +1,14 @@
 packages:
   - src/Fotbiler.RuleGate.Angular
+  - samples/document-approval/web
+
+linkWorkspacePackages: false
 
 allowBuilds:
   '@parcel/watcher': false
   esbuild: true
   lmdb: false
   msgpackr-extract: false
+
+minimumReleaseAgeExclude:
+  - '@fotbiler/rulegate-angular@0.7.0-preview.1'
