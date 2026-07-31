@@ -1,0 +1,170 @@
+schemaVersion: 1
+manifest: rulegate.yaml
+
+tests:
+  - id: document-read-with-permission
+    description: A direct permission satisfies the read policy.
+    request:
+      subject:
+        id: reader-1
+        permissions: [DOC.READ]
+      resource:
+        type: document
+        id: document-1
+      action: read
+      context:
+        evaluationTime: '2026-07-31T09:00:00Z'
+    expect:
+      outcome: allow
+
+  - id: blocked-document-reader
+    description: A negated blocked role denies an otherwise capable reader.
+    request:
+      subject:
+        id: blocked-reader-1
+        roles: [DOCUMENT.BLOCKED]
+        permissions: [DOC.READ]
+      resource:
+        type: document
+        id: document-1
+      action: read
+      context:
+        evaluationTime: '2026-07-31T09:00:00Z'
+    expect:
+      outcome: deny
+      failureCodes:
+        - RULEGATE_NEGATED_REQUIREMENT_SATISFIED
+
+  - id: missing-policy-is-denied
+    description: An unmatched resource and action route remains default-deny.
+    request:
+      subject:
+        id: reader-1
+        permissions: [DOC.READ]
+      resource:
+        type: unknown-resource
+      action: unknown-action
+      context:
+        evaluationTime: '2026-07-31T09:00:00Z'
+    expect:
+      outcome: deny
+      failureCodes:
+        - RULEGATE_NO_MATCHING_POLICY
+
+  - id: document-owner-update
+    description: Permission, state, ownership, organization, and clearance all match.
+    request:
+      subject:
+        id: editor-1
+        permissions: [DOC.UPDATE]
+        attributes:
+          - name: userId
+            valueType: string
+            value: editor-1
+          - name: organizationId
+            valueType: string
+            value: records
+          - name: clearanceLevel
+            valueType: number
+            value: '4'
+      resource:
+        type: document
+        id: document-2
+        attributes:
+          - name: status
+            valueType: string
+            value: draft
+          - name: ownerId
+            valueType: string
+            value: editor-1
+          - name: organizationId
+            valueType: string
+            value: records
+          - name: classificationLevel
+            valueType: number
+            value: '3'
+      action: update
+      context:
+        evaluationTime: '2026-07-31T09:00:00Z'
+    expect:
+      outcome: allow
+
+  - id: incompatible-clearance-is-indeterminate
+    description: A string-to-number comparison cannot produce a trusted decision.
+    request:
+      subject:
+        id: editor-1
+        permissions: [DOC.UPDATE]
+        attributes:
+          - name: userId
+            valueType: string
+            value: editor-1
+          - name: organizationId
+            valueType: string
+            value: records
+          - name: clearanceLevel
+            valueType: string
+            value: high
+      resource:
+        type: document
+        id: document-2
+        attributes:
+          - name: status
+            valueType: string
+            value: draft
+          - name: ownerId
+            valueType: string
+            value: editor-1
+          - name: organizationId
+            valueType: string
+            value: records
+          - name: classificationLevel
+            valueType: number
+            value: '3'
+      action: update
+      context:
+        evaluationTime: '2026-07-31T09:00:00Z'
+    expect:
+      outcome: indeterminate
+      failureCodes:
+        - RULEGATE_ATTRIBUTE_TYPE_MISMATCH
+
+  - id: publish-through-api-channel
+    description: Permission, request channel, and bounded availability match.
+    request:
+      subject:
+        id: publisher-1
+        permissions: [DOC.PUBLISH]
+      resource:
+        type: document
+        id: document-3
+      action: publish
+      context:
+        evaluationTime: '2026-07-31T09:00:00Z'
+        attributes:
+          - name: requestChannel
+            valueType: string
+            value: api
+    expect:
+      outcome: allow
+
+  - id: archive-empty-state
+    description: Null, missing, and empty attribute states remain distinct.
+    request:
+      subject:
+        id: records-manager-1
+        permissions: [DOC.ARCHIVE]
+      resource:
+        type: document
+        id: document-4
+        attributes:
+          - name: archivedAt
+            valueType: nullValue
+          - name: activeReviewers
+            valueType: stringCollection
+            values: []
+      action: archive
+      context:
+        evaluationTime: '2026-07-31T09:00:00Z'
+    expect:
+      outcome: allow

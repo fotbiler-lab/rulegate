@@ -888,6 +888,23 @@ Do not:
 A safe startup strategy is to fail application startup or fail deployment when
 the intended policy set cannot be compiled.
 
+## Policy-test fixtures
+
+`rulegate test` compiles the complete fixture and referenced manifest before it
+evaluates any request. Fixture validation rejects malformed YAML, duplicate
+keys and identifiers, unsupported types, missing request boundaries, invalid
+expectations, and evaluation times without an explicit offset.
+
+Fixtures must contain synthetic or otherwise safe test data. Text and JSON
+reports include test identifiers, descriptions, outcomes, policy identifiers,
+and failure codes, but never subject, resource, or context attribute values.
+
+The command evaluates the portable policy model only. It does not execute
+identity-provider validation, ASP.NET Core enrichment providers, endpoint
+handlers, or application data access. Continue to test those host trust
+boundaries separately, and never treat a CLI fixture as a replacement for API
+enforcement.
+
 ## Policy replacement and stale configuration
 
 RuleGate does not currently provide manifest hot reload.

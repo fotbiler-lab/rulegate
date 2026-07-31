@@ -146,6 +146,11 @@ do
     >/dev/null
 
   grep -Fx \
+    "tools/$framework/any/Fotbiler.RuleGate.Core.dll" \
+    <<<"$PACKAGE_FILES" \
+    >/dev/null
+
+  grep -Fx \
     "tools/$framework/any/Fotbiler.RuleGate.Manifest.dll" \
     <<<"$PACKAGE_FILES" \
     >/dev/null
@@ -180,6 +185,38 @@ application:
   name: CLI Smoke
 
 policies: []
+YAML
+
+cat > "$WORK_DIRECTORY/authorization.tests.yaml" <<'YAML'
+schemaVersion: 1
+manifest: rulegate.yaml
+
+tests:
+  - id: reader-is-allowed
+    request:
+      subject:
+        id: reader-1
+        permissions: [DOC.READ]
+      resource:
+        type: document
+      action: read
+      context:
+        evaluationTime: '2026-07-31T09:00:00Z'
+    expect:
+      outcome: allow
+
+  - id: missing-permission-is-denied
+    request:
+      subject:
+        id: reader-2
+      resource:
+        type: document
+      action: read
+      context:
+        evaluationTime: '2026-07-31T09:00:00Z'
+    expect:
+      outcome: deny
+      failureCodes: [RULEGATE_MISSING_PERMISSION]
 YAML
 
 for framework in "${EXPECTED_FRAMEWORKS[@]}"
@@ -226,6 +263,11 @@ do
     >/dev/null
 
   grep -F \
+    'test' \
+    "$TEMP_DIRECTORY/help-$framework.out" \
+    >/dev/null
+
+  grep -F \
     'info' \
     "$TEMP_DIRECTORY/help-$framework.out" \
     >/dev/null
@@ -262,6 +304,32 @@ do
   grep -F \
     'rulegate validate [<file>] [options]' \
     "$TEMP_DIRECTORY/validate-help-$framework.out" \
+    >/dev/null
+
+  printf '\n== Verify test help ==\n'
+
+  "$CLI" \
+    test \
+    --help \
+    >"$TEMP_DIRECTORY/test-help-$framework.out" \
+    2>"$TEMP_DIRECTORY/test-help-$framework.err"
+
+  test ! -s \
+    "$TEMP_DIRECTORY/test-help-$framework.err"
+
+  grep -F \
+    -- '--filter' \
+    "$TEMP_DIRECTORY/test-help-$framework.out" \
+    >/dev/null
+
+  grep -F \
+    -- '--format' \
+    "$TEMP_DIRECTORY/test-help-$framework.out" \
+    >/dev/null
+
+  grep -F \
+    'rulegate test [<file>] [options]' \
+    "$TEMP_DIRECTORY/test-help-$framework.out" \
     >/dev/null
 
   printf '\n== Verify version ==\n'
@@ -303,6 +371,16 @@ do
     "$TEMP_DIRECTORY/info-$framework.out" \
     >/dev/null
 
+  grep -F \
+    'Default policy tests: authorization.tests.yaml' \
+    "$TEMP_DIRECTORY/info-$framework.out" \
+    >/dev/null
+
+  grep -F \
+    'Supported policy test schema version: 1' \
+    "$TEMP_DIRECTORY/info-$framework.out" \
+    >/dev/null
+
   printf '\n== Verify default manifest discovery ==\n'
 
   (
@@ -325,6 +403,43 @@ do
     'Policies: 1' \
     "$TEMP_DIRECTORY/valid-$framework.out" \
     >/dev/null
+
+  printf '\n== Verify packaged policy testing ==\n'
+
+  (
+    cd "$WORK_DIRECTORY"
+
+    "$CLI" \
+      test \
+      --format json \
+      >"$TEMP_DIRECTORY/test-$framework.json" \
+      2>"$TEMP_DIRECTORY/test-$framework.err"
+  )
+
+  test ! -s "$TEMP_DIRECTORY/test-$framework.err"
+
+  python3 - \
+    "$TEMP_DIRECTORY/test-$framework.json" <<'PY'
+import json
+from pathlib import Path
+import sys
+
+path = Path(sys.argv[1])
+payload = json.loads(path.read_text(encoding="utf-8"))
+
+assert payload["isValid"] is True
+assert payload["isSuccess"] is True
+assert payload["totalTestCount"] == 2
+assert payload["selectedTestCount"] == 2
+assert payload["passedTestCount"] == 2
+assert payload["failedTestCount"] == 0
+assert [item["actualOutcome"] for item in payload["tests"]] == [
+    "allow",
+    "deny",
+]
+
+print("Policy test JSON output verified.")
+PY
 
   printf '\n== Verify JSON validation failure ==\n'
 

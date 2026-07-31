@@ -775,6 +775,8 @@ The current preview includes:
 - Diagnostics and logging
 - Generic HTTP authorization-result mapping
 - Deterministic CLI manifest validation with text and JSON output
+- Deterministic host-independent policy fixtures with allow, deny,
+  indeterminate, and failure-code expectations
 - Deterministic C# constants generated from manifest identifiers
 - Deterministic TypeScript constants generated from manifest identifiers
 - Angular authorization helpers
@@ -795,5 +797,6 @@ Continue with:
 - [Getting started](getting-started.md) for an executable example.
 - The root [README](../README.md) for current ASP.NET Core usage.
 - The [Keycloak integration guide](keycloak.md) for optional provider mapping.
+- [Policy testing](policy-testing.md) for executable authorization examples.
 - [Documentation index](README.md) for all available guides.
 - [Roadmap](roadmap.md) for upcoming capabilities.

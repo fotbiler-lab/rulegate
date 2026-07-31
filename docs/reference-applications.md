@@ -10,6 +10,9 @@ smallest complete HTTP example. It compiles a YAML manifest at startup,
 registers RuleGate, protects a Minimal API endpoint, and demonstrates allowed
 and denied requests. Its detailed manifest also provides copyable examples of
 every requirement family without adding full-stack infrastructure to the host.
+Its committed `authorization.tests.yaml` evaluates representative allow, deny,
+indeterminate, default-deny, resource, context, and null/empty behavior directly
+against that manifest without starting the HTTP application.
 
 Its header authentication handler is deliberately local to the sample. It is
 not a production authentication pattern.
@@ -79,6 +82,8 @@ CI verifies:
 - minimal allowed and denied HTTP decisions;
 - deterministic allow and deny decisions for permission-, role-, attribute-,
   context-, resource-, and time-based rules;
+- packaged CLI evaluation of allow, deny, indeterminate, and exact failure-code
+  fixture expectations;
 - database-backed organization schedule calculation and context enrichment;
 - SQLite database creation and API startup.
 

@@ -78,9 +78,9 @@ more than framework-level roles or ad hoc permission checks.
   diagnostics, and safe HTTP result mapping.
 - **Manifest-enabled:** YAML policies can be loaded, validated, and compiled
   into immutable runtime policy definitions.
-- **CLI-ready:** manifests can be validated and converted into deterministic C#
-  policy, resource-type, and action constants locally or in CI, with stable
-  process exit codes and stale-output detection.
+- **CLI-ready:** manifests can be validated, tested against deterministic
+  authorization fixtures, and converted into C# policy, resource-type, and
+  action constants locally or in CI, with stable process exit codes.
 - **Angular-ready:** a fail-closed frontend projection, declarative route
   authorization, template composition, disabled state, and generated
   TypeScript identifiers keep frontend behavior aligned with RuleGate.
@@ -101,15 +101,15 @@ to a remote service:
 
 ## Which package should I install?
 
-| Need                                       | Start with                                                    |
-| ------------------------------------------ | ------------------------------------------------------------- |
-| ASP.NET Core application                   | `Fotbiler.RuleGate.AspNetCore` + `Fotbiler.RuleGate.Manifest` |
-| Framework-independent authorization engine | `Fotbiler.RuleGate.Core`                                      |
-| Custom contracts or evaluators             | `Fotbiler.RuleGate.Abstractions`                              |
-| YAML policy loading and compilation        | `Fotbiler.RuleGate.Manifest`                                  |
-| Keycloak claim normalization               | `Fotbiler.RuleGate.Keycloak`                                  |
-| Manifest validation and code generation    | `Fotbiler.RuleGate.Cli`                                       |
-| Angular route and template projection      | `@fotbiler/rulegate-angular`                                  |
+| Need                                                     | Start with                                                    |
+| -------------------------------------------------------- | ------------------------------------------------------------- |
+| ASP.NET Core application                                 | `Fotbiler.RuleGate.AspNetCore` + `Fotbiler.RuleGate.Manifest` |
+| Framework-independent authorization engine               | `Fotbiler.RuleGate.Core`                                      |
+| Custom contracts or evaluators                           | `Fotbiler.RuleGate.Abstractions`                              |
+| YAML policy loading and compilation                      | `Fotbiler.RuleGate.Manifest`                                  |
+| Keycloak claim normalization                             | `Fotbiler.RuleGate.Keycloak`                                  |
+| Manifest validation, policy testing, and code generation | `Fotbiler.RuleGate.Cli`                                       |
+| Angular route and template projection                    | `@fotbiler/rulegate-angular`                                  |
 
 ## Packages
 
@@ -119,7 +119,7 @@ to a remote service:
 | [`Fotbiler.RuleGate.Core`](https://www.nuget.org/packages/Fotbiler.RuleGate.Core)                 | Policy engine, built-in requirement evaluators, dispatcher, and in-memory policy provider                                                       |
 | [`Fotbiler.RuleGate.Manifest`](https://www.nuget.org/packages/Fotbiler.RuleGate.Manifest)         | YAML manifest loading, validation, compilation, and domain mapping                                                                              |
 | [`Fotbiler.RuleGate.AspNetCore`](https://www.nuget.org/packages/Fotbiler.RuleGate.AspNetCore)     | ASP.NET Core dependency injection, claims mapping, ordered attribute enrichment, dynamic policies, endpoint helpers, and resource authorization |
-| [`Fotbiler.RuleGate.Cli`](https://www.nuget.org/packages/Fotbiler.RuleGate.Cli)                   | .NET tool for manifest validation, deterministic C# constant generation, stale-output checks, stable exit codes, and CI usage                   |
+| [`Fotbiler.RuleGate.Cli`](https://www.nuget.org/packages/Fotbiler.RuleGate.Cli)                   | .NET tool for manifest validation, policy testing, deterministic C# constant generation, stale-output checks, and CI usage                      |
 | [`Fotbiler.RuleGate.Keycloak`](https://www.nuget.org/packages/Fotbiler.RuleGate.Keycloak)         | Optional Keycloak claim normalization and RuleGate subject mapping                                                                              |
 | [`@fotbiler/rulegate-angular`](https://www.npmjs.com/package/@fotbiler/rulegate-angular)          | Angular 22 authorization client, declarative route guards, UI directives, and TypeScript identifier generation                                  |
 
@@ -160,6 +160,8 @@ RuleGate currently provides:
 - Opt-in safe HTTP authorization results
 - Opt-in structured authorization diagnostics
 - Deterministic CLI manifest validation with text and JSON output
+- Host-independent policy fixtures with allow, deny, indeterminate, and
+  failure-code expectations
 - Manifest-derived C# policy, resource-type, and action constants
 - Atomic generated-file writes and byte-exact stale-output checks
 - Generated-code compilation smoke coverage on .NET 8, .NET 9, and .NET 10
@@ -191,6 +193,7 @@ previews.
 | Configure logs and diagnostic sinks              | [Diagnostics](docs/diagnostics.md)                       |
 | Review trust boundaries and production controls  | [Security model](docs/security.md)                       |
 | Use the RuleGate command-line tool               | [CLI guide](docs/cli.md)                                 |
+| Test policies without starting an application    | [Policy testing](docs/policy-testing.md)                 |
 | Generate deterministic C# constants              | [C# code generation](docs/code-generation.md)            |
 | Add frontend permission, policy, and role checks | [Angular SDK](docs/angular.md)                           |
 | Map Keycloak roles without coupling the engine   | [Keycloak integration](docs/keycloak.md)                 |
@@ -253,6 +256,14 @@ rulegate validate ./policies/rulegate.yaml
 rulegate validate --format json
 ```
 
+The repository build for `0.8.0-preview.2` adds deterministic authorization
+requests against a manifest without starting the host application:
+
+```bash
+rulegate test ./policies/authorization.tests.yaml
+rulegate test ./policies/authorization.tests.yaml --format json
+```
+
 Use `rulegate --help`, `rulegate --version`, and `rulegate info` to inspect the
 installed tool.
 
@@ -275,9 +286,10 @@ rulegate generate csharp \
   --check
 ```
 
-See the [RuleGate CLI guide](docs/cli.md) for validation and command reference,
-and the [C# code-generation guide](docs/code-generation.md) for generated
-output, stale checks, identifier rules, and CI usage.
+See the [RuleGate CLI guide](docs/cli.md) for the command reference, the
+[policy-testing guide](docs/policy-testing.md) for deterministic fixtures, and
+the [C# code-generation guide](docs/code-generation.md) for generated output,
+stale checks, identifier rules, and CI usage.
 
 ## Quick start
 

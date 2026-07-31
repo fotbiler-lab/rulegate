@@ -1,8 +1,8 @@
 # RuleGate CLI
 
 `Fotbiler.RuleGate.Cli` is the RuleGate command-line tool for deterministic
-manifest validation, C# constant generation, stale-output checks, and CI
-automation.
+manifest validation, policy testing, C# constant generation, stale-output
+checks, and CI automation.
 
 ## Install
 
@@ -14,6 +14,10 @@ dotnet tool install \
 ```
 
 The installed command is `rulegate`.
+
+> The `rulegate test` command is available in the repository and is scheduled
+> for `0.8.0-preview.2`. It is not part of the currently published
+> `0.7.0-preview.2` package.
 
 ## Supported runtimes
 
@@ -28,6 +32,19 @@ rulegate validate
 rulegate validate ./policies/rulegate.yaml
 rulegate validate --format json
 ```
+
+## Test policy behavior
+
+```bash
+rulegate test
+rulegate test ./policies/authorization.tests.yaml
+rulegate test ./policies/authorization.tests.yaml --filter organization
+rulegate test ./policies/authorization.tests.yaml --format json
+```
+
+Fixtures evaluate explicit authorization requests against a compiled manifest
+without starting the host application. They support allow, deny, indeterminate,
+and exact failure-code expectations with fixed evaluation times.
 
 Validation covers the complete manifest requirement model, including typed
 attributes, attribute comparisons, explicit-time-zone schedules, bounded
@@ -80,6 +97,7 @@ Existing output files are preserved when generation fails.
 ```bash
 rulegate --help
 rulegate validate --help
+rulegate test --help
 rulegate generate csharp --help
 rulegate --version
 rulegate info
@@ -87,28 +105,29 @@ rulegate info
 
 ## Exit codes
 
-|  Code | Meaning                                                       |
-| ----: | ------------------------------------------------------------- |
-|   `0` | Command completed successfully                                |
-|   `1` | Manifest, generation, missing-output, or stale-output failure |
-|   `2` | Command-line usage error                                      |
-|   `3` | Unexpected internal error                                     |
-| `130` | Operation canceled                                            |
+|  Code | Meaning                                                                      |
+| ----: | ---------------------------------------------------------------------------- |
+|   `0` | Command completed successfully                                               |
+|   `1` | Fixture, manifest, expectation, generation, missing-output, or stale failure |
+|   `2` | Command-line usage error                                                     |
+|   `3` | Unexpected internal error                                                    |
+| `130` | Operation canceled                                                           |
 
 ## RuleGate packages
 
-| Package                                                                                         | Purpose                                                                                  |
-| ----------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
-| [Fotbiler.RuleGate.Abstractions](https://www.nuget.org/packages/Fotbiler.RuleGate.Abstractions) | Public authorization contracts and extension abstractions                                |
-| [Fotbiler.RuleGate.Core](https://www.nuget.org/packages/Fotbiler.RuleGate.Core)                 | Local fail-closed authorization engine and built-in evaluators                           |
-| [Fotbiler.RuleGate.Manifest](https://www.nuget.org/packages/Fotbiler.RuleGate.Manifest)         | YAML manifest loading, validation, and compilation                                       |
-| [Fotbiler.RuleGate.AspNetCore](https://www.nuget.org/packages/Fotbiler.RuleGate.AspNetCore)     | ASP.NET Core integration and attribute enrichment                                        |
-| [Fotbiler.RuleGate.Cli](https://www.nuget.org/packages/Fotbiler.RuleGate.Cli)                   | Manifest validation, deterministic C# generation, stale-output checks, and CI automation |
-| [Fotbiler.RuleGate.Keycloak](https://www.nuget.org/packages/Fotbiler.RuleGate.Keycloak)         | Optional Keycloak claim normalization and subject mapping                                |
+| Package                                                                                         | Purpose                                                                                    |
+| ----------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| [Fotbiler.RuleGate.Abstractions](https://www.nuget.org/packages/Fotbiler.RuleGate.Abstractions) | Public authorization contracts and extension abstractions                                  |
+| [Fotbiler.RuleGate.Core](https://www.nuget.org/packages/Fotbiler.RuleGate.Core)                 | Local fail-closed authorization engine and built-in evaluators                             |
+| [Fotbiler.RuleGate.Manifest](https://www.nuget.org/packages/Fotbiler.RuleGate.Manifest)         | YAML manifest loading, validation, and compilation                                         |
+| [Fotbiler.RuleGate.AspNetCore](https://www.nuget.org/packages/Fotbiler.RuleGate.AspNetCore)     | ASP.NET Core integration and attribute enrichment                                          |
+| [Fotbiler.RuleGate.Cli](https://www.nuget.org/packages/Fotbiler.RuleGate.Cli)                   | Manifest validation, policy testing, C# generation, stale-output checks, and CI automation |
+| [Fotbiler.RuleGate.Keycloak](https://www.nuget.org/packages/Fotbiler.RuleGate.Keycloak)         | Optional Keycloak claim normalization and subject mapping                                  |
 
 ## Documentation
 
 - [RuleGate CLI guide](https://github.com/fotbiler-lab/rulegate/blob/main/docs/cli.md)
+- [Policy testing](https://github.com/fotbiler-lab/rulegate/blob/main/docs/policy-testing.md)
 - [Manifest guide](https://github.com/fotbiler-lab/rulegate/blob/main/docs/manifests.md)
 - [Security model](https://github.com/fotbiler-lab/rulegate/blob/main/docs/security.md)
 - [Roadmap](https://github.com/fotbiler-lab/rulegate/blob/main/docs/roadmap.md)

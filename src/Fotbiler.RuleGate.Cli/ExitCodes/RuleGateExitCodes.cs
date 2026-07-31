@@ -6,6 +6,8 @@ internal static class RuleGateExitCodes
 
     public const int ManifestInvalid = 1;
 
+    public const int TestFailed = 1;
+
     public const int UsageError = 2;
 
     public const int InternalError = 3;

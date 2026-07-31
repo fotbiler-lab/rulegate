@@ -81,7 +81,7 @@ internal static class RuleGateCliApplication
         var rootCommand =
             new Command(
                 "rulegate",
-                "Validate, generate, and manage Fotbiler RuleGate policies.");
+                "Validate, test, generate, and manage RuleGate policies.");
 
         rootCommand.Options.Add(
             new HelpOption());
@@ -94,6 +94,9 @@ internal static class RuleGateCliApplication
 
         rootCommand.Subcommands.Add(
             GenerateCommand.Create());
+
+        rootCommand.Subcommands.Add(
+            TestCommand.Create());
 
         rootCommand.Subcommands.Add(
             InfoCommand.Create());
