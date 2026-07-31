@@ -22,7 +22,7 @@ PACKAGE_DIRECTORY="$REPOSITORY_ROOT/artifacts/packages"
 
 CONSUMER_PACKAGE_CACHE="$REPOSITORY_ROOT/artifacts/package-consumer-global-packages"
 
-PACKAGE_VERSION="0.9.0-preview.1"
+PACKAGE_VERSION="0.9.0-preview.2"
 
 EXPECTED_FRAMEWORKS=(
   "net8.0"
