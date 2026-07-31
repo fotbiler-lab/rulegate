@@ -8,7 +8,7 @@
   <ItemGroup>
     <PackageReference
       Include="Fotbiler.RuleGate.Keycloak"
-      Version="0.9.0-preview.1" />
+      Version="0.9.0-preview.2" />
   </ItemGroup>
 
 </Project>
