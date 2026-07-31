@@ -18,7 +18,7 @@ concurrency:
 
 jobs:
   stage:
-    name: Verify and stage npm package
+    name: Verify and stage npm package family
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     timeout-minutes: 20
@@ -31,7 +31,7 @@ jobs:
 
     env:
       EXPECTED_TAG: v0.7.0-preview.1
-      PACKAGE_PATH: artifacts/npm/fotbiler-rulegate-angular-0.7.0-preview.1.tgz
+      PACKAGE_VERSION: 0.7.0-preview.1
 
     steps:
       - name: Check out release tag
@@ -103,17 +103,28 @@ jobs:
       - name: Verify npm preview package
         run: ./scripts/verify-npm-preview-release.sh --check-registry-availability
 
-      - name: Upload verified npm package
+      - name: Upload verified npm packages
         uses: actions/upload-artifact@v6
         with:
           name: rulegate-${{ inputs.tag }}-npm-package
-          path: ${{ env.PACKAGE_PATH }}
+          path: artifacts/npm/*.tgz
           if-no-files-found: error
           retention-days: 30
 
-      - name: Stage npm package through Trusted Publishing
+      - name: Stage npm package family through Trusted Publishing
         run: |
-          npm stage publish \
-            "$PACKAGE_PATH" \
-            --access public \
-            --tag preview
+          set -euo pipefail
+
+          packages=(
+            "fotbiler-rulegate-client-$PACKAGE_VERSION.tgz"
+            "fotbiler-rulegate-angular-legacy-$PACKAGE_VERSION.tgz"
+            "fotbiler-rulegate-angular-$PACKAGE_VERSION.tgz"
+          )
+
+          for package in "${packages[@]}"
+          do
+            npm stage publish \
+              "artifacts/npm/$package" \
+              --access public \
+              --tag preview
+          done

@@ -16,8 +16,8 @@
   <a href="https://www.nuget.org/packages/Fotbiler.RuleGate.AspNetCore"><img alt="NuGet downloads" src="https://img.shields.io/nuget/dt/Fotbiler.RuleGate.AspNetCore?logo=nuget&amp;label=downloads"></a>
   <a href="https://www.npmjs.com/package/@fotbiler/rulegate-angular"><img alt="npm" src="https://img.shields.io/npm/v/%40fotbiler%2Frulegate-angular?logo=npm&amp;label=npm"></a>
   <a href="https://www.npmjs.com/package/@fotbiler/rulegate-angular"><img alt="npm downloads" src="https://img.shields.io/npm/dm/%40fotbiler%2Frulegate-angular?logo=npm&amp;label=downloads"></a>
-  <a href="https://dotnet.microsoft.com/"><img alt=".NET 8, 9, and 10" src="https://img.shields.io/badge/.NET-8%20%7C%209%20%7C%2010-512BD4?logo=dotnet"></a>
-  <a href="https://angular.dev/"><img alt="Angular 22" src="https://img.shields.io/badge/Angular-22-DD0031?logo=angular&amp;logoColor=white"></a>
+  <a href="https://dotnet.microsoft.com/"><img alt=".NET Core 3.1 and .NET 5 through 10" src="https://img.shields.io/badge/.NET_Core_3.1_%7C_.NET_5–10-512BD4?logo=dotnet"></a>
+  <a href="https://angular.dev/"><img alt="Angular 9 through 22" src="https://img.shields.io/badge/Angular-9–22-DD0031?logo=angular&amp;logoColor=white"></a>
   <a href="LICENSE"><img alt="License" src="https://img.shields.io/github/license/fotbiler-lab/rulegate?label=license"></a>
 </p>
 
@@ -102,38 +102,49 @@ to a remote service:
 
 ## Which package should I install?
 
-| Need                                                      | Start with                       |
-| --------------------------------------------------------- | -------------------------------- |
-| ASP.NET Core application                                  | `Fotbiler.RuleGate.AspNetCore`   |
-| Framework-independent authorization engine                | `Fotbiler.RuleGate.Core`         |
-| Custom contracts or evaluators                            | `Fotbiler.RuleGate.Abstractions` |
-| YAML policy loading and compilation                       | `Fotbiler.RuleGate.Manifest`     |
-| Keycloak claim normalization                              | `Fotbiler.RuleGate.Keycloak`     |
-| Validation, testing, explanation, linting, and generation | `Fotbiler.RuleGate.Cli`          |
-| Angular route and template projection                     | `@fotbiler/rulegate-angular`     |
+| Need                                                      | Start with                          |
+| --------------------------------------------------------- | ----------------------------------- |
+| ASP.NET Core application                                  | `Fotbiler.RuleGate.AspNetCore`      |
+| Framework-independent authorization engine                | `Fotbiler.RuleGate.Core`            |
+| Custom contracts or evaluators                            | `Fotbiler.RuleGate.Abstractions`    |
+| YAML policy loading and compilation                       | `Fotbiler.RuleGate.Manifest`        |
+| Keycloak claim normalization                              | `Fotbiler.RuleGate.Keycloak`        |
+| Validation, testing, explanation, linting, and generation | `Fotbiler.RuleGate.Cli`             |
+| Angular 20–22 route and template projection               | `@fotbiler/rulegate-angular`        |
+| Angular 12–19 route and template projection               | `@fotbiler/rulegate-angular-legacy` |
+| Framework-independent frontend state or Angular 9–11      | `@fotbiler/rulegate-client`         |
 
 ## Packages
 
-| Package                                                                                           | Purpose                                                                                                                                 |
-| ------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
-| [`Fotbiler.RuleGate.Abstractions`](https://www.nuget.org/packages/Fotbiler.RuleGate.Abstractions) | Authorization contracts, policy definitions, source/reload contracts, telemetry names, requests, decisions, and evaluation abstractions |
-| [`Fotbiler.RuleGate.Core`](https://www.nuget.org/packages/Fotbiler.RuleGate.Core)                 | Policy engine, built-in evaluators, atomic immutable snapshots, and exporter-neutral telemetry                                          |
-| [`Fotbiler.RuleGate.Manifest`](https://www.nuget.org/packages/Fotbiler.RuleGate.Manifest)         | YAML loading, validation, compilation, file sources, embedded-resource sources, and domain mapping                                      |
-| [`Fotbiler.RuleGate.AspNetCore`](https://www.nuget.org/packages/Fotbiler.RuleGate.AspNetCore)     | ASP.NET Core integration, configuration policy sources, atomic reload hosting, enrichment, dynamic policies, and endpoint helpers       |
-| [`Fotbiler.RuleGate.Cli`](https://www.nuget.org/packages/Fotbiler.RuleGate.Cli)                   | .NET tool for validation, testing, redacted explanations, linting, deterministic C# generation, stale-output checks, and CI             |
-| [`Fotbiler.RuleGate.Keycloak`](https://www.nuget.org/packages/Fotbiler.RuleGate.Keycloak)         | Optional Keycloak claim normalization and RuleGate subject mapping                                                                      |
-| [`@fotbiler/rulegate-angular`](https://www.npmjs.com/package/@fotbiler/rulegate-angular)          | Angular 22 authorization client, declarative route guards, UI directives, and TypeScript identifier generation                          |
+| Package                                                                                                | Purpose                                                                                                                                 |
+| ------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------- |
+| [`Fotbiler.RuleGate.Abstractions`](https://www.nuget.org/packages/Fotbiler.RuleGate.Abstractions)      | Authorization contracts, policy definitions, source/reload contracts, telemetry names, requests, decisions, and evaluation abstractions |
+| [`Fotbiler.RuleGate.Core`](https://www.nuget.org/packages/Fotbiler.RuleGate.Core)                      | Policy engine, built-in evaluators, atomic immutable snapshots, and exporter-neutral telemetry                                          |
+| [`Fotbiler.RuleGate.Manifest`](https://www.nuget.org/packages/Fotbiler.RuleGate.Manifest)              | YAML loading, validation, compilation, file sources, embedded-resource sources, and domain mapping                                      |
+| [`Fotbiler.RuleGate.AspNetCore`](https://www.nuget.org/packages/Fotbiler.RuleGate.AspNetCore)          | ASP.NET Core integration, configuration policy sources, atomic reload hosting, enrichment, dynamic policies, and endpoint helpers       |
+| [`Fotbiler.RuleGate.Cli`](https://www.nuget.org/packages/Fotbiler.RuleGate.Cli)                        | .NET tool for validation, testing, redacted explanations, linting, deterministic C# generation, stale-output checks, and CI             |
+| [`Fotbiler.RuleGate.Keycloak`](https://www.nuget.org/packages/Fotbiler.RuleGate.Keycloak)              | Optional Keycloak claim normalization and RuleGate subject mapping                                                                      |
+| [`@fotbiler/rulegate-client`](https://www.npmjs.com/package/@fotbiler/rulegate-client)                 | Framework-independent, fail-closed frontend authorization state                                                                         |
+| [`@fotbiler/rulegate-angular`](https://www.npmjs.com/package/@fotbiler/rulegate-angular)               | Angular 20–22 signals, declarative route guards, UI directives, and TypeScript identifier generation                                    |
+| [`@fotbiler/rulegate-angular-legacy`](https://www.npmjs.com/package/@fotbiler/rulegate-angular-legacy) | Angular 12–19 observable, NgModule, classic directive, and class-guard adapter                                                          |
 
 ## Supported .NET and Angular versions
 
-| Package family          | Current preview   | Supported platform                                        | Distribution |
-| ----------------------- | ----------------- | --------------------------------------------------------- | ------------ |
-| RuleGate NuGet packages | `0.9.0-preview.3` | .NET 8 (`net8.0`), .NET 9 (`net9.0`), .NET 10 (`net10.0`) | NuGet        |
-| RuleGate Angular SDK    | `0.7.0-preview.1` | Angular 22                                                | npm          |
+| Package                             | Repository compatibility targets                 | Support level                                    |
+| ----------------------------------- | ------------------------------------------------ | ------------------------------------------------ |
+| Abstractions, Core, Manifest        | `.NET Standard 2.0`, .NET 8, 9, and 10           | Current and portable                             |
+| ASP.NET Core and Keycloak           | .NET Core 3.1 and .NET 5–10                      | .NET 8–10 current; older targets legacy-tested   |
+| RuleGate CLI                        | .NET 8, 9, and 10                                | Current                                          |
+| `@fotbiler/rulegate-angular`        | Angular 20–22                                    | Current                                          |
+| `@fotbiler/rulegate-angular-legacy` | Angular 12–19                                    | Legacy-tested                                    |
+| `@fotbiler/rulegate-client`         | Angular 9–22 and framework-independent consumers | Current or legacy-tested with the host framework |
 
-Every RuleGate NuGet package includes framework-specific assemblies for all
-three .NET targets. The source, test suites, package assets, and package-only
-consumers are verified across each supported platform.
+The published `0.9.0-preview.3` NuGet packages and `0.7.0-preview.1` Angular
+package predate this expanded matrix. The next previews will publish the
+repository package set after release verification. See the
+[platform compatibility policy](docs/platform-compatibility.md) and
+[frontend compatibility guide](docs/frontend-compatibility.md) for package
+selection and the distinction between vendor support and legacy verification.
 
 ## Current capabilities
 

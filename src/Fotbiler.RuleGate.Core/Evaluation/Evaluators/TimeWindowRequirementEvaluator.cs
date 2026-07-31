@@ -20,8 +20,7 @@ public sealed class TimeWindowRequirementEvaluator
             requirement.TimeZone);
 
         var day = localTime.DayOfWeek;
-        var time = TimeOnly.FromDateTime(
-            localTime.DateTime);
+        var time = localTime.TimeOfDay;
 
         var isSatisfied = requirement.CrossesMidnight
             ? IsOvernightWindowSatisfied(
@@ -32,7 +31,7 @@ public sealed class TimeWindowRequirementEvaluator
               time >= requirement.Start &&
               time < requirement.End;
 
-        return ValueTask.FromResult(
+        return ValueTaskCompat.FromResult(
             isSatisfied
                 ? RequirementEvaluationResult.Satisfied()
                 : RequirementEvaluationResult.NotSatisfied(
@@ -45,7 +44,7 @@ public sealed class TimeWindowRequirementEvaluator
     private static bool IsOvernightWindowSatisfied(
         TimeWindowRequirementDefinition requirement,
         DayOfWeek day,
-        TimeOnly time)
+        TimeSpan time)
     {
         if (time >= requirement.Start)
         {

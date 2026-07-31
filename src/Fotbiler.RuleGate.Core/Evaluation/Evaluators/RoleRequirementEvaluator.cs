@@ -23,6 +23,6 @@ public sealed class RoleRequirementEvaluator
                     AuthorizationFailureCodes.MissingRole,
                     requirement.Id));
 
-        return ValueTask.FromResult(result);
+        return ValueTaskCompat.FromResult(result);
     }
 }

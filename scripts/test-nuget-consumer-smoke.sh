@@ -25,6 +25,16 @@ CONSUMER_PACKAGE_CACHE="$REPOSITORY_ROOT/artifacts/package-consumer-global-packa
 PACKAGE_VERSION="0.9.0-preview.3"
 
 EXPECTED_FRAMEWORKS=(
+  "netcoreapp3.1"
+  "net5.0"
+  "net6.0"
+  "net7.0"
+  "net8.0"
+  "net9.0"
+  "net10.0"
+)
+
+CURRENT_FRAMEWORKS=(
   "net8.0"
   "net9.0"
   "net10.0"
@@ -179,7 +189,7 @@ dotnet list \
 
 printf '\n== Run package consumer ==\n'
 
-for framework in "${EXPECTED_FRAMEWORKS[@]}"
+for framework in "${CURRENT_FRAMEWORKS[@]}"
 do
   printf '\nFRAMEWORK: %s\n' "$framework"
 

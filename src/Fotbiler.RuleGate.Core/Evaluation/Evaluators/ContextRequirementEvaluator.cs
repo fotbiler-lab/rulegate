@@ -20,7 +20,7 @@ public sealed class ContextRequirementEvaluator
                 requirement.AttributeName,
                 out var rawValue))
         {
-            return ValueTask.FromResult(
+            return ValueTaskCompat.FromResult(
                 RequirementEvaluationResult.NotSatisfied(
                     new AuthorizationFailure(
                         AuthorizationFailureCodes
@@ -38,7 +38,7 @@ public sealed class ContextRequirementEvaluator
         }
         catch (ArgumentException)
         {
-            return ValueTask.FromResult(
+            return ValueTaskCompat.FromResult(
                 RequirementEvaluationResult.Indeterminate(
                     new AuthorizationFailure(
                         AuthorizationFailureCodes
@@ -83,6 +83,6 @@ public sealed class ContextRequirementEvaluator
                         requirement.Id))
         };
 
-        return ValueTask.FromResult(result);
+        return ValueTaskCompat.FromResult(result);
     }
 }

@@ -48,15 +48,16 @@ Development through 1.0 preserves five product properties:
 | Explain and Lint                             | ✅ Available |
 | Policy Sources and Atomic Reload             | ✅ Available |
 | OpenTelemetry, Benchmarks, and Concurrency   | ✅ Available |
-| .NET and Angular Compatibility Track         | ⏳ Planned   |
+| .NET and Angular Compatibility Track         | ✅ Available |
 | API Freeze and Security Hardening            | ⏳ Planned   |
 | Stable Release                               | ⏳ Planned   |
 
 The latest RuleGate NuGet preview is `0.9.0-preview.3`. The independently
 versioned Angular npm package remains at `0.7.0-preview.1`. Official Reference
 Applications, Policy Testing, Explain and Lint, Policy Sources and Atomic
-Reload, and OpenTelemetry, Benchmarks, and Concurrency are available. The next
-milestone is API Freeze and Security Hardening in `1.0.0-rc.1`.
+Reload, OpenTelemetry, Benchmarks and Concurrency, and the compatibility track
+are available. The next milestone is API Freeze and Security Hardening in
+`1.0.0-rc.1`.
 
 All NuGet packages share one version and are published together for every
 NuGet release, including packages without code changes. npm packages are
@@ -65,17 +66,21 @@ family.
 
 ## Current platform support
 
-The packages currently published and verified support:
+The repository package and consumer matrix verifies:
 
-| Package family       | Current tested platform     |
-| -------------------- | --------------------------- |
-| RuleGate NuGet       | .NET 8, .NET 9, and .NET 10 |
-| RuleGate Angular SDK | Angular 22                  |
+| Package family                        | Verified platform                              |
+| ------------------------------------- | ---------------------------------------------- |
+| RuleGate portable libraries           | .NET Standard 2.0, .NET 8, .NET 9, and .NET 10 |
+| RuleGate ASP.NET Core integrations    | .NET Core 3.1 and .NET 5 through .NET 10       |
+| RuleGate CLI                          | .NET 8, .NET 9, and .NET 10                    |
+| Modern Angular adapter                | Angular 20 through Angular 22                  |
+| Legacy Angular adapter                | Angular 12 through Angular 19                  |
+| Framework-independent frontend client | Angular 9 through Angular 22 consumers         |
 
-The wider .NET Core 3.1+ and Angular 9+ matrix in the compatibility track is a
-1.0 goal, not a claim about the current packages. A platform becomes
-`legacy-tested` only after a package-only consumer installs the real release
-artifact and passes the defined build and authorization tests.
+The published `0.9.0-preview.3` NuGet packages and `0.7.0-preview.1` Angular
+package predate the expanded compatibility matrix. The expanded targets are
+released only after the next-preview package verification and publication
+workflow succeeds.
 
 Support levels are:
 
@@ -311,34 +316,34 @@ RuleGate 1.0 is intended to provide:
 
 ## Compatibility track
 
-Compatibility work proceeds in parallel so it does not hide or delay feature
-scope until the release-candidate gate.
+The delivered .NET compatibility model is:
 
-### .NET goals
+- Abstractions, Core, and Manifest target .NET Standard 2.0 plus .NET 8–10.
+- ASP.NET Core and Keycloak integration packages target .NET Core 3.1 and
+  every .NET release from 5 through 10.
+- The CLI remains on .NET 8–10; generated source is verified independently.
+- Packed NuGet consumers build every target and execute inside isolated .NET
+  Core 3.1, .NET 5, .NET 6, and .NET 7 runtime containers as well as installed
+  .NET 8–10 runtimes.
 
-- Evaluate `netstandard2.0` for abstractions and the provider-independent core.
-- Validate manifest-package requirements separately where dependencies or APIs
-  prevent the same target set.
-- Multi-target ASP.NET Core integration from ASP.NET Core 3.1 through current
-  supported versions where a secure implementation is maintainable.
-- Keep the CLI on modern .NET when necessary; generated source must remain
-  consumable by validated legacy applications.
-- Add package-only consumers for .NET Core 3.1, .NET 5, .NET 6, .NET 7, current
-  LTS, and current STS releases.
+The delivered frontend compatibility model is:
 
-### Frontend goals
+- `@fotbiler/rulegate-client` owns framework-independent fail-closed state.
+- `@fotbiler/rulegate-angular` targets Angular 20–22 with signals, standalone
+  APIs, functional guards, and modern directives.
+- `@fotbiler/rulegate-angular-legacy` targets Angular 12–19 with observables,
+  NgModule, class guards, and classic directives.
+- Angular 9–11 use the framework-independent client through a host-owned
+  service because those versions predate the stable partial-Ivy library format.
+- Packed `.tgz` consumers build real production applications on representative
+  Angular 9–22 versions.
 
-- Extract a framework-independent `@fotbiler/rulegate-client` TypeScript core.
-- Keep `@fotbiler/rulegate-angular` focused on the current Angular Package
-  Format, standalone APIs, signals, functional guards, and modern directives.
-- Provide a separately maintained legacy Angular adapter when required for
-  NgModule, observable, class-based guard, and classic directive patterns.
-- Verify representative package consumers for Angular 9–11, 12–15, 16–19,
-  and 20+ rather than assuming one modern package works unchanged everywhere.
-
-Compatibility is accepted only when consumers install the packed `.nupkg` or
-`.tgz`, build production code, and run authorization smoke tests. Source-only
-compatibility does not satisfy the roadmap.
+Compatibility is accepted only when consumers install packed `.nupkg` or
+`.tgz` artifacts and pass the defined build and authorization tests.
+Source-only compatibility does not satisfy the roadmap. See the
+[frontend compatibility guide](frontend-compatibility.md) for package selection.
+The complete current-versus-legacy policy is documented in
+[Platform compatibility](platform-compatibility.md).
 
 ## Roadmap principles
 

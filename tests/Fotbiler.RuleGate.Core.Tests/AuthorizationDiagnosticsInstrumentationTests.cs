@@ -243,8 +243,8 @@ public sealed class
             [
                 new TimeWindowRequirementDefinition(
                     [DayOfWeek.Thursday],
-                    new TimeOnly(0, 0),
-                    new TimeOnly(23, 59),
+                    TimeSpan.Zero,
+                    new TimeSpan(23, 59, 0),
                     TimeZoneInfo.Utc,
                     "time"),
                 new DateTimeWindowRequirementDefinition(

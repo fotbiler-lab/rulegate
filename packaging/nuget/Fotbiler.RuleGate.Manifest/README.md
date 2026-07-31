@@ -14,6 +14,11 @@ change before the first stable release.
 
     dotnet add package Fotbiler.RuleGate.Manifest --version 0.9.0-preview.3
 
+## Compatibility
+
+This package targets .NET Standard 2.0, .NET 8, .NET 9, and .NET 10.
+Manifest compilation remains fail-closed on every target.
+
 ## Example manifest
 
     schemaVersion: 1

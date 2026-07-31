@@ -13,13 +13,33 @@
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
 
+  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1' Or
+                        '$(TargetFramework)' == 'net5.0' Or
+                        '$(TargetFramework)' == 'net6.0' Or
+                        '$(TargetFramework)' == 'net7.0'">
+    <PackageReference
+      Include="Microsoft.Extensions.Configuration.Binder"
+      Version="10.0.2" />
+    <PackageReference
+      Include="Microsoft.Bcl.TimeProvider"
+      Version="10.0.10" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
+    <Compile Remove="Authorization/RuleGateAuthorizationMiddlewareResultHandler.cs" />
+  </ItemGroup>
+
   <PropertyGroup>
-    <TargetFrameworks>$(RuleGateTargetFrameworks)</TargetFrameworks>
+    <TargetFrameworks>$(RuleGateAspNetCoreTargetFrameworks)</TargetFrameworks>
 
     <PackageId>Fotbiler.RuleGate.AspNetCore</PackageId>
     <Title>RuleGate ASP.NET Core</Title>
     <Description>ASP.NET Core dependency injection, local configuration and YAML policy sources, atomic reload hosting, ClaimsPrincipal mapping, enrichment, dynamic policies, resource authorization, safe diagnostics, and OpenTelemetry correlation for RuleGate.</Description>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Using Include="Fotbiler.RuleGate.AspNetCore.Compatibility" />
+  </ItemGroup>
 
   <ItemGroup>
     <None

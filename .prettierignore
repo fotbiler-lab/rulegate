@@ -1,1 +1,3 @@
 samples/document-approval/web/public/rulegate-logo.svg
+compatibility/*/.work/
+compatibility/*/node_modules/

@@ -111,7 +111,7 @@ internal static class RuleGateInstrumentation
 
         AuthorizationEvaluations.Add(1, tags);
         AuthorizationDuration.Record(
-            Stopwatch.GetElapsedTime(startTimestamp).TotalSeconds,
+            StopwatchCompat.GetElapsedTime(startTimestamp).TotalSeconds,
             tags);
         SetTags(activity, tags);
     }
@@ -147,7 +147,7 @@ internal static class RuleGateInstrumentation
 
         PolicyLookups.Add(1, tags);
         PolicyLookupDuration.Record(
-            Stopwatch.GetElapsedTime(startTimestamp).TotalSeconds,
+            StopwatchCompat.GetElapsedTime(startTimestamp).TotalSeconds,
             tags);
     }
 
@@ -167,7 +167,7 @@ internal static class RuleGateInstrumentation
 
         PolicyReloads.Add(1, tags);
         PolicyReloadDuration.Record(
-            Stopwatch.GetElapsedTime(startTimestamp).TotalSeconds,
+            StopwatchCompat.GetElapsedTime(startTimestamp).TotalSeconds,
             tags);
 
         activity?.SetTag(
@@ -230,7 +230,7 @@ internal static class RuleGateInstrumentation
 
         PolicySourceLoads.Add(1, tags);
         PolicySourceLoadDuration.Record(
-            Stopwatch.GetElapsedTime(startTimestamp).TotalSeconds,
+            StopwatchCompat.GetElapsedTime(startTimestamp).TotalSeconds,
             tags);
         SetTags(activity, tags);
 
@@ -257,7 +257,7 @@ internal static class RuleGateInstrumentation
 
         AuthorizationEvaluations.Add(1, tags);
         AuthorizationDuration.Record(
-            Stopwatch.GetElapsedTime(startTimestamp).TotalSeconds,
+            StopwatchCompat.GetElapsedTime(startTimestamp).TotalSeconds,
             tags);
         SetTags(activity, tags);
         activity?.SetStatus(ActivityStatusCode.Error);
@@ -276,7 +276,7 @@ internal static class RuleGateInstrumentation
 
         PolicyReloads.Add(1, tags);
         PolicyReloadDuration.Record(
-            Stopwatch.GetElapsedTime(startTimestamp).TotalSeconds,
+            StopwatchCompat.GetElapsedTime(startTimestamp).TotalSeconds,
             tags);
         SetTags(activity, tags);
 

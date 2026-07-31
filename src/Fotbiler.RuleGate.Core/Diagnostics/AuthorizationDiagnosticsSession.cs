@@ -115,7 +115,7 @@ internal sealed class AuthorizationDiagnosticsSession
                 token.RequirementId,
                 token.RequirementKind,
                 result.Outcome,
-                Stopwatch.GetElapsedTime(
+                StopwatchCompat.GetElapsedTime(
                     token.StartTimestamp),
                 result.Failures.Select(
                     static failure =>

@@ -16,6 +16,12 @@ stable release.
 
     dotnet add package Fotbiler.RuleGate.Core --version 0.9.0-preview.3
 
+## Compatibility
+
+This package targets .NET Standard 2.0, .NET 8, .NET 9, and .NET 10.
+Legacy runtime compatibility is verified through packed
+ASP.NET Core consumer applications.
+
 ## When to use this package
 
 Use Core when you need:

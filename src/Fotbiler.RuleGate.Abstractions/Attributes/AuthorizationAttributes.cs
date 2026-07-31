@@ -12,8 +12,9 @@ public sealed class AuthorizationAttributes
     {
         _values = values is null
             ? new Dictionary<string, object?>(StringComparer.Ordinal)
-            : new Dictionary<string, object?>(
-                values,
+            : values.ToDictionary(
+                static pair => pair.Key,
+                static pair => pair.Value,
                 StringComparer.Ordinal);
     }
 

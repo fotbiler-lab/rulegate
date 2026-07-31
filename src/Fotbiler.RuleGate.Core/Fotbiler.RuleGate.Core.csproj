@@ -4,8 +4,14 @@
     <ProjectReference Include="..\Fotbiler.RuleGate.Abstractions\Fotbiler.RuleGate.Abstractions.csproj" />
   </ItemGroup>
 
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+    <PackageReference
+      Include="System.Diagnostics.DiagnosticSource"
+      Version="10.0.2" />
+  </ItemGroup>
+
   <PropertyGroup>
-    <TargetFrameworks>$(RuleGateTargetFrameworks)</TargetFrameworks>
+    <TargetFrameworks>$(RuleGateLibraryTargetFrameworks)</TargetFrameworks>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 
@@ -13,6 +19,10 @@
     <Title>RuleGate Core</Title>
     <Description>Fail-closed policy authorization engine with built-in evaluators, immutable atomic snapshots, last-valid reload behavior, safe diagnostics, and exporter-neutral OpenTelemetry signals for RuleGate.</Description>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Using Include="Fotbiler.RuleGate.Core.Compatibility" />
+  </ItemGroup>
 
   <ItemGroup>
     <None

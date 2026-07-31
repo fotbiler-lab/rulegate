@@ -8,6 +8,7 @@ using Fotbiler.RuleGate.AspNetCore.Authorization;
 using Fotbiler.RuleGate.AspNetCore.DependencyInjection;
 using Fotbiler.RuleGate.AspNetCore.Endpoints;
 using Fotbiler.RuleGate.AspNetCore.Enrichment;
+using Fotbiler.RuleGate.AspNetCore.PolicySources;
 using Fotbiler.RuleGate.AspNetCore.Subjects;
 using Fotbiler.RuleGate.Manifest.Compilation;
 using Microsoft.AspNetCore.Authorization;
@@ -17,6 +18,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.Routing.Patterns;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Configuration;
 
 const string yaml = """
     schemaVersion: 1
@@ -135,6 +137,30 @@ if (!compilation.IsSuccess)
         "The package consumer manifest could not be compiled.");
 }
 
+var invalidConfiguration = new ConfigurationBuilder()
+    .AddInMemoryCollection(
+        new Dictionary<string, string?>
+        {
+            ["RuleGate:schemaVersion"] = "1",
+            ["RuleGate:application:id"] = "package-consumer-smoke",
+            ["RuleGate:application:name"] = "Package Consumer Smoke",
+            ["RuleGate:unknownProperty"] = "must-fail-closed",
+        })
+    .Build();
+
+var invalidConfigurationResult = await new ConfigurationPolicySource(
+        invalidConfiguration,
+        "RuleGate")
+    .LoadAsync();
+
+if (invalidConfigurationResult.IsSuccess ||
+    !invalidConfigurationResult.Diagnostics.Any(
+        diagnostic => diagnostic.Code == ConfigurationPolicySourceCodes.BindingFailed))
+{
+    throw new InvalidOperationException(
+        "Unknown configuration properties must fail closed on every target framework.");
+}
+
 var services =
     new ServiceCollection();
 
@@ -142,10 +168,15 @@ services.AddLogging();
 
 services.AddAuthorizationCore();
 
-services
+var ruleGateBuilder = services
     .AddRuleGate()
-    .AddLoggingDiagnostics()
-    .AddHttpAuthorizationResultMapping()
+    .AddLoggingDiagnostics();
+
+#if !NETCOREAPP3_1
+ruleGateBuilder.AddHttpAuthorizationResultMapping();
+#endif
+
+ruleGateBuilder
     .AddSubjectAttributeProvider<
         PackageConsumerSubjectAttributeProvider>()
     .AddPolicySource(
@@ -175,6 +206,7 @@ if (!reloadResult.IsSuccess ||
         "The packaged policy source could not activate an atomic snapshot.");
 }
 
+#if !NETCOREAPP3_1
 var authorizationResultHandler =
     serviceProvider.GetRequiredService<
         IAuthorizationMiddlewareResultHandler>();
@@ -185,6 +217,7 @@ if (authorizationResultHandler.GetType().Name !=
     throw new InvalidOperationException(
         "The packaged HTTP authorization result mapping was not registered.");
 }
+#endif
 
 var firstEngine =
     serviceProvider.GetRequiredService<
@@ -544,8 +577,8 @@ if (!secureContextDecision.IsAllowed)
 
 var publicTimeRequirement = new TimeWindowRequirementDefinition(
     [DayOfWeek.Thursday],
-    new TimeOnly(0, 0),
-    new TimeOnly(1, 0),
+    TimeSpan.Zero,
+    TimeSpan.FromHours(1),
     TimeZoneInfo.Utc);
 
 var publicContextRequirement = new ContextRequirementDefinition(
@@ -820,7 +853,7 @@ internal sealed class
     {
         cancellationToken.ThrowIfCancellationRequested();
 
-        return ValueTask.FromResult(
+        return new ValueTask<RuleGateAttributeProviderResult>(
             RuleGateAttributeProviderResult.Success(
                 new AuthorizationAttributes(
                 [
@@ -850,7 +883,7 @@ internal sealed class PackageConsumerPolicySource
     {
         cancellationToken.ThrowIfCancellationRequested();
 
-        return ValueTask.FromResult(
+        return new ValueTask<PolicySourceLoadResult>(
             PolicySourceLoadResult.Success(_policies));
     }
 }

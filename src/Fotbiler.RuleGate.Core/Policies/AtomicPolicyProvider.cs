@@ -1,4 +1,3 @@
-using System.Collections.Frozen;
 using System.Diagnostics;
 using Fotbiler.RuleGate.Abstractions.Policies;
 using Fotbiler.RuleGate.Core.Diagnostics;
@@ -389,12 +388,12 @@ public sealed class AtomicPolicyProvider :
 
     private sealed class PolicySnapshot
     {
-        private readonly FrozenDictionary<PolicyRoute, PolicyDefinition>
+        private readonly Dictionary<PolicyRoute, PolicyDefinition>
             _policies;
 
         private PolicySnapshot(
             PolicySnapshotInfo info,
-            FrozenDictionary<PolicyRoute, PolicyDefinition> policies)
+            Dictionary<PolicyRoute, PolicyDefinition> policies)
         {
             Info = info;
             _policies = policies;
@@ -403,8 +402,7 @@ public sealed class AtomicPolicyProvider :
         public static PolicySnapshot Empty { get; } =
             new(
                 new PolicySnapshotInfo(0, 0, []),
-                new Dictionary<PolicyRoute, PolicyDefinition>()
-                    .ToFrozenDictionary());
+                new Dictionary<PolicyRoute, PolicyDefinition>());
 
         public PolicySnapshotInfo Info { get; }
 
@@ -425,7 +423,7 @@ public sealed class AtomicPolicyProvider :
             IEnumerable<string> sourceNames)
         {
             var items = entries.ToArray();
-            var policies = items.ToFrozenDictionary(
+            var policies = items.ToDictionary(
                 static item => new PolicyRoute(
                     item.Policy.ResourceType,
                     item.Policy.Action),

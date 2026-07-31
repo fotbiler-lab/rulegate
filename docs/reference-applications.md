@@ -90,18 +90,17 @@ CI verifies:
 Docker Compose builds the API and web images from the same package-only
 projects. Keycloak configuration remains an explicit external prerequisite.
 
-## Framework-independent TypeScript feasibility
+## Framework-independent TypeScript client
 
-The sample confirms a narrow framework-independent client is feasible: the
-portable part is an immutable snapshot plus exact permission, policy, and role
-membership checks. Angular-specific behavior is limited to signals, dependency
-injection, router guards, and directives.
+The compatibility track extracted the sample's portable snapshot and exact
+permission, policy, and role checks into `@fotbiler/rulegate-client`. The
+modern Angular adapter adds signals, dependency injection, functional router
+guards, and standalone directives; the legacy adapter adds observable,
+NgModule, class-guard, and classic-directive APIs. Keycloak lifecycle and
+backend authorization remain outside all frontend packages.
 
-No additional TypeScript package is introduced in this milestone. Extracting a
-portable client now would duplicate a very small API and create a compatibility
-promise before the Angular and legacy-adapter matrices are defined. A later
-compatibility milestone can extract that snapshot contract without moving
-Keycloak lifecycle or backend authorization into the browser.
+See [Frontend compatibility](frontend-compatibility.md) for package selection
+across Angular 9–22.
 
 ## Security notes
 

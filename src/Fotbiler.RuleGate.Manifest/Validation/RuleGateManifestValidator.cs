@@ -809,8 +809,8 @@ public sealed class RuleGateManifestValidator
 
         var startIsValid = false;
         var endIsValid = false;
-        var start = default(TimeOnly);
-        var end = default(TimeOnly);
+        var start = default(TimeSpan);
+        var end = default(TimeSpan);
 
         if (string.IsNullOrWhiteSpace(requirement.Start))
         {

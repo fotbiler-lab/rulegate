@@ -4,15 +4,19 @@
   "private": true,
   "packageManager": "pnpm@11.3.0",
   "scripts": {
-    "angular:build": "./scripts/build-angular-package.sh",
-    "angular:format:check": "prettier --check angular.json package.json pnpm-workspace.yaml tsconfig.json src/Fotbiler.RuleGate.Angular",
+    "client:build": "./scripts/build-client-package.sh",
+    "client:test": "vitest run src/Fotbiler.RuleGate.Client",
+    "angular:legacy:build": "./scripts/build-angular-legacy-package.sh",
+    "angular:build": "./scripts/build-angular-package.sh && ./scripts/build-angular-legacy-package.sh",
+    "angular:format:check": "prettier --check angular.json package.json pnpm-workspace.yaml tsconfig.json compatibility/angular-modern-builder compatibility/angular-legacy-builder src/Fotbiler.RuleGate.Client src/Fotbiler.RuleGate.Angular src/Fotbiler.RuleGate.Angular.Legacy",
     "angular:package:smoke": "./scripts/test-angular-package-smoke.sh",
-    "angular:test": "ng test rulegate-angular --watch=false && node --test src/Fotbiler.RuleGate.Angular/tools/rulegate-angular.test.mjs",
+    "angular:test": "pnpm client:build && ng test rulegate-angular --watch=false && node --test src/Fotbiler.RuleGate.Angular/tools/rulegate-angular.test.mjs",
     "samples:build": "pnpm --filter rulegate-document-approval-web build",
     "samples:format:check": "prettier --check samples",
     "samples:generate:check": "pnpm --filter rulegate-document-approval-web generate:check"
   },
   "devDependencies": {
+    "@fotbiler/rulegate-client": "workspace:*",
     "@angular/build": "22.0.8",
     "@angular/cli": "22.0.8",
     "@angular/common": "22.0.8",
@@ -27,6 +31,7 @@
     "rxjs": "7.8.2",
     "tslib": "2.8.1",
     "typescript": "6.0.2",
-    "vitest": "4.1.10"
+    "vitest": "4.1.10",
+    "zone.js": "0.16.0"
   }
 }

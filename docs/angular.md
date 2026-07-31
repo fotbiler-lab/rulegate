@@ -6,7 +6,7 @@ frontend authorization projection.
 Install the current preview from npm:
 
 ```bash
-pnpm add @fotbiler/rulegate-angular@0.7.0-preview.1
+pnpm add @fotbiler/rulegate-angular@0.7.0-preview.1 @fotbiler/rulegate-client@0.7.0-preview.1
 ```
 
 > [!IMPORTANT]
@@ -26,7 +26,11 @@ The package provides:
 - Deterministic TypeScript constants generated from `rulegate.yaml`
 - Public TypeScript models for snapshots and requirements
 
-The package requires Angular 22.
+The modern package supports Angular 20–22. Angular 12–19 applications use
+`@fotbiler/rulegate-angular-legacy`; Angular 9–11 applications consume the
+framework-independent `@fotbiler/rulegate-client` through a small host-owned
+service. See [Frontend compatibility](frontend-compatibility.md) for the full
+matrix, installation, and legacy support policy.
 
 ## Supply authorization state
 

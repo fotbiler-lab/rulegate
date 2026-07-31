@@ -1,4 +1,6 @@
 packages:
+  - compatibility/angular-modern-builder
+  - src/Fotbiler.RuleGate.Client
   - src/Fotbiler.RuleGate.Angular
   - samples/document-approval/web
 
@@ -11,4 +13,9 @@ allowBuilds:
   msgpackr-extract: false
 
 minimumReleaseAgeExclude:
+  - '@angular/common@20.3.27'
+  - '@angular/compiler@20.3.27'
+  - '@angular/compiler-cli@20.3.27'
+  - '@angular/core@20.3.27'
+  - '@angular/router@20.3.27'
   - '@fotbiler/rulegate-angular@0.7.0-preview.1'

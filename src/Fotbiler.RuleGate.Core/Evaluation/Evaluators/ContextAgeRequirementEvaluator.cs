@@ -20,7 +20,7 @@ public sealed class ContextAgeRequirementEvaluator
                 requirement.AttributeName,
                 out var rawTimestamp))
         {
-            return ValueTask.FromResult(
+            return ValueTaskCompat.FromResult(
                 RequirementEvaluationResult.NotSatisfied(
                     new AuthorizationFailure(
                         AuthorizationFailureCodes
@@ -38,7 +38,7 @@ public sealed class ContextAgeRequirementEvaluator
         }
         catch (ArgumentException)
         {
-            return ValueTask.FromResult(
+            return ValueTaskCompat.FromResult(
                 RequirementEvaluationResult.Indeterminate(
                     new AuthorizationFailure(
                         AuthorizationFailureCodes
@@ -49,7 +49,7 @@ public sealed class ContextAgeRequirementEvaluator
         if (timestampValue.Kind !=
             AuthorizationAttributeValueKind.DateTimeOffset)
         {
-            return ValueTask.FromResult(
+            return ValueTaskCompat.FromResult(
                 RequirementEvaluationResult.Indeterminate(
                     new AuthorizationFailure(
                         AuthorizationFailureCodes
@@ -65,7 +65,7 @@ public sealed class ContextAgeRequirementEvaluator
 
         if (timestamp > evaluationTime)
         {
-            return ValueTask.FromResult(
+            return ValueTaskCompat.FromResult(
                 RequirementEvaluationResult.Indeterminate(
                     new AuthorizationFailure(
                         AuthorizationFailureCodes
@@ -77,7 +77,7 @@ public sealed class ContextAgeRequirementEvaluator
             evaluationTime - timestamp <=
             requirement.MaximumAge;
 
-        return ValueTask.FromResult(
+        return ValueTaskCompat.FromResult(
             isSatisfied
                 ? RequirementEvaluationResult.Satisfied()
                 : RequirementEvaluationResult.NotSatisfied(

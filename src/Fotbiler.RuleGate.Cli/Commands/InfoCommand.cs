@@ -25,7 +25,7 @@ internal static class InfoCommand
                         .Output;
 
                 output.WriteLine(
-                    "Fotbiler RuleGate CLI");
+                    "RuleGate CLI");
                 output.WriteLine(
                     $"Version: {CliVersionProvider.GetVersion()}");
                 output.WriteLine(

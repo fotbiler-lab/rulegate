@@ -9,7 +9,7 @@
   </ItemGroup>
 
   <PropertyGroup>
-    <TargetFrameworks>$(RuleGateTargetFrameworks)</TargetFrameworks>
+    <TargetFrameworks>$(RuleGateLibraryTargetFrameworks)</TargetFrameworks>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 

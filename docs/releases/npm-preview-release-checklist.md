@@ -1,35 +1,37 @@
 # npm Preview Release Checklist
 
-This checklist defines the release process for the public
-`@fotbiler/rulegate-angular` npm package.
+This checklist defines the release process for the public RuleGate npm package
+family.
 
 npm package versions and release tags are immutable. Never overwrite a
 published version or move an existing release tag.
 
 ## Release inventory
 
-The `0.7.0-preview.1` npm release contains one package:
+The compatibility package family contains:
 
 ```text
+@fotbiler/rulegate-client
+@fotbiler/rulegate-angular-legacy
 @fotbiler/rulegate-angular
 ```
 
-The package is public and uses both the `latest` and `preview` distribution
-tags. npm packages have an independent version line from the synchronized
-NuGet package family. The Angular package remains `0.7.0-preview.1` while the
-current NuGet package family is `0.9.0-preview.3`.
+All three packages are public, share one npm version, and are published
+together even when only one package has code changes. npm packages retain an
+independent version line from the synchronized NuGet package family.
 
 ## Required security configuration
 
 - npm organization: `fotbiler`
-- Public package: `@fotbiler/rulegate-angular`
+- Public packages: all three packages in the release inventory
 - Maintainer npm account with two-factor authentication enabled
 - GitHub repository: `fotbiler-lab/rulegate`
 - GitHub environment: `npm-production`
 - Trusted Publishing workflow: `publish-npm.yml`
 - Allowed Trusted Publishing action: `npm stage publish` only
 - GitHub-hosted runner with `id-token: write`
-- npm CLI 11.15.0 or newer for staged publishing
+- npm CLI 11.5.1 or newer and Node.js 22.14.0 or newer for Trusted
+  Publishing; use the reviewed versions pinned in the workflow
 
 Do not store an npm password, session token, granular access token, recovery
 code, or one-time password in the repository or GitHub Actions.
@@ -57,12 +59,14 @@ Do not publish from a feature or release-preparation branch.
 
 Before tagging, verify:
 
-- [ ] `src/Fotbiler.RuleGate.Angular/package.json` contains the exact version.
-- [ ] Package name is `@fotbiler/rulegate-angular`.
+- [ ] All three source `package.json` files contain the same exact version.
+- [ ] Package names and repository directories match the release inventory.
 - [ ] `publishConfig.access` is `public`.
 - [ ] Repository URL and directory are correct.
 - [ ] License is `Apache-2.0`.
-- [ ] Angular peer dependencies match the supported major version.
+- [ ] Modern Angular peer dependencies cover Angular 20–22.
+- [ ] Legacy Angular peer dependencies cover Angular 12–19.
+- [ ] Both Angular adapters require the exact package-family client version.
 - [ ] The Keycloak secondary entrypoint is present without making
       `keycloak-js` a dependency or peer dependency.
 - [ ] Changelog contains a dated release section.
@@ -83,10 +87,10 @@ Create a local commit, then run:
 ```
 
 The npm verifier checks repository cleanliness, locked dependencies, format,
-production build, tests, package metadata, tarball contents, exported public
-APIs, a package-only Angular consumer, registry uniqueness, and normal-CI
-publication isolation. The consumer installs real `keycloak-js` separately and
-compiles against the optional secondary entrypoint.
+production builds, tests, metadata for all three packages, tarball contents,
+exported public APIs, package-only Angular consumers, registry uniqueness, and
+normal-CI publication isolation. The CI compatibility matrix builds real
+consumers on Angular 9, 11, 12, 15, 16, 19, 20, 21, and 22.
 
 Record the produced tarball name and SHA-256 hash.
 
@@ -108,10 +112,14 @@ git push \
 
 Verify the tag object and its peeled commit before publishing.
 
-## First-package bootstrap
+## New-package bootstrap
 
-Trusted Publishing and staged publishing require the package to exist on npm.
-Therefore `0.4.0-preview.1` is a one-time bootstrap publication.
+Trusted Publishing configuration requires a package to exist on npm. The
+existing `@fotbiler/rulegate-angular` package is already configured. Before the
+first family release, bootstrap `@fotbiler/rulegate-client` and
+`@fotbiler/rulegate-angular-legacy` with an authenticated maintainer operation,
+then configure their Trusted Publishers. Do not dispatch the three-package
+workflow until all three trust relationships exist.
 
 Before the first publish:
 
@@ -122,24 +130,20 @@ Before the first publish:
 5. Run the npm release verifier and compare the tarball hash.
 6. Install npm CLI 12.0.1 or another reviewed compatible version.
 
-Publish the already-verified tarball:
-
-```bash
-npm publish \
-  artifacts/npm/fotbiler-rulegate-angular-0.4.0-preview.1.tgz \
-  --access public \
-  --tag preview \
-  --provenance=false
-```
+Use a dedicated bootstrap version that is not the intended family release
+version, or follow the current npm staged-package bootstrap process if it
+exposes package settings before approval. Never consume the intended family
+version during bootstrap. Record the exact command, artifact hash, and npm
+result in the release evidence.
 
 Local bootstrap publication cannot generate GitHub Actions provenance. This
-exception applies only to the first package version. Do not create a temporary
-automation token to work around the bootstrap constraint.
+exception applies only to each package's bootstrap version. Do not create a
+temporary automation token to work around the bootstrap constraint.
 
 ## Configure Trusted Publishing
 
-After the first package is visible, open its npm settings and create a GitHub
-Actions Trusted Publisher with these exact values:
+For each package, open npm settings and create a GitHub Actions Trusted
+Publisher with these exact values:
 
 | Field                | Value                    |
 | -------------------- | ------------------------ |
@@ -152,10 +156,6 @@ Actions Trusted Publisher with these exact values:
 Then set package publishing access to require 2FA and disallow traditional
 tokens. Future GitHub Actions publications use short-lived OIDC credentials
 and automatic provenance.
-
-The `0.4.0-preview.1` workflow is installed for trust configuration but must
-not be dispatched after the manual bootstrap publish because that immutable
-version already exists.
 
 ## Future staged publication
 
@@ -170,24 +170,26 @@ gh workflow run \
   --field "tag=$TAG"
 ```
 
-Verify the workflow artifact and staged package, then approve it with 2FA on
-npmjs.com. Do not approve a staged package until its metadata, contents, source
-commit, provenance, and SHA-256 evidence match the verified release.
+Verify the workflow artifact and all three staged packages, then approve each
+with 2FA on npmjs.com. Do not approve any staged package until the complete
+family metadata, contents, source commit, provenance, and SHA-256 evidence
+match the verified release.
 
 ## Public-package verification
 
 After publication, verify:
 
-- [ ] Exact name and version.
+- [ ] Exact names and one aligned version across all three packages.
 - [ ] Public visibility.
 - [ ] `preview` distribution tag.
 - [ ] Repository URL and directory.
 - [ ] License and README rendering.
-- [ ] Angular peer dependencies.
+- [ ] Modern and legacy Angular peer dependencies.
+- [ ] Exact client peer dependency alignment.
 - [ ] FESM and TypeScript declaration assets.
 - [ ] Keycloak secondary-entrypoint FESM and declaration assets.
 - [ ] No `keycloak-js` dependency or peer dependency in the RuleGate package.
-- [ ] Package installation into a clean Angular application.
+- [ ] Package installation into the compatibility consumer matrix.
 - [ ] No unexpected files or lifecycle scripts.
 
 ## GitHub prerelease

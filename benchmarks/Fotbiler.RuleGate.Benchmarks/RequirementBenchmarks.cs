@@ -65,8 +65,8 @@ public class RequirementBenchmarks
         _time = CreateEngine(
             new TimeWindowRequirementDefinition(
                 Enum.GetValues<DayOfWeek>(),
-                new TimeOnly(8, 0),
-                new TimeOnly(18, 0),
+                TimeSpan.FromHours(8),
+                TimeSpan.FromHours(18),
                 TimeZoneInfo.Utc));
 
         _context = CreateEngine(

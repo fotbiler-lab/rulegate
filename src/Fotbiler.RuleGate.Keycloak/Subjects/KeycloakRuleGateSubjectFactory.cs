@@ -1,4 +1,3 @@
-using System.Collections.Frozen;
 using System.Security.Claims;
 using System.Text.Json;
 using Fotbiler.RuleGate.Abstractions.Authorization;
@@ -20,9 +19,9 @@ public sealed class KeycloakRuleGateSubjectFactory
 
     private readonly string _resourceAccessClaimType;
 
-    private readonly FrozenSet<string> _clientIds;
+    private readonly HashSet<string> _clientIds;
 
-    private readonly FrozenSet<string>
+    private readonly HashSet<string>
         _permissionClaimTypes;
 
     public KeycloakRuleGateSubjectFactory(
@@ -366,20 +365,19 @@ public sealed class KeycloakRuleGateSubjectFactory
         return values;
     }
 
-    private static FrozenSet<string>
+    private static HashSet<string>
         ValidateIdentifiers(
             IEnumerable<string> values,
             string optionName)
     {
         ArgumentNullException.ThrowIfNull(values);
 
-        return values
-            .Select(
+        return new HashSet<string>(
+            values.Select(
                 value => ValidateIdentifier(
                     value,
-                    optionName))
-            .ToFrozenSet(
-                StringComparer.Ordinal);
+                    optionName)),
+            StringComparer.Ordinal);
     }
 
     private static string ValidateIdentifier(

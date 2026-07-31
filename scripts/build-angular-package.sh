@@ -14,9 +14,16 @@ REPOSITORY_ROOT="$(
 
 cd "$REPOSITORY_ROOT"
 
-pnpm exec ng \
-  build \
-  rulegate-angular
+"$REPOSITORY_ROOT/scripts/build-client-package.sh"
+
+node \
+  "$REPOSITORY_ROOT/scripts/prepare-angular-modern-build.mjs"
+
+pnpm \
+  --dir compatibility/angular-modern-builder \
+  exec \
+  ng-packagr \
+  --project .work/ng-package.json
 
 cp \
   "$REPOSITORY_ROOT/LICENSE" \

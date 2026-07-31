@@ -25,6 +25,6 @@ internal sealed class NullAuthorizationDiagnosticsSink
 
         cancellationToken.ThrowIfCancellationRequested();
 
-        return ValueTask.CompletedTask;
+        return ValueTaskCompat.CompletedTask;
     }
 }

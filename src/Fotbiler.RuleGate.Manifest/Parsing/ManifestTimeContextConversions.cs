@@ -40,13 +40,12 @@ internal static class ManifestTimeContextConversions
 
     internal static bool TryParseTime(
         string? value,
-        out TimeOnly time)
+        out TimeSpan time)
     {
-        return TimeOnly.TryParseExact(
+        return TimeSpan.TryParseExact(
             value,
-            "HH:mm",
+            @"hh\:mm",
             CultureInfo.InvariantCulture,
-            DateTimeStyles.None,
             out time);
     }
 

@@ -15,7 +15,9 @@ public sealed record AttributeComparisonRequirementDefinition
         ArgumentNullException.ThrowIfNull(left);
         ArgumentNullException.ThrowIfNull(right);
 
-        if (!Enum.IsDefined(@operator))
+        if (!Enum.IsDefined(
+                typeof(AuthorizationAttributeOperator),
+                @operator))
         {
             throw new ArgumentOutOfRangeException(
                 nameof(@operator),
@@ -30,7 +32,9 @@ public sealed record AttributeComparisonRequirementDefinition
                 nameof(@operator));
         }
 
-        if (!Enum.IsDefined(stringComparison))
+        if (!Enum.IsDefined(
+                typeof(AuthorizationStringComparison),
+                stringComparison))
         {
             throw new ArgumentOutOfRangeException(
                 nameof(stringComparison),

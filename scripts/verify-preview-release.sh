@@ -37,12 +37,28 @@ EXPECTED_VERSION="$EXPECTED_VERSION_PREFIX-$EXPECTED_VERSION_SUFFIX"
 EXPECTED_REPOSITORY_URL="https://github.com/fotbiler-lab/rulegate"
 EXPECTED_LICENSE="Apache-2.0"
 EXPECTED_AUTHOR="Fotbiler"
+EXPECTED_PACKAGE_ICON="rulegate-icon.png"
 EXPECTED_FRAMEWORKS_VALUE="net8.0;net9.0;net10.0"
+EXPECTED_LIBRARY_FRAMEWORKS_VALUE='netstandard2.0;$(RuleGateTargetFrameworks)'
+EXPECTED_ASPNETCORE_FRAMEWORKS_VALUE='netcoreapp3.1;net5.0;net6.0;net7.0;$(RuleGateTargetFrameworks)'
 
 EXPECTED_FRAMEWORKS=(
   "net8.0"
   "net9.0"
   "net10.0"
+)
+
+EXPECTED_LIBRARY_FRAMEWORKS=(
+  "netstandard2.0"
+  "${EXPECTED_FRAMEWORKS[@]}"
+)
+
+EXPECTED_ASPNETCORE_FRAMEWORKS=(
+  "netcoreapp3.1"
+  "net5.0"
+  "net6.0"
+  "net7.0"
+  "${EXPECTED_FRAMEWORKS[@]}"
 )
 
 FRAMEWORK_COUNT="${#EXPECTED_FRAMEWORKS[@]}"
@@ -205,11 +221,35 @@ ACTUAL_TARGET_FRAMEWORKS="$(
   read_property RuleGateTargetFrameworks
 )"
 
+ACTUAL_LIBRARY_TARGET_FRAMEWORKS="$(
+  read_property RuleGateLibraryTargetFrameworks
+)"
+
+ACTUAL_ASPNETCORE_TARGET_FRAMEWORKS="$(
+  read_property RuleGateAspNetCoreTargetFrameworks
+)"
+
 if [[ "$ACTUAL_TARGET_FRAMEWORKS" != "$EXPECTED_FRAMEWORKS_VALUE" ]]
 then
   echo "ERROR: Unexpected RuleGateTargetFrameworks."
   echo "Expected: $EXPECTED_FRAMEWORKS_VALUE"
   echo "Actual:   $ACTUAL_TARGET_FRAMEWORKS"
+  exit 1
+fi
+
+if [[ "$ACTUAL_LIBRARY_TARGET_FRAMEWORKS" != "$EXPECTED_LIBRARY_FRAMEWORKS_VALUE" ]]
+then
+  echo "ERROR: Unexpected RuleGateLibraryTargetFrameworks."
+  echo "Expected: $EXPECTED_LIBRARY_FRAMEWORKS_VALUE"
+  echo "Actual:   $ACTUAL_LIBRARY_TARGET_FRAMEWORKS"
+  exit 1
+fi
+
+if [[ "$ACTUAL_ASPNETCORE_TARGET_FRAMEWORKS" != "$EXPECTED_ASPNETCORE_FRAMEWORKS_VALUE" ]]
+then
+  echo "ERROR: Unexpected RuleGateAspNetCoreTargetFrameworks."
+  echo "Expected: $EXPECTED_ASPNETCORE_FRAMEWORKS_VALUE"
+  echo "Actual:   $ACTUAL_ASPNETCORE_TARGET_FRAMEWORKS"
   exit 1
 fi
 
@@ -379,6 +419,20 @@ do
 
   printf '\nPACKAGE: %s\n' "$package_id"
 
+  case "$package_id" in
+    Fotbiler.RuleGate.Abstractions|Fotbiler.RuleGate.Core|Fotbiler.RuleGate.Manifest)
+      package_frameworks=("${EXPECTED_LIBRARY_FRAMEWORKS[@]}")
+      ;;
+
+    Fotbiler.RuleGate.AspNetCore|Fotbiler.RuleGate.Keycloak)
+      package_frameworks=("${EXPECTED_ASPNETCORE_FRAMEWORKS[@]}")
+      ;;
+
+    Fotbiler.RuleGate.Cli)
+      package_frameworks=("${EXPECTED_FRAMEWORKS[@]}")
+      ;;
+  esac
+
   package_files="$(
     unzip -Z1 "$package_path"
   )"
@@ -388,7 +442,12 @@ do
     "README.md" \
     "$package_id does not contain README.md."
 
-  for framework in "${EXPECTED_FRAMEWORKS[@]}"
+  assert_contains \
+    "$package_files" \
+    "$EXPECTED_PACKAGE_ICON" \
+    "$package_id does not contain its package icon."
+
+  for framework in "${package_frameworks[@]}"
   do
     if [[ "$package_id" == "Fotbiler.RuleGate.Cli" ]]
     then
@@ -462,6 +521,11 @@ do
 
   assert_contains \
     "$nuspec_content" \
+    "<icon>$EXPECTED_PACKAGE_ICON</icon>" \
+    "$package_id does not declare its embedded package icon."
+
+  assert_contains \
+    "$nuspec_content" \
     "<projectUrl>$EXPECTED_REPOSITORY_URL</projectUrl>" \
     "$package_id has an unexpected project URL."
 
@@ -479,7 +543,7 @@ do
     unzip -Z1 "$symbol_path"
   )"
 
-  for framework in "${EXPECTED_FRAMEWORKS[@]}"
+  for framework in "${package_frameworks[@]}"
   do
     if [[ "$package_id" == "Fotbiler.RuleGate.Cli" ]]
     then
@@ -556,7 +620,7 @@ do
         "<packageType name=\"DotnetTool\"" \
         "CLI package is not declared as a .NET tool."
 
-      for framework in "${EXPECTED_FRAMEWORKS[@]}"
+      for framework in "${package_frameworks[@]}"
       do
         assert_contains \
           "$package_files" \
@@ -585,14 +649,9 @@ do
   echo "Verified: $package_id"
 done
 
-printf '\n== Run package consumer smoke test ==\n'
+printf '\n== Run current and legacy package consumers ==\n'
 
-./scripts/test-nuget-consumer-smoke.sh \
-  --packages-ready
-
-printf '\n== Run Keycloak package consumer smoke test ==\n'
-
-./scripts/test-keycloak-nuget-consumer-smoke.sh \
+./scripts/test-dotnet-legacy-consumers.sh \
   --packages-ready
 
 printf '\n== Run packaged CLI tool smoke test ==\n'
@@ -624,7 +683,9 @@ printf 'Commit:  %s\n' "$HEAD_COMMIT"
 printf 'Packages: %s nupkg + %s snupkg\n' \
   "$EXPECTED_PACKAGE_COUNT" \
   "$EXPECTED_PACKAGE_COUNT"
-printf 'Frameworks: %s\n' "$EXPECTED_FRAMEWORKS_VALUE"
+printf 'Libraries:  %s\n' "$EXPECTED_LIBRARY_FRAMEWORKS_VALUE"
+printf 'ASP.NET:    %s\n' "$EXPECTED_ASPNETCORE_FRAMEWORKS_VALUE"
+printf 'CLI:        %s\n' "$EXPECTED_FRAMEWORKS_VALUE"
 printf 'Tests:    completed successfully\n'
 printf 'Consumer: completed successfully\n'
 printf 'CLI tool: completed successfully\n'

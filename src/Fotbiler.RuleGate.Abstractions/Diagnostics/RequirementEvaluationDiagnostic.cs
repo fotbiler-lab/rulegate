@@ -39,7 +39,9 @@ public sealed record RequirementEvaluationDiagnostic
                 requirementId);
         }
 
-        if (!Enum.IsDefined(requirementKind))
+        if (!Enum.IsDefined(
+                typeof(AuthorizationRequirementKind),
+                requirementKind))
         {
             throw new ArgumentOutOfRangeException(
                 nameof(requirementKind),
@@ -47,7 +49,9 @@ public sealed record RequirementEvaluationDiagnostic
                 "The authorization requirement kind is not supported.");
         }
 
-        if (!Enum.IsDefined(outcome))
+        if (!Enum.IsDefined(
+                typeof(RequirementEvaluationOutcome),
+                outcome))
         {
             throw new ArgumentOutOfRangeException(
                 nameof(outcome),
@@ -79,7 +83,9 @@ public sealed record RequirementEvaluationDiagnostic
         }
 
         if (attributeSource is not null &&
-            !Enum.IsDefined(attributeSource.Value))
+            !Enum.IsDefined(
+                typeof(AuthorizationAttributeSource),
+                attributeSource.Value))
         {
             throw new ArgumentOutOfRangeException(
                 nameof(attributeSource),
@@ -95,6 +101,7 @@ public sealed record RequirementEvaluationDiagnostic
 
         if (comparedAttributeSource is not null &&
             !Enum.IsDefined(
+                typeof(AuthorizationAttributeSource),
                 comparedAttributeSource.Value))
         {
             throw new ArgumentOutOfRangeException(

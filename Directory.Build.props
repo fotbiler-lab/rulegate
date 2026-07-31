@@ -3,8 +3,11 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <LangVersion>14.0</LangVersion>
 
     <RuleGateTargetFrameworks>net8.0;net9.0;net10.0</RuleGateTargetFrameworks>
+    <RuleGateLibraryTargetFrameworks>netstandard2.0;$(RuleGateTargetFrameworks)</RuleGateLibraryTargetFrameworks>
+    <RuleGateAspNetCoreTargetFrameworks>netcoreapp3.1;net5.0;net6.0;net7.0;$(RuleGateTargetFrameworks)</RuleGateAspNetCoreTargetFrameworks>
 
     <Deterministic>true</Deterministic>
     <DebugType>portable</DebugType>
@@ -26,6 +29,7 @@
 
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageIcon>rulegate-icon.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
 
     <PackageTags>authorization;rbac;policy;security;access-control;rulegate</PackageTags>
@@ -40,5 +44,47 @@
 
     <ContinuousIntegrationBuild
       Condition="'$(CI)' == 'true'">true</ContinuousIntegrationBuild>
+
+    <CheckEolTargetFramework
+      Condition="'$(TargetFramework)' == 'netcoreapp3.1' Or
+                 '$(TargetFramework)' == 'net5.0' Or
+                 '$(TargetFramework)' == 'net6.0' Or
+                 '$(TargetFramework)' == 'net7.0'">false</CheckEolTargetFramework>
+    <SuppressTfmSupportBuildWarnings
+      Condition="'$(TargetFramework)' == 'netcoreapp3.1' Or
+                 '$(TargetFramework)' == 'net5.0' Or
+                 '$(TargetFramework)' == 'net6.0' Or
+                 '$(TargetFramework)' == 'net7.0'">true</SuppressTfmSupportBuildWarnings>
+    <MeziantouPolyfill_ExcludedPolyfills
+      Condition="'$(TargetFramework)' == 'netcoreapp3.1' Or
+                 '$(TargetFramework)' == 'net5.0' Or
+                 '$(TargetFramework)' == 'net6.0' Or
+                 '$(TargetFramework)' == 'net7.0'">M:System.Linq.Enumerable.AggregateBy|M:System.Linq.Enumerable.CountBy</MeziantouPolyfill_ExcludedPolyfills>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None
+      Include="$(MSBuildThisFileDirectory)packaging/nuget/rulegate-icon.png"
+      Pack="true"
+      PackagePath="\"
+      Link="rulegate-icon.png"
+      Visible="false" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0' Or
+                        '$(TargetFramework)' == 'netcoreapp3.1' Or
+                        '$(TargetFramework)' == 'net5.0' Or
+                        '$(TargetFramework)' == 'net6.0' Or
+                        '$(TargetFramework)' == 'net7.0'">
+    <PackageReference
+      Include="Meziantou.Polyfill"
+      Version="1.0.57"
+      PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+    <PackageReference
+      Include="System.Threading.Tasks.Extensions"
+      Version="4.6.3" />
+  </ItemGroup>
 </Project>

@@ -223,7 +223,7 @@ public sealed class CliApplicationTests
             result.ExitCode);
 
         Assert.Contains(
-            "Fotbiler RuleGate CLI",
+            "RuleGate CLI",
             result.StandardOutput,
             StringComparison.Ordinal);
 

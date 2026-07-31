@@ -36,7 +36,9 @@ public sealed record AuthorizationAttributeOperand
         AuthorizationAttributeSource source,
         string name)
     {
-        if (!Enum.IsDefined(source))
+        if (!Enum.IsDefined(
+                typeof(AuthorizationAttributeSource),
+                source))
         {
             throw new ArgumentOutOfRangeException(
                 nameof(source),

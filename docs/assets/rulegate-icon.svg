@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180" role="img" aria-labelledby="title description">
+  <title id="title">RuleGate icon</title>
+  <desc id="description">A blue shield with a keyhole.</desc>
+  <defs>
+    <linearGradient id="shield" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#79c9f5"/>
+      <stop offset="0.52" stop-color="#2789ca"/>
+      <stop offset="1" stop-color="#075b9a"/>
+    </linearGradient>
+    <linearGradient id="shield-edge" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#d5f1ff"/>
+      <stop offset="1" stop-color="#0a4f83"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="0" dy="5" stdDeviation="5" flood-color="#031f36" flood-opacity="0.28"/>
+    </filter>
+  </defs>
+
+  <g filter="url(#shadow)">
+    <path
+      d="M90 10 153 34v43c0 42-23 72-63 94-40-22-63-52-63-94V34L90 10Z"
+      fill="url(#shield)"
+      stroke="url(#shield-edge)"
+      stroke-width="3"/>
+    <path
+      d="M90 25 139 43v34c0 32-16 56-49 76-33-20-49-44-49-76V43L90 25Z"
+      fill="none"
+      stroke="#073f6c"
+      stroke-opacity="0.55"
+      stroke-width="2"/>
+    <circle cx="90" cy="72" r="30" fill="#eef9ff" stroke="#062d4d" stroke-width="5"/>
+    <path
+      d="M90 55a13 13 0 0 0-7 24l-5 25h24l-5-25a13 13 0 0 0-7-24Z"
+      fill="#061d31"/>
+  </g>
+</svg>

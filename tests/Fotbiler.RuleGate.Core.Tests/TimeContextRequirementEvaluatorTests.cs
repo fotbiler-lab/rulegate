@@ -21,8 +21,8 @@ public sealed class TimeContextRequirementEvaluatorTests
     {
         var requirement = new TimeWindowRequirementDefinition(
             [DayOfWeek.Monday],
-            new TimeOnly(8, 0),
-            new TimeOnly(18, 0),
+            TimeSpan.FromHours(8),
+            TimeSpan.FromHours(18),
             TimeZoneInfo.Utc);
 
         var result = await EvaluateAsync(
@@ -49,8 +49,8 @@ public sealed class TimeContextRequirementEvaluatorTests
     {
         var requirement = new TimeWindowRequirementDefinition(
             [DayOfWeek.Friday],
-            new TimeOnly(22, 0),
-            new TimeOnly(2, 0),
+            TimeSpan.FromHours(22),
+            TimeSpan.FromHours(2),
             TimeZoneInfo.Utc);
 
         var result = await EvaluateAsync(
@@ -73,8 +73,8 @@ public sealed class TimeContextRequirementEvaluatorTests
 
         var requirement = new TimeWindowRequirementDefinition(
             [DayOfWeek.Monday],
-            new TimeOnly(8, 0),
-            new TimeOnly(9, 0),
+            TimeSpan.FromHours(8),
+            TimeSpan.FromHours(9),
             utcPlusThree);
 
         var result = await EvaluateAsync(

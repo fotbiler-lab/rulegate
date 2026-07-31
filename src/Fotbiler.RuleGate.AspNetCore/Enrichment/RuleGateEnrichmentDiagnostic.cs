@@ -17,8 +17,13 @@ public sealed class RuleGateEnrichmentDiagnostic
         ArgumentException.ThrowIfNullOrWhiteSpace(
             providerName);
 
-        ArgumentOutOfRangeException.ThrowIfNegative(
-            attributeCount);
+        if (attributeCount < 0)
+        {
+            throw new ArgumentOutOfRangeException(
+                nameof(attributeCount),
+                attributeCount,
+                "The attribute count cannot be negative.");
+        }
 
         AttributeSource = attributeSource;
         ProviderName = providerName;

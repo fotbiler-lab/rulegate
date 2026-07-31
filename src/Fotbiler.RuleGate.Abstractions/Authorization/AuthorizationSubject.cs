@@ -1,4 +1,3 @@
-using System.Collections.Frozen;
 using Fotbiler.RuleGate.Abstractions.Attributes;
 
 namespace Fotbiler.RuleGate.Abstractions.Authorization;
@@ -15,11 +14,15 @@ public sealed class AuthorizationSubject
 
         Id = id;
 
-        Roles = (roles ?? [])
-            .ToFrozenSet(StringComparer.Ordinal);
+        Roles = Array.AsReadOnly(
+            (roles ?? [])
+                .Distinct(StringComparer.Ordinal)
+                .ToArray());
 
-        Permissions = (permissions ?? [])
-            .ToFrozenSet(StringComparer.Ordinal);
+        Permissions = Array.AsReadOnly(
+            (permissions ?? [])
+                .Distinct(StringComparer.Ordinal)
+                .ToArray());
 
         Attributes = attributes
             ?? AuthorizationAttributes.Empty;
@@ -27,9 +30,9 @@ public sealed class AuthorizationSubject
 
     public string Id { get; }
 
-    public IReadOnlySet<string> Roles { get; }
+    public IReadOnlyCollection<string> Roles { get; }
 
-    public IReadOnlySet<string> Permissions { get; }
+    public IReadOnlyCollection<string> Permissions { get; }
 
     public AuthorizationAttributes Attributes { get; }
 }

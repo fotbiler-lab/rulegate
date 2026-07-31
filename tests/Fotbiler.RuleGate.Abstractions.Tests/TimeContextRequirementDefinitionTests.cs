@@ -10,16 +10,16 @@ public sealed class TimeContextRequirementDefinitionTests
     {
         var requirement = new TimeWindowRequirementDefinition(
             [DayOfWeek.Friday, DayOfWeek.Monday],
-            new TimeOnly(8, 0),
-            new TimeOnly(18, 0),
+            TimeSpan.FromHours(8),
+            TimeSpan.FromHours(18),
             TimeZoneInfo.Utc,
             "business-hours");
 
         Assert.Equal(
             [DayOfWeek.Monday, DayOfWeek.Friday],
             requirement.Days);
-        Assert.Equal(new TimeOnly(8, 0), requirement.Start);
-        Assert.Equal(new TimeOnly(18, 0), requirement.End);
+        Assert.Equal(TimeSpan.FromHours(8), requirement.Start);
+        Assert.Equal(TimeSpan.FromHours(18), requirement.End);
         Assert.Same(TimeZoneInfo.Utc, requirement.TimeZone);
         Assert.False(requirement.CrossesMidnight);
         Assert.Equal("business-hours", requirement.Id);
@@ -31,22 +31,22 @@ public sealed class TimeContextRequirementDefinitionTests
         Assert.Throws<ArgumentException>(
             () => new TimeWindowRequirementDefinition(
                 [],
-                new TimeOnly(8, 0),
-                new TimeOnly(18, 0),
+                TimeSpan.FromHours(8),
+                TimeSpan.FromHours(18),
                 TimeZoneInfo.Utc));
 
         Assert.Throws<ArgumentException>(
             () => new TimeWindowRequirementDefinition(
                 [DayOfWeek.Monday, DayOfWeek.Monday],
-                new TimeOnly(8, 0),
-                new TimeOnly(18, 0),
+                TimeSpan.FromHours(8),
+                TimeSpan.FromHours(18),
                 TimeZoneInfo.Utc));
 
         Assert.Throws<ArgumentException>(
             () => new TimeWindowRequirementDefinition(
                 [DayOfWeek.Monday],
-                new TimeOnly(8, 0),
-                new TimeOnly(8, 0),
+                TimeSpan.FromHours(8),
+                TimeSpan.FromHours(8),
                 TimeZoneInfo.Utc));
     }
 

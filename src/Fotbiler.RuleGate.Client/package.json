@@ -1,0 +1,44 @@
+{
+  "name": "@fotbiler/rulegate-client",
+  "version": "0.7.0-preview.1",
+  "description": "Framework-independent, fail-closed authorization state for RuleGate web clients.",
+  "keywords": [
+    "authorization",
+    "permissions",
+    "policy",
+    "roles",
+    "rulegate",
+    "security",
+    "typescript"
+  ],
+  "author": "Fotbiler",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fotbiler-lab/rulegate.git",
+    "directory": "src/Fotbiler.RuleGate.Client"
+  },
+  "homepage": "https://github.com/fotbiler-lab/rulegate#readme",
+  "bugs": {
+    "url": "https://github.com/fotbiler-lab/rulegate/issues"
+  },
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "sideEffects": false
+}

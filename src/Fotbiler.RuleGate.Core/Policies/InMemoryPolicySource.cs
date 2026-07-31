@@ -33,7 +33,7 @@ public sealed class InMemoryPolicySource : IPolicySource
     {
         cancellationToken.ThrowIfCancellationRequested();
 
-        return ValueTask.FromResult(
+        return ValueTaskCompat.FromResult(
             PolicySourceLoadResult.Success(_policies));
     }
 }

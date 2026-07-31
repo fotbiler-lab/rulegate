@@ -10,10 +10,11 @@ a frontend authorization projection in RuleGate applications.
 ## Install
 
 ```bash
-pnpm add @fotbiler/rulegate-angular@0.7.0-preview.1
+pnpm add @fotbiler/rulegate-angular@0.7.0-preview.1 @fotbiler/rulegate-client@0.7.0-preview.1
 ```
 
-The package requires Angular 22.
+The package supports Angular 20–22. Older applications should follow the
+[frontend compatibility guide](https://github.com/fotbiler-lab/rulegate/blob/main/docs/frontend-compatibility.md).
 
 ## Supply authorization state
 
