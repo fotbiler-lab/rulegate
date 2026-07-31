@@ -1,6 +1,6 @@
 {
   "name": "@fotbiler/rulegate-angular",
-  "version": "0.7.0-preview.1",
+  "version": "0.9.0-preview.4",
   "description": "Angular authorization helpers for RuleGate applications.",
   "keywords": [
     "angular",
@@ -27,7 +27,7 @@
     "rulegate-angular": "bin/rulegate-angular.mjs"
   },
   "peerDependencies": {
-    "@fotbiler/rulegate-client": "0.7.0-preview.1",
+    "@fotbiler/rulegate-client": "0.9.0-preview.4",
     "@angular/core": "^20.0.0 || ^21.0.0 || ^22.0.0",
     "@angular/router": "^20.0.0 || ^21.0.0 || ^22.0.0"
   },
