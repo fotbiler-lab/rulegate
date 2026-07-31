@@ -19,6 +19,7 @@ rules, authentication and MFA age, and canonical trusted request context.
 | Define and validate `rulegate.yaml` policies                        | [Manifest guide](manifests.md)                                     |
 | Validate manifests locally or in CI                                 | [RuleGate CLI](cli.md)                                             |
 | Test policy outcomes without starting an application                | [Policy testing](policy-testing.md)                                |
+| Explain decisions and lint policy structure safely                  | [Explain and Lint](explain-and-lint.md)                            |
 | Generate C# constants and detect stale output                       | [C# code generation](code-generation.md)                           |
 | Integrate RuleGate with ASP.NET Core                                | [ASP.NET Core integration](aspnetcore.md)                          |
 | Supply trusted subject, resource, and context attributes            | [ASP.NET Core enrichment](enrichment.md)                           |
@@ -42,7 +43,7 @@ The latest published RuleGate NuGet preview is
 | [`Fotbiler.RuleGate.Core`](https://www.nuget.org/packages/Fotbiler.RuleGate.Core)                 | Local fail-closed authorization engine and built-in evaluators                               |
 | [`Fotbiler.RuleGate.Manifest`](https://www.nuget.org/packages/Fotbiler.RuleGate.Manifest)         | YAML manifest loading, validation, and compilation                                           |
 | [`Fotbiler.RuleGate.AspNetCore`](https://www.nuget.org/packages/Fotbiler.RuleGate.AspNetCore)     | ASP.NET Core integration and trusted attribute enrichment                                    |
-| [`Fotbiler.RuleGate.Cli`](https://www.nuget.org/packages/Fotbiler.RuleGate.Cli)                   | .NET tool for manifest validation, policy testing, deterministic C# generation, and CI usage |
+| [`Fotbiler.RuleGate.Cli`](https://www.nuget.org/packages/Fotbiler.RuleGate.Cli)                   | .NET tool for validation, testing, explanation, linting, deterministic C# generation, and CI |
 | [`Fotbiler.RuleGate.Keycloak`](https://www.nuget.org/packages/Fotbiler.RuleGate.Keycloak)         | Optional Keycloak claim normalization and RuleGate subject mapping                           |
 | [`@fotbiler/rulegate-angular`](https://www.npmjs.com/package/@fotbiler/rulegate-angular)          | Angular authorization client, route guards, UI directives, and TypeScript generation         |
 
@@ -71,22 +72,24 @@ After completing that guide:
 2. Use the [manifest guide](manifests.md) to define and validate policies.
 3. Add deterministic allow, deny, and indeterminate expectations with the
    [policy-testing guide](policy-testing.md).
-4. Use the [C# code-generation guide](code-generation.md) when application code
+4. Use [Explain and Lint](explain-and-lint.md) to inspect a decision safely and
+   enforce maintainable policy structure in CI.
+5. Use the [C# code-generation guide](code-generation.md) when application code
    should consume manifest identifiers as constants.
-5. Follow the [ASP.NET Core integration](aspnetcore.md) guide to protect HTTP
+6. Follow the [ASP.NET Core integration](aspnetcore.md) guide to protect HTTP
    endpoints and map authenticated identities.
-6. Add the [ASP.NET Core enrichment pipeline](enrichment.md) when trusted
+7. Add the [ASP.NET Core enrichment pipeline](enrichment.md) when trusted
    authorization attributes come from application services.
-7. Use the [Angular SDK guide](angular.md) for route and template visibility
+8. Use the [Angular SDK guide](angular.md) for route and template visibility
    after backend authorization is in place.
-8. Follow the [Keycloak integration](keycloak.md) guide when Keycloak supplies
+9. Follow the [Keycloak integration](keycloak.md) guide when Keycloak supplies
    the authenticated identity.
-9. Use the [diagnostics guide](diagnostics.md) to configure logging and custom
-   observability safely.
-10. Run the [reference applications](reference-applications.md) to see the
+10. Use the [diagnostics guide](diagnostics.md) to configure logging and custom
+    observability safely.
+11. Run the [reference applications](reference-applications.md) to see the
     packages composed in minimal and full-stack hosts.
-11. Review the [security model](security.md) before production integration.
-12. Use the root [README](../README.md) for the repository overview and current
+12. Review the [security model](security.md) before production integration.
+13. Use the root [README](../README.md) for the repository overview and current
     package status.
 
 ## Documentation principles
@@ -116,6 +119,8 @@ project maintainers rather than package consumers.
   exit-code contract.
 - [Policy testing](policy-testing.md) — evaluate deterministic authorization
   fixtures, assert outcomes and failure codes, and filter CI test runs.
+- [Explain and Lint](explain-and-lint.md) — produce redacted structural
+  decision explanations and enforce deterministic manifest-quality findings.
 - [C# code generation](code-generation.md) — generate deterministic constants,
   enforce stale-output checks in CI, and understand identifier diagnostics.
 

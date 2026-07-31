@@ -6,6 +6,25 @@ The project follows Semantic Versioning. Preview releases may introduce breaking
 
 ## [Unreleased]
 
+### Added
+
+- Added `rulegate explain` for one deterministic policy-test request with
+  stable text and JSON requirement trees from the production evaluator path.
+- Added default redaction of subject IDs, resource IDs, request values, policy
+  literals, test descriptions, evaluation IDs, and timing data from decision
+  explanations.
+- Added `rulegate lint` with stable findings for duplicate, contradictory,
+  absorbed, overly deep, and unnecessarily complex requirements, identifier
+  collisions, risky negative operators, and excessive policy complexity.
+- Added strict CI exit codes, package-level smoke coverage, and the
+  [Explain and Lint guide](docs/explain-and-lint.md).
+
+### Security
+
+- Explain and lint compile or validate all input before processing, fail closed
+  on invalid files, and never emit subject, resource, context, or literal
+  attribute values.
+
 ## [0.8.0-preview.2] - 2026-07-31
 
 ### Added

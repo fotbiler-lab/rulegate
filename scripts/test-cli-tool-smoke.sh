@@ -187,6 +187,23 @@ application:
 policies: []
 YAML
 
+cat > "$WORK_DIRECTORY/lint-findings.yaml" <<'YAML'
+schemaVersion: 1
+
+application:
+  id: cli-smoke-lint
+  name: CLI Smoke Lint
+
+policies:
+  - id: documents.read
+    resourceType: document
+    action: read
+    requirement:
+      all:
+        - permission: DOC.READ
+        - permission: DOC.READ
+YAML
+
 cat > "$WORK_DIRECTORY/authorization.tests.yaml" <<'YAML'
 schemaVersion: 1
 manifest: rulegate.yaml
@@ -268,6 +285,16 @@ do
     >/dev/null
 
   grep -F \
+    'explain' \
+    "$TEMP_DIRECTORY/help-$framework.out" \
+    >/dev/null
+
+  grep -F \
+    'lint' \
+    "$TEMP_DIRECTORY/help-$framework.out" \
+    >/dev/null
+
+  grep -F \
     'info' \
     "$TEMP_DIRECTORY/help-$framework.out" \
     >/dev/null
@@ -330,6 +357,43 @@ do
   grep -F \
     'rulegate test [<file>] [options]' \
     "$TEMP_DIRECTORY/test-help-$framework.out" \
+    >/dev/null
+
+  printf '\n== Verify explain help ==\n'
+
+  "$CLI" \
+    explain \
+    --help \
+    >"$TEMP_DIRECTORY/explain-help-$framework.out" \
+    2>"$TEMP_DIRECTORY/explain-help-$framework.err"
+
+  test ! -s \
+    "$TEMP_DIRECTORY/explain-help-$framework.err"
+
+  grep -F \
+    -- '--test' \
+    "$TEMP_DIRECTORY/explain-help-$framework.out" \
+    >/dev/null
+
+  grep -F \
+    -- '--format' \
+    "$TEMP_DIRECTORY/explain-help-$framework.out" \
+    >/dev/null
+
+  printf '\n== Verify lint help ==\n'
+
+  "$CLI" \
+    lint \
+    --help \
+    >"$TEMP_DIRECTORY/lint-help-$framework.out" \
+    2>"$TEMP_DIRECTORY/lint-help-$framework.err"
+
+  test ! -s \
+    "$TEMP_DIRECTORY/lint-help-$framework.err"
+
+  grep -F \
+    -- '--format' \
+    "$TEMP_DIRECTORY/lint-help-$framework.out" \
     >/dev/null
 
   printf '\n== Verify version ==\n'
@@ -439,6 +503,103 @@ assert [item["actualOutcome"] for item in payload["tests"]] == [
 ]
 
 print("Policy test JSON output verified.")
+PY
+
+  printf '\n== Verify packaged policy explanation ==\n'
+
+  (
+    cd "$WORK_DIRECTORY"
+
+    "$CLI" \
+      explain \
+      --test missing-permission-is-denied \
+      --format json \
+      >"$TEMP_DIRECTORY/explain-$framework.json" \
+      2>"$TEMP_DIRECTORY/explain-$framework.err"
+  )
+
+  test ! -s "$TEMP_DIRECTORY/explain-$framework.err"
+
+  python3 - \
+    "$TEMP_DIRECTORY/explain-$framework.json" <<'PY'
+import json
+from pathlib import Path
+import sys
+
+path = Path(sys.argv[1])
+text = path.read_text(encoding="utf-8")
+payload = json.loads(text)
+
+assert payload["isValid"] is True
+assert payload["outcome"] == "deny"
+assert payload["policyId"] == "documents.read"
+assert payload["sensitiveValuesRedacted"] is True
+assert payload["requirements"][0]["kind"] == "permission"
+assert "reader-2" not in text
+
+print("Policy explanation JSON output verified.")
+PY
+
+  printf '\n== Verify packaged manifest linting ==\n'
+
+  (
+    cd "$WORK_DIRECTORY"
+
+    "$CLI" \
+      lint \
+      --format json \
+      >"$TEMP_DIRECTORY/lint-clean-$framework.json" \
+      2>"$TEMP_DIRECTORY/lint-clean-$framework.err"
+  )
+
+  test ! -s "$TEMP_DIRECTORY/lint-clean-$framework.err"
+
+  python3 - \
+    "$TEMP_DIRECTORY/lint-clean-$framework.json" <<'PY'
+import json
+from pathlib import Path
+import sys
+
+path = Path(sys.argv[1])
+payload = json.loads(path.read_text(encoding="utf-8"))
+
+assert payload["isValid"] is True
+assert payload["isClean"] is True
+assert payload["findings"] == []
+
+print("Clean manifest lint output verified.")
+PY
+
+  set +e
+
+  "$CLI" \
+    lint \
+    "$WORK_DIRECTORY/lint-findings.yaml" \
+    --format json \
+    >"$TEMP_DIRECTORY/lint-findings-$framework.json" \
+    2>"$TEMP_DIRECTORY/lint-findings-$framework.err"
+
+  LINT_EXIT_CODE="$?"
+
+  set -e
+
+  test "$LINT_EXIT_CODE" -eq 1
+  test ! -s "$TEMP_DIRECTORY/lint-findings-$framework.err"
+
+  python3 - \
+    "$TEMP_DIRECTORY/lint-findings-$framework.json" <<'PY'
+import json
+from pathlib import Path
+import sys
+
+path = Path(sys.argv[1])
+payload = json.loads(path.read_text(encoding="utf-8"))
+
+assert payload["isValid"] is True
+assert payload["isClean"] is False
+assert payload["findings"][0]["code"] == "RGLINT001"
+
+print("Manifest lint finding output verified.")
 PY
 
   printf '\n== Verify JSON validation failure ==\n'

@@ -131,6 +131,16 @@ public sealed class CliApplicationTests
             StringComparison.Ordinal);
 
         Assert.Contains(
+            "explain",
+            result.StandardOutput,
+            StringComparison.Ordinal);
+
+        Assert.Contains(
+            "lint",
+            result.StandardOutput,
+            StringComparison.Ordinal);
+
+        Assert.Contains(
             "info",
             result.StandardOutput,
             StringComparison.Ordinal);
@@ -150,7 +160,7 @@ public sealed class CliApplicationTests
             result.ExitCode);
 
         Assert.Contains(
-            "Validate, test, generate, and manage RuleGate policies.",
+            "Validate, test, explain, lint, generate, and manage RuleGate policies.",
             result.StandardOutput,
             StringComparison.Ordinal);
 

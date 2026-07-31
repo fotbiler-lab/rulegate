@@ -241,6 +241,7 @@ rulegate test samples/aspnetcore-minimal/authorization.tests.yaml
 ## Related documentation
 
 - [RuleGate CLI](cli.md)
+- [Explain and Lint](explain-and-lint.md)
 - [Manifest guide](manifests.md)
 - [Authorization model](authorization-model.md)
 - [Security model](security.md)

@@ -81,7 +81,7 @@ internal static class RuleGateCliApplication
         var rootCommand =
             new Command(
                 "rulegate",
-                "Validate, test, generate, and manage RuleGate policies.");
+                "Validate, test, explain, lint, generate, and manage RuleGate policies.");
 
         rootCommand.Options.Add(
             new HelpOption());
@@ -97,6 +97,12 @@ internal static class RuleGateCliApplication
 
         rootCommand.Subcommands.Add(
             TestCommand.Create());
+
+        rootCommand.Subcommands.Add(
+            ExplainCommand.Create());
+
+        rootCommand.Subcommands.Add(
+            LintCommand.Create());
 
         rootCommand.Subcommands.Add(
             InfoCommand.Create());
