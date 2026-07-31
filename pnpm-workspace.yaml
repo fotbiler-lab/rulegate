@@ -18,4 +18,5 @@ minimumReleaseAgeExclude:
   - '@angular/compiler-cli@20.3.27'
   - '@angular/core@20.3.27'
   - '@angular/router@20.3.27'
-  - '@fotbiler/rulegate-angular@0.7.0-preview.1'
+  - '@fotbiler/rulegate-angular@0.9.0-preview.4'
+  - '@fotbiler/rulegate-client@0.9.0-preview.4'

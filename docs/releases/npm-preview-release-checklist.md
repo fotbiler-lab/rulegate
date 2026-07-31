@@ -114,31 +114,37 @@ Verify the tag object and its peeled commit before publishing.
 
 ## New-package bootstrap
 
-Trusted Publishing configuration requires a package to exist on npm. The
-existing `@fotbiler/rulegate-angular` package is already configured. Before the
-first family release, bootstrap `@fotbiler/rulegate-client` and
-`@fotbiler/rulegate-angular-legacy` with an authenticated maintainer operation,
-then configure their Trusted Publishers. Do not dispatch the three-package
-workflow until all three trust relationships exist.
+Staged publishing and Trusted Publishing configuration both require the package
+to already exist on npm. A brand-new package therefore needs a one-time
+maintainer bootstrap before it can join the normal staged family workflow.
 
-Before the first publish:
+For a brand-new package:
 
 1. Enable 2FA on the maintainer npm account.
 2. Authenticate locally with `npm login --auth-type=web`.
-3. Verify `npm whoami` and `npm org ls fotbiler`.
-4. Check out the exact annotated tag commit.
+3. Verify `npm whoami` and the maintainer's access to the `fotbiler` scope.
+4. Check out the exact verified release/tag commit that produced the tarball.
 5. Run the npm release verifier and compare the tarball hash.
-6. Install npm CLI 12.0.1 or another reviewed compatible version.
+6. Publish the verified tarball directly with public access, the intended
+   distribution tag, and provenance explicitly disabled because the operation
+   is not running in GitHub Actions.
+7. Verify the public registry version and `dist.shasum` against the exact
+   verified tarball.
+8. Configure the package's GitHub Actions Trusted Publisher before its next
+   release.
 
-Use a dedicated bootstrap version that is not the intended family release
-version, or follow the current npm staged-package bootstrap process if it
-exposes package settings before approval. Never consume the intended family
-version during bootstrap. Record the exact command, artifact hash, and npm
-result in the release evidence.
+Prefer a dedicated bootstrap version when planning a new package ahead of a
+coordinated family release. This keeps the intended coordinated version
+available for the normal staged workflow.
+
+If the coordinated release version itself must be used as an exceptional
+bootstrap version, treat that version as immutable immediately after npm
+accepts it. Do not then dispatch a release workflow that expects the same
+version to still be unpublished.
 
 Local bootstrap publication cannot generate GitHub Actions provenance. This
-exception applies only to each package's bootstrap version. Do not create a
-temporary automation token to work around the bootstrap constraint.
+exception applies only to the bootstrap publication. Do not create a temporary
+automation token to work around the bootstrap constraint.
 
 ## Configure Trusted Publishing
 
@@ -160,7 +166,8 @@ and automatic provenance.
 ## Future staged publication
 
 For later releases, update the exact version and tag guardrails on the release
-branch. After merging and tagging, dispatch from `main`:
+branch. After merging, final-main verification, and annotated tagging, dispatch
+from `main`:
 
 ```bash
 gh workflow run \
@@ -170,10 +177,44 @@ gh workflow run \
   --field "tag=$TAG"
 ```
 
-Verify the workflow artifact and all three staged packages, then approve each
-with 2FA on npmjs.com. Do not approve any staged package until the complete
-family metadata, contents, source commit, provenance, and SHA-256 evidence
-match the verified release.
+The workflow verifies and stages all three packages through GitHub Actions OIDC.
+It intentionally does not approve the staged packages.
+
+Review every staged package before approval:
+
+```bash
+npm stage list @fotbiler/rulegate-client
+npm stage list @fotbiler/rulegate-angular-legacy
+npm stage list @fotbiler/rulegate-angular
+
+npm stage view <stage-id>
+npm stage download <stage-id>
+```
+
+Compare package metadata, tarball contents, source commit, provenance, and
+artifact hashes with the verified release evidence. Only then approve each
+stage with an authenticated maintainer account:
+
+```bash
+npm stage approve <stage-id>
+```
+
+Every approval requires maintainer proof-of-presence/2FA. GitHub Actions OIDC
+must not be used to approve or reject staged packages.
+
+The workflow stages preview releases with the `preview` distribution tag.
+Until RuleGate has a stable release, also align `latest` to the newly verified
+preview after all three packages are publicly visible:
+
+```bash
+npm dist-tag add "@fotbiler/rulegate-client@$VERSION" latest
+npm dist-tag add "@fotbiler/rulegate-angular-legacy@$VERSION" latest
+npm dist-tag add "@fotbiler/rulegate-angular@$VERSION" latest
+```
+
+Verify both `preview` and `latest` on all three packages. After the first stable
+RuleGate release, reserve `latest` for the stable line and keep prereleases on
+their prerelease distribution tag.
 
 ## Public-package verification
 
@@ -181,7 +222,10 @@ After publication, verify:
 
 - [ ] Exact names and one aligned version across all three packages.
 - [ ] Public visibility.
-- [ ] `preview` distribution tag.
+- [ ] `preview` distribution tag points to the intended preview version.
+- [ ] Before the first stable release, `latest` is deliberately aligned to the
+      intended preview version; after stable release, `latest` remains on the
+      stable line.
 - [ ] Repository URL and directory.
 - [ ] License and README rendering.
 - [ ] Modern and legacy Angular peer dependencies.
@@ -194,7 +238,7 @@ After publication, verify:
 
 ## GitHub prerelease
 
-Create a draft GitHub prerelease only after npm and NuGet verification succeed.
+Create the GitHub prerelease only after npm and NuGet verification succeed.
 Use the existing annotated tag, attach the verified `.tgz`, `.nupkg`, and
 `.snupkg`, include the release notes, and leave the release marked as a
 prerelease rather than the latest stable release.

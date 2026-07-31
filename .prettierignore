@@ -1,3 +1,6 @@
 samples/document-approval/web/public/rulegate-logo.svg
 compatibility/*/.work/
 compatibility/*/node_modules/
+samples/document-approval/web/.angular/
+samples/document-approval/web/dist/
+samples/document-approval/web/src/app/generated/rulegate.ts

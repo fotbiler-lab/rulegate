@@ -5,7 +5,7 @@
   "scripts": {
     "start": "ng serve",
     "build": "ng build",
-    "format:check": "prettier --check .",
+    "format:check": "prettier --check . --ignore-path ../../../.prettierignore",
     "generate": "rulegate-angular generate ../api/rulegate.yaml --output src/app/generated/rulegate.ts",
     "generate:check": "rulegate-angular generate ../api/rulegate.yaml --output src/app/generated/rulegate.ts --check"
   },
@@ -16,7 +16,8 @@
     "@angular/forms": "22.0.8",
     "@angular/platform-browser": "22.0.8",
     "@angular/router": "22.0.8",
-    "@fotbiler/rulegate-angular": "0.7.0-preview.1",
+    "@fotbiler/rulegate-angular": "0.9.0-preview.4",
+    "@fotbiler/rulegate-client": "0.9.0-preview.4",
     "@primeuix/themes": "3.0.0",
     "keycloak-js": "26.2.4",
     "primeflex": "4.0.0",
