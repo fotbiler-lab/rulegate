@@ -8,6 +8,10 @@ internal static class RuleGateExitCodes
 
     public const int TestFailed = 1;
 
+    public const int ExplanationFailed = 1;
+
+    public const int LintFailed = 1;
+
     public const int UsageError = 2;
 
     public const int InternalError = 3;

@@ -905,6 +905,22 @@ handlers, or application data access. Continue to test those host trust
 boundaries separately, and never treat a CLI fixture as a replacement for API
 enforcement.
 
+## Decision explanations and lint output
+
+`rulegate explain` evaluates one validated policy-test request through the
+runtime evaluator pipeline. Its report includes structural policy and
+requirement identifiers, attribute sources and names, outcomes, and failure
+codes. It excludes subject and resource IDs, roles, permissions, every request
+or literal value, descriptions, evaluation IDs, and durations.
+
+`rulegate lint` validates the complete manifest before static analysis. Lint
+fingerprints may compare policy values inside the local process, but reports
+only rule codes, manifest paths, and value-free messages. Neither command is a
+safe HTTP response body; keep their output in trusted developer and CI systems.
+
+See [Explain and Lint](explain-and-lint.md) for the complete rule and redaction
+contract.
+
 ## Policy replacement and stale configuration
 
 RuleGate does not currently provide manifest hot reload.

@@ -1,10 +1,10 @@
 using Fotbiler.RuleGate.Abstractions.Authorization;
 using Fotbiler.RuleGate.Abstractions.Constants;
 using Fotbiler.RuleGate.Abstractions.Evaluation;
+using Fotbiler.RuleGate.Cli.Evaluation;
 using Fotbiler.RuleGate.Cli.ExitCodes;
 using Fotbiler.RuleGate.Cli.Output;
 using Fotbiler.RuleGate.Core.Evaluation;
-using Fotbiler.RuleGate.Core.Evaluation.Evaluators;
 using Fotbiler.RuleGate.Core.Policies;
 using Fotbiler.RuleGate.Manifest.Compilation;
 
@@ -169,7 +169,9 @@ internal sealed class PolicyTestRunner
             new InMemoryPolicyProvider(
                 manifestCompilation.Policies);
 
-        var dispatcher = CreateDispatcher();
+        var dispatcher =
+            RequirementEvaluationDispatcherFactory
+                .Create();
         var results =
             new List<PolicyTestCaseResult>(
                 selectedTests.Length);
@@ -300,25 +302,6 @@ internal sealed class PolicyTestRunner
             ActualFailureCodes:
                 actualFailureCodes,
             PolicyId: policy?.Id);
-    }
-
-    private static RequirementEvaluationDispatcher
-        CreateDispatcher()
-    {
-        return new RequirementEvaluationDispatcher(
-        [
-            new PermissionRequirementEvaluator(),
-            new RoleRequirementEvaluator(),
-            new AttributeRequirementEvaluator(),
-            new AttributeComparisonRequirementEvaluator(),
-            new TimeWindowRequirementEvaluator(),
-            new DateTimeWindowRequirementEvaluator(),
-            new ContextAgeRequirementEvaluator(),
-            new ContextRequirementEvaluator(),
-            new AllRequirementEvaluator(),
-            new AnyRequirementEvaluator(),
-            new NotRequirementEvaluator()
-        ]);
     }
 
     private static IReadOnlyList<PolicyTestDiagnostic>

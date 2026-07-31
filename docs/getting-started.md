@@ -119,6 +119,15 @@ rulegate validate ./policies/rulegate.yaml
 CLI validation uses the same fail-closed manifest compiler as application
 startup. A failed validation never produces or exposes a partial policy set.
 
+Before deployment, lint the valid manifest for structural risks:
+
+```bash
+rulegate lint ./policies/rulegate.yaml --format json
+```
+
+See [Explain and Lint](explain-and-lint.md) for lint finding codes and redacted
+decision explanations built from deterministic policy-test fixtures.
+
 Generate deterministic policy, resource-type, and action constants:
 
 ```bash

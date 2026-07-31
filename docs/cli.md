@@ -1,8 +1,8 @@
 # RuleGate CLI
 
 `Fotbiler.RuleGate.Cli` is the RuleGate command-line tool for deterministic
-manifest validation, policy testing, C# constant generation, stale-output
-checks, and CI automation.
+manifest validation and linting, policy testing, redacted decision
+explanations, C# constant generation, stale-output checks, and CI automation.
 
 The installed command is `rulegate`.
 
@@ -68,6 +68,10 @@ rulegate validate [file] --format json
 rulegate test [authorization.tests.yaml]
 rulegate test [authorization.tests.yaml] --filter <text>
 rulegate test [authorization.tests.yaml] --format json
+rulegate explain [authorization.tests.yaml] --test <id>
+rulegate explain [authorization.tests.yaml] --test <id> --format json
+rulegate lint [file]
+rulegate lint [file] --format json
 rulegate generate csharp [file] --namespace <namespace>
 rulegate generate csharp [file] --namespace <namespace> --output <file>
 rulegate generate csharp [file] --namespace <namespace> --output <file> --check
@@ -78,6 +82,8 @@ Run command-specific help with:
 ```bash
 rulegate validate --help
 rulegate test --help
+rulegate explain --help
+rulegate lint --help
 rulegate generate csharp --help
 ```
 
@@ -150,6 +156,43 @@ See the [policy-testing guide](policy-testing.md) for the fixture schema, typed
 attributes, deterministic-time contract, filtering, output model, and security
 boundary.
 
+## Explain a decision safely
+
+Select one exact test identifier from an `authorization.tests.yaml` fixture:
+
+```bash
+rulegate explain \
+  ./policies/authorization.tests.yaml \
+  --test organization-mismatch
+
+rulegate explain \
+  ./policies/authorization.tests.yaml \
+  --test organization-mismatch \
+  --format json
+```
+
+The command evaluates the request through the runtime requirement pipeline and
+reports the final outcome, failure codes, and evaluated requirement tree. It
+omits subject/resource identities, request and literal values, random
+evaluation IDs, durations, and test descriptions. A deny or indeterminate
+decision is still a successful explanation.
+
+## Lint policy structure
+
+```bash
+rulegate lint
+rulegate lint ./policies/rulegate.yaml
+rulegate lint ./policies/rulegate.yaml --format json
+```
+
+Lint runs only after full manifest validation. It reports stable codes for
+duplicate or contradictory requirements, absorbed logical branches, excessive
+depth or complexity, unnecessary logical layers, identifier collisions, and
+risky negative operators. Any finding returns exit code `1` for strict CI.
+
+See the [Explain and Lint guide](explain-and-lint.md) for the complete output,
+redaction, rule-code, and CI contracts.
+
 ## Generate C# constants
 
 ```bash
@@ -176,13 +219,13 @@ diagnostics, and security boundaries.
 
 ## Exit codes
 
-| Exit code | Name                           | Meaning                                                                                         |
-| --------: | ------------------------------ | ----------------------------------------------------------------------------------------------- |
-|       `0` | Success                        | Validation, testing, generation, file output, or stale check completed successfully             |
-|       `1` | Input, test, or output failure | Fixture/manifest validation, an expectation, generation, missing output, or stale output failed |
-|       `2` | Usage error                    | The command or option combination is invalid                                                    |
-|       `3` | Internal error                 | An unexpected failure occurred                                                                  |
-|     `130` | Cancelled                      | The operation was cancelled                                                                     |
+| Exit code | Name                              | Meaning                                                                                         |
+| --------: | --------------------------------- | ----------------------------------------------------------------------------------------------- |
+|       `0` | Success                           | Validation, testing, explanation, clean lint, generation, file output, or stale check completed |
+|       `1` | Input, finding, or output failure | Input validation, a test, lint finding, generation, missing output, or stale output failed      |
+|       `2` | Usage error                       | The command or option combination is invalid                                                    |
+|       `3` | Internal error                    | An unexpected failure occurred                                                                  |
+|     `130` | Cancelled                         | The operation was cancelled                                                                     |
 
 ## CI example
 
@@ -207,6 +250,17 @@ dotnet tool install \
   --format json
 
 "$TOOL_DIRECTORY/rulegate" \
+  lint \
+  ./rulegate.yaml \
+  --format json
+
+"$TOOL_DIRECTORY/rulegate" \
+  explain \
+  ./authorization.tests.yaml \
+  --test organization-mismatch \
+  --format json
+
+"$TOOL_DIRECTORY/rulegate" \
   generate csharp \
   ./rulegate.yaml \
   --namespace Sample.Authorization \
@@ -228,11 +282,14 @@ manifest contents, or policy inputs.
 
 ## Security behavior
 
-Validation, policy testing, and generation reuse `RuleGateManifestCompiler` and
-preserve its fail-closed behavior:
+Validation, policy testing, explanation, linting, and generation preserve
+fail-closed manifest behavior:
 
 - invalid manifests never produce partial compiled policies or generated code;
 - invalid fixtures or manifests prevent every policy-test evaluation;
+- invalid fixtures or manifests prevent decision explanation;
+- lint findings are produced only after complete manifest validation;
+- explanation reports omit identity-specific data and all request values;
 - fixtures require explicit evaluation times and never read the system clock;
 - unsupported requirements cannot grant access;
 - identifier collisions prevent all source output;
@@ -276,6 +333,7 @@ Run from the directory containing `rulegate.yaml`, or provide an explicit path.
 - [Manifest guide](manifests.md)
 - [C# code generation](code-generation.md)
 - [Policy testing](policy-testing.md)
+- [Explain and Lint](explain-and-lint.md)
 - [Authorization model](authorization-model.md)
 - [Security model](security.md)
 - [Roadmap](roadmap.md)
