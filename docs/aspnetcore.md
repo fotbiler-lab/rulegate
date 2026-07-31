@@ -1038,6 +1038,23 @@ See the dedicated [diagnostics guide](diagnostics.md) for event IDs, diagnostic
 models, parent-child traces, custom sink behavior, cancellation semantics, and
 sensitive-data boundaries.
 
+## OpenTelemetry correlation
+
+RuleGate emits standard .NET activities and metrics independently from the
+optional logging sink. When the host registers
+`RuleGateTelemetry.ActivitySourceName`, authorization activities automatically
+become children of the current ASP.NET Core request activity.
+
+Register `RuleGateTelemetry.MeterName` to collect low-cardinality decision,
+failure-category, latency, lookup, source-load, snapshot, and reload metrics.
+The host remains responsible for the OpenTelemetry SDK, sampling, resources,
+collector, and exporters.
+
+Built-in signals exclude identity, resource, route, policy, role, permission,
+claim, and attribute values. See the
+[telemetry, performance, and concurrency guide](telemetry-performance-concurrency.md)
+for exact instrument names and registration code.
+
 ## Custom requirement evaluators
 
 Register an application-specific evaluator:
@@ -1294,6 +1311,7 @@ The current ASP.NET Core integration includes:
   sources
 - Immutable policy snapshots and optional YAML/configuration reload monitoring
 - Optional logging diagnostics
+- Exporter-neutral OpenTelemetry request correlation and metrics
 - Optional HTTP ProblemDetails mapping
 - Generic safe `401` and `403` responses
 
@@ -1317,5 +1335,7 @@ Continue with:
 - [Manifest guide](manifests.md) for complete YAML reference.
 - [Policy sources](policy-sources.md) for source registration and atomic
   reload.
+- [Telemetry, performance, and concurrency](telemetry-performance-concurrency.md)
+  for OpenTelemetry registration and thread-safety contracts.
 - The root [README](../README.md) for the repository overview.
 - [Documentation index](README.md) for all guides.

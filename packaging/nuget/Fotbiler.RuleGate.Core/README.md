@@ -5,7 +5,9 @@ Local, provider-independent authorization engine for RuleGate.
 Core contains the built-in policy engine, role and permission evaluators,
 logical requirements, typed attribute evaluators, requirement dispatch,
 in-memory policy storage and sources, immutable atomic policy snapshots, and
-opt-in authorization diagnostics.
+opt-in authorization diagnostics. It emits exporter-neutral OpenTelemetry
+activities and low-cardinality metrics through the standard .NET diagnostics
+APIs.
 
 RuleGate is currently in preview. Public APIs may change before the first
 stable release.
@@ -28,6 +30,7 @@ Use Core when you need:
 - Custom policy-provider or evaluator composition
 - Framework-independent policy-source loading and manual atomic reload
 - Lock-free lookups against the last valid immutable policy snapshot
+- Value-safe authorization, policy-load, and reload telemetry
 - Direct control over authorization requests and decisions
 
 ASP.NET Core applications should normally install
@@ -65,6 +68,7 @@ authorization inputs cannot grant access.
 - [RuleGate CLI](https://github.com/fotbiler-lab/rulegate/blob/main/docs/cli.md)
 - [Policy testing](https://github.com/fotbiler-lab/rulegate/blob/main/docs/policy-testing.md)
 - [Policy sources and atomic reload](https://github.com/fotbiler-lab/rulegate/blob/main/docs/policy-sources.md)
+- [Telemetry, performance, and concurrency](https://github.com/fotbiler-lab/rulegate/blob/main/docs/telemetry-performance-concurrency.md)
 - [Documentation index](https://github.com/fotbiler-lab/rulegate/blob/main/docs/README.md)
 
 ## Security

@@ -1,5 +1,7 @@
 using System.Collections.Frozen;
+using System.Diagnostics;
 using Fotbiler.RuleGate.Abstractions.Policies;
+using Fotbiler.RuleGate.Core.Diagnostics;
 
 namespace Fotbiler.RuleGate.Core.Policies;
 
@@ -72,23 +74,57 @@ public sealed class AtomicPolicyProvider :
     public async ValueTask<PolicyReloadResult> ReloadAsync(
         CancellationToken cancellationToken = default)
     {
-        cancellationToken.ThrowIfCancellationRequested();
+        using var activity =
+            RuleGateInstrumentation
+                .StartPolicyReloadActivity();
 
-        await _reloadLock.WaitAsync(cancellationToken);
+        var startTimestamp = Stopwatch.GetTimestamp();
+        var lockTaken = false;
 
         try
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            await _reloadLock.WaitAsync(cancellationToken);
+            lockTaken = true;
+
             var result = await LoadAndActivateAsync(
                 cancellationToken);
 
             Volatile.Write(ref _lastReload, result);
             Volatile.Write(ref _initializationAttempted, 1);
 
+            RuleGateInstrumentation.RecordPolicyReload(
+                activity,
+                startTimestamp,
+                result);
+
             return result;
+        }
+        catch (OperationCanceledException)
+            when (cancellationToken.IsCancellationRequested)
+        {
+            RuleGateInstrumentation
+                .RecordPolicyReloadCancellation(
+                    activity,
+                    startTimestamp);
+
+            throw;
+        }
+        catch (Exception)
+        {
+            RuleGateInstrumentation.RecordPolicyReloadError(
+                activity,
+                startTimestamp);
+
+            throw;
         }
         finally
         {
-            _reloadLock.Release();
+            if (lockTaken)
+            {
+                _reloadLock.Release();
+            }
         }
     }
 
@@ -100,12 +136,25 @@ public sealed class AtomicPolicyProvider :
             return;
         }
 
-        await _reloadLock.WaitAsync(cancellationToken);
+        using var activity =
+            RuleGateInstrumentation
+                .StartPolicyReloadActivity();
+
+        var startTimestamp = Stopwatch.GetTimestamp();
+        var lockTaken = false;
 
         try
         {
+            await _reloadLock.WaitAsync(cancellationToken);
+            lockTaken = true;
+
             if (Volatile.Read(ref _initializationAttempted) != 0)
             {
+                RuleGateInstrumentation
+                    .RecordPolicyReloadCoalesced(
+                        activity,
+                        startTimestamp);
+
                 return;
             }
 
@@ -114,10 +163,36 @@ public sealed class AtomicPolicyProvider :
 
             Volatile.Write(ref _lastReload, result);
             Volatile.Write(ref _initializationAttempted, 1);
+
+            RuleGateInstrumentation.RecordPolicyReload(
+                activity,
+                startTimestamp,
+                result);
+        }
+        catch (OperationCanceledException)
+            when (cancellationToken.IsCancellationRequested)
+        {
+            RuleGateInstrumentation
+                .RecordPolicyReloadCancellation(
+                    activity,
+                    startTimestamp);
+
+            throw;
+        }
+        catch (Exception)
+        {
+            RuleGateInstrumentation.RecordPolicyReloadError(
+                activity,
+                startTimestamp);
+
+            throw;
         }
         finally
         {
-            _reloadLock.Release();
+            if (lockTaken)
+            {
+                _reloadLock.Release();
+            }
         }
     }
 
@@ -136,6 +211,13 @@ public sealed class AtomicPolicyProvider :
         {
             cancellationToken.ThrowIfCancellationRequested();
 
+            using var sourceActivity =
+                RuleGateInstrumentation
+                    .StartPolicySourceLoadActivity();
+
+            var sourceStartTimestamp =
+                Stopwatch.GetTimestamp();
+
             PolicySourceLoadResult? loadResult;
 
             try
@@ -146,10 +228,20 @@ public sealed class AtomicPolicyProvider :
             catch (OperationCanceledException)
                 when (cancellationToken.IsCancellationRequested)
             {
+                RuleGateInstrumentation.RecordPolicySourceLoad(
+                    sourceActivity,
+                    sourceStartTimestamp,
+                    "cancelled");
+
                 throw;
             }
             catch (Exception)
             {
+                RuleGateInstrumentation.RecordPolicySourceLoad(
+                    sourceActivity,
+                    sourceStartTimestamp,
+                    "error");
+
                 diagnostics.Add(
                     new PolicyReloadDiagnostic(
                         source.Name,
@@ -161,6 +253,11 @@ public sealed class AtomicPolicyProvider :
 
             if (loadResult is null)
             {
+                RuleGateInstrumentation.RecordPolicySourceLoad(
+                    sourceActivity,
+                    sourceStartTimestamp,
+                    "invalid");
+
                 diagnostics.Add(
                     new PolicyReloadDiagnostic(
                         source.Name,
@@ -169,6 +266,13 @@ public sealed class AtomicPolicyProvider :
 
                 continue;
             }
+
+            RuleGateInstrumentation.RecordPolicySourceLoad(
+                sourceActivity,
+                sourceStartTimestamp,
+                loadResult.IsSuccess
+                    ? "success"
+                    : "rejected");
 
             foreach (var diagnostic in loadResult.Diagnostics)
             {

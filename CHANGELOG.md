@@ -6,6 +6,37 @@ The project follows Semantic Versioning. Preview releases may introduce breaking
 
 ## [Unreleased]
 
+### Added
+
+- Added exporter-neutral authorization, policy-lookup, source-load, snapshot,
+  and reload instrumentation through standard .NET `ActivitySource` and
+  `Meter` APIs.
+- Added public RuleGate activity-source, meter, and activity-name constants for
+  native listeners, OpenTelemetry SDK registration, and auto-instrumentation.
+- Added BenchmarkDotNet suites for scalar, collection,
+  attribute-to-attribute, logical, time, and context requirements and for
+  immutable policy lookup at 10, 100, 1,000, and 10,000 policies.
+- Added configurable concurrency stress tooling and the
+  [Telemetry, Performance, and Concurrency guide](docs/telemetry-performance-concurrency.md).
+
+### Security
+
+- Built-in telemetry uses closed, low-cardinality outcome categories and omits
+  subject/resource IDs, routes, policy/source IDs, roles, permissions, claims,
+  attribute names and values, raw diagnostic codes, exception messages, and
+  stack traces.
+- Rejected, cancelled, and failed reloads continue to preserve the active
+  immutable snapshot while emitting only bounded result telemetry.
+
+### Verification
+
+- Added native activity and metric listener tests across .NET 8, .NET 9, and
+  .NET 10, including privacy, denial, indeterminate, cancellation, error,
+  source-load, and reload cases.
+- Added parallel evaluation/reload, serialized source-load, queued
+  cancellation, lock reuse, BenchmarkDotNet dry-run, and bounded stress checks
+  to CI and release verification.
+
 ## [0.9.0-preview.2] - 2026-07-31
 
 ### Added

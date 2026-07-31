@@ -7,7 +7,7 @@
 
     <PackageId>Fotbiler.RuleGate.Abstractions</PackageId>
     <Title>RuleGate Abstractions</Title>
-    <Description>Public authorization contracts, typed attribute values, policy-source and reload contracts, snapshot metadata, requests, decisions, evaluation abstractions, and diagnostics contracts for RuleGate.</Description>
+    <Description>Public authorization contracts, typed attribute values, policy-source and reload contracts, snapshot metadata, telemetry names, requests, decisions, evaluation abstractions, and diagnostics contracts for RuleGate.</Description>
   </PropertyGroup>
 
   <ItemGroup>

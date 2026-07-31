@@ -40,6 +40,10 @@ Policy sources and atomic reload remain provider-independent; they do not
 contact Keycloak or change token-validation behavior. See the
 [policy-source guide](https://github.com/fotbiler-lab/rulegate/blob/main/docs/policy-sources.md).
 
+Authorization telemetry remains provider-independent and does not emit raw
+Keycloak roles, claims, subject identifiers, or token values. See the
+[telemetry, performance, and concurrency guide](https://github.com/fotbiler-lab/rulegate/blob/main/docs/telemetry-performance-concurrency.md).
+
 See the [Keycloak integration guide](https://github.com/fotbiler-lab/rulegate/blob/main/docs/keycloak.md)
 for role naming, client-role selection, and security boundaries.
 

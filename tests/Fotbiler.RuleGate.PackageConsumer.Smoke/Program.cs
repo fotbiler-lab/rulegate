@@ -2,6 +2,7 @@ using System.Security.Claims;
 using Fotbiler.RuleGate.Abstractions.Attributes;
 using Fotbiler.RuleGate.Abstractions.Authorization;
 using Fotbiler.RuleGate.Abstractions.Constants;
+using Fotbiler.RuleGate.Abstractions.Diagnostics;
 using Fotbiler.RuleGate.Abstractions.Policies;
 using Fotbiler.RuleGate.AspNetCore.Authorization;
 using Fotbiler.RuleGate.AspNetCore.DependencyInjection;
@@ -711,6 +712,17 @@ if (endpointResource.Type !=
 {
     throw new InvalidOperationException(
         "The default RuleGate HTTP resource factory did not map the endpoint route value.");
+}
+
+if (RuleGateTelemetry.ActivitySourceName !=
+        "Fotbiler.RuleGate" ||
+    RuleGateTelemetry.MeterName !=
+        "Fotbiler.RuleGate" ||
+    string.IsNullOrWhiteSpace(
+        RuleGateTelemetry.AuthorizationActivityName))
+{
+    throw new InvalidOperationException(
+        "The public RuleGate telemetry contract is unavailable.");
 }
 
 Console.WriteLine(

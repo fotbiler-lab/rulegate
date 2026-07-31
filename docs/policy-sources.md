@@ -240,4 +240,7 @@ constructed collection.
   distributed version identifiers.
 
 See the [security model](security.md) for trust boundaries and the
-[diagnostics guide](diagnostics.md) for runtime logging behavior.
+[diagnostics guide](diagnostics.md) for runtime logging behavior. The
+[telemetry, performance, and concurrency guide](telemetry-performance-concurrency.md)
+documents bounded source-load/reload signals, race-condition tests, and the
+atomic provider's thread-safety contract.

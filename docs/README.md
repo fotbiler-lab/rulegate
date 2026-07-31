@@ -12,26 +12,27 @@ rules, authentication and MFA age, and canonical trusted request context.
 
 ## Start here
 
-| Goal                                                                | Document                                                           |
-| ------------------------------------------------------------------- | ------------------------------------------------------------------ |
-| Make your first authorization decision                              | [Getting started](getting-started.md)                              |
-| Understand subjects, resources, actions, policies, and requirements | [Authorization model](authorization-model.md)                      |
-| Define and validate `rulegate.yaml` policies                        | [Manifest guide](manifests.md)                                     |
-| Validate manifests locally or in CI                                 | [RuleGate CLI](cli.md)                                             |
-| Test policy outcomes without starting an application                | [Policy testing](policy-testing.md)                                |
-| Explain decisions and lint policy structure safely                  | [Explain and Lint](explain-and-lint.md)                            |
-| Load and atomically replace local policy sources                    | [Policy sources](policy-sources.md)                                |
-| Generate C# constants and detect stale output                       | [C# code generation](code-generation.md)                           |
-| Integrate RuleGate with ASP.NET Core                                | [ASP.NET Core integration](aspnetcore.md)                          |
-| Supply trusted subject, resource, and context attributes            | [ASP.NET Core enrichment](enrichment.md)                           |
-| Add permission, policy, and role checks to Angular                  | [Angular SDK](angular.md)                                          |
-| Map Keycloak roles on ASP.NET Core and Angular                      | [Keycloak integration](keycloak.md)                                |
-| Run the official package-consuming samples                          | [Reference applications](reference-applications.md)                |
-| Operate authorization diagnostics safely                            | [Diagnostics](diagnostics.md)                                      |
-| Understand runtime and integration security                         | [Security model](security.md)                                      |
-| Understand current and planned capabilities                         | [Roadmap](roadmap.md)                                              |
-| Prepare and verify a NuGet preview                                  | [NuGet release checklist](releases/preview-release-checklist.md)   |
-| Prepare and verify an npm preview                                   | [npm release checklist](releases/npm-preview-release-checklist.md) |
+| Goal                                                                | Document                                                                        |
+| ------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| Make your first authorization decision                              | [Getting started](getting-started.md)                                           |
+| Understand subjects, resources, actions, policies, and requirements | [Authorization model](authorization-model.md)                                   |
+| Define and validate `rulegate.yaml` policies                        | [Manifest guide](manifests.md)                                                  |
+| Validate manifests locally or in CI                                 | [RuleGate CLI](cli.md)                                                          |
+| Test policy outcomes without starting an application                | [Policy testing](policy-testing.md)                                             |
+| Explain decisions and lint policy structure safely                  | [Explain and Lint](explain-and-lint.md)                                         |
+| Load and atomically replace local policy sources                    | [Policy sources](policy-sources.md)                                             |
+| Export telemetry and verify performance or concurrency              | [Telemetry, performance, and concurrency](telemetry-performance-concurrency.md) |
+| Generate C# constants and detect stale output                       | [C# code generation](code-generation.md)                                        |
+| Integrate RuleGate with ASP.NET Core                                | [ASP.NET Core integration](aspnetcore.md)                                       |
+| Supply trusted subject, resource, and context attributes            | [ASP.NET Core enrichment](enrichment.md)                                        |
+| Add permission, policy, and role checks to Angular                  | [Angular SDK](angular.md)                                                       |
+| Map Keycloak roles on ASP.NET Core and Angular                      | [Keycloak integration](keycloak.md)                                             |
+| Run the official package-consuming samples                          | [Reference applications](reference-applications.md)                             |
+| Operate authorization diagnostics safely                            | [Diagnostics](diagnostics.md)                                                   |
+| Understand runtime and integration security                         | [Security model](security.md)                                                   |
+| Understand current and planned capabilities                         | [Roadmap](roadmap.md)                                                           |
+| Prepare and verify a NuGet preview                                  | [NuGet release checklist](releases/preview-release-checklist.md)                |
+| Prepare and verify an npm preview                                   | [npm release checklist](releases/npm-preview-release-checklist.md)              |
 
 ## Published packages
 
@@ -40,8 +41,8 @@ The latest published RuleGate NuGet preview is
 
 | Package                                                                                           | Purpose                                                                                      |
 | ------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
-| [`Fotbiler.RuleGate.Abstractions`](https://www.nuget.org/packages/Fotbiler.RuleGate.Abstractions) | Public authorization, policy-source, reload, and extension contracts                         |
-| [`Fotbiler.RuleGate.Core`](https://www.nuget.org/packages/Fotbiler.RuleGate.Core)                 | Local fail-closed engine, built-in evaluators, and immutable atomic snapshots                |
+| [`Fotbiler.RuleGate.Abstractions`](https://www.nuget.org/packages/Fotbiler.RuleGate.Abstractions) | Public authorization, policy-source, reload, telemetry-name, and extension contracts         |
+| [`Fotbiler.RuleGate.Core`](https://www.nuget.org/packages/Fotbiler.RuleGate.Core)                 | Local fail-closed engine, built-in evaluators, immutable snapshots, and telemetry            |
 | [`Fotbiler.RuleGate.Manifest`](https://www.nuget.org/packages/Fotbiler.RuleGate.Manifest)         | YAML loading, validation, compilation, file sources, and embedded-resource sources           |
 | [`Fotbiler.RuleGate.AspNetCore`](https://www.nuget.org/packages/Fotbiler.RuleGate.AspNetCore)     | ASP.NET Core integration, configuration sources, atomic reload, and trusted enrichment       |
 | [`Fotbiler.RuleGate.Cli`](https://www.nuget.org/packages/Fotbiler.RuleGate.Cli)                   | .NET tool for validation, testing, explanation, linting, deterministic C# generation, and CI |
@@ -79,20 +80,22 @@ After completing that guide:
    should consume manifest identifiers as constants.
 6. Use [Policy sources](policy-sources.md) to load local policies and preserve
    the last valid immutable snapshot during reload.
-7. Follow the [ASP.NET Core integration](aspnetcore.md) guide to protect HTTP
+7. Use [Telemetry, performance, and concurrency](telemetry-performance-concurrency.md)
+   to register OpenTelemetry signals and run benchmarks or stress checks.
+8. Follow the [ASP.NET Core integration](aspnetcore.md) guide to protect HTTP
    endpoints and map authenticated identities.
-8. Add the [ASP.NET Core enrichment pipeline](enrichment.md) when trusted
+9. Add the [ASP.NET Core enrichment pipeline](enrichment.md) when trusted
    authorization attributes come from application services.
-9. Use the [Angular SDK guide](angular.md) for route and template visibility
-   after backend authorization is in place.
-10. Follow the [Keycloak integration](keycloak.md) guide when Keycloak supplies
+10. Use the [Angular SDK guide](angular.md) for route and template visibility
+    after backend authorization is in place.
+11. Follow the [Keycloak integration](keycloak.md) guide when Keycloak supplies
     the authenticated identity.
-11. Use the [diagnostics guide](diagnostics.md) to configure logging and custom
+12. Use the [diagnostics guide](diagnostics.md) to configure logging and custom
     observability safely.
-12. Run the [reference applications](reference-applications.md) to see the
+13. Run the [reference applications](reference-applications.md) to see the
     packages composed in minimal and full-stack hosts.
-13. Review the [security model](security.md) before production integration.
-14. Use the root [README](../README.md) for the repository overview and current
+14. Review the [security model](security.md) before production integration.
+15. Use the root [README](../README.md) for the repository overview and current
     package status.
 
 ## Documentation principles

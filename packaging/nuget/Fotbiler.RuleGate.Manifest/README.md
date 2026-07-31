@@ -98,6 +98,7 @@ authentication and MFA age, and canonical context-property requirements.
 - [RuleGate CLI](https://github.com/fotbiler-lab/rulegate/blob/main/docs/cli.md)
 - [Policy testing](https://github.com/fotbiler-lab/rulegate/blob/main/docs/policy-testing.md)
 - [Policy sources and atomic reload](https://github.com/fotbiler-lab/rulegate/blob/main/docs/policy-sources.md)
+- [Telemetry, performance, and concurrency](https://github.com/fotbiler-lab/rulegate/blob/main/docs/telemetry-performance-concurrency.md)
 - [Documentation index](https://github.com/fotbiler-lab/rulegate/blob/main/docs/README.md)
 - [Detailed minimal manifest](https://github.com/fotbiler-lab/rulegate/blob/main/samples/aspnetcore-minimal/rulegate.yaml)
 - [Document approval policy manifest](https://github.com/fotbiler-lab/rulegate/blob/main/samples/document-approval/api/rulegate.yaml)

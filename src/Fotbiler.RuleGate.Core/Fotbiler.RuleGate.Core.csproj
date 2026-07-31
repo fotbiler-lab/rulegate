@@ -11,7 +11,7 @@
 
     <PackageId>Fotbiler.RuleGate.Core</PackageId>
     <Title>RuleGate Core</Title>
-    <Description>Fail-closed policy authorization engine with built-in evaluators, in-memory policy sources, immutable atomic snapshots, last-valid reload behavior, and opt-in diagnostics for RuleGate.</Description>
+    <Description>Fail-closed policy authorization engine with built-in evaluators, immutable atomic snapshots, last-valid reload behavior, safe diagnostics, and exporter-neutral OpenTelemetry signals for RuleGate.</Description>
   </PropertyGroup>
 
   <ItemGroup>

@@ -75,7 +75,7 @@ more than framework-level roles or ad hoc permission checks.
   authorization inputs deny access.
 - **Framework-ready:** ASP.NET Core applications can use dynamic policies,
   endpoint helpers, controller attributes, ordered attribute enrichment,
-  diagnostics, and safe HTTP result mapping.
+  diagnostics, OpenTelemetry signals, and safe HTTP result mapping.
 - **Manifest-enabled:** YAML policies can be loaded, validated, and compiled
   from files, embedded resources, configuration, or application-defined
   sources into atomically replaceable immutable runtime snapshots.
@@ -114,15 +114,15 @@ to a remote service:
 
 ## Packages
 
-| Package                                                                                           | Purpose                                                                                                                           |
-| ------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| [`Fotbiler.RuleGate.Abstractions`](https://www.nuget.org/packages/Fotbiler.RuleGate.Abstractions) | Authorization contracts, policy definitions, source and reload contracts, requests, decisions, and evaluation abstractions        |
-| [`Fotbiler.RuleGate.Core`](https://www.nuget.org/packages/Fotbiler.RuleGate.Core)                 | Policy engine, built-in requirement evaluators, in-memory sources, and atomic immutable snapshots                                 |
-| [`Fotbiler.RuleGate.Manifest`](https://www.nuget.org/packages/Fotbiler.RuleGate.Manifest)         | YAML loading, validation, compilation, file sources, embedded-resource sources, and domain mapping                                |
-| [`Fotbiler.RuleGate.AspNetCore`](https://www.nuget.org/packages/Fotbiler.RuleGate.AspNetCore)     | ASP.NET Core integration, configuration policy sources, atomic reload hosting, enrichment, dynamic policies, and endpoint helpers |
-| [`Fotbiler.RuleGate.Cli`](https://www.nuget.org/packages/Fotbiler.RuleGate.Cli)                   | .NET tool for validation, testing, redacted explanations, linting, deterministic C# generation, stale-output checks, and CI       |
-| [`Fotbiler.RuleGate.Keycloak`](https://www.nuget.org/packages/Fotbiler.RuleGate.Keycloak)         | Optional Keycloak claim normalization and RuleGate subject mapping                                                                |
-| [`@fotbiler/rulegate-angular`](https://www.npmjs.com/package/@fotbiler/rulegate-angular)          | Angular 22 authorization client, declarative route guards, UI directives, and TypeScript identifier generation                    |
+| Package                                                                                           | Purpose                                                                                                                                 |
+| ------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| [`Fotbiler.RuleGate.Abstractions`](https://www.nuget.org/packages/Fotbiler.RuleGate.Abstractions) | Authorization contracts, policy definitions, source/reload contracts, telemetry names, requests, decisions, and evaluation abstractions |
+| [`Fotbiler.RuleGate.Core`](https://www.nuget.org/packages/Fotbiler.RuleGate.Core)                 | Policy engine, built-in evaluators, atomic immutable snapshots, and exporter-neutral telemetry                                          |
+| [`Fotbiler.RuleGate.Manifest`](https://www.nuget.org/packages/Fotbiler.RuleGate.Manifest)         | YAML loading, validation, compilation, file sources, embedded-resource sources, and domain mapping                                      |
+| [`Fotbiler.RuleGate.AspNetCore`](https://www.nuget.org/packages/Fotbiler.RuleGate.AspNetCore)     | ASP.NET Core integration, configuration policy sources, atomic reload hosting, enrichment, dynamic policies, and endpoint helpers       |
+| [`Fotbiler.RuleGate.Cli`](https://www.nuget.org/packages/Fotbiler.RuleGate.Cli)                   | .NET tool for validation, testing, redacted explanations, linting, deterministic C# generation, stale-output checks, and CI             |
+| [`Fotbiler.RuleGate.Keycloak`](https://www.nuget.org/packages/Fotbiler.RuleGate.Keycloak)         | Optional Keycloak claim normalization and RuleGate subject mapping                                                                      |
+| [`@fotbiler/rulegate-angular`](https://www.npmjs.com/package/@fotbiler/rulegate-angular)          | Angular 22 authorization client, declarative route guards, UI directives, and TypeScript identifier generation                          |
 
 ## Supported .NET and Angular versions
 
@@ -164,6 +164,11 @@ RuleGate currently provides:
 - Resource-based authorization
 - Opt-in safe HTTP authorization results
 - Opt-in structured authorization diagnostics
+- Exporter-neutral OpenTelemetry activities and low-cardinality metrics
+- Decision, failure-category, latency, policy-lookup, source-load, and reload
+  instrumentation without policy or identity values
+- BenchmarkDotNet requirement and policy-lookup suites
+- Parallel evaluation/reload tests and configurable concurrency stress
 - Deterministic CLI manifest validation with text and JSON output
 - Host-independent policy fixtures with allow, deny, indeterminate, and
   failure-code expectations
@@ -190,25 +195,26 @@ previews.
 
 ## Documentation
 
-| Goal                                             | Guide                                                    |
-| ------------------------------------------------ | -------------------------------------------------------- |
-| Make the first authorization decision            | [Getting started](docs/getting-started.md)               |
-| Understand the authorization model               | [Authorization model](docs/authorization-model.md)       |
-| Define `rulegate.yaml` policies                  | [Manifest guide](docs/manifests.md)                      |
-| Protect ASP.NET Core applications                | [ASP.NET Core integration](docs/aspnetcore.md)           |
-| Supply trusted authorization attributes          | [ASP.NET Core enrichment](docs/enrichment.md)            |
-| Configure logs and diagnostic sinks              | [Diagnostics](docs/diagnostics.md)                       |
-| Review trust boundaries and production controls  | [Security model](docs/security.md)                       |
-| Use the RuleGate command-line tool               | [CLI guide](docs/cli.md)                                 |
-| Test policies without starting an application    | [Policy testing](docs/policy-testing.md)                 |
-| Explain decisions and lint policy structure      | [Explain and Lint](docs/explain-and-lint.md)             |
-| Load and atomically reload local policy sources  | [Policy sources](docs/policy-sources.md)                 |
-| Generate deterministic C# constants              | [C# code generation](docs/code-generation.md)            |
-| Add frontend permission, policy, and role checks | [Angular SDK](docs/angular.md)                           |
-| Map Keycloak roles without coupling the engine   | [Keycloak integration](docs/keycloak.md)                 |
-| Run package-consuming reference applications     | [Reference applications](docs/reference-applications.md) |
-| Browse all documentation                         | [Documentation index](docs/README.md)                    |
-| Review current and planned capabilities          | [Roadmap](docs/roadmap.md)                               |
+| Goal                                             | Guide                                                                  |
+| ------------------------------------------------ | ---------------------------------------------------------------------- |
+| Make the first authorization decision            | [Getting started](docs/getting-started.md)                             |
+| Understand the authorization model               | [Authorization model](docs/authorization-model.md)                     |
+| Define `rulegate.yaml` policies                  | [Manifest guide](docs/manifests.md)                                    |
+| Protect ASP.NET Core applications                | [ASP.NET Core integration](docs/aspnetcore.md)                         |
+| Supply trusted authorization attributes          | [ASP.NET Core enrichment](docs/enrichment.md)                          |
+| Configure logs and diagnostic sinks              | [Diagnostics](docs/diagnostics.md)                                     |
+| Configure telemetry and run performance tests    | [Telemetry and performance](docs/telemetry-performance-concurrency.md) |
+| Review trust boundaries and production controls  | [Security model](docs/security.md)                                     |
+| Use the RuleGate command-line tool               | [CLI guide](docs/cli.md)                                               |
+| Test policies without starting an application    | [Policy testing](docs/policy-testing.md)                               |
+| Explain decisions and lint policy structure      | [Explain and Lint](docs/explain-and-lint.md)                           |
+| Load and atomically reload local policy sources  | [Policy sources](docs/policy-sources.md)                               |
+| Generate deterministic C# constants              | [C# code generation](docs/code-generation.md)                          |
+| Add frontend permission, policy, and role checks | [Angular SDK](docs/angular.md)                                         |
+| Map Keycloak roles without coupling the engine   | [Keycloak integration](docs/keycloak.md)                               |
+| Run package-consuming reference applications     | [Reference applications](docs/reference-applications.md)               |
+| Browse all documentation                         | [Documentation index](docs/README.md)                                  |
+| Review current and planned capabilities          | [Roadmap](docs/roadmap.md)                                             |
 
 ## Installation
 
@@ -506,6 +512,10 @@ claims mapping, domain resources, imperative authorization, endpoint metadata,
 controllers, diagnostics, and HTTP result mapping. The dedicated
 [enrichment guide](docs/enrichment.md) covers ordered trusted subject,
 resource, and context attribute providers.
+
+The [telemetry, performance, and concurrency guide](docs/telemetry-performance-concurrency.md)
+documents OpenTelemetry registration, bounded metrics and activities,
+benchmarks, stress tests, and thread-safety contracts.
 
 ## Reference applications
 
