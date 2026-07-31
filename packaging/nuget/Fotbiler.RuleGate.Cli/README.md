@@ -10,14 +10,10 @@ checks, and CI automation.
 dotnet tool install \
   --global \
   Fotbiler.RuleGate.Cli \
-  --version 0.7.0-preview.2
+  --version 0.8.0-preview.2
 ```
 
 The installed command is `rulegate`.
-
-> The `rulegate test` command is available in the repository and is scheduled
-> for `0.8.0-preview.2`. It is not part of the currently published
-> `0.7.0-preview.2` package.
 
 ## Supported runtimes
 

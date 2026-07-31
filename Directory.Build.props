@@ -9,7 +9,7 @@
     <Deterministic>true</Deterministic>
     <DebugType>portable</DebugType>
 
-    <VersionPrefix>0.7.0</VersionPrefix>
+    <VersionPrefix>0.8.0</VersionPrefix>
     <VersionSuffix>preview.2</VersionSuffix>
 
     <Authors>Fotbiler</Authors>
@@ -29,7 +29,7 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
 
     <PackageTags>authorization;rbac;policy;security;access-control;rulegate</PackageTags>
-    <PackageReleaseNotes>Adds ordered ASP.NET Core subject, resource, and context attribute enrichment with explicit collision behavior, cancellation, fail-closed providers, and safe diagnostics across .NET 8, .NET 9, and .NET 10.</PackageReleaseNotes>
+    <PackageReleaseNotes>Adds deterministic host-independent policy testing with allow, deny, and indeterminate expectations, exact failure-code assertions, typed fixtures, filtering, text and JSON reports, and package verification across .NET 8, .NET 9, and .NET 10.</PackageReleaseNotes>
 
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>

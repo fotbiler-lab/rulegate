@@ -5,8 +5,7 @@ RuleGate manifest. It makes policy behavior repeatable in local development and
 CI without starting ASP.NET Core, Angular, an identity provider, a database, or
 another host dependency.
 
-The command is implemented in the repository and scheduled for RuleGate CLI
-`0.8.0-preview.2`.
+The command is available in RuleGate CLI `0.8.0-preview.2` and later.
 
 ## Run a fixture
 

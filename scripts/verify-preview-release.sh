@@ -30,7 +30,7 @@ case "${1:-}" in
     ;;
 esac
 
-EXPECTED_VERSION_PREFIX="0.7.0"
+EXPECTED_VERSION_PREFIX="0.8.0"
 EXPECTED_VERSION_SUFFIX="preview.2"
 EXPECTED_VERSION="$EXPECTED_VERSION_PREFIX-$EXPECTED_VERSION_SUFFIX"
 
@@ -46,13 +46,6 @@ EXPECTED_FRAMEWORKS=(
 )
 
 FRAMEWORK_COUNT="${#EXPECTED_FRAMEWORKS[@]}"
-
-TEST_PROJECT_COUNT="$(
-  find tests \
-    -type f \
-    -name '*.Tests.csproj' |
-    wc -l
-)"
 
 PACKAGE_DIRECTORY="$REPOSITORY_ROOT/artifacts/packages"
 
@@ -84,6 +77,58 @@ read_property()
     "s:.*<$property_name>\\(.*\\)</$property_name>.*:\\1:p" \
     Directory.Build.props |
     head -n 1
+}
+
+count_expected_test_runs()
+{
+  local expected_count=0
+  local project
+  local target_framework
+  local target_frameworks
+  local target_count
+  local -a declared_frameworks
+
+  while IFS= read -r project
+  do
+    target_frameworks="$(
+      sed -n \
+        's:.*<TargetFrameworks>\(.*\)</TargetFrameworks>.*:\1:p' \
+        "$project" |
+        head -n 1
+    )"
+
+    target_framework="$(
+      sed -n \
+        's:.*<TargetFramework>\(.*\)</TargetFramework>.*:\1:p' \
+        "$project" |
+        head -n 1
+    )"
+
+    if [[ "$target_frameworks" == '$(RuleGateTargetFrameworks)' ]]
+    then
+      target_count="$FRAMEWORK_COUNT"
+    elif [[ -n "$target_frameworks" ]]
+    then
+      IFS=';' read -r -a declared_frameworks <<< "$target_frameworks"
+      target_count="${#declared_frameworks[@]}"
+    elif [[ -n "$target_framework" ]]
+    then
+      target_count=1
+    else
+      echo "ERROR: Test project does not declare a target framework: $project" >&2
+      return 1
+    fi
+
+    expected_count=$((expected_count + target_count))
+  done < <(
+    find tests \
+      -type f \
+      -name '*.Tests.csproj' \
+      -print |
+      sort
+  )
+
+  printf '%s\n' "$expected_count"
 }
 
 assert_contains()
@@ -248,9 +293,7 @@ TRX_COUNT="$(
     wc -l
 )"
 
-EXPECTED_TRX_COUNT=$((
-  TEST_PROJECT_COUNT * FRAMEWORK_COUNT
-))
+EXPECTED_TRX_COUNT="$(count_expected_test_runs)"
 
 if [[ "$TRX_COUNT" -ne "$EXPECTED_TRX_COUNT" ]]
 then
