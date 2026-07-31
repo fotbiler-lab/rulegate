@@ -23,7 +23,7 @@ env:
 
 jobs:
   angular-package:
-    name: Build, test, and pack frontend packages
+    name: Build, test, and pack Angular SDK
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
