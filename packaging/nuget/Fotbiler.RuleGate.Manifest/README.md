@@ -11,7 +11,7 @@ change before the first stable release.
 
 ## Installation
 
-    dotnet add package Fotbiler.RuleGate.Manifest --version 0.8.0-preview.2
+    dotnet add package Fotbiler.RuleGate.Manifest --version 0.9.0-preview.1
 
 ## Example manifest
 

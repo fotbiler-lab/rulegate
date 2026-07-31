@@ -9,8 +9,8 @@
     <Deterministic>true</Deterministic>
     <DebugType>portable</DebugType>
 
-    <VersionPrefix>0.8.0</VersionPrefix>
-    <VersionSuffix>preview.2</VersionSuffix>
+    <VersionPrefix>0.9.0</VersionPrefix>
+    <VersionSuffix>preview.1</VersionSuffix>
 
     <Authors>Fotbiler</Authors>
     <Company>Fotbiler</Company>
@@ -29,7 +29,7 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
 
     <PackageTags>authorization;rbac;policy;security;access-control;rulegate</PackageTags>
-    <PackageReleaseNotes>Adds deterministic host-independent policy testing with allow, deny, and indeterminate expectations, exact failure-code assertions, typed fixtures, filtering, text and JSON reports, and package verification across .NET 8, .NET 9, and .NET 10.</PackageReleaseNotes>
+    <PackageReleaseNotes>Adds redacted structural decision explanations and deterministic manifest linting with stable text and JSON reports, strict CI exit codes, and package verification across .NET 8, .NET 9, and .NET 10.</PackageReleaseNotes>
 
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>

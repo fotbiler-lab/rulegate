@@ -17,7 +17,7 @@ The `0.7.0-preview.1` npm release contains one package:
 The package is public and uses both the `latest` and `preview` distribution
 tags. npm packages have an independent version line from the synchronized
 NuGet package family. The Angular package remains `0.7.0-preview.1` while the
-current NuGet package family is `0.8.0-preview.2`.
+current NuGet package family is `0.9.0-preview.1`.
 
 ## Required security configuration
 

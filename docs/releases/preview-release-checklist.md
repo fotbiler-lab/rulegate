@@ -19,7 +19,7 @@ The current release family contains:
 Release verification produces one `.nupkg` and one `.snupkg` for every package
 in the tagged source. Every package in the release family uses the same version
 and is published for every NuGet release, including packages without code
-changes. The current synchronized NuGet version is `0.8.0-preview.2`.
+changes. The current synchronized NuGet version is `0.9.0-preview.1`.
 
 ## Release workflow
 
@@ -266,7 +266,7 @@ Verify that the run:
 - [ ] Completes successfully.
 - [ ] Uploads one workflow artifact containing six verified `.nupkg` and six
       verified `.snupkg` files.
-- [ ] Publishes every RuleGate NuGet package at `0.8.0-preview.2`.
+- [ ] Publishes every RuleGate NuGet package at `0.9.0-preview.1`.
 
 Record:
 

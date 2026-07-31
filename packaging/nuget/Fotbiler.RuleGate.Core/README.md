@@ -11,7 +11,7 @@ stable release.
 
 ## Installation
 
-    dotnet add package Fotbiler.RuleGate.Core --version 0.8.0-preview.2
+    dotnet add package Fotbiler.RuleGate.Core --version 0.9.0-preview.1
 
 ## When to use this package
 
