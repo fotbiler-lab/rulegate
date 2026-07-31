@@ -52,7 +52,7 @@ Development through 1.0 preserves five product properties:
 | API Freeze and Security Hardening            | ⏳ Planned   |
 | Stable Release                               | ⏳ Planned   |
 
-The latest RuleGate NuGet preview is `0.9.0-preview.2`. The independently
+The latest RuleGate NuGet preview is `0.9.0-preview.3`. The independently
 versioned Angular npm package remains at `0.7.0-preview.1`. Official Reference
 Applications, Policy Testing, Explain and Lint, Policy Sources and Atomic
 Reload, and OpenTelemetry, Benchmarks, and Concurrency are available. The next

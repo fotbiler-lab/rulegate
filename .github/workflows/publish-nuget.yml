@@ -6,7 +6,7 @@ on:
       tag:
         description: Existing release tag to publish
         required: true
-        default: v0.9.0-preview.2
+        default: v0.9.0-preview.3
         type: string
 
 permissions:
@@ -35,8 +35,8 @@ jobs:
       id-token: write
 
     env:
-      EXPECTED_TAG: v0.9.0-preview.2
-      EXPECTED_PACKAGE_VERSION: 0.9.0-preview.2
+      EXPECTED_TAG: v0.9.0-preview.3
+      EXPECTED_PACKAGE_VERSION: 0.9.0-preview.3
       NUGET_SOURCE: https://api.nuget.org/v3/index.json
 
     steps:

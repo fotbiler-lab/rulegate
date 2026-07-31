@@ -128,7 +128,7 @@ to a remote service:
 
 | Package family          | Current preview   | Supported platform                                        | Distribution |
 | ----------------------- | ----------------- | --------------------------------------------------------- | ------------ |
-| RuleGate NuGet packages | `0.9.0-preview.2` | .NET 8 (`net8.0`), .NET 9 (`net9.0`), .NET 10 (`net10.0`) | NuGet        |
+| RuleGate NuGet packages | `0.9.0-preview.3` | .NET 8 (`net8.0`), .NET 9 (`net9.0`), .NET 10 (`net10.0`) | NuGet        |
 | RuleGate Angular SDK    | `0.7.0-preview.1` | Angular 22                                                | npm          |
 
 Every RuleGate NuGet package includes framework-specific assemblies for all
@@ -221,7 +221,7 @@ previews.
 Install the ASP.NET Core package:
 
 ```bash
-dotnet add package Fotbiler.RuleGate.AspNetCore --version 0.9.0-preview.2
+dotnet add package Fotbiler.RuleGate.AspNetCore --version 0.9.0-preview.3
 ```
 
 `Fotbiler.RuleGate.AspNetCore` references the core engine, abstractions, and
@@ -231,7 +231,7 @@ Applications using only RuleGate contracts may reference the abstractions
 package directly:
 
 ```bash
-dotnet add package Fotbiler.RuleGate.Abstractions --version 0.9.0-preview.2
+dotnet add package Fotbiler.RuleGate.Abstractions --version 0.9.0-preview.3
 ```
 
 Install the Angular SDK:
@@ -243,7 +243,7 @@ pnpm add @fotbiler/rulegate-angular@0.7.0-preview.1
 Install the optional Keycloak integration when Keycloak supplies the identity:
 
 ```bash
-dotnet add package Fotbiler.RuleGate.Keycloak --version 0.9.0-preview.2
+dotnet add package Fotbiler.RuleGate.Keycloak --version 0.9.0-preview.3
 ```
 
 ## Use the RuleGate CLI
@@ -254,7 +254,7 @@ Install the RuleGate command-line tool:
 dotnet tool install \
   --global \
   Fotbiler.RuleGate.Cli \
-  --version 0.9.0-preview.2
+  --version 0.9.0-preview.3
 ```
 
 Validate the default `rulegate.yaml` in the current directory:
@@ -270,7 +270,7 @@ rulegate validate ./policies/rulegate.yaml
 rulegate validate --format json
 ```
 
-The `0.9.0-preview.2` tool evaluates and safely explains deterministic
+The `0.9.0-preview.3` tool evaluates and safely explains deterministic
 authorization requests against a manifest without starting the host
 application:
 
@@ -550,11 +550,11 @@ Read the [security model](docs/security.md) before production integration.
 ## Project status
 
 The latest RuleGate NuGet preview is
-[`0.9.0-preview.2`](https://github.com/fotbiler-lab/rulegate/releases/tag/v0.9.0-preview.2).
-It adds composable policy sources, immutable combined snapshots, and safe
-atomic reload while preserving the last valid policy set on failure.
+[`0.9.0-preview.3`](https://github.com/fotbiler-lab/rulegate/releases/tag/v0.9.0-preview.3).
+It adds exporter-neutral OpenTelemetry signals, repeatable benchmarks, and
+concurrency hardening with bounded stress verification.
 
-All NuGet packages are `0.9.0-preview.2`. The independently versioned Angular
+All NuGet packages are `0.9.0-preview.3`. The independently versioned Angular
 npm package remains at `0.7.0-preview.1`.
 
 See the [roadmap](docs/roadmap.md) for the complete release path.
