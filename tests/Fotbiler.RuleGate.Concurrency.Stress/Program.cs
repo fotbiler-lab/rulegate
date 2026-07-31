@@ -52,6 +52,8 @@ var evaluators = Enumerable.Range(0, evaluatorCount)
         _ => Task.Run(
             async () =>
             {
+                var completedSinceYield = 0;
+
                 while (!stopping.IsCancellationRequested)
                 {
                     try
@@ -68,6 +70,14 @@ var evaluators = Enumerable.Range(0, evaluatorCount)
 
                         Interlocked.Increment(
                             ref evaluationCount);
+
+                        completedSinceYield++;
+
+                        if (completedSinceYield == 1_024)
+                        {
+                            completedSinceYield = 0;
+                            await Task.Yield();
+                        }
                     }
                     catch (OperationCanceledException)
                         when (stopping.IsCancellationRequested)
