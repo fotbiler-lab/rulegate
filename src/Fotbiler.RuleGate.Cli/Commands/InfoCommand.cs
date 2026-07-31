@@ -1,6 +1,7 @@
 using System.CommandLine;
 using System.Runtime.InteropServices;
 using Fotbiler.RuleGate.Cli.ExitCodes;
+using Fotbiler.RuleGate.Cli.Testing;
 using Fotbiler.RuleGate.Cli.Versioning;
 using Fotbiler.RuleGate.Manifest.Configuration;
 
@@ -37,6 +38,13 @@ internal static class InfoCommand
                 output.WriteLine(
                     "Supported schema version: " +
                     RuleGateManifestDefaults
+                        .SupportedSchemaVersion);
+                output.WriteLine(
+                    "Default policy tests: " +
+                    PolicyTestDefaults.FileName);
+                output.WriteLine(
+                    "Supported policy test schema version: " +
+                    PolicyTestDefaults
                         .SupportedSchemaVersion);
 
                 return RuleGateExitCodes.Success;

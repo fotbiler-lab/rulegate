@@ -16,6 +16,17 @@ Run it:
 dotnet run --project samples/aspnetcore-minimal
 ```
 
+Run the same manifest without starting the host:
+
+```bash
+rulegate test samples/aspnetcore-minimal/authorization.tests.yaml
+```
+
+The committed fixture asserts allow, deny, indeterminate, exact failure-code,
+default-deny, ownership, organization, context, and null/empty behavior. See
+the [policy-testing guide](../../docs/policy-testing.md) for its schema and CI
+contract.
+
 Then exercise anonymous, denied, and allowed requests:
 
 ```bash

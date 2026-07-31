@@ -44,7 +44,7 @@ Development through 1.0 preserves five product properties:
 | First-Class Time and Context Policies        | ✅ Available |
 | ASP.NET Core Enrichment Pipeline             | ✅ Available |
 | Official Reference Applications              | ✅ Available |
-| Policy Testing CLI                           | ⏳ Planned   |
+| Policy Testing CLI                           | ✅ Available |
 | Explain and Lint                             | ⏳ Planned   |
 | Policy Sources and Atomic Reload             | ⏳ Planned   |
 | OpenTelemetry, Benchmarks, and Concurrency   | ⏳ Planned   |
@@ -54,8 +54,8 @@ Development through 1.0 preserves five product properties:
 
 The latest RuleGate NuGet preview is `0.7.0-preview.2`. The independently
 versioned Angular npm package remains at `0.7.0-preview.1`. Official Reference
-Applications are available in the repository. The next feature milestone is
-the Policy Testing CLI in `0.8.0-preview.2`.
+Applications and the Policy Testing CLI are available in the repository. The
+next feature milestone is Explain and Lint in `0.9.0-preview.1`.
 
 All NuGet packages share one version and are published together for every
 NuGet release, including packages without code changes. npm packages are
@@ -226,11 +226,6 @@ The full-stack sample uses the current stable .NET, Angular, and Keycloak
 versions at implementation time. Smaller compatibility samples cover legacy
 hosting and Angular patterns.
 
-## Planned previews
-
-The compatibility track runs alongside these feature milestones and becomes a
-release criterion at `1.0.0-rc.1`.
-
 ### `0.8.0-preview.2` — Policy Testing CLI
 
 - `rulegate test [authorization.tests.yaml]`
@@ -239,6 +234,12 @@ release criterion at `1.0.0-rc.1`.
 - Expected failure codes, filtering, summaries, and stable CI exit codes
 - Manifest and test-fixture validation
 - Deterministic execution without starting the host application
+- [Policy testing guide](policy-testing.md)
+
+## Planned previews
+
+The compatibility track runs alongside these feature milestones and becomes a
+release criterion at `1.0.0-rc.1`.
 
 ### `0.9.0-preview.1` — Explain and Lint
 

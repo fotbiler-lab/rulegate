@@ -8,6 +8,15 @@ The project follows Semantic Versioning. Preview releases may introduce breaking
 
 ### Added
 
+- Added `rulegate test` for deterministic, host-independent authorization
+  fixtures with allow, deny, and indeterminate expectations.
+- Added optional exact failure-code assertions, case-insensitive identifier
+  filtering, human-readable summaries, JSON output, and stable CI exit codes.
+- Added strict fixture and manifest validation with explicitly typed subject,
+  resource, and context attributes and required fixed evaluation times.
+- Added a package-consuming policy-test smoke matrix and a complete minimal API
+  fixture covering default-deny, logical, resource, context, null/empty, and
+  indeterminate behavior across .NET 8, .NET 9, and .NET 10.
 - Added a package-consuming Minimal API reference with a detailed manifest
   catalog covering every RuleGate requirement family and automated 401, 403,
   permission, role, and blocked-role checks.
@@ -21,6 +30,9 @@ The project follows Semantic Versioning. Preview releases may introduce breaking
 
 ### Security
 
+- Policy testing compiles the complete fixture and manifest before evaluation,
+  preserves fail-closed indeterminate outcomes, and omits request attribute
+  values from text and JSON reports.
 - Kept identity-provider integration optional and enforced every protected
   document operation again at the API boundary.
 - Derived subject, resource, and organization-schedule attributes from trusted

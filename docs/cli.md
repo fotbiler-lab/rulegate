@@ -1,14 +1,18 @@
 # RuleGate CLI
 
 `Fotbiler.RuleGate.Cli` is the RuleGate command-line tool for deterministic
-manifest validation, C# constant generation, stale-output checks, and CI
-automation.
+manifest validation, policy testing, C# constant generation, stale-output
+checks, and CI automation.
 
 The installed command is `rulegate`.
 
 ## Current release
 
 The current public tool package is `0.7.0-preview.2`.
+
+The `rulegate test` command documented below is available in the repository and
+is scheduled for `0.8.0-preview.2`; it is not part of the currently published
+tool package.
 
 ## Supported runtimes
 
@@ -65,6 +69,9 @@ rulegate info
 rulegate validate [file]
 rulegate validate [file] --format text
 rulegate validate [file] --format json
+rulegate test [authorization.tests.yaml]
+rulegate test [authorization.tests.yaml] --filter <text>
+rulegate test [authorization.tests.yaml] --format json
 rulegate generate csharp [file] --namespace <namespace>
 rulegate generate csharp [file] --namespace <namespace> --output <file>
 rulegate generate csharp [file] --namespace <namespace> --output <file> --check
@@ -74,6 +81,7 @@ Run command-specific help with:
 
 ```bash
 rulegate validate --help
+rulegate test --help
 rulegate generate csharp --help
 ```
 
@@ -119,6 +127,33 @@ JSON mode writes one complete JSON document to standard output. Automation
 should use its fields and the process exit code rather than parsing
 human-readable text.
 
+## Test policy behavior
+
+Evaluate the default `authorization.tests.yaml` without starting an
+application:
+
+```bash
+rulegate test
+```
+
+Use an explicit fixture, select test identifiers, or request JSON output:
+
+```bash
+rulegate test ./policies/authorization.tests.yaml
+rulegate test ./policies/authorization.tests.yaml --filter organization
+rulegate test ./policies/authorization.tests.yaml --format json
+```
+
+Fixtures contain explicit subjects, resources, actions, context, fixed
+evaluation times, and expected `allow`, `deny`, or `indeterminate` outcomes.
+They can also assert the complete set of failure codes. The referenced manifest
+is compiled before any test runs, and invalid fixture or manifest input prevents
+all evaluation.
+
+See the [policy-testing guide](policy-testing.md) for the fixture schema, typed
+attributes, deterministic-time contract, filtering, output model, and security
+boundary.
+
 ## Generate C# constants
 
 ```bash
@@ -145,13 +180,13 @@ diagnostics, and security boundaries.
 
 ## Exit codes
 
-| Exit code | Name                              | Meaning                                                                         |
-| --------: | --------------------------------- | ------------------------------------------------------------------------------- |
-|       `0` | Success                           | Validation, generation, file output, or stale check completed successfully      |
-|       `1` | Input or generated-output failure | Manifest loading/validation, generation, missing output, or stale output failed |
-|       `2` | Usage error                       | The command or option combination is invalid                                    |
-|       `3` | Internal error                    | An unexpected failure occurred                                                  |
-|     `130` | Cancelled                         | The operation was cancelled                                                     |
+| Exit code | Name                           | Meaning                                                                                         |
+| --------: | ------------------------------ | ----------------------------------------------------------------------------------------------- |
+|       `0` | Success                        | Validation, testing, generation, file output, or stale check completed successfully             |
+|       `1` | Input, test, or output failure | Fixture/manifest validation, an expectation, generation, missing output, or stale output failed |
+|       `2` | Usage error                    | The command or option combination is invalid                                                    |
+|       `3` | Internal error                 | An unexpected failure occurred                                                                  |
+|     `130` | Cancelled                      | The operation was cancelled                                                                     |
 
 ## CI example
 
@@ -168,6 +203,11 @@ dotnet tool install \
 "$TOOL_DIRECTORY/rulegate" \
   validate \
   ./rulegate.yaml \
+  --format json
+
+"$TOOL_DIRECTORY/rulegate" \
+  test \
+  ./authorization.tests.yaml \
   --format json
 
 "$TOOL_DIRECTORY/rulegate" \
@@ -192,10 +232,12 @@ manifest contents, or policy inputs.
 
 ## Security behavior
 
-Validation and generation reuse `RuleGateManifestCompiler` and preserve its
-fail-closed behavior:
+Validation, policy testing, and generation reuse `RuleGateManifestCompiler` and
+preserve its fail-closed behavior:
 
 - invalid manifests never produce partial compiled policies or generated code;
+- invalid fixtures or manifests prevent every policy-test evaluation;
+- fixtures require explicit evaluation times and never read the system clock;
 - unsupported requirements cannot grant access;
 - identifier collisions prevent all source output;
 - existing output files are preserved when generation fails;
@@ -237,6 +279,7 @@ Run from the directory containing `rulegate.yaml`, or provide an explicit path.
 - [Getting started](getting-started.md)
 - [Manifest guide](manifests.md)
 - [C# code generation](code-generation.md)
+- [Policy testing](policy-testing.md)
 - [Authorization model](authorization-model.md)
 - [Security model](security.md)
 - [Roadmap](roadmap.md)

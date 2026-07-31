@@ -1471,3 +1471,5 @@ The process exit-code contract is:
 
 See the [RuleGate CLI guide](cli.md) for installation, validation, C#
 generation, stale-output detection, automation, CI, and operational details.
+Use the [policy-testing guide](policy-testing.md) to evaluate explicit requests
+against a compiled manifest without starting an application.

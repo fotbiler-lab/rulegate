@@ -11,14 +11,21 @@
 
     <PackageId>Fotbiler.RuleGate.Cli</PackageId>
     <Title>RuleGate CLI</Title>
-    <Description>Command-line manifest validation, deterministic C# constant generation, stale-output checks, diagnostics, and automation tooling for RuleGate.</Description>
-    <PackageTags>$(PackageTags);cli;dotnet-tool;manifest;validation;code-generation;generator</PackageTags>
+    <Description>Command-line manifest validation, deterministic policy testing, C# constant generation, stale-output checks, diagnostics, and automation tooling for RuleGate.</Description>
+    <PackageTags>$(PackageTags);cli;dotnet-tool;manifest;validation;policy-testing;code-generation;generator</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference
       Include="System.CommandLine"
       Version="2.0.10" />
+
+    <PackageReference
+      Include="YamlDotNet"
+      Version="18.1.0" />
+
+    <ProjectReference
+      Include="..\Fotbiler.RuleGate.Core\Fotbiler.RuleGate.Core.csproj" />
 
     <ProjectReference
       Include="..\Fotbiler.RuleGate.Manifest\Fotbiler.RuleGate.Manifest.csproj" />
