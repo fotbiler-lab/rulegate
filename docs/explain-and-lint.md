@@ -8,6 +8,7 @@ RuleGate provides two deterministic inspection commands:
   risky, contradictory, or unnecessarily complex requirement structures.
 
 Both commands support human-readable text and stable JSON output for CI.
+They are available in RuleGate CLI `0.9.0-preview.1` and later.
 
 ## Explain one decision
 

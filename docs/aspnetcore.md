@@ -40,7 +40,7 @@ Install the ASP.NET Core integration:
 ```bash
 dotnet add package \
   Fotbiler.RuleGate.AspNetCore \
-  --version 0.8.0-preview.2
+  --version 0.9.0-preview.1
 ```
 
 Install the manifest package when policies are defined in `rulegate.yaml`:
@@ -48,7 +48,7 @@ Install the manifest package when policies are defined in `rulegate.yaml`:
 ```bash
 dotnet add package \
   Fotbiler.RuleGate.Manifest \
-  --version 0.8.0-preview.2
+  --version 0.9.0-preview.1
 ```
 
 `Fotbiler.RuleGate.AspNetCore` references the RuleGate core and abstractions

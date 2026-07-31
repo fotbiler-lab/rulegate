@@ -6,6 +6,8 @@ The project follows Semantic Versioning. Preview releases may introduce breaking
 
 ## [Unreleased]
 
+## [0.9.0-preview.1] - 2026-07-31
+
 ### Added
 
 - Added `rulegate explain` for one deterministic policy-test request with
@@ -19,11 +21,22 @@ The project follows Semantic Versioning. Preview releases may introduce breaking
 - Added strict CI exit codes, package-level smoke coverage, and the
   [Explain and Lint guide](docs/explain-and-lint.md).
 
+### Changed
+
+- Published all six synchronized NuGet packages at `0.9.0-preview.1`. The
+  independently versioned Angular npm package remains at `0.7.0-preview.1`.
+
 ### Security
 
 - Explain and lint compile or validate all input before processing, fail closed
   on invalid files, and never emit subject, resource, context, or literal
   attribute values.
+
+### Verification
+
+- Added package-only explain and lint execution on .NET 8, .NET 9, and .NET 10
+  alongside the existing validation, policy-testing, and generation smoke
+  matrix.
 
 ## [0.8.0-preview.2] - 2026-07-31
 
@@ -519,7 +532,8 @@ The project follows Semantic Versioning. Preview releases may introduce breaking
 - CLI, Angular, and Keycloak integration packages are not yet included.
 - Public APIs may change before the first stable release.
 
-[Unreleased]: https://github.com/fotbiler-lab/rulegate/compare/v0.8.0-preview.2...HEAD
+[Unreleased]: https://github.com/fotbiler-lab/rulegate/compare/v0.9.0-preview.1...HEAD
+[0.9.0-preview.1]: https://github.com/fotbiler-lab/rulegate/compare/v0.8.0-preview.2...v0.9.0-preview.1
 [0.8.0-preview.2]: https://github.com/fotbiler-lab/rulegate/compare/v0.7.0-preview.2...v0.8.0-preview.2
 [0.7.0-preview.2]: https://github.com/fotbiler-lab/rulegate/compare/v0.7.0-preview.1...v0.7.0-preview.2
 [0.7.0-preview.1]: https://github.com/fotbiler-lab/rulegate/compare/v0.6.0-preview.2...v0.7.0-preview.1
