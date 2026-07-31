@@ -10,7 +10,7 @@ explanations, C# constant generation, stale-output checks, and CI automation.
 dotnet tool install \
   --global \
   Fotbiler.RuleGate.Cli \
-  --version 0.9.0-preview.2
+  --version 0.9.0-preview.3
 ```
 
 The installed command is `rulegate`.

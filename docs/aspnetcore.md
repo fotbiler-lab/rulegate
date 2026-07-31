@@ -40,7 +40,7 @@ Install the ASP.NET Core integration:
 ```bash
 dotnet add package \
   Fotbiler.RuleGate.AspNetCore \
-  --version 0.9.0-preview.2
+  --version 0.9.0-preview.3
 ```
 
 `Fotbiler.RuleGate.AspNetCore` references the RuleGate core, abstractions, and
