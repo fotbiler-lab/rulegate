@@ -523,6 +523,11 @@ do
 
       assert_contains \
         "$nuspec_content" \
+        "<dependency id=\"Fotbiler.RuleGate.Manifest\" version=\"$EXPECTED_VERSION\"" \
+        "AspNetCore does not depend on the expected Manifest version."
+
+      assert_contains \
+        "$nuspec_content" \
         "<frameworkReference name=\"Microsoft.AspNetCore.App\"" \
         "AspNetCore does not reference Microsoft.AspNetCore.App."
 

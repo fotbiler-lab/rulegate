@@ -36,6 +36,10 @@ The mapping keeps identity-provider details outside the policy engine:
 Only selected client IDs are mapped. RuleGate does not contact Keycloak to
 expand roles or infer permissions absent from the validated token.
 
+Policy sources and atomic reload remain provider-independent; they do not
+contact Keycloak or change token-validation behavior. See the
+[policy-source guide](https://github.com/fotbiler-lab/rulegate/blob/main/docs/policy-sources.md).
+
 See the [Keycloak integration guide](https://github.com/fotbiler-lab/rulegate/blob/main/docs/keycloak.md)
 for role naming, client-role selection, and security boundaries.
 

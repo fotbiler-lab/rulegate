@@ -923,16 +923,28 @@ contract.
 
 ## Policy replacement and stale configuration
 
-RuleGate does not currently provide manifest hot reload.
-
-Applications implementing their own reload mechanism must avoid windows where:
+RuleGate policy sources use immutable snapshots and atomic replacement to avoid
+windows where:
 
 - Old and new policies are mixed
 - Only part of the new policy set is active
 - A failed reload removes the last known valid policy unintentionally
 - Different application instances evaluate different policy generations
 
-Use atomic replacement and record the active policy version.
+Every candidate source set is completely loaded, parsed, validated, and checked
+for duplicate IDs and routes before activation. If any source fails, the
+candidate is rejected and the last valid snapshot stays active. Before the
+first successful activation, policy lookup remains empty and authorization
+denies by default.
+
+YAML file and configuration change monitoring is opt-in. Protect reloadable
+sources from unauthorized writes and monitor `POLICY_SOURCE_*`,
+`MANIFEST_*`, and `POLICY_SNAPSHOT_*` diagnostics. Snapshot versions are local
+process counters; deployments remain responsible for coordinating the same
+policy generation across multiple instances.
+
+See [Policy sources and atomic reload](policy-sources.md) for the complete
+activation sequence and source contracts.
 
 ## HTTP authorization results
 
@@ -1611,6 +1623,9 @@ The current preview provides:
 - Unknown-property rejection
 - Bounded YAML recursion
 - All-or-nothing manifest compilation
+- Local in-memory, YAML file, embedded-resource, configuration, and
+  application-defined policy sources
+- Immutable snapshots, atomic reload, and last-valid-snapshot preservation
 - Authenticated dynamic ASP.NET Core policies
 - Fail-closed subject and resource mapping
 - Ordered fail-closed ASP.NET Core attribute enrichment
@@ -1630,7 +1645,6 @@ The current preview does not provide:
 - Automatic context attribute mapping
 - Manifest signing
 - Manifest encryption
-- Manifest hot reload
 - Remote policy-store security
 - Durable audit storage
 - OpenTelemetry integration
@@ -1646,6 +1660,8 @@ Continue with:
 
 - [Authorization model](authorization-model.md) for policy concepts.
 - [Manifest guide](manifests.md) for complete YAML syntax.
+- [Policy sources](policy-sources.md) for atomic activation and reload trust
+  boundaries.
 - [ASP.NET Core integration](aspnetcore.md) for HTTP integration.
 - [ASP.NET Core enrichment](enrichment.md) for trusted attribute providers.
 - [Angular SDK](angular.md) for client-side user-experience controls.

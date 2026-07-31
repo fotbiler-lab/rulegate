@@ -4,7 +4,8 @@ YAML manifest loading, validation, and policy compilation for RuleGate.
 
 Manifest converts `rulegate.yaml` documents into immutable RuleGate policy
 definitions. Loading and validation failures are structured, and failed
-compilation does not return a partial policy collection.
+compilation does not return a partial policy collection. YAML files and
+embedded YAML resources can be used directly as reloadable policy sources.
 
 RuleGate is currently in preview. Public APIs and the manifest schema may
 change before the first stable release.
@@ -61,6 +62,16 @@ change before the first stable release.
 The compiled policy collection can be registered with the RuleGate engine or
 the ASP.NET Core integration.
 
+ASP.NET Core applications can register a validated YAML source directly:
+
+    builder.Services
+        .AddRuleGate()
+        .AddYamlPolicyFile(
+            "rulegate.yaml",
+            options => options.ReloadOnChange = true);
+
+Failed reloads preserve the last valid immutable policy snapshot.
+
 The manifest supports typed scalar and collection literals, ordinal string
 comparison, value-less presence, null and collection-state operators, and
 subject, resource, context, or literal operand comparisons.
@@ -86,6 +97,7 @@ authentication and MFA age, and canonical context-property requirements.
 - [Security model](https://github.com/fotbiler-lab/rulegate/blob/main/docs/security.md)
 - [RuleGate CLI](https://github.com/fotbiler-lab/rulegate/blob/main/docs/cli.md)
 - [Policy testing](https://github.com/fotbiler-lab/rulegate/blob/main/docs/policy-testing.md)
+- [Policy sources and atomic reload](https://github.com/fotbiler-lab/rulegate/blob/main/docs/policy-sources.md)
 - [Documentation index](https://github.com/fotbiler-lab/rulegate/blob/main/docs/README.md)
 - [Detailed minimal manifest](https://github.com/fotbiler-lab/rulegate/blob/main/samples/aspnetcore-minimal/rulegate.yaml)
 - [Document approval policy manifest](https://github.com/fotbiler-lab/rulegate/blob/main/samples/document-approval/api/rulegate.yaml)
@@ -94,7 +106,8 @@ authentication and MFA age, and canonical context-property requirements.
 
 Treat manifest files as security-sensitive configuration. Load policies from
 controlled sources, reject failed compilation, and never continue with a
-partial or stale policy set.
+partial policy set. Reloadable hosts preserve the last valid complete snapshot
+when a candidate source fails.
 
 Report suspected vulnerabilities through the
 [private security reporting process](https://github.com/fotbiler-lab/rulegate/security/policy).

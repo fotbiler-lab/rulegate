@@ -1,0 +1,10 @@
+schemaVersion: 1
+application:
+  id: embedded-test
+  name: Embedded Test
+policies:
+  - id: embedded-document-read
+    resourceType: document
+    action: read
+    requirement:
+      permission: document.read

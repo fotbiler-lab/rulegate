@@ -38,6 +38,10 @@ PolicyDefinition collection
 A failed load or validation never returns a partially compiled policy
 collection.
 
+Applications can register YAML files, embedded YAML resources, structured .NET
+configuration, or custom sources without manually assembling a provider. See
+[Policy sources and atomic reload](policy-sources.md) for runtime activation.
+
 ## Default file name
 
 The conventional manifest file name is:
@@ -1021,7 +1025,7 @@ var result =
         cancellationToken);
 ```
 
-Check the result before registering policies:
+Check the result before using policies directly:
 
 ```csharp
 if (!result.IsSuccess)
@@ -1048,6 +1052,22 @@ services
 ```
 
 Do not register policies when `IsSuccess` is `false`.
+
+ASP.NET Core applications can instead delegate this all-or-nothing flow to a
+built-in source:
+
+```csharp
+services
+    .AddRuleGate()
+    .AddYamlPolicyFile(
+        "rulegate.yaml",
+        options =>
+            options.ReloadOnChange = true);
+```
+
+The source compiler produces the same load and validation codes, but activation
+occurs only after the complete combined source set becomes a valid immutable
+snapshot. Failed reloads preserve the last valid snapshot.
 
 ## Compilation result
 
@@ -1380,13 +1400,14 @@ The current manifest format supports:
 - Structured load errors
 - Structured validation errors
 - Compilation from text and files
+- Compilation from an already-bound manifest model
+- YAML file and embedded-resource policy sources
 
 The current format does not directly support:
 
 - Includes or imported manifest fragments
 - Environment-variable substitution
 - Remote manifest loading
-- Watch mode
 - TypeScript code generation
 - Generated requirement or domain-resource models
 

@@ -15,7 +15,7 @@
 
     <PackageId>Fotbiler.RuleGate.Manifest</PackageId>
     <Title>RuleGate Manifest</Title>
-    <Description>YAML manifest loading, validation, compilation, and policy mapping for RuleGate, including typed attribute, time, and trusted-context requirements.</Description>
+    <Description>YAML manifest loading, validation, compilation, file and embedded-resource policy sources, and mapping for typed attribute, time, and trusted-context requirements in RuleGate.</Description>
   </PropertyGroup>
 
   <ItemGroup>
