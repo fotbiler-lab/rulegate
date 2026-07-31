@@ -1118,6 +1118,26 @@ for compliance records.
 
 Use a separate durable, application-owned audit mechanism.
 
+## Telemetry privacy boundary
+
+Built-in OpenTelemetry activities and metrics use closed, low-cardinality
+outcome categories. They do not include subject IDs, resource IDs, resource
+types, actions, policy or source names, roles, permissions, claims, attribute
+names or values, raw diagnostic codes, exception messages, or stack traces.
+
+Policy count is emitted only as a histogram measurement value. It is not a
+metric dimension. Rejected candidates and unexpected failures use bounded
+result tags rather than source diagnostics.
+
+The host owns sampling, exporters, collectors, retention, and access control.
+Custom activity enrichment can invalidate RuleGate's built-in privacy and
+cardinality guarantees and must be reviewed as security-sensitive code.
+
+Telemetry is operational evidence, not a durable authorization audit trail.
+See the
+[telemetry, performance, and concurrency guide](telemetry-performance-concurrency.md)
+for the exact signal contract.
+
 ## Custom requirement evaluators
 
 Custom evaluators extend the trusted computing base.
@@ -1591,6 +1611,9 @@ Test:
 - Sink exception isolation
 - Concurrent evaluations
 - Diagnostic and audit separation
+- Bounded telemetry result values
+- Absence of identity, policy, claim, and attribute data from telemetry
+- Cancellation, rejection, and unexpected-error telemetry
 
 ### Attribute enrichment
 
@@ -1634,6 +1657,8 @@ The current preview provides:
 - Generic opt-in HTTP ProblemDetails
 - Opt-in structured diagnostics
 - Diagnostic sink failure isolation
+- Exporter-neutral OpenTelemetry activities and low-cardinality metrics
+- Parallel evaluation/reload tests and bounded concurrency stress
 
 The current preview does not provide:
 
@@ -1647,7 +1672,6 @@ The current preview does not provide:
 - Manifest encryption
 - Remote policy-store security
 - Durable audit storage
-- OpenTelemetry integration
 - Built-in distributed rate limiting
 - Frontend security enforcement
 

@@ -7,7 +7,9 @@ dynamic policies, Minimal API endpoint helpers, controller and action
 attributes, imperative authorization extensions, resource mapping, structured
 diagnostics, ordered subject/resource/context attribute enrichment, local
 policy sources, atomic reload hosting, and opt-in safe HTTP authorization
-results.
+results. Exporter-neutral RuleGate activities automatically correlate with the
+current ASP.NET Core request activity when the host registers the public
+RuleGate activity source and meter.
 The default handler supplies deterministic evaluation time through the
 registered `TimeProvider`; trusted context values remain application-owned.
 
@@ -95,6 +97,7 @@ Dynamic policy names use this form:
 - [RuleGate CLI](https://github.com/fotbiler-lab/rulegate/blob/main/docs/cli.md)
 - [Policy testing](https://github.com/fotbiler-lab/rulegate/blob/main/docs/policy-testing.md)
 - [Policy sources and atomic reload](https://github.com/fotbiler-lab/rulegate/blob/main/docs/policy-sources.md)
+- [Telemetry, performance, and concurrency](https://github.com/fotbiler-lab/rulegate/blob/main/docs/telemetry-performance-concurrency.md)
 - [Documentation index](https://github.com/fotbiler-lab/rulegate/blob/main/docs/README.md)
 - [Minimal ASP.NET Core reference](https://github.com/fotbiler-lab/rulegate/tree/main/samples/aspnetcore-minimal)
 - [Full-stack document approval reference](https://github.com/fotbiler-lab/rulegate/tree/main/samples/document-approval)

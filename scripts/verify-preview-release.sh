@@ -305,6 +305,14 @@ fi
 
 printf 'TRX files: %s\n' "$TRX_COUNT"
 
+printf '\n== Run bounded concurrency stress ==\n'
+
+./scripts/test-concurrency-stress.sh 3
+
+printf '\n== Validate benchmark suite ==\n'
+
+./scripts/test-benchmarks.sh
+
 printf '\n== Pack ==\n'
 
 rm -rf "$PACKAGE_DIRECTORY"

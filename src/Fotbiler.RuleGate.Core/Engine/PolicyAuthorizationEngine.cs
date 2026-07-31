@@ -58,8 +58,6 @@ public sealed class PolicyAuthorizationEngine
     {
         ArgumentNullException.ThrowIfNull(request);
 
-        cancellationToken.ThrowIfCancellationRequested();
-
         return _diagnosticsSink.IsEnabled
             ? EvaluateWithDiagnosticsAsync(
                 request,
@@ -74,29 +72,74 @@ public sealed class PolicyAuthorizationEngine
             AuthorizationRequest request,
             CancellationToken cancellationToken)
     {
-        var policy =
-            await _policyProvider.FindAsync(
-                request.Resource.Type,
-                request.Action,
+        using var activity =
+            RuleGateInstrumentation
+                .StartAuthorizationActivity();
+
+        var startTimestamp =
+            Stopwatch.GetTimestamp();
+
+        try
+        {
+            var policy = await FindPolicyAsync(
+                request,
                 cancellationToken);
 
-        if (policy is null)
-        {
-            return AuthorizationDecision.Deny(
-                new AuthorizationFailure(
-                    AuthorizationFailureCodes
-                        .NoMatchingPolicy));
+            if (policy is null)
+            {
+                var missingPolicyDecision =
+                    AuthorizationDecision.Deny(
+                        new AuthorizationFailure(
+                            AuthorizationFailureCodes
+                                .NoMatchingPolicy));
+
+                RuleGateInstrumentation.RecordAuthorization(
+                    activity,
+                    startTimestamp,
+                    missingPolicyDecision.IsAllowed,
+                    policyMatched: false,
+                    requirementOutcome: null);
+
+                return missingPolicyDecision;
+            }
+
+            var result =
+                await _requirementDispatcher
+                    .EvaluateAsync(
+                        policy.Requirement,
+                        new RequirementEvaluationContext(
+                            request),
+                        cancellationToken);
+
+            var decision = CreateDecision(result);
+
+            RuleGateInstrumentation.RecordAuthorization(
+                activity,
+                startTimestamp,
+                decision.IsAllowed,
+                policyMatched: true,
+                requirementOutcome: result.Outcome);
+
+            return decision;
         }
+        catch (OperationCanceledException)
+            when (cancellationToken.IsCancellationRequested)
+        {
+            RuleGateInstrumentation
+                .RecordAuthorizationCancellation(
+                    activity,
+                    startTimestamp);
 
-        var result =
-            await _requirementDispatcher
-                .EvaluateAsync(
-                    policy.Requirement,
-                    new RequirementEvaluationContext(
-                        request),
-                    cancellationToken);
+            throw;
+        }
+        catch (Exception)
+        {
+            RuleGateInstrumentation.RecordAuthorizationError(
+                activity,
+                startTimestamp);
 
-        return CreateDecision(result);
+            throw;
+        }
     }
 
     private async ValueTask<AuthorizationDecision>
@@ -104,6 +147,10 @@ public sealed class PolicyAuthorizationEngine
             AuthorizationRequest request,
             CancellationToken cancellationToken)
     {
+        using var activity =
+            RuleGateInstrumentation
+                .StartAuthorizationActivity();
+
         var evaluationId = Guid.NewGuid();
         var startTimestamp =
             Stopwatch.GetTimestamp();
@@ -115,54 +162,86 @@ public sealed class PolicyAuthorizationEngine
 
         AuthorizationDecision decision;
 
-        var policy =
-            await _policyProvider.FindAsync(
-                request.Resource.Type,
-                request.Action,
+        RequirementEvaluationOutcome?
+            requirementOutcome = null;
+
+        try
+        {
+            var policy = await FindPolicyAsync(
+                request,
                 cancellationToken);
 
-        if (policy is null)
-        {
-            decision =
-                AuthorizationDecision.Deny(
-                    new AuthorizationFailure(
-                        AuthorizationFailureCodes
-                            .NoMatchingPolicy));
-        }
-        else
-        {
-            policyId = policy.Id;
-
-            RequirementEvaluationResult result;
-
-            var context =
-                new RequirementEvaluationContext(
-                    request);
-
-            if (_requirementDispatcher is
-                IRequirementEvaluationDiagnosticsDispatcher
-                    diagnosticsDispatcher)
+            if (policy is null)
             {
-                result =
-                    await diagnosticsDispatcher
-                        .EvaluateWithDiagnosticsAsync(
-                            policy.Requirement,
-                            context,
-                            session,
-                            parentEvaluationId: null,
-                            cancellationToken);
+                decision =
+                    AuthorizationDecision.Deny(
+                        new AuthorizationFailure(
+                            AuthorizationFailureCodes
+                                .NoMatchingPolicy));
             }
             else
             {
-                result =
-                    await _requirementDispatcher
-                        .EvaluateAsync(
-                            policy.Requirement,
-                            context,
-                            cancellationToken);
+                policyId = policy.Id;
+
+                RequirementEvaluationResult result;
+
+                var context =
+                    new RequirementEvaluationContext(
+                        request);
+
+                if (_requirementDispatcher is
+                    IRequirementEvaluationDiagnosticsDispatcher
+                        diagnosticsDispatcher)
+                {
+                    result =
+                        await diagnosticsDispatcher
+                            .EvaluateWithDiagnosticsAsync(
+                                policy.Requirement,
+                                context,
+                                session,
+                                parentEvaluationId: null,
+                                cancellationToken);
+                }
+                else
+                {
+                    result =
+                        await _requirementDispatcher
+                            .EvaluateAsync(
+                                policy.Requirement,
+                                context,
+                                cancellationToken);
+                }
+
+                requirementOutcome = result.Outcome;
+                decision = CreateDecision(result);
             }
 
-            decision = CreateDecision(result);
+            RuleGateInstrumentation.RecordAuthorization(
+                activity,
+                startTimestamp,
+                decision.IsAllowed,
+                policyMatched: policyId is not null,
+                requirementOutcome: requirementOutcome);
+
+            activity?.Stop();
+        }
+        catch (OperationCanceledException)
+            when (cancellationToken.IsCancellationRequested)
+        {
+            RuleGateInstrumentation
+                .RecordAuthorizationCancellation(
+                    activity,
+                    startTimestamp);
+
+            throw;
+        }
+        catch (Exception)
+        {
+            RuleGateInstrumentation.RecordAuthorizationError(
+                activity,
+                startTimestamp);
+
+            throw;
         }
 
         var diagnostic =
@@ -181,6 +260,24 @@ public sealed class PolicyAuthorizationEngine
             diagnostic);
 
         return decision;
+    }
+
+    private async ValueTask<PolicyDefinition?> FindPolicyAsync(
+        AuthorizationRequest request,
+        CancellationToken cancellationToken)
+    {
+        var startTimestamp = Stopwatch.GetTimestamp();
+
+        var policy = await _policyProvider.FindAsync(
+            request.Resource.Type,
+            request.Action,
+            cancellationToken);
+
+        RuleGateInstrumentation.RecordPolicyLookup(
+            startTimestamp,
+            policy is not null);
+
+        return policy;
     }
 
     private async ValueTask

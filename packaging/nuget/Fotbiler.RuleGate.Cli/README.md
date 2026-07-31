@@ -148,6 +148,7 @@ rulegate info
 - [Policy testing](https://github.com/fotbiler-lab/rulegate/blob/main/docs/policy-testing.md)
 - [Explain and Lint](https://github.com/fotbiler-lab/rulegate/blob/main/docs/explain-and-lint.md)
 - [Manifest guide](https://github.com/fotbiler-lab/rulegate/blob/main/docs/manifests.md)
+- [Telemetry, performance, and concurrency](https://github.com/fotbiler-lab/rulegate/blob/main/docs/telemetry-performance-concurrency.md)
 - [Security model](https://github.com/fotbiler-lab/rulegate/blob/main/docs/security.md)
 - [Roadmap](https://github.com/fotbiler-lab/rulegate/blob/main/docs/roadmap.md)
 - [Documentation index](https://github.com/fotbiler-lab/rulegate/blob/main/docs/README.md)

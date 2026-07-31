@@ -5,8 +5,8 @@ Public authorization contracts for the RuleGate ecosystem.
 This package contains policy definitions, authorization requests and
 decisions, typed attribute values, requirement evaluation abstractions, and
 diagnostics contracts. Policy-source, reload-result, and snapshot metadata
-contracts are also defined here. It does not contain the RuleGate authorization
-engine.
+contracts and public telemetry source names are also defined here. It does not
+contain the RuleGate authorization engine.
 
 RuleGate is currently in preview. Public APIs may change before the first
 stable release.
@@ -30,6 +30,7 @@ Reference Abstractions directly when you are:
 - Creating diagnostic or policy-provider extensions
 - Implementing an application-defined `IPolicySource`
 - Coordinating reload through `IPolicyReloadService`
+- Registering RuleGate activity and meter names with an observability pipeline
 
 Most applications should install
 [Fotbiler.RuleGate.AspNetCore](https://www.nuget.org/packages/Fotbiler.RuleGate.AspNetCore)
@@ -56,6 +57,7 @@ instead of referencing Abstractions directly.
 - [RuleGate CLI](https://github.com/fotbiler-lab/rulegate/blob/main/docs/cli.md)
 - [Policy testing](https://github.com/fotbiler-lab/rulegate/blob/main/docs/policy-testing.md)
 - [Policy sources and atomic reload](https://github.com/fotbiler-lab/rulegate/blob/main/docs/policy-sources.md)
+- [Telemetry, performance, and concurrency](https://github.com/fotbiler-lab/rulegate/blob/main/docs/telemetry-performance-concurrency.md)
 - [Documentation index](https://github.com/fotbiler-lab/rulegate/blob/main/docs/README.md)
 
 ## Security

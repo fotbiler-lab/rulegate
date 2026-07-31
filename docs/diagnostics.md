@@ -785,6 +785,23 @@ Also test:
 - Indeterminate outcomes
 - Concurrent evaluations
 
+## OpenTelemetry signals
+
+RuleGate also emits exporter-neutral activities and metrics through the public
+`RuleGateTelemetry.ActivitySourceName` and `RuleGateTelemetry.MeterName`
+constants. These signals cover authorization decisions, bounded failure
+categories, latency, policy lookup, source loading, and atomic reload.
+
+OpenTelemetry is independent from `IAuthorizationDiagnosticsSink`. A host may
+enable structured logs, a custom diagnostic sink, telemetry, or any
+combination. Built-in telemetry never records policy, requirement, source,
+subject, resource, role, permission, claim, or attribute values.
+
+See the
+[telemetry, performance, and concurrency guide](telemetry-performance-concurrency.md)
+for registration, instrument names, bounded dimensions, benchmarks, stress
+tests, and thread-safety contracts.
+
 ## Current boundaries
 
 The current diagnostics surface includes:
@@ -800,19 +817,19 @@ The current diagnostics surface includes:
 - Structured deterministic reload results and source diagnostics
 - Custom singleton diagnostics sink
 - Sink failure isolation
+- Exporter-neutral OpenTelemetry authorization and reload activities
+- Built-in low-cardinality counters and duration histograms
+- Cancellation and unexpected-error telemetry
 
 The current preview does not include:
 
-- OpenTelemetry activities
-- Built-in metrics
-- Distributed tracing propagation
 - Persistent diagnostic storage
 - Built-in multi-sink fan-out
 - Decision visualization
 - Durable compliance audit logging
 - Guaranteed diagnostics for failed or canceled evaluations
 
-See the [roadmap](roadmap.md) for planned observability work.
+See the [roadmap](roadmap.md) for the remaining release-hardening work.
 
 ## Next steps
 
@@ -822,4 +839,6 @@ Continue with:
 - [Authorization model](authorization-model.md) for requirement concepts.
 - [Manifest guide](manifests.md) for policy configuration.
 - [Policy sources](policy-sources.md) for reload results and source failures.
+- [Telemetry, performance, and concurrency](telemetry-performance-concurrency.md)
+  for OpenTelemetry and thread-safety guidance.
 - [Documentation index](README.md) for all available guides.

@@ -1,0 +1,13 @@
+using BenchmarkDotNet.Running;
+
+namespace Fotbiler.RuleGate.Benchmarks;
+
+public static class Program
+{
+    public static void Main(string[] args)
+    {
+        BenchmarkSwitcher
+            .FromAssembly(typeof(Program).Assembly)
+            .Run(args);
+    }
+}

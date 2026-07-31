@@ -18,7 +18,7 @@
 
     <PackageId>Fotbiler.RuleGate.AspNetCore</PackageId>
     <Title>RuleGate ASP.NET Core</Title>
-    <Description>ASP.NET Core dependency injection, local configuration and YAML policy sources, atomic reload hosting, ClaimsPrincipal mapping, enrichment, dynamic policies, resource authorization, and safe diagnostics for RuleGate.</Description>
+    <Description>ASP.NET Core dependency injection, local configuration and YAML policy sources, atomic reload hosting, ClaimsPrincipal mapping, enrichment, dynamic policies, resource authorization, safe diagnostics, and OpenTelemetry correlation for RuleGate.</Description>
   </PropertyGroup>
 
   <ItemGroup>

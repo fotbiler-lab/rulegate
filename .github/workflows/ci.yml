@@ -122,6 +122,12 @@ jobs:
             --logger trx \
             --results-directory TestResults
 
+      - name: Run bounded concurrency stress
+        run: ./scripts/test-concurrency-stress.sh 3
+
+      - name: Validate benchmark suite
+        run: ./scripts/test-benchmarks.sh
+
       - name: Pack
         run: |
           dotnet pack \

@@ -100,6 +100,11 @@ dotnet test \
   --configuration Release \
   --no-build
 
+./scripts/test-concurrency-stress.sh \
+  3
+
+./scripts/test-benchmarks.sh
+
 dotnet pack \
   Fotbiler.RuleGate.slnx \
   --configuration Release \

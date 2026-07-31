@@ -47,16 +47,16 @@ Development through 1.0 preserves five product properties:
 | Policy Testing CLI                           | ✅ Available |
 | Explain and Lint                             | ✅ Available |
 | Policy Sources and Atomic Reload             | ✅ Available |
-| OpenTelemetry, Benchmarks, and Concurrency   | ⏳ Planned   |
+| OpenTelemetry, Benchmarks, and Concurrency   | ✅ Available |
 | .NET and Angular Compatibility Track         | ⏳ Planned   |
 | API Freeze and Security Hardening            | ⏳ Planned   |
 | Stable Release                               | ⏳ Planned   |
 
 The latest RuleGate NuGet preview is `0.9.0-preview.2`. The independently
 versioned Angular npm package remains at `0.7.0-preview.1`. Official Reference
-Applications, Policy Testing, Explain and Lint, and Policy Sources and Atomic
-Reload are available. The next feature milestone is OpenTelemetry, Benchmarks,
-and Concurrency in `0.9.0-preview.3`.
+Applications, Policy Testing, Explain and Lint, Policy Sources and Atomic
+Reload, and OpenTelemetry, Benchmarks, and Concurrency are available. The next
+milestone is API Freeze and Security Hardening in `1.0.0-rc.1`.
 
 All NuGet packages share one version and are published together for every
 NuGet release, including packages without code changes. npm packages are
@@ -256,23 +256,25 @@ hosting and Angular patterns.
 - Deterministic reload diagnostics and concurrency tests
 - [Policy sources and atomic reload guide](policy-sources.md)
 
+### `0.9.0-preview.3` — OpenTelemetry, Benchmarks, and Concurrency
+
+- Low-cardinality authorization metrics, activities, and traces
+- Decision, bounded failure-category, latency, policy-lookup, source-load, and
+  reload instrumentation
+- No subject IDs, resource IDs, policy/source identifiers, raw roles,
+  permissions, claims, or attribute names and values in built-in telemetry
+- Benchmarks for scalar, collection, attribute-to-attribute, logical, time, and
+  context requirements
+- Policy lookup benchmarks at 10, 100, 1,000, and 10,000 policies
+- Immutable-snapshot, parallel-evaluation, cancellation, provider, and reload
+  race-condition tests
+- Configurable long-running stress tests and documented thread-safety contracts
+- [Telemetry, performance, and concurrency guide](telemetry-performance-concurrency.md)
+
 ## Planned previews
 
 The compatibility track runs alongside these feature milestones and becomes a
 release criterion at `1.0.0-rc.1`.
-
-### `0.9.0-preview.3` — OpenTelemetry, Benchmarks, and Concurrency
-
-- Low-cardinality authorization metrics, activities, and traces
-- Decision, failure, latency, policy-load, and reload instrumentation
-- No subject IDs, resource IDs, raw roles, permissions, claims, or attribute
-  values in telemetry by default
-- Benchmarks for scalar, collection, attribute-to-attribute, logical, time, and
-  context requirements
-- Policy lookup benchmarks at representative policy-set sizes
-- Immutable-snapshot, parallel-evaluation, cancellation, provider, and reload
-  race-condition tests
-- Long-running stress tests and documented thread-safety contracts
 
 ### `1.0.0-rc.1` — API Freeze and Security Hardening
 

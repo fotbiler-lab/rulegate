@@ -781,11 +781,11 @@ The current preview includes:
 - Deterministic TypeScript constants generated from manifest identifiers
 - Angular authorization helpers
 - Optional Keycloak claim-normalization helpers
+- Exporter-neutral OpenTelemetry activities and low-cardinality metrics
 
 The following areas are planned separately:
 
 - Domain resource mapping helpers
-- OpenTelemetry integration
 - Decision visualization
 
 See the [roadmap](roadmap.md) for milestone planning.
