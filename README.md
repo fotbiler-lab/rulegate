@@ -77,7 +77,8 @@ more than framework-level roles or ad hoc permission checks.
   endpoint helpers, controller attributes, ordered attribute enrichment,
   diagnostics, and safe HTTP result mapping.
 - **Manifest-enabled:** YAML policies can be loaded, validated, and compiled
-  into immutable runtime policy definitions.
+  from files, embedded resources, configuration, or application-defined
+  sources into atomically replaceable immutable runtime snapshots.
 - **CLI-ready:** manifests can be validated and linted, deterministic fixtures
   can be tested and explained safely, and C# policy, resource-type, and action
   constants can be generated locally or in CI with stable process exit codes.
@@ -101,27 +102,27 @@ to a remote service:
 
 ## Which package should I install?
 
-| Need                                                      | Start with                                                    |
-| --------------------------------------------------------- | ------------------------------------------------------------- |
-| ASP.NET Core application                                  | `Fotbiler.RuleGate.AspNetCore` + `Fotbiler.RuleGate.Manifest` |
-| Framework-independent authorization engine                | `Fotbiler.RuleGate.Core`                                      |
-| Custom contracts or evaluators                            | `Fotbiler.RuleGate.Abstractions`                              |
-| YAML policy loading and compilation                       | `Fotbiler.RuleGate.Manifest`                                  |
-| Keycloak claim normalization                              | `Fotbiler.RuleGate.Keycloak`                                  |
-| Validation, testing, explanation, linting, and generation | `Fotbiler.RuleGate.Cli`                                       |
-| Angular route and template projection                     | `@fotbiler/rulegate-angular`                                  |
+| Need                                                      | Start with                       |
+| --------------------------------------------------------- | -------------------------------- |
+| ASP.NET Core application                                  | `Fotbiler.RuleGate.AspNetCore`   |
+| Framework-independent authorization engine                | `Fotbiler.RuleGate.Core`         |
+| Custom contracts or evaluators                            | `Fotbiler.RuleGate.Abstractions` |
+| YAML policy loading and compilation                       | `Fotbiler.RuleGate.Manifest`     |
+| Keycloak claim normalization                              | `Fotbiler.RuleGate.Keycloak`     |
+| Validation, testing, explanation, linting, and generation | `Fotbiler.RuleGate.Cli`          |
+| Angular route and template projection                     | `@fotbiler/rulegate-angular`     |
 
 ## Packages
 
-| Package                                                                                           | Purpose                                                                                                                                         |
-| ------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
-| [`Fotbiler.RuleGate.Abstractions`](https://www.nuget.org/packages/Fotbiler.RuleGate.Abstractions) | Authorization contracts, policy definitions, requests, decisions, and evaluation abstractions                                                   |
-| [`Fotbiler.RuleGate.Core`](https://www.nuget.org/packages/Fotbiler.RuleGate.Core)                 | Policy engine, built-in requirement evaluators, dispatcher, and in-memory policy provider                                                       |
-| [`Fotbiler.RuleGate.Manifest`](https://www.nuget.org/packages/Fotbiler.RuleGate.Manifest)         | YAML manifest loading, validation, compilation, and domain mapping                                                                              |
-| [`Fotbiler.RuleGate.AspNetCore`](https://www.nuget.org/packages/Fotbiler.RuleGate.AspNetCore)     | ASP.NET Core dependency injection, claims mapping, ordered attribute enrichment, dynamic policies, endpoint helpers, and resource authorization |
-| [`Fotbiler.RuleGate.Cli`](https://www.nuget.org/packages/Fotbiler.RuleGate.Cli)                   | .NET tool for validation, testing, redacted explanations, linting, deterministic C# generation, stale-output checks, and CI                     |
-| [`Fotbiler.RuleGate.Keycloak`](https://www.nuget.org/packages/Fotbiler.RuleGate.Keycloak)         | Optional Keycloak claim normalization and RuleGate subject mapping                                                                              |
-| [`@fotbiler/rulegate-angular`](https://www.npmjs.com/package/@fotbiler/rulegate-angular)          | Angular 22 authorization client, declarative route guards, UI directives, and TypeScript identifier generation                                  |
+| Package                                                                                           | Purpose                                                                                                                           |
+| ------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| [`Fotbiler.RuleGate.Abstractions`](https://www.nuget.org/packages/Fotbiler.RuleGate.Abstractions) | Authorization contracts, policy definitions, source and reload contracts, requests, decisions, and evaluation abstractions        |
+| [`Fotbiler.RuleGate.Core`](https://www.nuget.org/packages/Fotbiler.RuleGate.Core)                 | Policy engine, built-in requirement evaluators, in-memory sources, and atomic immutable snapshots                                 |
+| [`Fotbiler.RuleGate.Manifest`](https://www.nuget.org/packages/Fotbiler.RuleGate.Manifest)         | YAML loading, validation, compilation, file sources, embedded-resource sources, and domain mapping                                |
+| [`Fotbiler.RuleGate.AspNetCore`](https://www.nuget.org/packages/Fotbiler.RuleGate.AspNetCore)     | ASP.NET Core integration, configuration policy sources, atomic reload hosting, enrichment, dynamic policies, and endpoint helpers |
+| [`Fotbiler.RuleGate.Cli`](https://www.nuget.org/packages/Fotbiler.RuleGate.Cli)                   | .NET tool for validation, testing, redacted explanations, linting, deterministic C# generation, stale-output checks, and CI       |
+| [`Fotbiler.RuleGate.Keycloak`](https://www.nuget.org/packages/Fotbiler.RuleGate.Keycloak)         | Optional Keycloak claim normalization and RuleGate subject mapping                                                                |
+| [`@fotbiler/rulegate-angular`](https://www.npmjs.com/package/@fotbiler/rulegate-angular)          | Angular 22 authorization client, declarative route guards, UI directives, and TypeScript identifier generation                    |
 
 ## Supported .NET and Angular versions
 
@@ -151,6 +152,10 @@ RuleGate currently provides:
 - Homogeneous attribute collections with a 256-element safety limit
 - Immutable in-memory policy registration
 - YAML manifest loading, validation, and compilation
+- In-memory, YAML file, embedded-resource, configuration, and
+  application-defined policy sources
+- Complete-source validation, immutable snapshots, and atomic policy reload
+- Last-valid-snapshot preservation with deterministic reload diagnostics
 - ASP.NET Core dependency injection and dynamic policies
 - Minimal API and controller authorization
 - Configurable claims-to-subject mapping
@@ -197,6 +202,7 @@ previews.
 | Use the RuleGate command-line tool               | [CLI guide](docs/cli.md)                                 |
 | Test policies without starting an application    | [Policy testing](docs/policy-testing.md)                 |
 | Explain decisions and lint policy structure      | [Explain and Lint](docs/explain-and-lint.md)             |
+| Load and atomically reload local policy sources  | [Policy sources](docs/policy-sources.md)                 |
 | Generate deterministic C# constants              | [C# code generation](docs/code-generation.md)            |
 | Add frontend permission, policy, and role checks | [Angular SDK](docs/angular.md)                           |
 | Map Keycloak roles without coupling the engine   | [Keycloak integration](docs/keycloak.md)                 |
@@ -206,15 +212,14 @@ previews.
 
 ## Installation
 
-Install the ASP.NET Core and manifest packages:
+Install the ASP.NET Core package:
 
 ```bash
 dotnet add package Fotbiler.RuleGate.AspNetCore --version 0.9.0-preview.1
-dotnet add package Fotbiler.RuleGate.Manifest --version 0.9.0-preview.1
 ```
 
-`Fotbiler.RuleGate.AspNetCore` references the core engine and abstractions
-packages.
+`Fotbiler.RuleGate.AspNetCore` references the core engine, abstractions, and
+manifest packages.
 
 Applications using only RuleGate contracts may reference the abstractions
 package directly:
@@ -371,26 +376,14 @@ workflow state, and trusted request context:
 The host must derive `ownerId`, `status`, and `trustedDevice` from trusted
 application sources. Missing or incompatible input denies access.
 
-### 2. Compile the complete manifest
+### 2. Validate the complete manifest
 
-```csharp
-using Fotbiler.RuleGate.Manifest.Compilation;
-
-var compiler =
-    new RuleGateManifestCompiler();
-
-var compilation =
-    await compiler.CompileFromFileAsync(
-        "rulegate.yaml");
-
-if (!compilation.IsSuccess)
-{
-    throw new InvalidOperationException(
-        "RuleGate manifest compilation failed.");
-}
+```bash
+rulegate validate rulegate.yaml
+rulegate lint rulegate.yaml
 ```
 
-A failed compilation returns no partial policy collection.
+A failed validation returns no partial policy collection.
 
 The [manifest guide](docs/manifests.md) documents structured load and
 validation errors.
@@ -402,8 +395,16 @@ using Fotbiler.RuleGate.AspNetCore.DependencyInjection;
 
 builder.Services
     .AddRuleGate()
-    .AddPolicies(compilation.Policies);
+    .AddYamlPolicyFile(
+        "rulegate.yaml",
+        options =>
+            options.ReloadOnChange = true);
 ```
+
+RuleGate activates the complete manifest as one immutable snapshot. A failed
+reload preserves the last valid snapshot. See
+[Policy sources and atomic reload](docs/policy-sources.md) for in-memory,
+embedded-resource, configuration, and application-defined sources.
 
 ### 4. Evaluate a request
 

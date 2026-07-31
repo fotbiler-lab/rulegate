@@ -22,4 +22,10 @@
     <ProjectReference Include="..\..\src\Fotbiler.RuleGate.Manifest\Fotbiler.RuleGate.Manifest.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <EmbeddedResource
+      Include="Resources\embedded-rulegate.yaml"
+      LogicalName="RuleGate.Tests.embedded-rulegate.yaml" />
+  </ItemGroup>
+
 </Project>

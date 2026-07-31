@@ -4,7 +4,8 @@ Local, provider-independent authorization engine for RuleGate.
 
 Core contains the built-in policy engine, role and permission evaluators,
 logical requirements, typed attribute evaluators, requirement dispatch,
-in-memory policy storage, and opt-in authorization diagnostics.
+in-memory policy storage and sources, immutable atomic policy snapshots, and
+opt-in authorization diagnostics.
 
 RuleGate is currently in preview. Public APIs may change before the first
 stable release.
@@ -25,6 +26,8 @@ Use Core when you need:
 - Recurring time-window, bounded date-time, authentication-age, and canonical
   context policies
 - Custom policy-provider or evaluator composition
+- Framework-independent policy-source loading and manual atomic reload
+- Lock-free lookups against the last valid immutable policy snapshot
 - Direct control over authorization requests and decisions
 
 ASP.NET Core applications should normally install
@@ -61,6 +64,7 @@ authorization inputs cannot grant access.
 - [Security model](https://github.com/fotbiler-lab/rulegate/blob/main/docs/security.md)
 - [RuleGate CLI](https://github.com/fotbiler-lab/rulegate/blob/main/docs/cli.md)
 - [Policy testing](https://github.com/fotbiler-lab/rulegate/blob/main/docs/policy-testing.md)
+- [Policy sources and atomic reload](https://github.com/fotbiler-lab/rulegate/blob/main/docs/policy-sources.md)
 - [Documentation index](https://github.com/fotbiler-lab/rulegate/blob/main/docs/README.md)
 
 ## Security

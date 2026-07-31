@@ -5,7 +5,7 @@ This guide explains how to integrate RuleGate with ASP.NET Core applications.
 It covers:
 
 - Dependency-injection registration
-- Manifest policy registration
+- Local policy-source registration and atomic reload
 - Dynamic ASP.NET Core policies
 - `ClaimsPrincipal` subject mapping
 - Ordered subject, resource, and context attribute enrichment
@@ -43,16 +43,8 @@ dotnet add package \
   --version 0.9.0-preview.1
 ```
 
-Install the manifest package when policies are defined in `rulegate.yaml`:
-
-```bash
-dotnet add package \
-  Fotbiler.RuleGate.Manifest \
-  --version 0.9.0-preview.1
-```
-
-`Fotbiler.RuleGate.AspNetCore` references the RuleGate core and abstractions
-packages automatically.
+`Fotbiler.RuleGate.AspNetCore` references the RuleGate core, abstractions, and
+manifest packages automatically.
 
 ## Integration flow
 
@@ -143,45 +135,7 @@ policies:
       permission: document.delete
 ```
 
-## Compile policies before registration
-
-Compile the manifest before building the application:
-
-```csharp
-using Fotbiler.RuleGate.Manifest.Compilation;
-
-var compiler =
-    new RuleGateManifestCompiler();
-
-var compilation =
-    await compiler.CompileFromFileAsync(
-        "rulegate.yaml");
-
-if (!compilation.IsSuccess)
-{
-    foreach (var error in compilation.LoadErrors)
-    {
-        Console.Error.WriteLine(
-            $"{error.Code}: {error.Message}");
-    }
-
-    foreach (var error in compilation.ValidationErrors)
-    {
-        Console.Error.WriteLine(
-            $"{error.Code} at {error.Path}: " +
-            error.Message);
-    }
-
-    throw new InvalidOperationException(
-        "RuleGate manifest compilation failed.");
-}
-```
-
-Do not register policies when compilation fails.
-
-A failed manifest compilation returns no partially compiled policy collection.
-
-## Register ASP.NET Core services
+## Register ASP.NET Core services and policies
 
 Register authentication and ASP.NET Core authorization according to the
 application's normal security configuration.
@@ -196,8 +150,23 @@ builder.Services.AddAuthorization();
 
 builder.Services
     .AddRuleGate()
-    .AddPolicies(compilation.Policies);
+    .AddYamlPolicyFile(
+        "rulegate.yaml",
+        options =>
+        {
+            options.ReloadOnChange = true;
+        });
 ```
+
+The initial source load completes before host startup continues. RuleGate
+parses and validates the complete manifest, builds an immutable snapshot, and
+then activates it. A failed initial load leaves the provider empty and
+authorization denies by default. A failed later reload preserves the last
+valid snapshot.
+
+Applications that must refuse startup after an invalid initial source can call
+`IPolicyReloadService.ReloadAsync()` before `app.Run()` and stop when
+`IsSuccess` is `false`.
 
 `AddRuleGate` registers the default:
 
@@ -211,6 +180,11 @@ builder.Services
 - HTTP resource factory
 - Scoped authorization request enricher
 - System `TimeProvider`
+
+Register in-memory, embedded-resource, structured configuration, or
+application-defined sources when a YAML file is not the appropriate host
+boundary. See [Policy sources and atomic reload](policy-sources.md) for the
+complete registration and failure contract.
 
 Registration is idempotent for the default services.
 
@@ -1316,6 +1290,9 @@ The current ASP.NET Core integration includes:
 - Imperative authorization extensions
 - Replaceable subject and resource factories
 - Replaceable `TimeProvider`
+- Local YAML, embedded-resource, configuration, and application-defined policy
+  sources
+- Immutable policy snapshots and optional YAML/configuration reload monitoring
 - Optional logging diagnostics
 - Optional HTTP ProblemDetails mapping
 - Generic safe `401` and `403` responses
@@ -1328,7 +1305,6 @@ The current integration does not automatically provide:
 - Domain entity loading from route IDs
 - Resource attribute loading
 - Context attribute mapping from `HttpContext`
-- Manifest hot reload
 - Remote policy loading
 - Frontend authorization enforcement
 
@@ -1339,5 +1315,7 @@ Continue with:
 - [Getting started](getting-started.md) for the smallest executable example.
 - [Authorization model](authorization-model.md) for core concepts.
 - [Manifest guide](manifests.md) for complete YAML reference.
+- [Policy sources](policy-sources.md) for source registration and atomic
+  reload.
 - The root [README](../README.md) for the repository overview.
 - [Documentation index](README.md) for all guides.

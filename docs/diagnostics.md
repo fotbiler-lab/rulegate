@@ -2,7 +2,8 @@
 
 RuleGate diagnostics provide structured information about ASP.NET Core
 attribute enrichment, completed authorization evaluations, and their
-requirement trees.
+requirement trees. Policy-source hosting also emits safe snapshot activation
+and reload-rejection events.
 
 Diagnostics are intended for:
 
@@ -77,6 +78,12 @@ ASP.NET Core enrichment uses:
 Fotbiler.RuleGate.AspNetCore.Diagnostics.LoggingRuleGateEnrichmentDiagnosticsSink
 ```
 
+Policy source activation and reload hosting uses:
+
+```text
+Fotbiler.RuleGate.AspNetCore.PolicySources.PolicySourceReloadHostedService
+```
+
 Example `appsettings.json` configuration:
 
 ```json
@@ -85,7 +92,8 @@ Example `appsettings.json` configuration:
     "LogLevel": {
       "Default": "Information",
       "Fotbiler.RuleGate.AspNetCore.Diagnostics.LoggingAuthorizationDiagnosticsSink": "Information",
-      "Fotbiler.RuleGate.AspNetCore.Diagnostics.LoggingRuleGateEnrichmentDiagnosticsSink": "Warning"
+      "Fotbiler.RuleGate.AspNetCore.Diagnostics.LoggingRuleGateEnrichmentDiagnosticsSink": "Warning",
+      "Fotbiler.RuleGate.AspNetCore.PolicySources.PolicySourceReloadHostedService": "Information"
     }
   }
 }
@@ -112,7 +120,7 @@ boundaries.
 
 ## Built-in logging events
 
-The built-in sinks emit four structured event types.
+The built-in sinks and policy-source host emit seven structured event types.
 
 | Event ID | Level       | Purpose                                  |
 | -------: | ----------- | ---------------------------------------- |
@@ -120,6 +128,15 @@ The built-in sinks emit four structured event types.
 |   `2001` | Debug       | Completed requirement evaluation         |
 |   `2010` | Debug       | Successful attribute-enrichment provider |
 |   `2011` | Warning     | Fail-closed enrichment provider outcome  |
+|   `2020` | Information | Immutable policy snapshot activated      |
+|   `2021` | Warning     | Candidate policy reload rejected         |
+|   `2022` | Warning     | Policy-source file watch unavailable     |
+
+Policy reload events include snapshot version, policy count, or stable
+diagnostic codes. They do not include policy values, manifest contents,
+exception messages, subject IDs, resource IDs, roles, permissions, or
+attribute values. The source guide documents the structured
+`PolicyReloadResult` returned to trusted application code.
 
 ## Enrichment events
 
@@ -779,6 +796,8 @@ The current diagnostics surface includes:
 - Evaluation durations
 - Failure codes
 - Built-in ASP.NET Core structured logging
+- Policy snapshot activation and reload-rejection logging
+- Structured deterministic reload results and source diagnostics
 - Custom singleton diagnostics sink
 - Sink failure isolation
 
@@ -802,4 +821,5 @@ Continue with:
 - [ASP.NET Core integration](aspnetcore.md) for registration and HTTP usage.
 - [Authorization model](authorization-model.md) for requirement concepts.
 - [Manifest guide](manifests.md) for policy configuration.
+- [Policy sources](policy-sources.md) for reload results and source failures.
 - [Documentation index](README.md) for all available guides.

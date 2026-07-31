@@ -57,6 +57,11 @@ Explanation uses the runtime evaluator pipeline but omits subject/resource
 identities and every request or literal value. Lint reports deterministic
 structural findings and returns `1` when any finding exists.
 
+Validated manifests can be activated at runtime through RuleGate policy
+sources. See the
+[policy-source guide](https://github.com/fotbiler-lab/rulegate/blob/main/docs/policy-sources.md)
+for atomic reload behavior.
+
 Validation covers the complete manifest requirement model, including typed
 attributes, attribute comparisons, explicit-time-zone schedules, bounded
 date-time rules, authentication age, and canonical context policies.

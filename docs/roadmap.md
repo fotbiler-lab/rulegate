@@ -46,7 +46,7 @@ Development through 1.0 preserves five product properties:
 | Official Reference Applications              | ✅ Available |
 | Policy Testing CLI                           | ✅ Available |
 | Explain and Lint                             | ✅ Available |
-| Policy Sources and Atomic Reload             | ⏳ Planned   |
+| Policy Sources and Atomic Reload             | ✅ Available |
 | OpenTelemetry, Benchmarks, and Concurrency   | ⏳ Planned   |
 | .NET and Angular Compatibility Track         | ⏳ Planned   |
 | API Freeze and Security Hardening            | ⏳ Planned   |
@@ -54,8 +54,9 @@ Development through 1.0 preserves five product properties:
 
 The latest RuleGate NuGet preview is `0.9.0-preview.1`. The independently
 versioned Angular npm package remains at `0.7.0-preview.1`. Official Reference
-Applications, Policy Testing, and Explain and Lint are available. The next
-feature milestone is Policy Sources and Atomic Reload in `0.9.0-preview.2`.
+Applications, Policy Testing, Explain and Lint, and Policy Sources and Atomic
+Reload are available. The next feature milestone is OpenTelemetry, Benchmarks,
+and Concurrency in `0.9.0-preview.3`.
 
 All NuGet packages share one version and are published together for every
 NuGet release, including packages without code changes. npm packages are
@@ -245,11 +246,6 @@ hosting and Angular patterns.
 - Stable human-readable and machine-readable output
 - [Explain and Lint guide](explain-and-lint.md)
 
-## Planned previews
-
-The compatibility track runs alongside these feature milestones and becomes a
-release criterion at `1.0.0-rc.1`.
-
 ### `0.9.0-preview.2` — Policy Sources and Atomic Reload
 
 - In-memory, YAML file, embedded-resource, configuration, and
@@ -258,6 +254,12 @@ release criterion at `1.0.0-rc.1`.
 - Immutable policy snapshots and atomic replacement
 - Preservation of the last valid snapshot when a reload fails
 - Deterministic reload diagnostics and concurrency tests
+- [Policy sources and atomic reload guide](policy-sources.md)
+
+## Planned previews
+
+The compatibility track runs alongside these feature milestones and becomes a
+release criterion at `1.0.0-rc.1`.
 
 ### `0.9.0-preview.3` — OpenTelemetry, Benchmarks, and Concurrency
 

@@ -6,6 +6,33 @@ The project follows Semantic Versioning. Preview releases may introduce breaking
 
 ## [Unreleased]
 
+### Added
+
+- Added public policy-source, source-result, reload-result, diagnostic, and
+  snapshot metadata contracts.
+- Added in-memory, YAML file, embedded YAML resource, structured .NET
+  configuration, and application-defined policy sources.
+- Added immutable combined policy snapshots, serialized reload coordination,
+  atomic activation, manual reload, optional YAML/configuration change
+  monitoring, and safe structured reload logging.
+- Added the [Policy Sources and Atomic Reload guide](docs/policy-sources.md).
+
+### Security
+
+- Candidate policy sets are parsed and validated completely before activation;
+  duplicate source names, policy IDs, and resource/action routes reject the
+  entire candidate.
+- Failed and cancelled reloads preserve the last valid snapshot. Before any
+  valid activation, policy lookup remains empty and authorization fails closed.
+- Application-source exceptions become stable diagnostics without exposing
+  exception messages or stack traces.
+
+### Verification
+
+- Added deterministic source diagnostics, last-valid-snapshot, cancellation,
+  package-consumer, concurrent reader/reloader, YAML file-watch, and
+  configuration-reload tests across the supported .NET targets.
+
 ## [0.9.0-preview.1] - 2026-07-31
 
 ### Added

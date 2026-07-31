@@ -9,7 +9,7 @@ You will create a small .NET console application that:
 
 1. Loads a policy from `rulegate.yaml`.
 2. Validates and compiles the manifest.
-3. Registers the compiled policies with RuleGate.
+3. Activates the complete policy source as an immutable snapshot.
 4. Creates a subject and a protected resource.
 5. Evaluates an authorization request.
 6. Prints `Allowed` when the subject has the required permission.
@@ -39,21 +39,17 @@ dotnet new console
 
 ## 2. Install RuleGate
 
-Install the ASP.NET Core integration and manifest packages:
+Install the ASP.NET Core integration:
 
 ```bash
 dotnet add package \
   Fotbiler.RuleGate.AspNetCore \
   --version 0.9.0-preview.1
-
-dotnet add package \
-  Fotbiler.RuleGate.Manifest \
-  --version 0.9.0-preview.1
 ```
 
 `Fotbiler.RuleGate.AspNetCore` brings in the authorization engine and public
-contracts. `Fotbiler.RuleGate.Manifest` provides YAML loading, validation, and
-policy compilation.
+contracts together with YAML loading, validation, policy compilation, and
+local policy sources.
 
 The RuleGate CLI is distributed as a separate .NET tool. Install the exact
 preview version used by this guide:
@@ -153,34 +149,9 @@ Replace `Program.cs` with:
 
 ```csharp
 using Fotbiler.RuleGate.Abstractions.Authorization;
+using Fotbiler.RuleGate.Abstractions.Policies;
 using Fotbiler.RuleGate.AspNetCore.DependencyInjection;
-using Fotbiler.RuleGate.Manifest.Compilation;
 using Microsoft.Extensions.DependencyInjection;
-
-var compiler =
-    new RuleGateManifestCompiler();
-
-var compilation =
-    await compiler.CompileFromFileAsync(
-        "rulegate.yaml");
-
-if (!compilation.IsSuccess)
-{
-    foreach (var error in compilation.LoadErrors)
-    {
-        Console.Error.WriteLine(
-            $"Load error: {error.Code} - {error.Message}");
-    }
-
-    foreach (var error in compilation.ValidationErrors)
-    {
-        Console.Error.WriteLine(
-            $"Validation error: {error.Code} " +
-            $"at {error.Path} - {error.Message}");
-    }
-
-    return 1;
-}
 
 var services =
     new ServiceCollection();
@@ -190,7 +161,7 @@ services.AddAuthorizationCore();
 
 services
     .AddRuleGate()
-    .AddPolicies(compilation.Policies);
+    .AddYamlPolicyFile("rulegate.yaml");
 
 using var serviceProvider =
     services.BuildServiceProvider(
@@ -199,6 +170,23 @@ using var serviceProvider =
             ValidateOnBuild = true,
             ValidateScopes = true,
         });
+
+var reload = await serviceProvider
+    .GetRequiredService<IPolicyReloadService>()
+    .ReloadAsync();
+
+if (!reload.IsSuccess)
+{
+    foreach (var diagnostic in reload.Diagnostics)
+    {
+        Console.Error.WriteLine(
+            $"{diagnostic.SourceName}: " +
+            $"{diagnostic.Code} at " +
+            $"{diagnostic.Path ?? "root"}");
+    }
+
+    return 1;
+}
 
 var engine =
     serviceProvider.GetRequiredService<
@@ -244,7 +232,15 @@ those services automatically.
 
 `AddAuthorizationCore` registers the ASP.NET Core authorization primitives,
 while `AddRuleGate` registers the RuleGate policy engine and built-in
-requirement evaluators.
+requirement evaluators. `AddYamlPolicyFile` adds the manifest as a local policy
+source. The explicit initial reload validates the complete source and activates
+one immutable snapshot before the first authorization request.
+
+ASP.NET Core hosts perform the initial source load through a hosted service.
+This console example calls `IPolicyReloadService` directly because it builds a
+bare service provider rather than starting a host. See
+[Policy sources and atomic reload](policy-sources.md) for file-change,
+configuration, embedded-resource, and application-defined sources.
 
 ## 5. Run the application
 

@@ -147,7 +147,9 @@ services
     .AddHttpAuthorizationResultMapping()
     .AddSubjectAttributeProvider<
         PackageConsumerSubjectAttributeProvider>()
-    .AddPolicies(compilation.Policies);
+    .AddPolicySource(
+        new PackageConsumerPolicySource(
+            compilation.Policies));
 
 using var serviceProvider =
     services.BuildServiceProvider(
@@ -159,6 +161,18 @@ using var serviceProvider =
 
 using var serviceScope =
     serviceProvider.CreateScope();
+
+var reloadResult = await serviceProvider
+    .GetRequiredService<IPolicyReloadService>()
+    .ReloadAsync();
+
+if (!reloadResult.IsSuccess ||
+    reloadResult.ActiveSnapshot.PolicyCount !=
+        compilation.Policies.Count)
+{
+    throw new InvalidOperationException(
+        "The packaged policy source could not activate an atomic snapshot.");
+}
 
 var authorizationResultHandler =
     serviceProvider.GetRequiredService<
@@ -802,5 +816,29 @@ internal sealed class
                         "tenant",
                         "tenant-1"),
                 ])));
+    }
+}
+
+internal sealed class PackageConsumerPolicySource
+    : IPolicySource
+{
+    private readonly IReadOnlyList<PolicyDefinition>
+        _policies;
+
+    public PackageConsumerPolicySource(
+        IEnumerable<PolicyDefinition> policies)
+    {
+        _policies = policies.ToArray();
+    }
+
+    public string Name => "package-consumer";
+
+    public ValueTask<PolicySourceLoadResult> LoadAsync(
+        CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        return ValueTask.FromResult(
+            PolicySourceLoadResult.Success(_policies));
     }
 }

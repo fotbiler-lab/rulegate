@@ -1,5 +1,6 @@
 using Fotbiler.RuleGate.Manifest.Loading;
 using Fotbiler.RuleGate.Manifest.Mapping;
+using Fotbiler.RuleGate.Manifest.Models;
 using Fotbiler.RuleGate.Manifest.Validation;
 
 namespace Fotbiler.RuleGate.Manifest.Compilation;
@@ -35,6 +36,15 @@ public sealed class RuleGateManifestCompiler
             _loader.LoadFromText(yaml);
 
         return Compile(loadResult);
+    }
+
+    public ManifestCompilationResult CompileFromManifest(
+        RuleGateManifest manifest)
+    {
+        ArgumentNullException.ThrowIfNull(manifest);
+
+        return Compile(
+            ManifestLoadResult.Success(manifest));
     }
 
     public async ValueTask<ManifestCompilationResult>

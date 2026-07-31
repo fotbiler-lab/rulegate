@@ -5,8 +5,9 @@ ASP.NET Core integration for the RuleGate authorization framework.
 This package provides dependency injection, configurable claims mapping,
 dynamic policies, Minimal API endpoint helpers, controller and action
 attributes, imperative authorization extensions, resource mapping, structured
-diagnostics, ordered subject/resource/context attribute enrichment, and opt-in
-safe HTTP authorization results.
+diagnostics, ordered subject/resource/context attribute enrichment, local
+policy sources, atomic reload hosting, and opt-in safe HTTP authorization
+results.
 The default handler supplies deterministic evaluation time through the
 registered `TimeProvider`; trusted context values remain application-owned.
 
@@ -17,17 +18,19 @@ stable release.
 
     dotnet add package Fotbiler.RuleGate.AspNetCore --version 0.9.0-preview.1
 
-Install the manifest package as well when policies are defined in YAML:
-
-    dotnet add package Fotbiler.RuleGate.Manifest --version 0.9.0-preview.1
-
 ## Register RuleGate
 
     using Fotbiler.RuleGate.AspNetCore.DependencyInjection;
 
-builder.Services
-.AddRuleGate()
-.AddPolicies(compilation.Policies);
+    builder.Services
+        .AddRuleGate()
+        .AddYamlPolicyFile(
+            "rulegate.yaml",
+            options => options.ReloadOnChange = true);
+
+YAML file, embedded-resource, structured configuration, in-memory, and
+application-defined sources are supported. A candidate is activated only after
+complete validation; failed reloads preserve the last valid snapshot.
 
 The application must configure ASP.NET Core authentication and authorization
 using its trusted identity provider and claim model.
@@ -91,6 +94,7 @@ Dynamic policy names use this form:
 - [Security model](https://github.com/fotbiler-lab/rulegate/blob/main/docs/security.md)
 - [RuleGate CLI](https://github.com/fotbiler-lab/rulegate/blob/main/docs/cli.md)
 - [Policy testing](https://github.com/fotbiler-lab/rulegate/blob/main/docs/policy-testing.md)
+- [Policy sources and atomic reload](https://github.com/fotbiler-lab/rulegate/blob/main/docs/policy-sources.md)
 - [Documentation index](https://github.com/fotbiler-lab/rulegate/blob/main/docs/README.md)
 - [Minimal ASP.NET Core reference](https://github.com/fotbiler-lab/rulegate/tree/main/samples/aspnetcore-minimal)
 - [Full-stack document approval reference](https://github.com/fotbiler-lab/rulegate/tree/main/samples/document-approval)
