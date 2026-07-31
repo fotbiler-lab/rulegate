@@ -52,10 +52,10 @@ Development through 1.0 preserves five product properties:
 | API Freeze and Security Hardening            | ⏳ Planned   |
 | Stable Release                               | ⏳ Planned   |
 
-The latest RuleGate NuGet preview is `0.7.0-preview.2`. The independently
+The latest RuleGate NuGet preview is `0.8.0-preview.2`. The independently
 versioned Angular npm package remains at `0.7.0-preview.1`. Official Reference
-Applications and the Policy Testing CLI are available in the repository. The
-next feature milestone is Explain and Lint in `0.9.0-preview.1`.
+Applications and the Policy Testing CLI are available. The next feature
+milestone is Explain and Lint in `0.9.0-preview.1`.
 
 All NuGet packages share one version and are published together for every
 NuGet release, including packages without code changes. npm packages are

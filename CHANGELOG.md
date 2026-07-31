@@ -6,6 +6,8 @@ The project follows Semantic Versioning. Preview releases may introduce breaking
 
 ## [Unreleased]
 
+## [0.8.0-preview.2] - 2026-07-31
+
 ### Added
 
 - Added `rulegate test` for deterministic, host-independent authorization
@@ -27,6 +29,11 @@ The project follows Semantic Versioning. Preview releases may introduce breaking
   ownership, organization scope, classification, workflow state, time windows,
   request context, and SQLite-backed organization schedules.
 - Added reproducible Keycloak setup and manual five-user verification guides.
+
+### Changed
+
+- Published all six synchronized NuGet packages at `0.8.0-preview.2`. The
+  independently versioned Angular npm package remains at `0.7.0-preview.1`.
 
 ### Security
 
@@ -493,7 +500,8 @@ The project follows Semantic Versioning. Preview releases may introduce breaking
 - CLI, Angular, and Keycloak integration packages are not yet included.
 - Public APIs may change before the first stable release.
 
-[Unreleased]: https://github.com/fotbiler-lab/rulegate/compare/v0.7.0-preview.2...HEAD
+[Unreleased]: https://github.com/fotbiler-lab/rulegate/compare/v0.8.0-preview.2...HEAD
+[0.8.0-preview.2]: https://github.com/fotbiler-lab/rulegate/compare/v0.7.0-preview.2...v0.8.0-preview.2
 [0.7.0-preview.2]: https://github.com/fotbiler-lab/rulegate/compare/v0.7.0-preview.1...v0.7.0-preview.2
 [0.7.0-preview.1]: https://github.com/fotbiler-lab/rulegate/compare/v0.6.0-preview.2...v0.7.0-preview.1
 [0.6.0-preview.2]: https://github.com/fotbiler-lab/rulegate/compare/v0.6.0-preview.1...v0.6.0-preview.2
