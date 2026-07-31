@@ -6,6 +6,8 @@ The project follows Semantic Versioning. Preview releases may introduce breaking
 
 ## [Unreleased]
 
+## [0.9.0-preview.4] - 2026-07-31
+
 ### Added
 
 - Added .NET Standard 2.0 targets for Abstractions, Core, and Manifest and
@@ -19,6 +21,8 @@ The project follows Semantic Versioning. Preview releases may introduce breaking
 
 ### Changed
 
+- Published all six synchronized NuGet packages and the three-package npm
+  family at `0.9.0-preview.4`.
 - Modern `@fotbiler/rulegate-angular` now supports Angular 20–22 and delegates
   fail-closed snapshot storage to the framework-independent client.
 - Public time-window contracts use `TimeSpan`, and subject role/permission

@@ -35,7 +35,7 @@ do
   esac
 done
 
-EXPECTED_PACKAGE_VERSION="0.7.0-preview.1"
+EXPECTED_PACKAGE_VERSION="0.9.0-preview.4"
 EXPECTED_REPOSITORY="git+https://github.com/fotbiler-lab/rulegate.git"
 EXPECTED_LICENSE="Apache-2.0"
 EXPECTED_AUTHOR="Fotbiler"

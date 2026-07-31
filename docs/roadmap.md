@@ -52,12 +52,12 @@ Development through 1.0 preserves five product properties:
 | API Freeze and Security Hardening            | ⏳ Planned   |
 | Stable Release                               | ⏳ Planned   |
 
-The latest RuleGate NuGet preview is `0.9.0-preview.3`. The independently
-versioned Angular npm package remains at `0.7.0-preview.1`. Official Reference
-Applications, Policy Testing, Explain and Lint, Policy Sources and Atomic
-Reload, OpenTelemetry, Benchmarks and Concurrency, and the compatibility track
-are available. The next milestone is API Freeze and Security Hardening in
-`1.0.0-rc.1`.
+The latest RuleGate NuGet preview is `0.9.0-preview.4`. The three-package npm
+family is also published at `0.9.0-preview.4` for this compatibility release.
+Official Reference Applications, Policy Testing, Explain and Lint, Policy
+Sources and Atomic Reload, OpenTelemetry, Benchmarks and Concurrency, and the
+compatibility track are available. The next milestone is API Freeze and
+Security Hardening in `1.0.0-rc.1`.
 
 All NuGet packages share one version and are published together for every
 NuGet release, including packages without code changes. npm packages are
@@ -77,10 +77,8 @@ The repository package and consumer matrix verifies:
 | Legacy Angular adapter                | Angular 12 through Angular 19                  |
 | Framework-independent frontend client | Angular 9 through Angular 22 consumers         |
 
-The published `0.9.0-preview.3` NuGet packages and `0.7.0-preview.1` Angular
-package predate the expanded compatibility matrix. The expanded targets are
-released only after the next-preview package verification and publication
-workflow succeeds.
+The `0.9.0-preview.4` NuGet and npm package families publish this expanded
+compatibility matrix after package-only consumer and release verification.
 
 Support levels are:
 
@@ -275,6 +273,17 @@ hosting and Angular patterns.
   race-condition tests
 - Configurable long-running stress tests and documented thread-safety contracts
 - [Telemetry, performance, and concurrency guide](telemetry-performance-concurrency.md)
+
+### `0.9.0-preview.4` — .NET and Angular Compatibility
+
+- .NET Standard 2.0 targets for Abstractions, Core, and Manifest
+- ASP.NET Core and Keycloak packages from .NET Core 3.1 through .NET 10
+- Framework-independent `@fotbiler/rulegate-client`
+- Modern Angular adapter support for Angular 20–22
+- Legacy Angular adapter support for Angular 12–19
+- Host-owned client integration path for Angular 9–11
+- Packed `.nupkg` and `.tgz` consumer verification across the compatibility matrix
+- Unified `0.9.0-preview.4` preview numbering across the NuGet and npm package families
 
 ## Planned previews
 

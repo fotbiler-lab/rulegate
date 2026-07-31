@@ -40,7 +40,7 @@ rules, authentication and MFA age, and canonical trusted request context.
 ## Published packages
 
 The latest published RuleGate NuGet preview is
-[`0.9.0-preview.3`](https://github.com/fotbiler-lab/rulegate/releases/tag/v0.9.0-preview.3).
+[`0.9.0-preview.4`](https://github.com/fotbiler-lab/rulegate/releases/tag/v0.9.0-preview.4).
 
 | Package                                                                                                | Purpose                                                                                      |
 | ------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------- |
@@ -54,9 +54,8 @@ The latest published RuleGate NuGet preview is
 | [`@fotbiler/rulegate-angular`](https://www.npmjs.com/package/@fotbiler/rulegate-angular)               | Modern Angular authorization client, route guards, UI directives, and TypeScript generation  |
 | [`@fotbiler/rulegate-angular-legacy`](https://www.npmjs.com/package/@fotbiler/rulegate-angular-legacy) | Angular 12–19 observable, NgModule, directive, and class-guard adapter                       |
 
-All published RuleGate NuGet packages are `0.9.0-preview.3`. The currently
-published Angular npm package is `0.7.0-preview.1`; the framework-independent
-and legacy Angular packages will join the independently versioned npm package
+All six published RuleGate NuGet packages and the three-package npm family
+are `0.9.0-preview.4`. The npm package family remains independently versioned
 family in the next preview.
 
 ## Recommended learning path

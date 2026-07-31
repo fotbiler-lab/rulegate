@@ -9,7 +9,7 @@ host-owned Angular service because those releases predate the stable partial-Ivy
 library format used by this adapter.
 
 ```bash
-pnpm add @fotbiler/rulegate-angular-legacy@0.7.0-preview.1 @fotbiler/rulegate-client@0.7.0-preview.1
+pnpm add @fotbiler/rulegate-angular-legacy@0.9.0-preview.4 @fotbiler/rulegate-client@0.9.0-preview.4
 ```
 
 Frontend checks improve user experience only. The backend remains the security

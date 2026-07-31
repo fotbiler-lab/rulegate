@@ -18,7 +18,7 @@ stable release.
 
 ## Installation
 
-    dotnet add package Fotbiler.RuleGate.AspNetCore --version 0.9.0-preview.3
+    dotnet add package Fotbiler.RuleGate.AspNetCore --version 0.9.0-preview.4
 
 ## Compatibility
 

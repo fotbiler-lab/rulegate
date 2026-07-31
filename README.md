@@ -139,9 +139,9 @@ to a remote service:
 | `@fotbiler/rulegate-angular-legacy` | Angular 12–19                                    | Legacy-tested                                    |
 | `@fotbiler/rulegate-client`         | Angular 9–22 and framework-independent consumers | Current or legacy-tested with the host framework |
 
-The published `0.9.0-preview.3` NuGet packages and `0.7.0-preview.1` Angular
-package predate this expanded matrix. The next previews will publish the
-repository package set after release verification. See the
+The `0.9.0-preview.4` NuGet and npm previews are the first public RuleGate
+release to carry this expanded compatibility matrix across the backend and
+frontend package families. See the
 [platform compatibility policy](docs/platform-compatibility.md) and
 [frontend compatibility guide](docs/frontend-compatibility.md) for package
 selection and the distinction between vendor support and legacy verification.
@@ -199,7 +199,7 @@ RuleGate currently provides:
 - Package-only Angular npm tarball verification
 - Package-consuming minimal ASP.NET Core and full-stack Angular reference
   applications
-- .NET 8, .NET 9, and .NET 10 packages
+- Portable .NET Standard 2.0 libraries, ASP.NET Core/Keycloak support from .NET Core 3.1 through .NET 10, and package-only legacy consumer verification
 
 See the [roadmap](docs/roadmap.md) for published milestones and upcoming
 previews.
@@ -232,7 +232,7 @@ previews.
 Install the ASP.NET Core package:
 
 ```bash
-dotnet add package Fotbiler.RuleGate.AspNetCore --version 0.9.0-preview.3
+dotnet add package Fotbiler.RuleGate.AspNetCore --version 0.9.0-preview.4
 ```
 
 `Fotbiler.RuleGate.AspNetCore` references the core engine, abstractions, and
@@ -242,19 +242,19 @@ Applications using only RuleGate contracts may reference the abstractions
 package directly:
 
 ```bash
-dotnet add package Fotbiler.RuleGate.Abstractions --version 0.9.0-preview.3
+dotnet add package Fotbiler.RuleGate.Abstractions --version 0.9.0-preview.4
 ```
 
 Install the Angular SDK:
 
 ```bash
-pnpm add @fotbiler/rulegate-angular@0.7.0-preview.1
+pnpm add @fotbiler/rulegate-angular@0.9.0-preview.4 @fotbiler/rulegate-client@0.9.0-preview.4
 ```
 
 Install the optional Keycloak integration when Keycloak supplies the identity:
 
 ```bash
-dotnet add package Fotbiler.RuleGate.Keycloak --version 0.9.0-preview.3
+dotnet add package Fotbiler.RuleGate.Keycloak --version 0.9.0-preview.4
 ```
 
 ## Use the RuleGate CLI
@@ -265,7 +265,7 @@ Install the RuleGate command-line tool:
 dotnet tool install \
   --global \
   Fotbiler.RuleGate.Cli \
-  --version 0.9.0-preview.3
+  --version 0.9.0-preview.4
 ```
 
 Validate the default `rulegate.yaml` in the current directory:
@@ -281,7 +281,7 @@ rulegate validate ./policies/rulegate.yaml
 rulegate validate --format json
 ```
 
-The `0.9.0-preview.3` tool evaluates and safely explains deterministic
+The `0.9.0-preview.4` tool evaluates and safely explains deterministic
 authorization requests against a manifest without starting the host
 application:
 
@@ -561,12 +561,13 @@ Read the [security model](docs/security.md) before production integration.
 ## Project status
 
 The latest RuleGate NuGet preview is
-[`0.9.0-preview.3`](https://github.com/fotbiler-lab/rulegate/releases/tag/v0.9.0-preview.3).
+[`0.9.0-preview.4`](https://github.com/fotbiler-lab/rulegate/releases/tag/v0.9.0-preview.4).
 It adds exporter-neutral OpenTelemetry signals, repeatable benchmarks, and
 concurrency hardening with bounded stress verification.
 
-All NuGet packages are `0.9.0-preview.3`. The independently versioned Angular
-npm package remains at `0.7.0-preview.1`.
+All six NuGet packages and the three-package npm family are
+`0.9.0-preview.4` for this compatibility preview. npm remains independently
+versioned from NuGet even when their preview numbers are aligned.
 
 See the [roadmap](docs/roadmap.md) for the complete release path.
 
