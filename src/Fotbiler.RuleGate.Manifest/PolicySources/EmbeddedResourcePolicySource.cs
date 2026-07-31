@@ -74,11 +74,17 @@ public sealed class EmbeddedResourcePolicySource : IPolicySource
 
         try
         {
-            await using (stream)
+            using (stream)
             using (var reader = new StreamReader(stream))
             {
+#if NETSTANDARD2_0
+                var yaml = await reader.ReadToEndAsync();
+
+                cancellationToken.ThrowIfCancellationRequested();
+#else
                 var yaml = await reader.ReadToEndAsync(
                     cancellationToken);
+#endif
 
                 return _compiler
                     .CompileFromText(yaml)

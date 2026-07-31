@@ -1,0 +1,37 @@
+{
+  "name": "@fotbiler/rulegate-angular-legacy",
+  "version": "0.7.0-preview.1",
+  "description": "NgModule, observable, class guard, and classic directive adapters for legacy Angular RuleGate applications.",
+  "keywords": [
+    "angular",
+    "authorization",
+    "legacy",
+    "permissions",
+    "policy",
+    "roles",
+    "rulegate",
+    "security"
+  ],
+  "author": "Fotbiler",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fotbiler-lab/rulegate.git",
+    "directory": "src/Fotbiler.RuleGate.Angular.Legacy"
+  },
+  "homepage": "https://github.com/fotbiler-lab/rulegate#readme",
+  "bugs": {
+    "url": "https://github.com/fotbiler-lab/rulegate/issues"
+  },
+  "peerDependencies": {
+    "@angular/core": ">=12.0.0 <20.0.0",
+    "@angular/router": ">=12.0.0 <20.0.0",
+    "@fotbiler/rulegate-client": "0.7.0-preview.1",
+    "rxjs": "^6.5.0 || ^7.0.0"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "sideEffects": false
+}

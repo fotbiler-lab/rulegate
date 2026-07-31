@@ -16,7 +16,9 @@ public sealed record AttributeRequirementDefinition
                 AuthorizationStringComparison.Ordinal)
         : base(id)
     {
-        if (!Enum.IsDefined(source))
+        if (!Enum.IsDefined(
+                typeof(AuthorizationAttributeSource),
+                source))
         {
             throw new ArgumentOutOfRangeException(
                 nameof(source),
@@ -26,7 +28,9 @@ public sealed record AttributeRequirementDefinition
 
         ArgumentException.ThrowIfNullOrWhiteSpace(name);
 
-        if (!Enum.IsDefined(@operator))
+        if (!Enum.IsDefined(
+                typeof(AuthorizationAttributeOperator),
+                @operator))
         {
             throw new ArgumentOutOfRangeException(
                 nameof(@operator),
@@ -34,7 +38,9 @@ public sealed record AttributeRequirementDefinition
                 "The authorization attribute operator is not supported.");
         }
 
-        if (!Enum.IsDefined(stringComparison))
+        if (!Enum.IsDefined(
+                typeof(AuthorizationStringComparison),
+                stringComparison))
         {
             throw new ArgumentOutOfRangeException(
                 nameof(stringComparison),

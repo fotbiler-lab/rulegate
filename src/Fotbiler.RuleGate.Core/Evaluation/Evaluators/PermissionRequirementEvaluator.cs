@@ -23,6 +23,6 @@ public sealed class PermissionRequirementEvaluator
                     AuthorizationFailureCodes.MissingPermission,
                     requirement.Id));
 
-        return ValueTask.FromResult(result);
+        return ValueTaskCompat.FromResult(result);
     }
 }

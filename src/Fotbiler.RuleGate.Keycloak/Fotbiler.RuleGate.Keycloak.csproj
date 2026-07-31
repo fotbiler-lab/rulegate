@@ -10,7 +10,7 @@
   </ItemGroup>
 
   <PropertyGroup>
-    <TargetFrameworks>$(RuleGateTargetFrameworks)</TargetFrameworks>
+    <TargetFrameworks>$(RuleGateAspNetCoreTargetFrameworks)</TargetFrameworks>
 
     <PackageId>Fotbiler.RuleGate.Keycloak</PackageId>
     <Title>RuleGate Keycloak Integration</Title>

@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Fotbiler.RuleGate.AspNetCore.Diagnostics;
 
-internal sealed partial class
+internal sealed class
     LoggingAuthorizationDiagnosticsSink
     : IAuthorizationDiagnosticsSink
 {
@@ -67,7 +67,7 @@ internal sealed partial class
             }
         }
 
-        return ValueTask.CompletedTask;
+        return default;
     }
 
     private static string JoinFailureCodes(
@@ -78,12 +78,7 @@ internal sealed partial class
             : string.Join(",", failureCodes);
     }
 
-    [LoggerMessage(
-        EventId = 2000,
-        Level = LogLevel.Information,
-        Message =
-            "RuleGate authorization evaluation {EvaluationId} completed. PolicyId: {PolicyId}; IsAllowed: {IsAllowed}; DurationMs: {DurationMs}; FailureCodes: {FailureCodes}; RequirementCount: {RequirementCount}.")]
-    private static partial void
+    private static void
         LogAuthorizationEvaluation(
             ILogger logger,
             Guid evaluationId,
@@ -91,14 +86,22 @@ internal sealed partial class
             bool isAllowed,
             double durationMs,
             string failureCodes,
-            int requirementCount);
+            int requirementCount)
+    {
+        logger.LogInformation(
+            new EventId(
+                2000,
+                nameof(LogAuthorizationEvaluation)),
+            "RuleGate authorization evaluation {EvaluationId} completed. PolicyId: {PolicyId}; IsAllowed: {IsAllowed}; DurationMs: {DurationMs}; FailureCodes: {FailureCodes}; RequirementCount: {RequirementCount}.",
+            evaluationId,
+            policyId,
+            isAllowed,
+            durationMs,
+            failureCodes,
+            requirementCount);
+    }
 
-    [LoggerMessage(
-        EventId = 2001,
-        Level = LogLevel.Debug,
-        Message =
-            "RuleGate requirement evaluation {RequirementEvaluationId} completed for authorization evaluation {AuthorizationEvaluationId}. ParentEvaluationId: {ParentEvaluationId}; RequirementId: {RequirementId}; RequirementKind: {RequirementKind}; Outcome: {Outcome}; DurationMs: {DurationMs}; FailureCodes: {FailureCodes}; AttributeSource: {AttributeSource}; ComparedAttributeSource: {ComparedAttributeSource}.")]
-    private static partial void
+    private static void
         LogRequirementEvaluation(
             ILogger logger,
             Guid authorizationEvaluationId,
@@ -112,5 +115,22 @@ internal sealed partial class
             AuthorizationAttributeSource?
                 attributeSource,
             AuthorizationAttributeSource?
-                comparedAttributeSource);
+                comparedAttributeSource)
+    {
+        logger.LogDebug(
+            new EventId(
+                2001,
+                nameof(LogRequirementEvaluation)),
+            "RuleGate requirement evaluation {RequirementEvaluationId} completed for authorization evaluation {AuthorizationEvaluationId}. ParentEvaluationId: {ParentEvaluationId}; RequirementId: {RequirementId}; RequirementKind: {RequirementKind}; Outcome: {Outcome}; DurationMs: {DurationMs}; FailureCodes: {FailureCodes}; AttributeSource: {AttributeSource}; ComparedAttributeSource: {ComparedAttributeSource}.",
+            requirementEvaluationId,
+            authorizationEvaluationId,
+            parentEvaluationId,
+            requirementId,
+            requirementKind,
+            outcome,
+            durationMs,
+            failureCodes,
+            attributeSource,
+            comparedAttributeSource);
+    }
 }

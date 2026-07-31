@@ -36,7 +36,7 @@ public sealed class AttributeRequirementEvaluator
                     ? attributeExists
                     : !attributeExists;
 
-            return ValueTask.FromResult(
+            return ValueTaskCompat.FromResult(
                 CreateBooleanResult(
                     isSatisfied,
                     requirement,
@@ -49,7 +49,7 @@ public sealed class AttributeRequirementEvaluator
 
         if (!attributeExists)
         {
-            return ValueTask.FromResult(
+            return ValueTaskCompat.FromResult(
                 RequirementEvaluationResult.NotSatisfied(
                     new AuthorizationFailure(
                         AuthorizationFailureCodes
@@ -69,7 +69,7 @@ public sealed class AttributeRequirementEvaluator
                     ? isNull
                     : !isNull;
 
-            return ValueTask.FromResult(
+            return ValueTaskCompat.FromResult(
                 CreateBooleanResult(
                     isSatisfied,
                     requirement,
@@ -87,7 +87,7 @@ public sealed class AttributeRequirementEvaluator
         }
         catch (ArgumentException)
         {
-            return ValueTask.FromResult(
+            return ValueTaskCompat.FromResult(
                 RequirementEvaluationResult.Indeterminate(
                     new AuthorizationFailure(
                         AuthorizationFailureCodes
@@ -129,7 +129,7 @@ public sealed class AttributeRequirementEvaluator
                         requirement.Id))
         };
 
-        return ValueTask.FromResult(result);
+        return ValueTaskCompat.FromResult(result);
     }
 
     private static RequirementEvaluationResult

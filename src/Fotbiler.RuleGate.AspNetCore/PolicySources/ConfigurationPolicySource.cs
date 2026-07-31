@@ -60,7 +60,7 @@ public sealed class ConfigurationPolicySource : IPolicySource
 
         if (!_section.Exists())
         {
-            return ValueTask.FromResult(
+            return new ValueTask<PolicySourceLoadResult>(
                 PolicySourceLoadResult.Failure(
                 [
                     new PolicySourceDiagnostic(
@@ -77,18 +77,20 @@ public sealed class ConfigurationPolicySource : IPolicySource
         {
             manifest = _section.Get<RuleGateManifest>(
                 options =>
+                {
                     options.ErrorOnUnknownConfiguration =
-                        true);
+                        true;
+                });
         }
         catch (Exception)
         {
-            return ValueTask.FromResult(
+            return new ValueTask<PolicySourceLoadResult>(
                 BindingFailure());
         }
 
         if (manifest is null)
         {
-            return ValueTask.FromResult(
+            return new ValueTask<PolicySourceLoadResult>(
                 BindingFailure());
         }
 
@@ -96,7 +98,7 @@ public sealed class ConfigurationPolicySource : IPolicySource
             .CompileFromManifest(manifest)
             .ToPolicySourceLoadResult();
 
-        return ValueTask.FromResult(result);
+        return new ValueTask<PolicySourceLoadResult>(result);
     }
 
     internal IChangeToken GetReloadToken()

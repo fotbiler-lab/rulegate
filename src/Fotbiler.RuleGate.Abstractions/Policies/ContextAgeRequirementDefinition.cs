@@ -11,7 +11,9 @@ public sealed record ContextAgeRequirementDefinition
         string? id = null)
         : base(id)
     {
-        if (!Enum.IsDefined(timestamp))
+        if (!Enum.IsDefined(
+                typeof(AuthorizationContextTimestamp),
+                timestamp))
         {
             throw new ArgumentOutOfRangeException(
                 nameof(timestamp),

@@ -81,6 +81,8 @@ Before committing the release preparation, verify:
 - [ ] The workflow publishes the exact version.
 - [ ] The workflow includes all six package IDs, even when a package has no
       code changes in the release.
+- [ ] Every package contains the embedded `rulegate-icon.png` and declares it
+      through NuGet `<icon>` metadata.
 - [ ] Normal CI does not publish packages or create releases.
 
 ## Documentation gate
@@ -126,8 +128,9 @@ The verification must cover:
 - package count;
 - package metadata and contents;
 - source commit metadata;
-- package-only consumer smoke tests;
-- package-only Keycloak integration smoke tests;
+- package-only consumer builds across every declared target;
+- isolated execution on .NET Core 3.1 and .NET 5–7 plus installed .NET 8–10
+  runtimes;
 - packaged CLI tool installation and execution;
 - generated C# output, stale detection, compilation, and execution on every
   supported framework;

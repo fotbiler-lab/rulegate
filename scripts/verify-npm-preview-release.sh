@@ -35,16 +35,30 @@ do
   esac
 done
 
-EXPECTED_PACKAGE_NAME="@fotbiler/rulegate-angular"
 EXPECTED_PACKAGE_VERSION="0.7.0-preview.1"
-EXPECTED_PACKAGE_FILE="fotbiler-rulegate-angular-$EXPECTED_PACKAGE_VERSION.tgz"
 EXPECTED_REPOSITORY="git+https://github.com/fotbiler-lab/rulegate.git"
-EXPECTED_REPOSITORY_DIRECTORY="src/Fotbiler.RuleGate.Angular"
 EXPECTED_LICENSE="Apache-2.0"
 EXPECTED_AUTHOR="Fotbiler"
 
 PACKAGE_DIRECTORY="$REPOSITORY_ROOT/artifacts/npm"
-PACKAGE_PATH="$PACKAGE_DIRECTORY/$EXPECTED_PACKAGE_FILE"
+
+PACKAGE_NAMES=(
+  "@fotbiler/rulegate-client"
+  "@fotbiler/rulegate-angular-legacy"
+  "@fotbiler/rulegate-angular"
+)
+
+declare -A PACKAGE_SOURCE_DIRECTORIES=(
+  ["@fotbiler/rulegate-client"]="src/Fotbiler.RuleGate.Client"
+  ["@fotbiler/rulegate-angular-legacy"]="src/Fotbiler.RuleGate.Angular.Legacy"
+  ["@fotbiler/rulegate-angular"]="src/Fotbiler.RuleGate.Angular"
+)
+
+declare -A PACKAGE_FILES=(
+  ["@fotbiler/rulegate-client"]="fotbiler-rulegate-client-$EXPECTED_PACKAGE_VERSION.tgz"
+  ["@fotbiler/rulegate-angular-legacy"]="fotbiler-rulegate-angular-legacy-$EXPECTED_PACKAGE_VERSION.tgz"
+  ["@fotbiler/rulegate-angular"]="fotbiler-rulegate-angular-$EXPECTED_PACKAGE_VERSION.tgz"
+)
 
 printf '\n== Verify repository state ==\n'
 
@@ -68,16 +82,20 @@ printf 'Commit: %s\n' "$HEAD_COMMIT"
 
 printf '\n== Verify package source metadata ==\n'
 
-node \
-  --input-type=module \
-  - \
-  "src/Fotbiler.RuleGate.Angular/package.json" \
-  "$EXPECTED_PACKAGE_NAME" \
-  "$EXPECTED_PACKAGE_VERSION" \
-  "$EXPECTED_REPOSITORY" \
-  "$EXPECTED_REPOSITORY_DIRECTORY" \
-  "$EXPECTED_LICENSE" \
-  "$EXPECTED_AUTHOR" <<'JS'
+for package_name in "${PACKAGE_NAMES[@]}"
+do
+  source_directory="${PACKAGE_SOURCE_DIRECTORIES[$package_name]}"
+
+  node \
+    --input-type=module \
+    - \
+    "$source_directory/package.json" \
+    "$package_name" \
+    "$EXPECTED_PACKAGE_VERSION" \
+    "$EXPECTED_REPOSITORY" \
+    "$source_directory" \
+    "$EXPECTED_LICENSE" \
+    "$EXPECTED_AUTHOR" <<'JS'
 import { readFile } from 'node:fs/promises';
 
 const [
@@ -113,9 +131,10 @@ for (const [description, actual, expected] of expectations) {
 }
 JS
 
-printf 'Package: %s@%s\n' \
-  "$EXPECTED_PACKAGE_NAME" \
-  "$EXPECTED_PACKAGE_VERSION"
+  printf 'Package: %s@%s\n' \
+    "$package_name" \
+    "$EXPECTED_PACKAGE_VERSION"
+done
 
 if [[ "$CHECK_REGISTRY_AVAILABILITY" == "true" ]]
 then
@@ -126,31 +145,36 @@ then
 
   set +e
 
-  npm view \
-    "$EXPECTED_PACKAGE_NAME@$EXPECTED_PACKAGE_VERSION" \
-    version \
-    >"$REGISTRY_OUTPUT" \
-    2>&1
+  for package_name in "${PACKAGE_NAMES[@]}"
+  do
+    : >"$REGISTRY_OUTPUT"
 
-  REGISTRY_EXIT_CODE="$?"
+    npm view \
+      "$package_name@$EXPECTED_PACKAGE_VERSION" \
+      version \
+      >"$REGISTRY_OUTPUT" \
+      2>&1
+
+    REGISTRY_EXIT_CODE="$?"
+
+    if [[ "$REGISTRY_EXIT_CODE" -eq 0 ]]
+    then
+      echo "ERROR: Package version already exists on npm: $package_name"
+      cat "$REGISTRY_OUTPUT"
+      exit 1
+    fi
+
+    if ! grep -F 'E404' "$REGISTRY_OUTPUT" >/dev/null
+    then
+      echo "ERROR: Registry availability could not be determined for $package_name."
+      cat "$REGISTRY_OUTPUT"
+      exit 1
+    fi
+
+    echo "Registry version is available: $package_name"
+  done
 
   set -e
-
-  if [[ "$REGISTRY_EXIT_CODE" -eq 0 ]]
-  then
-    echo "ERROR: Package version already exists on npm."
-    cat "$REGISTRY_OUTPUT"
-    exit 1
-  fi
-
-  if ! grep -F 'E404' "$REGISTRY_OUTPUT" >/dev/null
-  then
-    echo "ERROR: Registry availability could not be determined."
-    cat "$REGISTRY_OUTPUT"
-    exit 1
-  fi
-
-  echo "Registry version is available."
 fi
 
 printf '\n== Install locked dependencies ==\n'
@@ -174,90 +198,109 @@ printf '\n== Verify package-only consumer ==\n'
 ./scripts/test-angular-package-smoke.sh \
   --package-ready
 
-if [[ ! -f "$PACKAGE_PATH" ]]
-then
-  echo "ERROR: Expected npm package was not produced: $PACKAGE_PATH"
-  exit 1
-fi
+for package_name in "${PACKAGE_NAMES[@]}"
+do
+  package_path="$PACKAGE_DIRECTORY/${PACKAGE_FILES[$package_name]}"
+
+  if [[ ! -f "$package_path" ]]
+  then
+    echo "ERROR: Expected npm package was not produced: $package_path"
+    exit 1
+  fi
+done
 
 printf '\n== Verify packed public API ==\n'
 
-PACKAGE_FILES="$(tar --list --gzip --file "$PACKAGE_PATH")"
-
-for expected_file in \
-  package/package.json \
-  package/README.md \
-  package/LICENSE \
-  package/bin/rulegate-angular.mjs \
-  package/fesm2022/fotbiler-rulegate-angular.mjs \
-  package/fesm2022/fotbiler-rulegate-angular-keycloak.mjs \
-  package/types/fotbiler-rulegate-angular.d.ts \
-  package/types/fotbiler-rulegate-angular-keycloak.d.ts
+for package_name in "${PACKAGE_NAMES[@]}"
 do
-  if ! grep -Fx "$expected_file" \
-    <<<"$PACKAGE_FILES" \
-    >/dev/null
-  then
-    echo "ERROR: npm package does not contain $expected_file."
-    exit 1
-  fi
-done
+  package_path="$PACKAGE_DIRECTORY/${PACKAGE_FILES[$package_name]}"
+  packed_files="$(tar --list --gzip --file "$package_path")"
 
-TYPE_DECLARATIONS="$(
-  tar \
-    --extract \
-    --to-stdout \
-    --gzip \
-    --file "$PACKAGE_PATH" \
-    package/types/fotbiler-rulegate-angular.d.ts
-)"
+  for expected_file in package/package.json package/README.md package/LICENSE
+  do
+    if ! grep -Fx "$expected_file" <<<"$packed_files" >/dev/null
+    then
+      echo "ERROR: $package_name does not contain $expected_file."
+      exit 1
+    fi
+  done
 
-for public_api in \
-  RuleGateAuthorizationClient \
-  RuleGateAuthorizationSnapshot \
-  RuleGateAuthorizationRequirement \
-  RuleGateCanDirective \
-  RuleGateDisableDirective \
-  ruleGateGuard \
-  ruleGateRouteData \
-  provideRuleGateDeniedNavigation \
-  ruleGatePermissionGuard \
-  ruleGatePolicyGuard \
-  ruleGateRoleGuard \
-  RuleGateRoleRequirement
-do
-  if ! grep -F "$public_api" \
-    <<<"$TYPE_DECLARATIONS" \
-    >/dev/null
-  then
-    echo "ERROR: Packed declarations do not contain $public_api."
-    exit 1
-  fi
-done
+  case "$package_name" in
+    @fotbiler/rulegate-client)
+      expected_files=(
+        package/dist/index.js
+        package/dist/index.d.ts
+        package/dist/models.d.ts
+        package/dist/rule-gate-authorization-store.d.ts
+      )
+      public_apis=(
+        RuleGateAuthorizationStore
+        RuleGateAuthorizationSnapshot
+        RuleGateAuthorizationRequirement
+      )
+      ;;
 
-KEYCLOAK_TYPE_DECLARATIONS="$(
-  tar \
-    --extract \
-    --to-stdout \
-    --gzip \
-    --file "$PACKAGE_PATH" \
-    package/types/fotbiler-rulegate-angular-keycloak.d.ts
-)"
+    @fotbiler/rulegate-angular-legacy)
+      expected_files=(
+        package/fesm2015/fotbiler-rulegate-angular-legacy.js
+        package/fotbiler-rulegate-angular-legacy.d.ts
+        package/public-api.d.ts
+      )
+      public_apis=(
+        RuleGateLegacyAuthorizationClient
+        RuleGateLegacyCanDirective
+        RuleGateLegacyDisableDirective
+        RuleGateLegacyGuard
+        RuleGateLegacyModule
+        ruleGateLegacyRouteData
+      )
+      ;;
 
-for public_api in \
-  RuleGateKeycloakAdapter \
-  RuleGateKeycloakSession \
-  createRuleGateSnapshotFromKeycloak \
-  ruleGateKeycloakRealmRole \
-  ruleGateKeycloakClientRole
-do
-  if ! grep -F "$public_api" \
-    <<<"$KEYCLOAK_TYPE_DECLARATIONS" \
-    >/dev/null
-  then
-    echo "ERROR: Packed Keycloak declarations do not contain $public_api."
-    exit 1
-  fi
+    @fotbiler/rulegate-angular)
+      expected_files=(
+        package/bin/rulegate-angular.mjs
+        package/fesm2022/fotbiler-rulegate-angular.mjs
+        package/fesm2022/fotbiler-rulegate-angular-keycloak.mjs
+        package/index.d.ts
+        package/keycloak/index.d.ts
+      )
+      public_apis=(
+        RuleGateAuthorizationClient
+        RuleGateCanDirective
+        RuleGateDisableDirective
+        ruleGateGuard
+        ruleGateRouteData
+        provideRuleGateDeniedNavigation
+        RuleGateKeycloakAdapter
+        createRuleGateSnapshotFromKeycloak
+      )
+      ;;
+  esac
+
+  for expected_file in "${expected_files[@]}"
+  do
+    if ! grep -Fx "$expected_file" <<<"$packed_files" >/dev/null
+    then
+      echo "ERROR: $package_name does not contain $expected_file."
+      exit 1
+    fi
+  done
+
+  declarations_directory="$(mktemp --directory /tmp/rulegate-npm-declarations-XXXXXX)"
+  tar --extract --gzip --file "$package_path" --directory "$declarations_directory"
+
+  for public_api in "${public_apis[@]}"
+  do
+    if ! grep -R --include='*.d.ts' -F "$public_api" "$declarations_directory/package" >/dev/null
+    then
+      echo "ERROR: $package_name declarations do not contain $public_api."
+      rm -rf "$declarations_directory"
+      exit 1
+    fi
+  done
+
+  rm -rf "$declarations_directory"
+  echo "Verified: $package_name"
 done
 
 printf '\n== Verify normal CI does not publish ==\n'
@@ -274,6 +317,10 @@ echo "Normal CI contains no npm publishing configuration."
 
 printf '\n== npm preview verification succeeded ==\n'
 
-printf 'Package: %s\n' "$(basename "$PACKAGE_PATH")"
-printf 'SHA-256: %s\n' "$(sha256sum "$PACKAGE_PATH" | awk '{ print $1 }')"
+for package_name in "${PACKAGE_NAMES[@]}"
+do
+  package_path="$PACKAGE_DIRECTORY/${PACKAGE_FILES[$package_name]}"
+  printf 'Package: %s\n' "$(basename "$package_path")"
+  printf 'SHA-256: %s\n' "$(sha256sum "$package_path" | awk '{ print $1 }')"
+done
 printf 'Commit:  %s\n' "$HEAD_COMMIT"

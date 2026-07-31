@@ -249,7 +249,7 @@ public sealed class PolicyAuthorizationEngine
                 evaluationId,
                 policyId,
                 decision.IsAllowed,
-                Stopwatch.GetElapsedTime(
+                StopwatchCompat.GetElapsedTime(
                     startTimestamp),
                 decision.Failures.Select(
                     static failure =>

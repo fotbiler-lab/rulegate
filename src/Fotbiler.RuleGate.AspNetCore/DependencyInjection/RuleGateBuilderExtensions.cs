@@ -244,6 +244,7 @@ public static class RuleGateBuilderExtensions
                 lifetime);
     }
 
+#if !NETCOREAPP3_1
     public static RuleGateBuilder
         AddHttpAuthorizationResultMapping(
             this RuleGateBuilder builder)
@@ -283,6 +284,7 @@ public static class RuleGateBuilderExtensions
 
         return builder;
     }
+#endif
 
     private static RuleGateBuilder
         AddAttributeProvider<TProviderService, TProvider>(
@@ -295,7 +297,9 @@ public static class RuleGateBuilderExtensions
     {
         ArgumentNullException.ThrowIfNull(builder);
 
-        if (!Enum.IsDefined(lifetime))
+        if (!Enum.IsDefined(
+                typeof(ServiceLifetime),
+                lifetime))
         {
             throw new ArgumentOutOfRangeException(
                 nameof(lifetime));

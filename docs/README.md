@@ -26,12 +26,15 @@ rules, authentication and MFA age, and canonical trusted request context.
 | Integrate RuleGate with ASP.NET Core                                | [ASP.NET Core integration](aspnetcore.md)                                       |
 | Supply trusted subject, resource, and context attributes            | [ASP.NET Core enrichment](enrichment.md)                                        |
 | Add permission, policy, and role checks to Angular                  | [Angular SDK](angular.md)                                                       |
+| Select the correct frontend package for Angular 9–22                | [Frontend compatibility](frontend-compatibility.md)                             |
+| Review current and legacy-tested platform support                   | [Platform compatibility](platform-compatibility.md)                             |
 | Map Keycloak roles on ASP.NET Core and Angular                      | [Keycloak integration](keycloak.md)                                             |
 | Run the official package-consuming samples                          | [Reference applications](reference-applications.md)                             |
 | Operate authorization diagnostics safely                            | [Diagnostics](diagnostics.md)                                                   |
 | Understand runtime and integration security                         | [Security model](security.md)                                                   |
 | Understand current and planned capabilities                         | [Roadmap](roadmap.md)                                                           |
 | Prepare and verify a NuGet preview                                  | [NuGet release checklist](releases/preview-release-checklist.md)                |
+| Apply for the NuGet package ID prefix badge                         | [NuGet prefix reservation](releases/nuget-prefix-reservation.md)                |
 | Prepare and verify an npm preview                                   | [npm release checklist](releases/npm-preview-release-checklist.md)              |
 
 ## Published packages
@@ -39,18 +42,22 @@ rules, authentication and MFA age, and canonical trusted request context.
 The latest published RuleGate NuGet preview is
 [`0.9.0-preview.3`](https://github.com/fotbiler-lab/rulegate/releases/tag/v0.9.0-preview.3).
 
-| Package                                                                                           | Purpose                                                                                      |
-| ------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
-| [`Fotbiler.RuleGate.Abstractions`](https://www.nuget.org/packages/Fotbiler.RuleGate.Abstractions) | Public authorization, policy-source, reload, telemetry-name, and extension contracts         |
-| [`Fotbiler.RuleGate.Core`](https://www.nuget.org/packages/Fotbiler.RuleGate.Core)                 | Local fail-closed engine, built-in evaluators, immutable snapshots, and telemetry            |
-| [`Fotbiler.RuleGate.Manifest`](https://www.nuget.org/packages/Fotbiler.RuleGate.Manifest)         | YAML loading, validation, compilation, file sources, and embedded-resource sources           |
-| [`Fotbiler.RuleGate.AspNetCore`](https://www.nuget.org/packages/Fotbiler.RuleGate.AspNetCore)     | ASP.NET Core integration, configuration sources, atomic reload, and trusted enrichment       |
-| [`Fotbiler.RuleGate.Cli`](https://www.nuget.org/packages/Fotbiler.RuleGate.Cli)                   | .NET tool for validation, testing, explanation, linting, deterministic C# generation, and CI |
-| [`Fotbiler.RuleGate.Keycloak`](https://www.nuget.org/packages/Fotbiler.RuleGate.Keycloak)         | Optional Keycloak claim normalization and RuleGate subject mapping                           |
-| [`@fotbiler/rulegate-angular`](https://www.npmjs.com/package/@fotbiler/rulegate-angular)          | Angular authorization client, route guards, UI directives, and TypeScript generation         |
+| Package                                                                                                | Purpose                                                                                      |
+| ------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------- |
+| [`Fotbiler.RuleGate.Abstractions`](https://www.nuget.org/packages/Fotbiler.RuleGate.Abstractions)      | Public authorization, policy-source, reload, telemetry-name, and extension contracts         |
+| [`Fotbiler.RuleGate.Core`](https://www.nuget.org/packages/Fotbiler.RuleGate.Core)                      | Local fail-closed engine, built-in evaluators, immutable snapshots, and telemetry            |
+| [`Fotbiler.RuleGate.Manifest`](https://www.nuget.org/packages/Fotbiler.RuleGate.Manifest)              | YAML loading, validation, compilation, file sources, and embedded-resource sources           |
+| [`Fotbiler.RuleGate.AspNetCore`](https://www.nuget.org/packages/Fotbiler.RuleGate.AspNetCore)          | ASP.NET Core integration, configuration sources, atomic reload, and trusted enrichment       |
+| [`Fotbiler.RuleGate.Cli`](https://www.nuget.org/packages/Fotbiler.RuleGate.Cli)                        | .NET tool for validation, testing, explanation, linting, deterministic C# generation, and CI |
+| [`Fotbiler.RuleGate.Keycloak`](https://www.nuget.org/packages/Fotbiler.RuleGate.Keycloak)              | Optional Keycloak claim normalization and RuleGate subject mapping                           |
+| [`@fotbiler/rulegate-client`](https://www.npmjs.com/package/@fotbiler/rulegate-client)                 | Framework-independent fail-closed frontend authorization state                               |
+| [`@fotbiler/rulegate-angular`](https://www.npmjs.com/package/@fotbiler/rulegate-angular)               | Modern Angular authorization client, route guards, UI directives, and TypeScript generation  |
+| [`@fotbiler/rulegate-angular-legacy`](https://www.npmjs.com/package/@fotbiler/rulegate-angular-legacy) | Angular 12–19 observable, NgModule, directive, and class-guard adapter                       |
 
-All RuleGate NuGet packages are `0.9.0-preview.3`. The independently versioned
-Angular npm package remains at `0.7.0-preview.1`.
+All published RuleGate NuGet packages are `0.9.0-preview.3`. The currently
+published Angular npm package is `0.7.0-preview.1`; the framework-independent
+and legacy Angular packages will join the independently versioned npm package
+family in the next preview.
 
 ## Recommended learning path
 
@@ -135,6 +142,8 @@ project maintainers rather than package consumers.
 - [Angular SDK](angular.md) — supply frontend authorization state, protect
   routes, control template visibility, and preserve the backend security
   boundary.
+- [Frontend compatibility](frontend-compatibility.md) — choose the modern,
+  legacy, or framework-independent package and understand its support level.
 
 ## Identity-provider integrations
 

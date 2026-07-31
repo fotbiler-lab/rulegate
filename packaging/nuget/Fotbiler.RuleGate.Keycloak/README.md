@@ -13,6 +13,12 @@ bearer tokens before RuleGate maps the authenticated `ClaimsPrincipal`.
 dotnet add package Fotbiler.RuleGate.Keycloak --version 0.9.0-preview.3
 ```
 
+## Compatibility
+
+This package targets .NET Core 3.1 and every .NET release
+from 5 through 10. Legacy targets are package-tested for migration support but
+remain outside Microsoft security support.
+
 ## Register the integration
 
 ```csharp

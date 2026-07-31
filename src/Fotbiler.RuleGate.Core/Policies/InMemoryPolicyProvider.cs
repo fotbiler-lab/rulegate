@@ -1,4 +1,3 @@
-using System.Collections.Frozen;
 using Fotbiler.RuleGate.Abstractions.Policies;
 
 namespace Fotbiler.RuleGate.Core.Policies;
@@ -6,7 +5,7 @@ namespace Fotbiler.RuleGate.Core.Policies;
 public sealed class InMemoryPolicyProvider
     : IPolicyProvider
 {
-    private readonly FrozenDictionary<
+    private readonly Dictionary<
         PolicyRoute,
         PolicyDefinition> _policies;
 
@@ -35,17 +34,16 @@ public sealed class InMemoryPolicyProvider
                 policy.ResourceType,
                 policy.Action);
 
-            if (!policiesByRoute.TryAdd(
-                    route,
-                    policy))
+            if (policiesByRoute.ContainsKey(route))
             {
                 throw new InvalidOperationException(
                     $"Multiple policies are registered for resource type '{policy.ResourceType}' and action '{policy.Action}'.");
             }
+
+            policiesByRoute.Add(route, policy);
         }
 
-        _policies =
-            policiesByRoute.ToFrozenDictionary();
+        _policies = policiesByRoute;
     }
 
     public ValueTask<PolicyDefinition?> FindAsync(
@@ -68,7 +66,7 @@ public sealed class InMemoryPolicyProvider
                 ? policy
                 : null;
 
-        return ValueTask.FromResult(result);
+        return ValueTaskCompat.FromResult(result);
     }
 
     private readonly record struct PolicyRoute(

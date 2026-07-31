@@ -5,14 +5,30 @@ public sealed record TimeWindowRequirementDefinition
 {
     public TimeWindowRequirementDefinition(
         IEnumerable<DayOfWeek> days,
-        TimeOnly start,
-        TimeOnly end,
+        TimeSpan start,
+        TimeSpan end,
         TimeZoneInfo timeZone,
         string? id = null)
         : base(id)
     {
         ArgumentNullException.ThrowIfNull(days);
         ArgumentNullException.ThrowIfNull(timeZone);
+
+        if (start < TimeSpan.Zero ||
+            start >= TimeSpan.FromDays(1))
+        {
+            throw new ArgumentOutOfRangeException(
+                nameof(start),
+                "A time-window start must be within one day.");
+        }
+
+        if (end < TimeSpan.Zero ||
+            end >= TimeSpan.FromDays(1))
+        {
+            throw new ArgumentOutOfRangeException(
+                nameof(end),
+                "A time-window end must be within one day.");
+        }
 
         var copiedDays = days.ToArray();
 
@@ -24,7 +40,9 @@ public sealed record TimeWindowRequirementDefinition
         }
 
         if (copiedDays.Any(
-                static day => !Enum.IsDefined(day)))
+                static day => !Enum.IsDefined(
+                    typeof(DayOfWeek),
+                    day)))
         {
             throw new ArgumentOutOfRangeException(
                 nameof(days),
@@ -57,9 +75,9 @@ public sealed record TimeWindowRequirementDefinition
 
     public IReadOnlyList<DayOfWeek> Days { get; }
 
-    public TimeOnly Start { get; }
+    public TimeSpan Start { get; }
 
-    public TimeOnly End { get; }
+    public TimeSpan End { get; }
 
     public TimeZoneInfo TimeZone { get; }
 

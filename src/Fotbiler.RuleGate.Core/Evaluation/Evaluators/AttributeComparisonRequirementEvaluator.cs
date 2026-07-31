@@ -23,7 +23,7 @@ public sealed class AttributeComparisonRequirementEvaluator
 
         if (leftResolution.FailureCode is not null)
         {
-            return ValueTask.FromResult(
+            return ValueTaskCompat.FromResult(
                 CreateResolutionFailure(
                     leftResolution,
                     requirement.Id));
@@ -35,7 +35,7 @@ public sealed class AttributeComparisonRequirementEvaluator
 
         if (rightResolution.FailureCode is not null)
         {
-            return ValueTask.FromResult(
+            return ValueTaskCompat.FromResult(
                 CreateResolutionFailure(
                     rightResolution,
                     requirement.Id));
@@ -78,7 +78,7 @@ public sealed class AttributeComparisonRequirementEvaluator
                         requirement.Id))
         };
 
-        return ValueTask.FromResult(result);
+        return ValueTaskCompat.FromResult(result);
     }
 
     private static OperandResolution Resolve(

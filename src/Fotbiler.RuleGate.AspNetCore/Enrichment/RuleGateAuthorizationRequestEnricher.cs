@@ -223,7 +223,7 @@ public sealed class RuleGateAuthorizationRequestEnricher
                     provider,
                     RuleGateEnrichmentOutcome.Cancelled,
                     attributeCount: 0,
-                    Stopwatch.GetElapsedTime(startedAt),
+                    StopwatchCompat.GetElapsedTime(startedAt),
                     cancellationToken);
 
                 return AttributeEnrichmentResult.Fail();
@@ -235,7 +235,7 @@ public sealed class RuleGateAuthorizationRequestEnricher
                     RuleGateEnrichmentOutcome
                         .ProviderException,
                     attributeCount: 0,
-                    Stopwatch.GetElapsedTime(startedAt),
+                    StopwatchCompat.GetElapsedTime(startedAt),
                     cancellationToken);
 
                 return AttributeEnrichmentResult.Fail();
@@ -247,7 +247,7 @@ public sealed class RuleGateAuthorizationRequestEnricher
                     provider,
                     RuleGateEnrichmentOutcome.ProviderFailed,
                     attributeCount: 0,
-                    Stopwatch.GetElapsedTime(startedAt),
+                    StopwatchCompat.GetElapsedTime(startedAt),
                     cancellationToken);
 
                 return AttributeEnrichmentResult.Fail();
@@ -267,7 +267,7 @@ public sealed class RuleGateAuthorizationRequestEnricher
                     provider,
                     outcome,
                     attributeCount: 0,
-                    Stopwatch.GetElapsedTime(startedAt),
+                    StopwatchCompat.GetElapsedTime(startedAt),
                     cancellationToken);
 
                 return AttributeEnrichmentResult.Fail();
@@ -282,7 +282,7 @@ public sealed class RuleGateAuthorizationRequestEnricher
                 provider,
                 mergeOutcome,
                 result.Attributes.Count,
-                Stopwatch.GetElapsedTime(startedAt),
+                StopwatchCompat.GetElapsedTime(startedAt),
                 cancellationToken);
 
             if (mergeOutcome !=
@@ -303,7 +303,9 @@ public sealed class RuleGateAuthorizationRequestEnricher
             RuleGateAttributeCollisionBehavior
                 collisionBehavior)
     {
-        if (!Enum.IsDefined(collisionBehavior))
+        if (!Enum.IsDefined(
+                typeof(RuleGateAttributeCollisionBehavior),
+                collisionBehavior))
         {
             return RuleGateEnrichmentOutcome
                 .ProviderFailed;

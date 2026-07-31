@@ -78,7 +78,7 @@ public sealed class RuleGateManifestYamlLoader
 
         try
         {
-            var yaml = await File.ReadAllTextAsync(
+            var yaml = await ReadAllTextAsync(
                 path,
                 cancellationToken);
 
@@ -112,6 +112,25 @@ public sealed class RuleGateManifestYamlLoader
                 ManifestLoadCodes.FileReadFailed,
                 exception);
         }
+    }
+
+    private static async Task<string> ReadAllTextAsync(
+        string path,
+        CancellationToken cancellationToken)
+    {
+#if NETSTANDARD2_0
+        using var reader = File.OpenText(path);
+
+        var content = await reader.ReadToEndAsync();
+
+        cancellationToken.ThrowIfCancellationRequested();
+
+        return content;
+#else
+        return await File.ReadAllTextAsync(
+            path,
+            cancellationToken);
+#endif
     }
 
     private static ManifestLoadResult CreateFileError(

@@ -20,6 +20,13 @@ stable release.
 
     dotnet add package Fotbiler.RuleGate.AspNetCore --version 0.9.0-preview.3
 
+## Compatibility
+
+This package targets .NET Core 3.1 and every .NET release
+from 5 through 10. .NET Core 3.1 and .NET 5–7 are end-of-life and receive
+compatibility verification only; they do not receive security support from
+RuleGate or Microsoft.
+
 ## Register RuleGate
 
     using Fotbiler.RuleGate.AspNetCore.DependencyInjection;

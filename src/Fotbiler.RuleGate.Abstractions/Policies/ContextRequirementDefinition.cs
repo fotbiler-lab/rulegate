@@ -15,7 +15,9 @@ public sealed record ContextRequirementDefinition
             AuthorizationStringComparison.Ordinal)
         : base(id)
     {
-        if (!Enum.IsDefined(property))
+        if (!Enum.IsDefined(
+                typeof(AuthorizationContextProperty),
+                property))
         {
             throw new ArgumentOutOfRangeException(
                 nameof(property),
@@ -23,7 +25,9 @@ public sealed record ContextRequirementDefinition
                 "The authorization context property is not supported.");
         }
 
-        if (!Enum.IsDefined(@operator))
+        if (!Enum.IsDefined(
+                typeof(AuthorizationAttributeOperator),
+                @operator))
         {
             throw new ArgumentOutOfRangeException(
                 nameof(@operator),
@@ -31,7 +35,9 @@ public sealed record ContextRequirementDefinition
                 "The authorization context operator is not supported.");
         }
 
-        if (!Enum.IsDefined(stringComparison))
+        if (!Enum.IsDefined(
+                typeof(AuthorizationStringComparison),
+                stringComparison))
         {
             throw new ArgumentOutOfRangeException(
                 nameof(stringComparison),

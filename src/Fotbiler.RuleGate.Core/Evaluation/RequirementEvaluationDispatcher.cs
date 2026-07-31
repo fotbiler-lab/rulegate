@@ -1,4 +1,3 @@
-using System.Collections.Frozen;
 using Fotbiler.RuleGate.Abstractions.Authorization;
 using Fotbiler.RuleGate.Abstractions.Constants;
 using Fotbiler.RuleGate.Abstractions.Evaluation;
@@ -11,7 +10,7 @@ public sealed class RequirementEvaluationDispatcher
     : IRequirementEvaluationDispatcher,
       IRequirementEvaluationDiagnosticsDispatcher
 {
-    private readonly FrozenDictionary<
+    private readonly Dictionary<
         Type,
         IRequirementEvaluator> _evaluators;
 
@@ -38,17 +37,19 @@ public sealed class RequirementEvaluationDispatcher
                     nameof(evaluators));
             }
 
-            if (!evaluatorMap.TryAdd(
-                    evaluator.RequirementType,
-                    evaluator))
+            if (evaluatorMap.ContainsKey(
+                    evaluator.RequirementType))
             {
                 throw new InvalidOperationException(
                     $"Multiple evaluators are registered for requirement type '{evaluator.RequirementType.Name}'.");
             }
+
+            evaluatorMap.Add(
+                evaluator.RequirementType,
+                evaluator);
         }
 
-        _evaluators =
-            evaluatorMap.ToFrozenDictionary();
+        _evaluators = evaluatorMap;
     }
 
     public ValueTask<RequirementEvaluationResult>
@@ -66,7 +67,7 @@ public sealed class RequirementEvaluationDispatcher
                 requirement.GetType(),
                 out var evaluator))
         {
-            return ValueTask.FromResult(
+            return ValueTaskCompat.FromResult(
                 CreateEvaluatorNotFoundResult(
                     requirement));
         }

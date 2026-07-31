@@ -6,6 +6,42 @@ The project follows Semantic Versioning. Preview releases may introduce breaking
 
 ## [Unreleased]
 
+### Added
+
+- Added .NET Standard 2.0 targets for Abstractions, Core, and Manifest and
+  ASP.NET Core/Keycloak targets from .NET Core 3.1 through .NET 10.
+- Added `@fotbiler/rulegate-client` for framework-independent frontend state
+  and `@fotbiler/rulegate-angular-legacy` for Angular 12–19 applications.
+- Added package-only compatibility consumers for .NET Core 3.1, .NET 5–10,
+  and representative Angular 9–22 releases.
+- Added a shared embedded RuleGate icon to all six NuGet packages and a
+  maintainer guide for the external NuGet prefix-reservation application.
+
+### Changed
+
+- Modern `@fotbiler/rulegate-angular` now supports Angular 20–22 and delegates
+  fail-closed snapshot storage to the framework-independent client.
+- Public time-window contracts use `TimeSpan`, and subject role/permission
+  collections use `IReadOnlyCollection<string>`, so portable targets do not
+  expose APIs absent from .NET Standard 2.0.
+- CLI product output and generated-source headers use `RuleGate` without the
+  organization name.
+
+### Security
+
+- Preserved strict unknown-configuration rejection and fail-closed behavior on
+  legacy ASP.NET Core targets through the current configuration binder.
+- Kept frontend projections as user-experience controls only; backend RuleGate
+  evaluation remains the authorization boundary for every supported version.
+
+### Verification
+
+- Added CI matrices that install the actual packed `.nupkg` and `.tgz`
+  artifacts, run legacy .NET consumers in isolated containers, and build real
+  Angular production consumers.
+- Extended release verification to enforce package-specific target frameworks,
+  NuGet icon metadata, the three-package npm family, and CLI product naming.
+
 ## [0.9.0-preview.3] - 2026-07-31
 
 ### Added

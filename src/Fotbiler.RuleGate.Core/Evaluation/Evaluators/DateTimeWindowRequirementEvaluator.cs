@@ -27,7 +27,7 @@ public sealed class DateTimeWindowRequirementEvaluator
             (requirement.EndsAt is null ||
              evaluationTime < requirement.EndsAt);
 
-        return ValueTask.FromResult(
+        return ValueTaskCompat.FromResult(
             isSatisfied
                 ? RequirementEvaluationResult.Satisfied()
                 : RequirementEvaluationResult.NotSatisfied(

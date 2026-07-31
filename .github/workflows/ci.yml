@@ -23,7 +23,7 @@ env:
 
 jobs:
   angular-package:
-    name: Build, test, and pack Angular SDK
+    name: Build, test, and pack frontend packages
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
@@ -71,6 +71,30 @@ jobs:
           path: artifacts/npm/*.tgz
           if-no-files-found: error
           retention-days: 14
+
+  angular-compatibility:
+    name: Angular ${{ matrix.angular }} package consumer
+    needs: angular-package
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    strategy:
+      fail-fast: false
+      matrix:
+        angular: [9, 11, 12, 15, 16, 19, 20, 21, 22]
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Download packed frontend packages
+        uses: actions/download-artifact@v7
+        with:
+          name: rulegate-angular-npm-package
+          path: artifacts/npm
+
+      - name: Test package-only Angular consumer
+        run: ./scripts/test-angular-compatibility.sh ${{ matrix.angular }}
 
   build-test-pack:
     name: Build, test, pack, and smoke test
@@ -135,14 +159,9 @@ jobs:
             --configuration Release \
             --no-build
 
-      - name: Test NuGet package consumer
+      - name: Test current and legacy NuGet package consumers
         run: |
-          ./scripts/test-nuget-consumer-smoke.sh \
-            --packages-ready
-
-      - name: Test Keycloak NuGet package consumer
-        run: |
-          ./scripts/test-keycloak-nuget-consumer-smoke.sh \
+          ./scripts/test-dotnet-legacy-consumers.sh \
             --packages-ready
 
       - name: Test RuleGate CLI tool

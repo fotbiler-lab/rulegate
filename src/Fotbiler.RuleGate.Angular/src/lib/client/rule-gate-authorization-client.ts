@@ -1,35 +1,9 @@
 import { computed, Injectable, signal } from '@angular/core';
-
 import {
-  isRuleGateAuthorizationRequirement,
-  isRuleGateIdentifier,
   RuleGateAuthorizationRequirement,
   RuleGateAuthorizationSnapshot,
-} from '../models/rule-gate-authorization.models';
-
-const EMPTY_IDENTIFIERS: readonly string[] = Object.freeze([]);
-
-const EMPTY_SNAPSHOT: RuleGateAuthorizationSnapshot = Object.freeze({
-  permissions: EMPTY_IDENTIFIERS,
-  policies: EMPTY_IDENTIFIERS,
-  roles: EMPTY_IDENTIFIERS,
-});
-
-interface RuleGateAuthorizationState {
-  readonly isReady: boolean;
-  readonly permissionSet: ReadonlySet<string>;
-  readonly policySet: ReadonlySet<string>;
-  readonly roleSet: ReadonlySet<string>;
-  readonly snapshot: RuleGateAuthorizationSnapshot;
-}
-
-const EMPTY_STATE: RuleGateAuthorizationState = Object.freeze({
-  isReady: false,
-  permissionSet: new Set<string>(),
-  policySet: new Set<string>(),
-  roleSet: new Set<string>(),
-  snapshot: EMPTY_SNAPSHOT,
-});
+  RuleGateAuthorizationStore,
+} from '@fotbiler/rulegate-client';
 
 /**
  * Holds the host application's frontend authorization projection.
@@ -39,10 +13,17 @@ const EMPTY_STATE: RuleGateAuthorizationState = Object.freeze({
  */
 @Injectable({ providedIn: 'root' })
 export class RuleGateAuthorizationClient {
-  private readonly state = signal<RuleGateAuthorizationState>(EMPTY_STATE);
+  private readonly store = new RuleGateAuthorizationStore();
+  private readonly revision = signal(0);
 
-  readonly isReady = computed(() => this.state().isReady);
-  readonly snapshot = computed(() => this.state().snapshot);
+  readonly isReady = computed(() => {
+    this.revision();
+    return this.store.isReady;
+  });
+  readonly snapshot = computed(() => {
+    this.revision();
+    return this.store.snapshot;
+  });
 
   /**
    * Replaces the complete frontend authorization projection.
@@ -50,103 +31,38 @@ export class RuleGateAuthorizationClient {
    * Returns `false` and clears all grants when any identifier is malformed.
    */
   replaceSnapshot(snapshot: RuleGateAuthorizationSnapshot): boolean {
-    if (!snapshot || typeof snapshot !== 'object') {
-      this.clear();
-      return false;
-    }
-
-    const permissions = normalizeIdentifiers(snapshot.permissions);
-    const policies = normalizeIdentifiers(snapshot.policies);
-    const roles = normalizeIdentifiers(snapshot.roles);
-
-    if (permissions === null || policies === null || roles === null) {
-      this.clear();
-      return false;
-    }
-
-    const normalizedSnapshot: RuleGateAuthorizationSnapshot = Object.freeze({
-      permissions,
-      policies,
-      roles,
-    });
-
-    this.state.set(
-      Object.freeze({
-        isReady: true,
-        permissionSet: new Set(permissions),
-        policySet: new Set(policies),
-        roleSet: new Set(roles),
-        snapshot: normalizedSnapshot,
-      }),
-    );
-
-    return true;
+    const accepted = this.store.replaceSnapshot(snapshot);
+    this.notifyChanged();
+    return accepted;
   }
 
   /** Clears the projection and returns the client to fail-closed state. */
   clear(): void {
-    this.state.set(EMPTY_STATE);
+    this.store.clear();
+    this.notifyChanged();
   }
 
   hasPermission(permission: string): boolean {
-    const currentState = this.state();
-
-    return (
-      currentState.isReady &&
-      isRuleGateIdentifier(permission) &&
-      currentState.permissionSet.has(permission)
-    );
+    this.revision();
+    return this.store.hasPermission(permission);
   }
 
   hasPolicy(policy: string): boolean {
-    const currentState = this.state();
-
-    return (
-      currentState.isReady && isRuleGateIdentifier(policy) && currentState.policySet.has(policy)
-    );
+    this.revision();
+    return this.store.hasPolicy(policy);
   }
 
   hasRole(role: string): boolean {
-    const currentState = this.state();
-
-    return currentState.isReady && isRuleGateIdentifier(role) && currentState.roleSet.has(role);
+    this.revision();
+    return this.store.hasRole(role);
   }
 
   isGranted(requirement: RuleGateAuthorizationRequirement | null | undefined): boolean {
-    if (!isRuleGateAuthorizationRequirement(requirement)) {
-      return false;
-    }
-
-    if (requirement.permission !== undefined) {
-      return this.hasPermission(requirement.permission);
-    }
-
-    if (requirement.policy !== undefined) {
-      return this.hasPolicy(requirement.policy);
-    }
-
-    return this.hasRole(requirement.role);
-  }
-}
-
-function normalizeIdentifiers(values: readonly string[] | undefined): readonly string[] | null {
-  if (values === undefined) {
-    return EMPTY_IDENTIFIERS;
+    this.revision();
+    return this.store.isGranted(requirement);
   }
 
-  if (!Array.isArray(values)) {
-    return null;
+  private notifyChanged(): void {
+    this.revision.update((value) => value + 1);
   }
-
-  const identifiers = new Set<string>();
-
-  for (const value of values) {
-    if (!isRuleGateIdentifier(value)) {
-      return null;
-    }
-
-    identifiers.add(value);
-  }
-
-  return Object.freeze([...identifiers]);
 }

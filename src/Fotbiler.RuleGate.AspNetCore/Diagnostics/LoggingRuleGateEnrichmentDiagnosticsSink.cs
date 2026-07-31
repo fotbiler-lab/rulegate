@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Fotbiler.RuleGate.AspNetCore.Diagnostics;
 
-internal sealed partial class
+internal sealed class
     LoggingRuleGateEnrichmentDiagnosticsSink
     : IRuleGateEnrichmentDiagnosticsSink
 {
@@ -55,29 +55,32 @@ internal sealed partial class
                 diagnostic.Duration.TotalMilliseconds);
         }
 
-        return ValueTask.CompletedTask;
+        return default;
     }
 
-    [LoggerMessage(
-        EventId = 2010,
-        Level = LogLevel.Debug,
-        Message =
-            "RuleGate enrichment provider {ProviderName} completed. AttributeSource: {AttributeSource}; Order: {Order}; CollisionBehavior: {CollisionBehavior}; AttributeCount: {AttributeCount}; DurationMs: {DurationMs}.")]
-    private static partial void LogProviderSucceeded(
+    private static void LogProviderSucceeded(
         ILogger logger,
         string providerName,
         AuthorizationAttributeSource attributeSource,
         int order,
         RuleGateAttributeCollisionBehavior collisionBehavior,
         int attributeCount,
-        double durationMs);
+        double durationMs)
+    {
+        logger.LogDebug(
+            new EventId(
+                2010,
+                nameof(LogProviderSucceeded)),
+            "RuleGate enrichment provider {ProviderName} completed. AttributeSource: {AttributeSource}; Order: {Order}; CollisionBehavior: {CollisionBehavior}; AttributeCount: {AttributeCount}; DurationMs: {DurationMs}.",
+            providerName,
+            attributeSource,
+            order,
+            collisionBehavior,
+            attributeCount,
+            durationMs);
+    }
 
-    [LoggerMessage(
-        EventId = 2011,
-        Level = LogLevel.Warning,
-        Message =
-            "RuleGate enrichment provider {ProviderName} failed closed. AttributeSource: {AttributeSource}; Order: {Order}; CollisionBehavior: {CollisionBehavior}; Outcome: {Outcome}; AttributeCount: {AttributeCount}; DurationMs: {DurationMs}.")]
-    private static partial void LogProviderFailed(
+    private static void LogProviderFailed(
         ILogger logger,
         string providerName,
         AuthorizationAttributeSource attributeSource,
@@ -85,5 +88,19 @@ internal sealed partial class
         RuleGateAttributeCollisionBehavior collisionBehavior,
         RuleGateEnrichmentOutcome outcome,
         int attributeCount,
-        double durationMs);
+        double durationMs)
+    {
+        logger.LogWarning(
+            new EventId(
+                2011,
+                nameof(LogProviderFailed)),
+            "RuleGate enrichment provider {ProviderName} failed closed. AttributeSource: {AttributeSource}; Order: {Order}; CollisionBehavior: {CollisionBehavior}; Outcome: {Outcome}; AttributeCount: {AttributeCount}; DurationMs: {DurationMs}.",
+            providerName,
+            attributeSource,
+            order,
+            collisionBehavior,
+            outcome,
+            attributeCount,
+            durationMs);
+    }
 }

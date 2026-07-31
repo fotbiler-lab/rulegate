@@ -18,6 +18,6 @@ public sealed class DefaultDenyAuthorizationEngine
             new AuthorizationFailure(
                 AuthorizationFailureCodes.NoMatchingPolicy));
 
-        return ValueTask.FromResult(decision);
+        return ValueTaskCompat.FromResult(decision);
     }
 }

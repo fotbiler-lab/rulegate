@@ -15,6 +15,13 @@ stable release.
 
     dotnet add package Fotbiler.RuleGate.Abstractions --version 0.9.0-preview.3
 
+## Compatibility
+
+This package targets .NET Standard 2.0, .NET 8, .NET 9, and .NET 10.
+.NET Standard 2.0 allows the contracts to be consumed by the
+verified legacy integration targets without duplicating framework-specific
+assemblies.
+
 ## When to use this package
 
 Reference Abstractions directly when you are:

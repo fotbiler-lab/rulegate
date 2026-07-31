@@ -20,6 +20,16 @@ CONSUMER_PACKAGE_CACHE="$REPOSITORY_ROOT/artifacts/keycloak-package-consumer-glo
 PACKAGE_VERSION="0.9.0-preview.3"
 
 EXPECTED_FRAMEWORKS=(
+  "netcoreapp3.1"
+  "net5.0"
+  "net6.0"
+  "net7.0"
+  "net8.0"
+  "net9.0"
+  "net10.0"
+)
+
+CURRENT_FRAMEWORKS=(
   "net8.0"
   "net9.0"
   "net10.0"
@@ -92,6 +102,17 @@ dotnet restore \
 
 ASSETS_FILE="$SMOKE_DIRECTORY/obj/project.assets.json"
 
+for framework in "${EXPECTED_FRAMEWORKS[@]}"
+do
+  if ! grep -F "\"$framework\":" "$ASSETS_FILE" >/dev/null
+  then
+    echo "ERROR: Keycloak consumer assets do not contain $framework."
+    exit 1
+  fi
+
+  echo "Restored: $framework"
+done
+
 for dependency in \
   "Fotbiler.RuleGate.Keycloak/$PACKAGE_VERSION" \
   "Fotbiler.RuleGate.AspNetCore/$PACKAGE_VERSION" \
@@ -107,7 +128,7 @@ do
   echo "Resolved: $dependency"
 done
 
-for framework in "${EXPECTED_FRAMEWORKS[@]}"
+for framework in "${CURRENT_FRAMEWORKS[@]}"
 do
   dotnet run \
     --project "$SMOKE_PROJECT" \

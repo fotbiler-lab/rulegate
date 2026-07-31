@@ -312,6 +312,28 @@ do
     exit 1
   fi
 
+  printf '\n== Verify product information ==\n'
+
+  "$CLI" \
+    info \
+    >"$TEMP_DIRECTORY/info-$framework.out" \
+    2>"$TEMP_DIRECTORY/info-$framework.err"
+
+  test ! -s "$TEMP_DIRECTORY/info-$framework.err"
+
+  grep -Fx \
+    'RuleGate CLI' \
+    "$TEMP_DIRECTORY/info-$framework.out" \
+    >/dev/null
+
+  if grep -F \
+    'Fotbiler RuleGate' \
+    "$TEMP_DIRECTORY/info-$framework.out"
+  then
+    printf 'Organization name leaked into the CLI product name.\n' >&2
+    exit 1
+  fi
+
   printf '\n== Verify validate help ==\n'
 
   "$CLI" \

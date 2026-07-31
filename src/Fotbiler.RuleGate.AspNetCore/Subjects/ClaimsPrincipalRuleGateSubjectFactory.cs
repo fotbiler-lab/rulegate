@@ -1,4 +1,3 @@
-using System.Collections.Frozen;
 using System.Security.Claims;
 using Fotbiler.RuleGate.Abstractions.Authorization;
 using Microsoft.Extensions.Options;
@@ -10,10 +9,10 @@ public sealed class ClaimsPrincipalRuleGateSubjectFactory
 {
     private readonly string _subjectIdClaimType;
 
-    private readonly FrozenSet<string>
+    private readonly HashSet<string>
         _roleClaimTypes;
 
-    private readonly FrozenSet<string>
+    private readonly HashSet<string>
         _permissionClaimTypes;
 
     public ClaimsPrincipalRuleGateSubjectFactory(
@@ -104,7 +103,7 @@ public sealed class ClaimsPrincipalRuleGateSubjectFactory
 
     private static HashSet<string> ReadClaimValues(
         ClaimsPrincipal principal,
-        FrozenSet<string> claimTypes)
+        HashSet<string> claimTypes)
     {
         var values =
             new HashSet<string>(
@@ -139,7 +138,7 @@ public sealed class ClaimsPrincipalRuleGateSubjectFactory
         return claimType;
     }
 
-    private static FrozenSet<string>
+    private static HashSet<string>
         ValidateClaimTypes(
             IEnumerable<string> claimTypes,
             string optionName)
@@ -159,7 +158,6 @@ public sealed class ClaimsPrincipalRuleGateSubjectFactory
                     optionName));
         }
 
-        return validatedClaimTypes.ToFrozenSet(
-            StringComparer.Ordinal);
+        return validatedClaimTypes;
     }
 }
