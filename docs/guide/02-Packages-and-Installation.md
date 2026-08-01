@@ -4,15 +4,20 @@ RuleGate is split into focused packages. Most applications should install the
 host integration package rather than assembling the engine manually.
 
 ```mermaid
-flowchart TD
-    ASP[Fotbiler.RuleGate.AspNetCore] --> MAN[Manifest]
-    ASP --> CORE[Core]
-    MAN --> ABS[Abstractions]
-    CORE --> ABS
-    KEY[Fotbiler.RuleGate.Keycloak] --> ASP
-    CLI[Fotbiler.RuleGate.Cli] --> MAN
-    NG[@fotbiler/rulegate-angular] --> CLIENT[@fotbiler/rulegate-client]
-    LEGACY[@fotbiler/rulegate-angular-legacy] --> CLIENT
+flowchart LR
+    subgraph NuGet["NuGet package family"]
+        KEY["Fotbiler.RuleGate.Keycloak"] --> ASP["Fotbiler.RuleGate.AspNetCore"]
+        ASP --> MAN["Fotbiler.RuleGate.Manifest"]
+        ASP --> CORE["Fotbiler.RuleGate.Core"]
+        MAN --> ABS["Fotbiler.RuleGate.Abstractions"]
+        CORE --> ABS
+        CLI["Fotbiler.RuleGate.Cli"] --> MAN
+    end
+
+    subgraph npm["npm package family"]
+        NG["@fotbiler/rulegate-angular"] --> CLIENT["@fotbiler/rulegate-client"]
+        LEGACY["@fotbiler/rulegate-angular-legacy"] --> CLIENT
+    end
 ```
 
 ## Stable versions
