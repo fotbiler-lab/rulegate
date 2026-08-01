@@ -52,8 +52,8 @@ RuleGate 1.0 preserves five product properties:
 | API Freeze and Security Hardening            | ✅ Available |
 | Stable Release                               | ✅ Available |
 | Book-Style Documentation and GitHub Wiki     | ⏳ Planned   |
-| Expanded Domain Reference Portfolio          | ⏳ Planned   |
-| Legacy Reference Portfolio                   | ⏳ Planned   |
+| Focused Domain Reference Applications        | ⏳ Planned   |
+| Expanded Domain and Compatibility Portfolio  | ⏳ Planned   |
 | Native Java Package Family                   | ⏳ Planned   |
 | Native PHP Package Family                    | ⏳ Planned   |
 | React Integration                            | ⏳ Planned   |
@@ -395,11 +395,13 @@ Case-study and recipe chapters should normally follow this teaching order:
 6. tests;
 7. common mistakes and security considerations.
 
-### `1.2.0` — Expanded Domain Reference Portfolio
+### `1.2.0` — Focused Domain Reference Applications
 
 The reference-application portfolio will demonstrate RuleGate in focused,
-realistic domains without turning the repository into a collection of large
-sample products.
+realistic domains across both current and legacy project types without turning
+the repository into a collection of large sample products. The first wave will
+deliberately mix generations rather than treating legacy compatibility as a
+domain-free demonstration track.
 
 Each application will:
 
@@ -426,6 +428,12 @@ foundation. Planned focused domains include:
 - CRM lead and customer ownership, sales hierarchy, region scope, and
   restricted-field updates.
 
+Each domain will select the smallest useful combination from current ASP.NET
+Core and Angular, ASP.NET Core MVC 3.1, legacy .NET and Angular, and
+backend-only or frontend-independent consumers. The portfolio does not require
+every domain to be implemented in every stack; together, the applications must
+show that the same RuleGate concepts remain valid across new and legacy hosts.
+
 UI technology will deliberately vary between applications. Candidate
 open-source and freely usable stacks include Bootstrap, current PrimeNG,
 Angular Material, Tailwind CSS, and NG-ZORRO or another established free
@@ -439,10 +447,12 @@ an application-owned JWT implementation. RuleGate receives trusted subject,
 resource, action, and context data and remains independent from the selected
 identity product.
 
-### `1.3.0` — Legacy Reference Portfolio
+### `1.3.0` — Expanded Domain and Compatibility Portfolio
 
-The next sample milestone applies the same policies and documentation quality
-to representative legacy consumers. Planned coverage includes:
+The second sample milestone adds further domain cases and fills important gaps
+in the domain-by-platform matrix. Every compatibility combination must remain
+attached to a recognizable authorization problem rather than becoming a bare
+technology demo. Planned coverage includes:
 
 - an ASP.NET Core MVC 3.1 application;
 - a combined legacy Angular and legacy .NET application;
@@ -452,9 +462,11 @@ to representative legacy consumers. Planned coverage includes:
 - package-only builds and runtime authorization scenarios for every supported
   legacy combination.
 
-Legacy samples will remain small, use stable packages, contain detailed
-manifests, and explain vendor end-of-life and security limitations explicitly.
-They demonstrate compatibility without weakening current-runtime guarantees.
+Both current and legacy samples will remain small, use stable packages, contain
+detailed manifests, and explain their authentication and authorization
+boundaries explicitly. Legacy combinations will additionally document vendor
+end-of-life and security limitations. The complete portfolio demonstrates
+compatibility without weakening current-runtime guarantees.
 
 ### `1.4.0` — Native Java Package Family
 
