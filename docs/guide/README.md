@@ -85,7 +85,7 @@ Use this table to locate a feature without reading the guide linearly.
 | Safe diagnostics and OpenTelemetry                                     | [Testing and diagnostics](10-Testing-and-Diagnostics.md)   | [Diagnostics](../diagnostics.md)                                          |
 | File, embedded, configuration, memory, and custom sources              | [Policy sources](11-Policy-Sources-and-Reload.md)          | [Policy sources reference](../policy-sources.md)                          |
 | Atomic reload and last-valid snapshot                                  | [Policy sources](11-Policy-Sources-and-Reload.md)          | [Reload sequence](../policy-sources.md#atomic-activation-sequence)        |
-| Factories, evaluators, sources, sinks, and clocks                      | [Extensibility](12-Extensibility.md)                       | Package-specific references linked in that chapter                        |
+| Factories, evaluators, sources, sinks, and clocks                      | [Extensibility](12-Extensibility.md)                       | [Extension references](12-Extensibility.md#further-reference)             |
 | Ownership, tenancy, approvals, confidential access, service identities | [Recipes](13-Real-World-Recipes.md)                        | [Reference applications](../reference-applications.md)                    |
 | Production security and troubleshooting                                | [Production checklist](14-Production-Checklist.md)         | [Security model](../security.md)                                          |
 
