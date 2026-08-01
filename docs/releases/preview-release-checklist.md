@@ -1,7 +1,7 @@
-# NuGet Prerelease Checklist
+# NuGet Release Checklist
 
-This checklist defines the release process for RuleGate NuGet previews and
-release candidates.
+This checklist defines the release process for RuleGate NuGet previews,
+release candidates, and stable releases.
 
 NuGet packages are immutable. A published version must never be overwritten,
 and a published release tag must never be moved or recreated.
@@ -20,7 +20,7 @@ The current release family contains:
 Release verification produces one `.nupkg` and one `.snupkg` for every package
 in the tagged source. Every package in the release family uses the same version
 and is published for every NuGet release, including packages without code
-changes. The current synchronized NuGet version is `1.0.0-rc.1`.
+changes. The current synchronized NuGet version is `1.0.0`.
 
 ## Release workflow
 
@@ -40,7 +40,7 @@ Use this order:
 11. Create and push an annotated release tag.
 12. Manually dispatch the NuGet publish workflow with the existing tag.
 13. Verify the workflow artifact and every package on NuGet.org.
-14. Create the GitHub prerelease from the verified workflow artifacts.
+14. Create the GitHub release from the verified workflow artifacts.
 
 Do not tag or publish directly from a feature branch.
 
@@ -101,7 +101,7 @@ Review and update:
 - [ ] This release checklist when the workflow changes.
 - [ ] Every `packaging/nuget/*/README.md` source.
 - [ ] Package tables contain the complete release family.
-- [ ] Installation commands use the intended exact prerelease version.
+- [ ] Installation commands use the intended exact release version.
 - [ ] Delivered capabilities are not still described as planned.
 - [ ] Local Markdown links resolve.
 - [ ] Markdown code fences are balanced.
@@ -270,7 +270,7 @@ Verify that the run:
 - [ ] Completes successfully.
 - [ ] Uploads one workflow artifact containing six verified `.nupkg` and six
       verified `.snupkg` files.
-- [ ] Publishes every RuleGate NuGet package at `1.0.0-rc.1`.
+- [ ] Publishes every RuleGate NuGet package at `1.0.0`.
 
 Record:
 
@@ -300,9 +300,9 @@ For every published `.nupkg`, verify:
 - [ ] Symbol package publication.
 - [ ] Package installation and the applicable smoke test using only NuGet.org.
 
-## Create the GitHub prerelease
+## Create the GitHub release
 
-Create the GitHub prerelease only after NuGet publication and workflow artifact
+Create the GitHub release only after NuGet publication and workflow artifact
 verification succeed.
 
 Use the existing annotated tag and upload the package files downloaded from the
@@ -314,13 +314,15 @@ Before publishing the draft, verify:
 
 - [ ] Correct tag.
 - [ ] Correct title.
-- [ ] `prerelease` is enabled.
+- [ ] `prerelease` is disabled for a stable release and enabled for a preview
+      or release candidate.
 - [ ] Release notes match the changelog.
 - [ ] Exactly six `.nupkg` assets exist.
 - [ ] Exactly six `.snupkg` assets exist.
 - [ ] Uploaded asset sizes match the workflow artifact.
 - [ ] Downloaded release assets match the workflow artifact hashes.
-- [ ] The release is not marked as latest stable.
+- [ ] A stable release is marked as latest; a preview or release candidate is
+      not marked as latest stable.
 
 Publish the draft only after every check succeeds.
 
@@ -335,7 +337,7 @@ Publish the draft only after every check succeeds.
 - [ ] The workflow artifact contains all six `.nupkg` and six `.snupkg` files.
 - [ ] All six synchronized NuGet package versions are visible.
 - [ ] Public package metadata is correct.
-- [ ] GitHub release is marked as a prerelease.
+- [ ] GitHub release prerelease/latest flags match the release type.
 - [ ] GitHub release contains all twelve verified assets.
 - [ ] No package or release artifact is committed to Git.
 - [ ] No persistent NuGet publishing credential was introduced.

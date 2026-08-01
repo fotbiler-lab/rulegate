@@ -1629,7 +1629,7 @@ Test:
 
 ## Current security boundaries
 
-The current release candidate provides:
+RuleGate 1.0 provides:
 
 - Local in-process authorization
 - Exact policy routing
@@ -1658,7 +1658,7 @@ The current release candidate provides:
 - Exporter-neutral OpenTelemetry activities and low-cardinality metrics
 - Parallel evaluation/reload tests and bounded concurrency stress
 
-The current release candidate does not provide:
+RuleGate 1.0 does not provide:
 
 - Authentication
 - Token validation

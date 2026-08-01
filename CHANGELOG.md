@@ -2,9 +2,28 @@
 
 All notable changes to RuleGate are documented in this file.
 
-The project follows Semantic Versioning. Preview releases may introduce breaking changes before the first stable release.
+The project follows Semantic Versioning. Prerelease versions are not covered by
+the compatibility guarantees of a stable major release.
 
 ## [Unreleased]
+
+## [1.0.0] - 2026-08-01
+
+### Changed
+
+- Promoted the frozen RuleGate 1.0 API from release candidate to the first
+  stable release without additional public API changes.
+- Published all six NuGet packages and all three npm packages as one
+  coordinated `1.0.0` release family.
+- Updated installation, compatibility, security-support, roadmap, and release
+  documentation for the stable package line.
+
+### Verification
+
+- Verified the stable NuGet API and package contracts against `1.0.0-rc.1`.
+- Re-ran the complete .NET Core 3.1 and .NET 5–10 package-consumer matrix,
+  Angular 9–22 package-consumer matrix, security gates, deterministic tests,
+  reproducibility checks, benchmarks, and bounded concurrency stress tests.
 
 ## [1.0.0-rc.1] - 2026-08-01
 
@@ -689,7 +708,8 @@ The project follows Semantic Versioning. Preview releases may introduce breaking
 - CLI, Angular, and Keycloak integration packages are not yet included.
 - Public APIs may change before the first stable release.
 
-[Unreleased]: https://github.com/fotbiler-lab/rulegate/compare/v1.0.0-rc.1...HEAD
+[Unreleased]: https://github.com/fotbiler-lab/rulegate/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/fotbiler-lab/rulegate/compare/v1.0.0-rc.1...v1.0.0
 [1.0.0-rc.1]: https://github.com/fotbiler-lab/rulegate/compare/v0.9.0-preview.4...v1.0.0-rc.1
 [0.9.0-preview.4]: https://github.com/fotbiler-lab/rulegate/compare/v0.9.0-preview.3...v0.9.0-preview.4
 [0.9.0-preview.3]: https://github.com/fotbiler-lab/rulegate/compare/v0.9.0-preview.2...v0.9.0-preview.3

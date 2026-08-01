@@ -1,4 +1,4 @@
-name: Publish npm Prerelease
+name: Publish npm
 
 on:
   workflow_dispatch:
@@ -6,7 +6,7 @@ on:
       tag:
         description: Existing release tag to stage
         required: true
-        default: v1.0.0-rc.1
+        default: v1.0.0
         type: string
 
 permissions:
@@ -30,8 +30,8 @@ jobs:
       id-token: write
 
     env:
-      EXPECTED_TAG: v1.0.0-rc.1
-      PACKAGE_VERSION: 1.0.0-rc.1
+      EXPECTED_TAG: v1.0.0
+      PACKAGE_VERSION: 1.0.0
 
     steps:
       - name: Check out release tag
@@ -100,7 +100,7 @@ jobs:
           npm --version
           pnpm --version
 
-      - name: Verify npm prerelease package
+      - name: Verify npm package
         run: ./scripts/verify-npm-preview-release.sh --check-registry-availability
 
       - name: Upload verified npm packages
@@ -126,5 +126,5 @@ jobs:
             npm stage publish \
               "artifacts/npm/$package" \
               --access public \
-              --tag rc
+              --tag latest
           done

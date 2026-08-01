@@ -9,7 +9,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <RuleGatePackageVersion Condition="'$(RuleGatePackageVersion)' == ''">1.0.0-rc.1</RuleGatePackageVersion>
+    <RuleGatePackageVersion Condition="'$(RuleGatePackageVersion)' == ''">1.0.0</RuleGatePackageVersion>
   </PropertyGroup>
 
   <ItemGroup>

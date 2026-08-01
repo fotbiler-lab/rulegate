@@ -10,7 +10,7 @@ remains the security boundary.
 ## Install
 
 ```bash
-pnpm add @fotbiler/rulegate-client@1.0.0-rc.1
+pnpm add @fotbiler/rulegate-client@1.0.0
 ```
 
 See the [RuleGate frontend compatibility guide](https://github.com/fotbiler-lab/rulegate/blob/main/docs/frontend-compatibility.md)

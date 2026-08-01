@@ -13,7 +13,7 @@
     <DebugType>portable</DebugType>
 
     <VersionPrefix>1.0.0</VersionPrefix>
-    <VersionSuffix>rc.1</VersionSuffix>
+    <VersionSuffix></VersionSuffix>
 
     <Authors>Fotbiler</Authors>
     <Company>Fotbiler</Company>
@@ -33,7 +33,7 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
 
     <PackageTags>authorization;rbac;policy;security;access-control;rulegate</PackageTags>
-    <PackageReleaseNotes>Freezes the RuleGate 1.0 public API, hardens fail-closed manifest and requirement evaluation, adds resource limits and deterministic fuzz coverage, verifies reproducible packages, and documents migration from 0.9.0-preview.4.</PackageReleaseNotes>
+    <PackageReleaseNotes>Publishes the stable RuleGate 1.0 API and coordinated NuGet package family after release-candidate API freeze, security hardening, reproducibility, and package-only compatibility verification.</PackageReleaseNotes>
 
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
@@ -45,7 +45,7 @@
                  '$(MSBuildProjectName)' == 'Fotbiler.RuleGate.AspNetCore' Or
                  '$(MSBuildProjectName)' == 'Fotbiler.RuleGate.Cli' Or
                  '$(MSBuildProjectName)' == 'Fotbiler.RuleGate.Keycloak'">true</EnablePackageValidation>
-    <PackageValidationBaselineVersion>0.9.0-preview.4</PackageValidationBaselineVersion>
+    <PackageValidationBaselineVersion>1.0.0-rc.1</PackageValidationBaselineVersion>
     <ApiCompatPermitUnnecessarySuppressions>false</ApiCompatPermitUnnecessarySuppressions>
     <ApiCompatPreserveUnnecessarySuppressions>false</ApiCompatPreserveUnnecessarySuppressions>
 

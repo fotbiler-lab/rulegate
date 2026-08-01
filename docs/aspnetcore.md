@@ -27,7 +27,7 @@ Before production deployment, review the
 
 ## Supported frameworks
 
-The current RuleGate release candidate is supported on:
+RuleGate 1.0 is supported on:
 
 - .NET 8
 - .NET 9
@@ -44,7 +44,7 @@ Install the ASP.NET Core integration:
 ```bash
 dotnet add package \
   Fotbiler.RuleGate.AspNetCore \
-  --version 1.0.0-rc.1
+  --version 1.0.0
 ```
 
 `Fotbiler.RuleGate.AspNetCore` references the RuleGate core, abstractions, and

@@ -9,13 +9,12 @@ embedded YAML resources can be used directly as reloadable policy sources.
 Bounded document, node, depth, scalar, collection, alias, and policy limits
 protect the loader and validator from resource-exhaustion input.
 
-RuleGate is currently in release candidate. The 1.0 public API and manifest
-schema are frozen; blocking compatibility or security fixes may still be made
-before stable.
+RuleGate 1.0 is stable. Public API and manifest compatibility follow Semantic
+Versioning.
 
 ## Installation
 
-    dotnet add package Fotbiler.RuleGate.Manifest --version 1.0.0-rc.1
+    dotnet add package Fotbiler.RuleGate.Manifest --version 1.0.0
 
 ## Compatibility
 

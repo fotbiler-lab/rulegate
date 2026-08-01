@@ -61,14 +61,14 @@ Passing RuleGate compatibility tests does not make an end-of-life framework
 safe for production. Teams remain responsible for upgrading runtimes,
 frameworks, operating systems, and transitive dependencies.
 
-## RC package-consumer verification boundary
+## Stable package-consumer verification boundary
 
 The .NET package-only compatibility gate verifies two independent package
 graphs:
 
-- the current `1.0.0-rc.1` candidate, packed from the current repository and
+- the current `1.0.0` stable version, packed from the current repository and
   restored from an isolated local feed;
-- the published `0.9.0-preview.4` compatibility baseline, restored directly
+- the published `1.0.0-rc.1` compatibility baseline, restored directly
   from NuGet.org.
 
 Both ASP.NET Core and Keycloak consumers contain no `ProjectReference` entries.
@@ -77,9 +77,9 @@ They restore, build, and execute on `net8.0`, `net9.0`, and `net10.0`. Their
 read-only Docker runtime images with networking disabled.
 
 The verifier checks exact package versions and package sources. For the current
-candidate it also verifies that each restored RuleGate package hash matches the
+stable build it also verifies that each restored RuleGate package hash matches the
 locally packed `.nupkg`. This prevents a package already present in a global
-cache or registry from silently satisfying the current-candidate matrix.
+cache or registry from silently satisfying the current-release matrix.
 
-The current CLI candidate is installed from the same local feed and executed on
+The current stable CLI is installed from the same local feed and executed on
 its `net8.0`, `net9.0`, and `net10.0` tool targets.

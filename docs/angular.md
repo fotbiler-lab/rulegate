@@ -3,10 +3,10 @@
 The RuleGate Angular SDK provides fail-closed user-interface helpers for a
 frontend authorization projection.
 
-Install the current release candidate from npm:
+Install the stable release from npm:
 
 ```bash
-pnpm add @fotbiler/rulegate-angular@1.0.0-rc.1 @fotbiler/rulegate-client@1.0.0-rc.1
+pnpm add @fotbiler/rulegate-angular@1.0.0 @fotbiler/rulegate-client@1.0.0
 ```
 
 > [!IMPORTANT]

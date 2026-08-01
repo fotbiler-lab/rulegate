@@ -1,7 +1,7 @@
 # RuleGate Manifest Guide
 
-This reference describes the complete `rulegate.yaml` format supported by the
-current RuleGate release candidate.
+This reference describes the complete `rulegate.yaml` format supported by
+RuleGate 1.0.
 
 For the shortest path to a running application, begin with
 [Getting started](getting-started.md). Read the
@@ -86,7 +86,7 @@ Duplicate YAML keys are also rejected.
 
 ## Schema version
 
-The current release candidate supports:
+RuleGate 1.0 supports:
 
 ```yaml
 schemaVersion: 1
@@ -1246,7 +1246,7 @@ policies[0].requirement.all[1].attribute.operator
 | `MANIFEST_CONTEXT_STRING_COMPARISON_NOT_ALLOWED`   | Context `.stringComparison`  |
 
 Applications may use stable codes and paths for tooling. Human-facing messages
-may evolve during prerelease builds.
+are informational and may evolve without changing those machine contracts.
 
 ## Common mistakes
 
@@ -1444,13 +1444,13 @@ Continue with:
 `Fotbiler.RuleGate.Cli` exposes the manifest compiler through a deterministic
 command-line interface.
 
-Install the current release candidate:
+Install the stable CLI:
 
 ```bash
 dotnet tool install \
   --global \
   Fotbiler.RuleGate.Cli \
-  --version 1.0.0-rc.1
+  --version 1.0.0
 ```
 
 Validate `rulegate.yaml` in the current directory:

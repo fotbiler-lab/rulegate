@@ -1,4 +1,4 @@
-# npm Prerelease Checklist
+# npm Release Checklist
 
 This checklist defines the release process for the public RuleGate npm package
 family.
@@ -19,7 +19,7 @@ The compatibility package family contains:
 All three packages are public, share one npm version, and are published
 together even when only one package has code changes. npm packages retain an
 independent version line from the synchronized NuGet package family. The
-current synchronized npm prerelease version is `1.0.0-rc.1`.
+current synchronized npm version is `1.0.0`.
 
 ## Required security configuration
 
@@ -51,7 +51,7 @@ Use the normal release order:
 7. Delete the release branch and update clean `main`.
 8. Re-run release verification from the final merge commit.
 9. Create and push an annotated release tag.
-10. Publish and verify the npm artifact before creating its GitHub prerelease.
+10. Publish and verify the npm artifact before creating its GitHub release.
     For a coordinated cross-ecosystem release, verify both registries first.
 
 Do not publish from a feature or release-preparation branch.
@@ -72,7 +72,7 @@ Before tagging, verify:
       `keycloak-js` a dependency or peer dependency.
 - [ ] Changelog contains a dated release section.
 - [ ] Roadmap describes the Angular SDK as available.
-- [ ] Installation examples contain the exact prerelease version.
+- [ ] Installation examples contain the exact release version.
 - [ ] Normal CI builds packages but cannot publish them.
 - [ ] `publish-npm.yml` expects the exact annotated release tag.
 
@@ -203,19 +203,9 @@ npm stage approve <stage-id>
 Every approval requires maintainer proof-of-presence/2FA. GitHub Actions OIDC
 must not be used to approve or reject staged packages.
 
-The workflow stages this release candidate with the `rc` distribution tag.
-Until RuleGate has a stable release, also align `latest` to the newly verified
-release candidate after all three packages are publicly visible:
-
-```bash
-npm dist-tag add "@fotbiler/rulegate-client@$VERSION" latest
-npm dist-tag add "@fotbiler/rulegate-angular-legacy@$VERSION" latest
-npm dist-tag add "@fotbiler/rulegate-angular@$VERSION" latest
-```
-
-Verify both `rc` and `latest` on all three packages. After the first stable
-RuleGate release, reserve `latest` for the stable line and keep release
-candidates on `rc`.
+The workflow stages this stable release with the `latest` distribution tag.
+The existing `rc` and `preview` tags remain on their corresponding prerelease
+lines. Verify all three tags after every package is publicly visible.
 
 ## Public-package verification
 
@@ -223,10 +213,9 @@ After publication, verify:
 
 - [ ] Exact names and one aligned version across all three packages.
 - [ ] Public visibility.
-- [ ] `rc` distribution tag points to the intended release-candidate version.
-- [ ] Before the first stable release, `latest` is deliberately aligned to the
-      intended release-candidate version; after stable release, `latest` remains on the
-      stable line.
+- [ ] `latest` points to the intended stable version.
+- [ ] `rc` remains on the latest release-candidate version.
+- [ ] `preview` remains on the latest preview version.
 - [ ] Repository URL and directory.
 - [ ] License and README rendering.
 - [ ] Modern and legacy Angular peer dependencies.
@@ -237,12 +226,12 @@ After publication, verify:
 - [ ] Package installation into the compatibility consumer matrix.
 - [ ] No unexpected files or lifecycle scripts.
 
-## GitHub prerelease
+## GitHub release
 
-Create the GitHub prerelease only after npm and NuGet verification succeed.
+Create the GitHub release only after npm and NuGet verification succeed.
 Use the existing annotated tag, attach the verified `.tgz`, `.nupkg`, and
-`.snupkg`, include the release notes, and leave the release marked as a
-prerelease rather than the latest stable release.
+`.snupkg`, include the release notes, mark the release as stable, and publish it
+as the latest release.
 
 ## Failure handling
 

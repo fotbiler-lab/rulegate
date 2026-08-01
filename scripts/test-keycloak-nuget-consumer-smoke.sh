@@ -17,7 +17,7 @@ SMOKE_DIRECTORY="$REPOSITORY_ROOT/tests/Fotbiler.RuleGate.Keycloak.PackageConsum
 SMOKE_PROJECT="$SMOKE_DIRECTORY/Fotbiler.RuleGate.Keycloak.PackageConsumer.Smoke.csproj"
 PACKAGE_DIRECTORY="$REPOSITORY_ROOT/artifacts/packages"
 CONSUMER_PACKAGE_CACHE="$REPOSITORY_ROOT/artifacts/keycloak-package-consumer-global-packages"
-PACKAGE_VERSION="1.0.0-rc.1"
+PACKAGE_VERSION="1.0.0"
 
 EXPECTED_FRAMEWORKS=(
   "netcoreapp3.1"

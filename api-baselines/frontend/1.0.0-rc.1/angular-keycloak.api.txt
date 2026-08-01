@@ -1,0 +1,35 @@
+===== keycloak/index.d.ts =====
+import { RuleGateAuthorizationSnapshot } from '@fotbiler/rulegate-angular';
+import * as i0 from '@angular/core';
+
+interface RuleGateKeycloakSession {
+    readonly authenticated?: boolean;
+    readonly realmAccess?: unknown;
+    readonly resourceAccess?: unknown;
+    readonly tokenParsed?: unknown;
+}
+interface RuleGateKeycloakSnapshotOptions {
+
+    readonly includeRealmRoles?: boolean;
+
+    readonly clientIds?: readonly string[];
+
+    readonly permissionClaim?: string | null;
+}
+type RuleGateKeycloakSnapshot = RuleGateAuthorizationSnapshot;
+
+declare function createRuleGateSnapshotFromKeycloak(session: RuleGateKeycloakSession, options?: RuleGateKeycloakSnapshotOptions): RuleGateAuthorizationSnapshot | null;
+
+declare class RuleGateKeycloakAdapter {
+    synchronize(session: RuleGateKeycloakSession, options?: RuleGateKeycloakSnapshotOptions): boolean;
+    clear(): void;
+}
+
+declare function encodeRuleGateKeycloakComponent(value: string): string;
+
+declare function ruleGateKeycloakRealmRole(role: string): string;
+
+declare function ruleGateKeycloakClientRole(clientId: string, role: string): string;
+
+export { RuleGateKeycloakAdapter, createRuleGateSnapshotFromKeycloak, encodeRuleGateKeycloakComponent, ruleGateKeycloakClientRole, ruleGateKeycloakRealmRole };
+export type { RuleGateKeycloakSession, RuleGateKeycloakSnapshot, RuleGateKeycloakSnapshotOptions };

@@ -760,9 +760,9 @@ A custom evaluator is appropriate when a rule requires:
 Custom evaluators must preserve cancellation, deterministic behavior,
 structured failures, and fail-closed evaluation.
 
-## Current release-candidate boundaries
+## RuleGate 1.0 boundaries
 
-The current release candidate includes:
+RuleGate 1.0 includes:
 
 - Permission requirements
 - Role requirements
