@@ -10,20 +10,20 @@ security guidance, read the [RuleGate security model](docs/security.md).
 
 ## Supported versions
 
-RuleGate is currently in release candidate.
+RuleGate 1.0 is the current stable release.
 
-Only the latest published prerelease in each package ecosystem receives security
-fixes.
+Only the latest supported stable line in each package ecosystem receives
+security fixes.
 
-| Package family                      | Version                                                                                      | Supported |
-| ----------------------------------- | -------------------------------------------------------------------------------------------- | --------- |
-| `@fotbiler/rulegate-client`         | [`1.0.0-rc.1`](https://www.npmjs.com/package/@fotbiler/rulegate-client/v/1.0.0-rc.1)         | Yes       |
-| `@fotbiler/rulegate-angular`        | [`1.0.0-rc.1`](https://www.npmjs.com/package/@fotbiler/rulegate-angular/v/1.0.0-rc.1)        | Yes       |
-| `@fotbiler/rulegate-angular-legacy` | [`1.0.0-rc.1`](https://www.npmjs.com/package/@fotbiler/rulegate-angular-legacy/v/1.0.0-rc.1) | Yes       |
-| NuGet packages                      | [`1.0.0-rc.1`](https://github.com/fotbiler-lab/rulegate/releases/tag/v1.0.0-rc.1)            | Yes       |
-| Older prereleases                   | —                                                                                            | No        |
+| Package family                      | Version                                                                            | Supported |
+| ----------------------------------- | ---------------------------------------------------------------------------------- | --------- |
+| `@fotbiler/rulegate-client`         | [`1.0.0`](https://www.npmjs.com/package/@fotbiler/rulegate-client/v/1.0.0)         | Yes       |
+| `@fotbiler/rulegate-angular`        | [`1.0.0`](https://www.npmjs.com/package/@fotbiler/rulegate-angular/v/1.0.0)        | Yes       |
+| `@fotbiler/rulegate-angular-legacy` | [`1.0.0`](https://www.npmjs.com/package/@fotbiler/rulegate-angular-legacy/v/1.0.0) | Yes       |
+| NuGet packages                      | [`1.0.0`](https://github.com/fotbiler-lab/rulegate/releases/tag/v1.0.0)            | Yes       |
+| Release candidates and previews     | —                                                                                  | No        |
 
-This table is updated when a new prerelease or stable version is published.
+This table is updated when a new supported stable version is published.
 
 ## Reporting a vulnerability
 

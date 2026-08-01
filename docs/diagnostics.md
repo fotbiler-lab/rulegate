@@ -821,7 +821,7 @@ The current diagnostics surface includes:
 - Built-in low-cardinality counters and duration histograms
 - Cancellation and unexpected-error telemetry
 
-The current release candidate does not include:
+RuleGate 1.0 does not include:
 
 - Persistent diagnostic storage
 - Built-in multi-sink fan-out

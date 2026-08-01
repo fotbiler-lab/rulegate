@@ -8,7 +8,7 @@ REPO_ROOT="$(
 
 cd "$REPO_ROOT"
 
-VERSION="${1:-1.0.0-rc.1}"
+VERSION="${1:-1.0.0}"
 
 PYTHON_SCRIPT="scripts/verify-sensitive-diagnostics-surface.py"
 

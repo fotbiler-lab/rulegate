@@ -26,7 +26,7 @@ infer compatibility from source compilation alone.
 ## Angular 20–22
 
 ```bash
-pnpm add @fotbiler/rulegate-angular@1.0.0-rc.1 @fotbiler/rulegate-client@1.0.0-rc.1
+pnpm add @fotbiler/rulegate-angular@1.0.0 @fotbiler/rulegate-client@1.0.0
 ```
 
 Use `RuleGateAuthorizationClient`, standalone `RuleGateCanDirective` and
@@ -36,7 +36,7 @@ The complete API is documented in the [Angular SDK guide](angular.md).
 ## Angular 12–19
 
 ```bash
-pnpm add @fotbiler/rulegate-angular-legacy@1.0.0-rc.1 @fotbiler/rulegate-client@1.0.0-rc.1
+pnpm add @fotbiler/rulegate-angular-legacy@1.0.0 @fotbiler/rulegate-client@1.0.0
 ```
 
 Import `RuleGateLegacyModule` in the application module. Supply a complete
@@ -58,7 +58,7 @@ composition and clears every grant when a snapshot is malformed.
 ## Angular 9–11
 
 ```bash
-pnpm add @fotbiler/rulegate-client@1.0.0-rc.1
+pnpm add @fotbiler/rulegate-client@1.0.0
 ```
 
 Create a host-owned Angular service around `RuleGateAuthorizationStore` and

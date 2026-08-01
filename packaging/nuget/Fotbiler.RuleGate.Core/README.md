@@ -10,12 +10,11 @@ activities and low-cardinality metrics through the standard .NET diagnostics
 APIs. Logical requirement traversal is bounded and remains fail-closed when a
 tree exceeds the supported evaluation depth.
 
-RuleGate is currently in release candidate. The 1.0 public API is frozen;
-blocking compatibility or security fixes may still be made before stable.
+RuleGate 1.0 is stable. Public API compatibility follows Semantic Versioning.
 
 ## Installation
 
-    dotnet add package Fotbiler.RuleGate.Core --version 1.0.0-rc.1
+    dotnet add package Fotbiler.RuleGate.Core --version 1.0.0
 
 ## Compatibility
 

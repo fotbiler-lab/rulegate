@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url';
 const scriptDirectory = dirname(fileURLToPath(import.meta.url));
 const repositoryRoot = resolve(scriptDirectory, '..');
 
-const baselineVersion = '0.9.0-preview.4';
+const baselineVersion = '1.0.0-rc.1';
 const update = process.argv.includes('--update');
 
 const baselineDirectory = join(repositoryRoot, 'api-baselines', 'frontend', baselineVersion);

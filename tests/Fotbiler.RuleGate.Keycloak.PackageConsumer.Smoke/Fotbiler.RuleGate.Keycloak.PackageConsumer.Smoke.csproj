@@ -6,7 +6,7 @@
     <IsPackable>false</IsPackable>
     <EnablePackageValidation>false</EnablePackageValidation>
     <PackageValidationBaselineVersion />
-    <RuleGatePackageVersion Condition="'$(RuleGatePackageVersion)' == ''">1.0.0-rc.1</RuleGatePackageVersion>
+    <RuleGatePackageVersion Condition="'$(RuleGatePackageVersion)' == ''">1.0.0</RuleGatePackageVersion>
   </PropertyGroup>
 
   <ItemGroup>

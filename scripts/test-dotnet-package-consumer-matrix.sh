@@ -8,8 +8,8 @@ REPOSITORY_ROOT="$(
 
 cd "$REPOSITORY_ROOT"
 
-CURRENT_VERSION="${1:-1.0.0-rc.1}"
-BASELINE_VERSION="${2:-0.9.0-preview.4}"
+CURRENT_VERSION="${1:-1.0.0}"
+BASELINE_VERSION="${2:-1.0.0-rc.1}"
 
 if [[ "$#" -ne 0 && "$#" -ne 2 ]]
 then
@@ -109,7 +109,7 @@ export DOTNET_CLI_TELEMETRY_OPTOUT=true
 export DOTNET_SKIP_FIRST_TIME_EXPERIENCE=true
 
 printf '\n========================================\n'
-printf 'Build current local RC packages\n'
+printf 'Build current local release packages\n'
 printf '========================================\n'
 
 dotnet restore \
@@ -299,7 +299,7 @@ for package_id in package_ids:
         if source_path != local_source:
             raise SystemExit(
                 "ERROR: current RuleGate package was "
-                "not restored from the local RC feed.\n"
+                "not restored from the local release feed.\n"
                 f"Package: {package_id}\n"
                 f"Source : {source}"
             )
@@ -511,7 +511,7 @@ run_consumer_mode()
 verify_current_cli_package()
 {
   printf '\n========================================\n'
-  printf 'Verify current RC CLI local package\n'
+  printf 'Verify current CLI local package\n'
   printf '========================================\n'
 
   local cli_package="$CURRENT_PACKAGE_DIRECTORY/Fotbiler.RuleGate.Cli.$CURRENT_VERSION.nupkg"
@@ -552,11 +552,11 @@ verify_current_cli_package()
         "Version: $CURRENT_VERSION" \
         >/dev/null
 
-    printf 'Current RC CLI passed on %s.\n' \
+    printf 'Current CLI passed on %s.\n' \
       "$framework"
   done
 
-  echo 'Current RC CLI package matrix passed.'
+  echo 'Current CLI package matrix passed.'
 }
 
 printf '\n========================================\n'
@@ -609,6 +609,6 @@ run_consumer_mode \
   ""
 
 echo
-echo 'CURRENT_LOCAL_RC_PACKAGE_CONSUMER_MATRIX_PASSED'
+echo 'CURRENT_LOCAL_RELEASE_PACKAGE_CONSUMER_MATRIX_PASSED'
 echo 'PUBLISHED_BASELINE_PACKAGE_CONSUMER_MATRIX_PASSED'
 echo 'DOTNET_PACKAGE_CONSUMER_MATRICES_PASSED'

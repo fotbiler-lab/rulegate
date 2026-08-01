@@ -9,12 +9,11 @@ contracts and public telemetry source names are also defined here. It does not
 contain the RuleGate authorization engine. The frozen 1.0 surface also exposes
 stable authorization failure codes used by package consumers and diagnostics.
 
-RuleGate is currently in release candidate. The 1.0 public API is frozen;
-blocking compatibility or security fixes may still be made before stable.
+RuleGate 1.0 is stable. Public API compatibility follows Semantic Versioning.
 
 ## Installation
 
-    dotnet add package Fotbiler.RuleGate.Abstractions --version 1.0.0-rc.1
+    dotnet add package Fotbiler.RuleGate.Abstractions --version 1.0.0
 
 ## Compatibility
 

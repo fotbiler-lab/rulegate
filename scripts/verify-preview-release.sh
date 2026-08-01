@@ -31,8 +31,8 @@ case "${1:-}" in
 esac
 
 EXPECTED_VERSION_PREFIX="1.0.0"
-EXPECTED_VERSION_SUFFIX="rc.1"
-EXPECTED_VERSION="$EXPECTED_VERSION_PREFIX-$EXPECTED_VERSION_SUFFIX"
+EXPECTED_VERSION_SUFFIX=""
+EXPECTED_VERSION="$EXPECTED_VERSION_PREFIX"
 
 EXPECTED_REPOSITORY_URL="https://github.com/fotbiler-lab/rulegate"
 EXPECTED_LICENSE="MIT"
@@ -652,8 +652,8 @@ done
 printf '\n== Run current and legacy package consumers ==\n'
 
 ./scripts/test-dotnet-package-consumer-matrix.sh \
-  1.0.0-rc.1 \
-  0.9.0-preview.4
+  1.0.0 \
+  1.0.0-rc.1
 
 printf '\n== Run packaged CLI tool smoke test ==\n'
 

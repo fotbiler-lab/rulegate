@@ -13,12 +13,11 @@ RuleGate activity source and meter.
 The default handler supplies deterministic evaluation time through the
 registered `IRuleGateClock`; trusted context values remain application-owned.
 
-RuleGate is currently in release candidate. The 1.0 public API is frozen;
-blocking compatibility or security fixes may still be made before stable.
+RuleGate 1.0 is stable. Public API compatibility follows Semantic Versioning.
 
 ## Installation
 
-    dotnet add package Fotbiler.RuleGate.AspNetCore --version 1.0.0-rc.1
+    dotnet add package Fotbiler.RuleGate.AspNetCore --version 1.0.0
 
 ## Compatibility
 

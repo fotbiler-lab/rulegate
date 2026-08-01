@@ -150,10 +150,10 @@ jobs:
         run: ./scripts/verify-no-production-regex.sh
 
       - name: Verify sensitive diagnostics surface
-        run: ./scripts/verify-sensitive-diagnostics-surface.sh 1.0.0-rc.1
+        run: ./scripts/verify-sensitive-diagnostics-surface.sh 1.0.0
 
       - name: Verify NuGet payload reproducibility
-        run: ./scripts/verify-nuget-payload-reproducibility.sh 1.0.0-rc.1
+        run: ./scripts/verify-nuget-payload-reproducibility.sh 1.0.0
 
       - name: Restore default-version build state
         run: |
@@ -194,8 +194,8 @@ jobs:
       - name: Test current and legacy NuGet package consumers
         run: |
           ./scripts/test-dotnet-package-consumer-matrix.sh \
-            1.0.0-rc.1 \
-            0.9.0-preview.4
+            1.0.0 \
+            1.0.0-rc.1
 
       - name: Test RuleGate CLI tool
         run: |

@@ -1,0 +1,59 @@
+===== index.d.ts =====
+import * as _angular_core from '@angular/core';
+import { TemplateRef, InjectionToken, Provider } from '@angular/core';
+import { RuleGateAuthorizationSnapshot, RuleGateAuthorizationRequirement } from '@fotbiler/rulegate-client';
+export * from '@fotbiler/rulegate-client';
+import { CanActivateFn, ActivatedRouteSnapshot, RouterStateSnapshot, MaybeAsync, GuardResult } from '@angular/router';
+
+declare class RuleGateAuthorizationClient {
+    readonly isReady: _angular_core.Signal<boolean>;
+    readonly snapshot: _angular_core.Signal<RuleGateAuthorizationSnapshot>;
+
+    replaceSnapshot(snapshot: RuleGateAuthorizationSnapshot): boolean;
+
+    clear(): void;
+    hasPermission(permission: string): boolean;
+    hasPolicy(policy: string): boolean;
+    hasRole(role: string): boolean;
+    isGranted(requirement: RuleGateAuthorizationRequirement | null | undefined): boolean;
+}
+
+declare class RuleGateCanDirective {
+    readonly ruleGateCan: _angular_core.InputSignal<RuleGateAuthorizationRequirement>;
+    readonly ruleGateCanElse: _angular_core.InputSignal<TemplateRef<unknown>>;
+    constructor();
+}
+
+declare class RuleGateDisableDirective {
+    readonly ruleGateDisable: _angular_core.InputSignal<RuleGateAuthorizationRequirement>;
+    readonly denied: _angular_core.Signal<boolean>;
+    constructor();
+    protected blockDeniedInteraction(event: Event): void;
+}
+
+declare function ruleGatePermissionGuard(permission: string): CanActivateFn;
+
+declare function ruleGatePolicyGuard(policy: string): CanActivateFn;
+
+declare function ruleGateRoleGuard(role: string): CanActivateFn;
+
+declare const RULE_GATE_ROUTE_DATA_KEY = "ruleGate";
+interface RuleGateRouteData {
+    readonly [RULE_GATE_ROUTE_DATA_KEY]: RuleGateAuthorizationRequirement;
+}
+interface RuleGateDeniedNavigationContext {
+    readonly requirement: RuleGateAuthorizationRequirement;
+    readonly route: ActivatedRouteSnapshot;
+    readonly state: RouterStateSnapshot;
+}
+type RuleGateDeniedNavigationHandler = (context: RuleGateDeniedNavigationContext) => MaybeAsync<GuardResult>;
+declare const RULE_GATE_DENIED_NAVIGATION_HANDLER: InjectionToken<RuleGateDeniedNavigationHandler>;
+
+declare function ruleGateRouteData(requirement: RuleGateAuthorizationRequirement): RuleGateRouteData;
+
+declare function provideRuleGateDeniedNavigation(handler: RuleGateDeniedNavigationHandler): Provider;
+
+declare const ruleGateGuard: CanActivateFn;
+
+export { RULE_GATE_DENIED_NAVIGATION_HANDLER, RULE_GATE_ROUTE_DATA_KEY, RuleGateAuthorizationClient, RuleGateCanDirective, RuleGateDisableDirective, provideRuleGateDeniedNavigation, ruleGateGuard, ruleGatePermissionGuard, ruleGatePolicyGuard, ruleGateRoleGuard, ruleGateRouteData };
+export type { RuleGateDeniedNavigationContext, RuleGateDeniedNavigationHandler, RuleGateRouteData };

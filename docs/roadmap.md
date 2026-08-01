@@ -1,8 +1,8 @@
 # RuleGate Roadmap
 
-This document describes planned development through RuleGate 1.0. Scope may
-change as public APIs, security boundaries, package structure, and package-only
-consumer feedback evolve.
+This document records the delivered path through RuleGate 1.0 and outlines the
+post-stable product direction. Future scope may change as security boundaries,
+package structure, and package-only consumer feedback evolve.
 
 ## Product direction
 
@@ -16,7 +16,7 @@ IdentityServer, an application user store, or another identity provider.
 Provider-specific integrations remain optional adapters around the
 provider-independent authorization engine.
 
-Development through 1.0 preserves five product properties:
+RuleGate 1.0 preserves five product properties:
 
 - local-first evaluation;
 - default-deny and fail-closed behavior;
@@ -50,15 +50,14 @@ Development through 1.0 preserves five product properties:
 | OpenTelemetry, Benchmarks, and Concurrency   | ✅ Available |
 | .NET and Angular Compatibility Track         | ✅ Available |
 | API Freeze and Security Hardening            | ✅ Available |
-| Stable Release                               | ⏳ Planned   |
+| Stable Release                               | ✅ Available |
 
-The latest RuleGate NuGet prerelease is `1.0.0-rc.1`. The three-package npm
-family is also published at `1.0.0-rc.1` for this coordinated release
-candidate.
+The latest stable RuleGate NuGet release is `1.0.0`. The three-package npm
+family is also published at `1.0.0` for this coordinated stable release.
 Official Reference Applications, Policy Testing, Explain and Lint, Policy
 Sources and Atomic Reload, OpenTelemetry, Benchmarks and Concurrency, and the
 compatibility track are available. API Freeze and Security Hardening are
-delivered in `1.0.0-rc.1`; the next milestone is the stable `1.0.0` release.
+delivered in `1.0.0-rc.1`; the stable `1.0.0` milestone is complete.
 
 All NuGet packages share one version and are published together for every
 NuGet release, including packages without code changes. npm packages are
@@ -82,8 +81,8 @@ The repository package and consumer matrix verifies:
 | Legacy Angular adapter                | Angular 12 through Angular 19                  |
 | Framework-independent frontend client | Angular 9 through Angular 22 consumers         |
 
-The `1.0.0-rc.1` NuGet and npm package families preserve this expanded
-compatibility matrix and add release-candidate API, security, reproducibility,
+The stable `1.0.0` NuGet and npm package families preserve this expanded
+compatibility matrix after release-candidate API, security, reproducibility,
 and package-only consumer gates.
 
 Support levels are:
@@ -97,7 +96,7 @@ Support levels are:
 RuleGate cannot extend vendor security support for end-of-life runtimes. Legacy
 verification describes compatibility only.
 
-## Published prereleases
+## Published releases
 
 ### `0.1.0-preview.1` — Authorization Core Foundation
 
@@ -306,11 +305,9 @@ includes:
 - completed current and legacy package-only consumer matrices;
 - published compatibility and support policy.
 
-## Planned release
-
 ### `1.0.0` — Stable Release
 
-RuleGate 1.0 is intended to provide:
+RuleGate 1.0 provides:
 
 - RBAC, permission-based authorization, ABAC, CBAC, resource rules, and logical
   composition;

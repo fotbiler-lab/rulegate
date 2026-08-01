@@ -35,7 +35,7 @@ do
   esac
 done
 
-EXPECTED_PACKAGE_VERSION="1.0.0-rc.1"
+EXPECTED_PACKAGE_VERSION="1.0.0"
 EXPECTED_REPOSITORY="git+https://github.com/fotbiler-lab/rulegate.git"
 EXPECTED_LICENSE="MIT"
 EXPECTED_AUTHOR="Fotbiler"
@@ -315,7 +315,7 @@ fi
 
 echo "Normal CI contains no npm publishing configuration."
 
-printf '\n== npm prerelease verification succeeded ==\n'
+printf '\n== npm package verification succeeded ==\n'
 
 for package_name in "${PACKAGE_NAMES[@]}"
 do

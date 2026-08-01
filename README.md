@@ -12,7 +12,7 @@
 
 <p align="center">
   <a href="https://github.com/fotbiler-lab/rulegate/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/fotbiler-lab/rulegate/actions/workflows/ci.yml/badge.svg?branch=main"></a>
-  <a href="https://www.nuget.org/packages/Fotbiler.RuleGate.AspNetCore"><img alt="NuGet" src="https://img.shields.io/nuget/vpre/Fotbiler.RuleGate.AspNetCore?logo=nuget&amp;label=NuGet"></a>
+  <a href="https://www.nuget.org/packages/Fotbiler.RuleGate.AspNetCore"><img alt="NuGet" src="https://img.shields.io/nuget/v/Fotbiler.RuleGate.AspNetCore?logo=nuget&amp;label=NuGet"></a>
   <a href="https://www.nuget.org/packages/Fotbiler.RuleGate.AspNetCore"><img alt="NuGet downloads" src="https://img.shields.io/nuget/dt/Fotbiler.RuleGate.AspNetCore?logo=nuget&amp;label=downloads"></a>
   <a href="https://www.npmjs.com/package/@fotbiler/rulegate-angular"><img alt="npm" src="https://img.shields.io/npm/v/%40fotbiler%2Frulegate-angular?logo=npm&amp;label=npm"></a>
   <a href="https://www.npmjs.com/package/@fotbiler/rulegate-angular"><img alt="npm downloads" src="https://img.shields.io/npm/dm/%40fotbiler%2Frulegate-angular?logo=npm&amp;label=downloads"></a>
@@ -35,11 +35,10 @@
   <a href="https://github.com/fotbiler-lab/rulegate/releases">Releases</a>
 </p>
 
-> [!WARNING]
-> RuleGate is currently in release candidate. Its 1.0 public API is frozen;
-> blocking compatibility or security findings may still require changes before
-> the stable release, and the packages are not yet recommended for production
-> use.
+> [!NOTE]
+> RuleGate 1.0 is the first stable release. Review the
+> [security model](docs/security.md), platform support policy, and migration
+> guide before production adoption.
 
 ## Authorization, not authentication
 
@@ -141,8 +140,8 @@ to a remote service:
 | `@fotbiler/rulegate-angular-legacy` | Angular 12–19                                    | Legacy-tested                                    |
 | `@fotbiler/rulegate-client`         | Angular 9–22 and framework-independent consumers | Current or legacy-tested with the host framework |
 
-The `0.9.0-preview.4` NuGet and npm previews are the first public RuleGate
-release to carry this expanded compatibility matrix across the backend and
+RuleGate 1.0 carries the compatibility matrix established in
+`0.9.0-preview.4` and hardened through `1.0.0-rc.1` across the backend and
 frontend package families. See the
 [platform compatibility policy](docs/platform-compatibility.md) and
 [frontend compatibility guide](docs/frontend-compatibility.md) for package
@@ -203,8 +202,8 @@ RuleGate currently provides:
   applications
 - Portable .NET Standard 2.0 libraries, ASP.NET Core/Keycloak support from .NET Core 3.1 through .NET 10, and package-only legacy consumer verification
 
-See the [roadmap](docs/roadmap.md) for published milestones and the stable
-release plan.
+See the [roadmap](docs/roadmap.md) for published milestones and post-stable
+product direction.
 
 ## Documentation
 
@@ -234,7 +233,7 @@ release plan.
 Install the ASP.NET Core package:
 
 ```bash
-dotnet add package Fotbiler.RuleGate.AspNetCore --version 1.0.0-rc.1
+dotnet add package Fotbiler.RuleGate.AspNetCore --version 1.0.0
 ```
 
 `Fotbiler.RuleGate.AspNetCore` references the core engine, abstractions, and
@@ -244,19 +243,19 @@ Applications using only RuleGate contracts may reference the abstractions
 package directly:
 
 ```bash
-dotnet add package Fotbiler.RuleGate.Abstractions --version 1.0.0-rc.1
+dotnet add package Fotbiler.RuleGate.Abstractions --version 1.0.0
 ```
 
 Install the Angular SDK:
 
 ```bash
-pnpm add @fotbiler/rulegate-angular@1.0.0-rc.1 @fotbiler/rulegate-client@1.0.0-rc.1
+pnpm add @fotbiler/rulegate-angular@1.0.0 @fotbiler/rulegate-client@1.0.0
 ```
 
 Install the optional Keycloak integration when Keycloak supplies the identity:
 
 ```bash
-dotnet add package Fotbiler.RuleGate.Keycloak --version 1.0.0-rc.1
+dotnet add package Fotbiler.RuleGate.Keycloak --version 1.0.0
 ```
 
 ## Use the RuleGate CLI
@@ -267,7 +266,7 @@ Install the RuleGate command-line tool:
 dotnet tool install \
   --global \
   Fotbiler.RuleGate.Cli \
-  --version 1.0.0-rc.1
+  --version 1.0.0
 ```
 
 Validate the default `rulegate.yaml` in the current directory:
@@ -283,7 +282,7 @@ rulegate validate ./policies/rulegate.yaml
 rulegate validate --format json
 ```
 
-The `1.0.0-rc.1` tool evaluates and safely explains deterministic
+The `1.0.0` tool evaluates and safely explains deterministic
 authorization requests against a manifest without starting the host
 application:
 
@@ -562,14 +561,14 @@ Read the [security model](docs/security.md) before production integration.
 
 ## Project status
 
-The latest RuleGate prerelease is
-[`1.0.0-rc.1`](https://github.com/fotbiler-lab/rulegate/releases/tag/v1.0.0-rc.1).
-It freezes the 1.0 public API and adds manifest resource limits, deterministic
-fuzz coverage, sensitive-diagnostics review, package reproducibility checks,
-and complete package-only compatibility gates.
+The latest stable RuleGate release is
+[`1.0.0`](https://github.com/fotbiler-lab/rulegate/releases/tag/v1.0.0).
+It promotes the frozen release-candidate API after manifest resource limits,
+deterministic fuzz coverage, sensitive-diagnostics review, package
+reproducibility checks, and complete package-only compatibility gates.
 
 All six NuGet packages and the three-package npm family are
-`1.0.0-rc.1` for this coordinated release candidate. npm remains independently
+`1.0.0` for this coordinated stable release. npm remains independently
 versioned from NuGet even when the two ecosystems are intentionally aligned.
 
 See the [roadmap](docs/roadmap.md) for the complete release path.

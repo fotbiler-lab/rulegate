@@ -1,6 +1,6 @@
 name: Bug report
 description: Report reproducible incorrect RuleGate behavior
-title: "[Bug]: "
+title: '[Bug]: '
 body:
   - type: markdown
     attributes:
@@ -20,7 +20,7 @@ body:
       options:
         - label: I searched existing issues for the same problem.
           required: true
-        - label: I am using a supported RuleGate preview.
+        - label: I am using a supported RuleGate release.
           required: true
         - label: This report does not contain a security vulnerability.
           required: true
