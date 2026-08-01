@@ -98,6 +98,8 @@ authentication and MFA age, and canonical context-property requirements.
 
 ## Documentation
 
+- [Complete RuleGate guide](https://github.com/fotbiler-lab/rulegate/blob/main/docs/guide/README.md)
+- [Policy language chapter](https://github.com/fotbiler-lab/rulegate/blob/main/docs/guide/04-Policy-Language.md)
 - [Manifest guide](https://github.com/fotbiler-lab/rulegate/blob/main/docs/manifests.md)
 - [Getting started](https://github.com/fotbiler-lab/rulegate/blob/main/docs/getting-started.md)
 - [Authorization model](https://github.com/fotbiler-lab/rulegate/blob/main/docs/authorization-model.md)

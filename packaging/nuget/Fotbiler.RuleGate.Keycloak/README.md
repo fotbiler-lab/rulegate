@@ -53,6 +53,10 @@ Keycloak roles, claims, subject identifiers, or token values. See the
 See the [Keycloak integration guide](https://github.com/fotbiler-lab/rulegate/blob/main/docs/keycloak.md)
 for role naming, client-role selection, and security boundaries.
 
+Start with the [complete RuleGate guide](https://github.com/fotbiler-lab/rulegate/blob/main/docs/guide/README.md)
+and continue with the [Identity and Keycloak chapter](https://github.com/fotbiler-lab/rulegate/blob/main/docs/guide/07-Identity-and-Keycloak.md)
+for the connected authentication, backend, frontend, and trust-boundary flow.
+
 See the
 [document-approval reference application](https://github.com/fotbiler-lab/rulegate/tree/main/samples/document-approval)
 for the complete ASP.NET Core, Angular, Keycloak, SQLite, and YAML composition.

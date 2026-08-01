@@ -144,6 +144,8 @@ rulegate info
 
 ## Documentation
 
+- [Complete RuleGate guide](https://github.com/fotbiler-lab/rulegate/blob/main/docs/guide/README.md)
+- [CLI and policy lifecycle chapter](https://github.com/fotbiler-lab/rulegate/blob/main/docs/guide/09-CLI-and-Policy-Lifecycle.md)
 - [RuleGate CLI guide](https://github.com/fotbiler-lab/rulegate/blob/main/docs/cli.md)
 - [Policy testing](https://github.com/fotbiler-lab/rulegate/blob/main/docs/policy-testing.md)
 - [Explain and Lint](https://github.com/fotbiler-lab/rulegate/blob/main/docs/explain-and-lint.md)

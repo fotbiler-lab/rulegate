@@ -58,6 +58,8 @@ instead of referencing Abstractions directly.
 
 ## Documentation
 
+- [Complete RuleGate guide](https://github.com/fotbiler-lab/rulegate/blob/main/docs/guide/README.md)
+- [Extensibility chapter](https://github.com/fotbiler-lab/rulegate/blob/main/docs/guide/12-Extensibility.md)
 - [Getting started](https://github.com/fotbiler-lab/rulegate/blob/main/docs/getting-started.md)
 - [Authorization model](https://github.com/fotbiler-lab/rulegate/blob/main/docs/authorization-model.md)
 - [Security model](https://github.com/fotbiler-lab/rulegate/blob/main/docs/security.md)

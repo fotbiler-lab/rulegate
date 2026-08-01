@@ -51,7 +51,7 @@ RuleGate 1.0 preserves five product properties:
 | .NET and Angular Compatibility Track         | ✅ Available |
 | API Freeze and Security Hardening            | ✅ Available |
 | Stable Release                               | ✅ Available |
-| Book-Style Documentation and GitHub Wiki     | ⏳ Planned   |
+| Book-Style Documentation and GitHub Wiki     | ✅ Available |
 | Focused Domain Reference Applications        | ⏳ Planned   |
 | Expanded Domain and Compatibility Portfolio  | ⏳ Planned   |
 | Native Java Package Family                   | ⏳ Planned   |
@@ -341,7 +341,7 @@ or security boundaries require a smaller release.
 ### `1.1.0` — Book-Style Documentation and GitHub Wiki
 
 The first post-stable milestone reorganizes and expands the documentation into
-a beginner-to-advanced learning path. Documentation is deliberately scheduled
+a beginner-to-advanced learning path. Documentation is deliberately delivered
 before the larger sample portfolio so that every later reference application
 can add to an established conceptual, recipe, and case-study structure.
 
@@ -356,20 +356,35 @@ A reader with no previous RuleGate experience should be able to:
 - implement custom providers, requirements, evaluators, and adapters;
 - apply RuleGate safely in a production application.
 
-Repository Markdown under `docs/` will remain the canonical source of truth.
-The same documentation will be published to the GitHub Wiki through a
-repeatable synchronization process rather than maintained manually in two
-places.
+Repository Markdown under `docs/` remains the canonical source of truth. The
+same documentation is built for the GitHub Wiki through a repeatable
+synchronization process rather than maintained manually in two places.
 
-The documentation publishing workflow will:
+Delivered scope:
 
-- generate the Wiki `Home` page and `_Sidebar`;
-- preserve usable navigation in both repository Markdown and the Wiki;
-- validate local links;
-- validate commands and important code examples where practical;
-- prevent repository and Wiki documentation from drifting.
+- a connected fourteen-chapter guide and glossary;
+- foundations for readers who are new to RBAC, PBAC, ABAC, CBAC, and
+  resource-based authorization;
+- installation and integration paths for every NuGet and npm package;
+- complete manifest, ASP.NET Core, trusted-enrichment, identity, frontend,
+  CLI, testing, diagnostics, reload, extensibility, and production guidance;
+- real-world recipes with YAML, backend, frontend, test, and security context;
+- Mermaid decision and lifecycle diagrams plus capability and comparison
+  tables where relationships benefit from visualization;
+- a concise product README and package-level routes into the guide;
+- an eighteen-page generated Wiki with `Home`, `_Sidebar`, and `_Footer`;
+- local link and heading-anchor verification;
+- pull-request verification and repeatable main-branch Wiki publication.
 
-The documentation set will include:
+The documentation publishing workflow:
+
+- generates the Wiki `Home` page and `_Sidebar`;
+- preserves usable navigation in both repository Markdown and the Wiki;
+- validates local links;
+- builds the Wiki from the same canonical Markdown;
+- prevents repository and Wiki documentation from drifting.
+
+The documentation set includes:
 
 - getting started and the first working policy;
 - authentication versus authorization;
@@ -385,7 +400,7 @@ The documentation set will include:
 - migration and versioning;
 - advanced extensibility.
 
-Case-study and recipe chapters should normally follow this teaching order:
+Case-study and recipe chapters follow this teaching order:
 
 1. problem;
 2. authorization reasoning;

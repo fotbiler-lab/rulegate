@@ -7,6 +7,21 @@ the compatibility guarantees of a stable major release.
 
 ## [Unreleased]
 
+### Added
+
+- Added a connected beginner-to-production RuleGate guide covering the full
+  NuGet and npm package families, authorization concepts, every built-in
+  policy requirement, ASP.NET Core, trusted enrichment, identity providers,
+  modern and legacy Angular, CLI workflows, testing, diagnostics, policy
+  reload, extensibility, real-world recipes, and production review.
+- Added deterministic documentation-link verification and generated GitHub
+  Wiki Home, sidebar, footer, and chapter publishing workflows.
+
+### Changed
+
+- Simplified the root README into a product overview with a realistic policy,
+  package selection, capability summary, and direct handbook/reference links.
+
 ## [1.0.0] - 2026-08-01
 
 ### Changed

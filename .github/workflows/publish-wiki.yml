@@ -1,0 +1,77 @@
+name: Publish Wiki
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'docs/guide/**'
+      - 'scripts/build-wiki.mjs'
+      - 'scripts/verify-documentation.mjs'
+      - '.github/workflows/publish-wiki.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: rulegate-wiki
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    name: Synchronize GitHub Wiki
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Verify documentation
+        run: node scripts/verify-documentation.mjs
+
+      - name: Build Wiki edition
+        run: node scripts/build-wiki.mjs
+
+      - name: Publish Wiki
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+
+          wiki_directory="$(mktemp --directory /tmp/rulegate-wiki-XXXXXX)"
+          trap 'rm -rf "$wiki_directory"' EXIT
+
+          git clone \
+            "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.wiki.git" \
+            "$wiki_directory"
+
+          find "$wiki_directory" \
+            -mindepth 1 \
+            -maxdepth 1 \
+            -type f \
+            -name '*.md' \
+            -delete
+
+          cp artifacts/wiki/*.md "$wiki_directory"/
+
+          git -C "$wiki_directory" add --all
+
+          if git -C "$wiki_directory" diff --cached --quiet
+          then
+            echo "Wiki is already synchronized."
+            exit 0
+          fi
+
+          git -C "$wiki_directory" \
+            -c user.name='github-actions[bot]' \
+            -c user.email='41898282+github-actions[bot]@users.noreply.github.com' \
+            commit \
+            -m "docs: synchronize RuleGate guide from ${GITHUB_SHA}"
+
+          git -C "$wiki_directory" push origin HEAD:master

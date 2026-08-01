@@ -13,6 +13,7 @@ remains the security boundary.
 pnpm add @fotbiler/rulegate-client@1.0.0
 ```
 
-See the [RuleGate frontend compatibility guide](https://github.com/fotbiler-lab/rulegate/blob/main/docs/frontend-compatibility.md)
-and the [main repository](https://github.com/fotbiler-lab/rulegate) for setup,
-support levels, and package-only verification details.
+Read the [frontend integration chapter](https://github.com/fotbiler-lab/rulegate/blob/main/docs/guide/08-Frontend-Integration.md)
+for the connected snapshot, trust-boundary, Angular 9–11, modern, and legacy
+examples. See the [frontend compatibility reference](https://github.com/fotbiler-lab/rulegate/blob/main/docs/frontend-compatibility.md)
+for support levels and package-only verification details.
