@@ -13,12 +13,12 @@
 <p align="center">
   <a href="https://github.com/fotbiler-lab/rulegate/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/fotbiler-lab/rulegate/actions/workflows/ci.yml/badge.svg?branch=main"></a>
   <a href="https://www.nuget.org/packages/Fotbiler.RuleGate.AspNetCore"><img alt="NuGet" src="https://img.shields.io/nuget/v/Fotbiler.RuleGate.AspNetCore?logo=nuget&amp;label=NuGet"></a>
-  <a href="https://www.nuget.org/packages/Fotbiler.RuleGate.AspNetCore"><img alt="NuGet downloads" src="https://img.shields.io/nuget/dt/Fotbiler.RuleGate.AspNetCore?logo=nuget&amp;label=downloads"></a>
+  <a href="https://www.nuget.org/profiles/fotbiler"><img alt="NuGet family downloads" src="https://img.shields.io/badge/dynamic/regex?url=https%3A%2F%2Fwww.nuget.org%2Fprofiles%2Ffotbiler&amp;search=%3Cdiv%20class%3D%22value%22%3E%28%5B0-9%2C%5D%2B%29%3C%2Fdiv%3E%5B%5B%3Aspace%3A%5D%5D%2A%3Cdiv%20class%3D%22description%22%3ETotal%20downloads%20of%20packages%3C%2Fdiv%3E&amp;replace=%241&amp;label=NuGet%20family%20downloads&amp;logo=nuget&amp;color=004880"></a>
   <a href="https://www.npmjs.com/package/@fotbiler/rulegate-angular"><img alt="npm" src="https://img.shields.io/npm/v/%40fotbiler%2Frulegate-angular?logo=npm&amp;label=npm"></a>
-  <a href="https://www.npmjs.com/package/@fotbiler/rulegate-angular"><img alt="npm downloads" src="https://img.shields.io/npm/dm/%40fotbiler%2Frulegate-angular?logo=npm&amp;label=downloads"></a>
+  <a href="https://www.npmjs.com/org/fotbiler"><img alt="npm family downloads" src="https://img.shields.io/npm-stat/dm/erengaygusuz?logo=npm&amp;label=npm%20family%20downloads"></a>
   <a href="https://dotnet.microsoft.com/"><img alt=".NET Core 3.1 and .NET 5 through 10" src="https://img.shields.io/badge/.NET_Core_3.1_%7C_.NET_5–10-512BD4?logo=dotnet"></a>
   <a href="https://angular.dev/"><img alt="Angular 9 through 22" src="https://img.shields.io/badge/Angular-9–22-DD0031?logo=angular&amp;logoColor=white"></a>
-  <a href="LICENSE"><img alt="License" src="https://img.shields.io/github/license/fotbiler-lab/rulegate?label=license"></a>
+  <a href="LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-blue"></a>
 </p>
 
 <p align="center">
