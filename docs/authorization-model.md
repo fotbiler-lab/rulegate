@@ -760,9 +760,9 @@ A custom evaluator is appropriate when a rule requires:
 Custom evaluators must preserve cancellation, deterministic behavior,
 structured failures, and fail-closed evaluation.
 
-## Current preview boundaries
+## Current release-candidate boundaries
 
-The current preview includes:
+The current release candidate includes:
 
 - Permission requirements
 - Role requirements

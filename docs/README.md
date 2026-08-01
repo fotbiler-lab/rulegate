@@ -34,14 +34,14 @@ rules, authentication and MFA age, and canonical trusted request context.
 | Operate authorization diagnostics safely                            | [Diagnostics](diagnostics.md)                                                   |
 | Understand runtime and integration security                         | [Security model](security.md)                                                   |
 | Understand current and planned capabilities                         | [Roadmap](roadmap.md)                                                           |
-| Prepare and verify a NuGet preview                                  | [NuGet release checklist](releases/preview-release-checklist.md)                |
+| Prepare and verify a NuGet prerelease                               | [NuGet release checklist](releases/preview-release-checklist.md)                |
 | Apply for the NuGet package ID prefix badge                         | [NuGet prefix reservation](releases/nuget-prefix-reservation.md)                |
-| Prepare and verify an npm preview                                   | [npm release checklist](releases/npm-preview-release-checklist.md)              |
+| Prepare and verify an npm prerelease                                | [npm release checklist](releases/npm-preview-release-checklist.md)              |
 
 ## Published packages
 
-The latest published RuleGate NuGet preview is
-[`0.9.0-preview.4`](https://github.com/fotbiler-lab/rulegate/releases/tag/v0.9.0-preview.4).
+The latest published RuleGate prerelease is
+[`1.0.0-rc.1`](https://github.com/fotbiler-lab/rulegate/releases/tag/v1.0.0-rc.1).
 
 | Package                                                                                                | Purpose                                                                                      |
 | ------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------- |
@@ -56,8 +56,8 @@ The latest published RuleGate NuGet preview is
 | [`@fotbiler/rulegate-angular-legacy`](https://www.npmjs.com/package/@fotbiler/rulegate-angular-legacy) | Angular 12–19 observable, NgModule, directive, and class-guard adapter                       |
 
 All six published RuleGate NuGet packages and the three-package npm family
-are `0.9.0-preview.4`. The npm package family remains independently versioned
-family in the next preview.
+are `1.0.0-rc.1`. The npm package family remains independently versioned from
+NuGet even though both ecosystems are aligned for this release candidate.
 
 ## Recommended learning path
 

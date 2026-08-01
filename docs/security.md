@@ -1629,7 +1629,7 @@ Test:
 
 ## Current security boundaries
 
-The current preview provides:
+The current release candidate provides:
 
 - Local in-process authorization
 - Exact policy routing
@@ -1658,7 +1658,7 @@ The current preview provides:
 - Exporter-neutral OpenTelemetry activities and low-cardinality metrics
 - Parallel evaluation/reload tests and bounded concurrency stress
 
-The current preview does not provide:
+The current release candidate does not provide:
 
 - Authentication
 - Token validation

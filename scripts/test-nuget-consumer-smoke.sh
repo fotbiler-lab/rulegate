@@ -22,7 +22,7 @@ PACKAGE_DIRECTORY="$REPOSITORY_ROOT/artifacts/packages"
 
 CONSUMER_PACKAGE_CACHE="$REPOSITORY_ROOT/artifacts/package-consumer-global-packages"
 
-PACKAGE_VERSION="0.9.0-preview.4"
+PACKAGE_VERSION="1.0.0-rc.1"
 
 EXPECTED_FRAMEWORKS=(
   "netcoreapp3.1"

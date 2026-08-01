@@ -1,4 +1,4 @@
-# npm Preview Release Checklist
+# npm Prerelease Checklist
 
 This checklist defines the release process for the public RuleGate npm package
 family.
@@ -18,7 +18,8 @@ The compatibility package family contains:
 
 All three packages are public, share one npm version, and are published
 together even when only one package has code changes. npm packages retain an
-independent version line from the synchronized NuGet package family.
+independent version line from the synchronized NuGet package family. The
+current synchronized npm prerelease version is `1.0.0-rc.1`.
 
 ## Required security configuration
 
@@ -71,7 +72,7 @@ Before tagging, verify:
       `keycloak-js` a dependency or peer dependency.
 - [ ] Changelog contains a dated release section.
 - [ ] Roadmap describes the Angular SDK as available.
-- [ ] Installation examples contain the exact preview version.
+- [ ] Installation examples contain the exact prerelease version.
 - [ ] Normal CI builds packages but cannot publish them.
 - [ ] `publish-npm.yml` expects the exact annotated release tag.
 
@@ -202,9 +203,9 @@ npm stage approve <stage-id>
 Every approval requires maintainer proof-of-presence/2FA. GitHub Actions OIDC
 must not be used to approve or reject staged packages.
 
-The workflow stages preview releases with the `preview` distribution tag.
+The workflow stages this release candidate with the `rc` distribution tag.
 Until RuleGate has a stable release, also align `latest` to the newly verified
-preview after all three packages are publicly visible:
+release candidate after all three packages are publicly visible:
 
 ```bash
 npm dist-tag add "@fotbiler/rulegate-client@$VERSION" latest
@@ -212,9 +213,9 @@ npm dist-tag add "@fotbiler/rulegate-angular-legacy@$VERSION" latest
 npm dist-tag add "@fotbiler/rulegate-angular@$VERSION" latest
 ```
 
-Verify both `preview` and `latest` on all three packages. After the first stable
-RuleGate release, reserve `latest` for the stable line and keep prereleases on
-their prerelease distribution tag.
+Verify both `rc` and `latest` on all three packages. After the first stable
+RuleGate release, reserve `latest` for the stable line and keep release
+candidates on `rc`.
 
 ## Public-package verification
 
@@ -222,9 +223,9 @@ After publication, verify:
 
 - [ ] Exact names and one aligned version across all three packages.
 - [ ] Public visibility.
-- [ ] `preview` distribution tag points to the intended preview version.
+- [ ] `rc` distribution tag points to the intended release-candidate version.
 - [ ] Before the first stable release, `latest` is deliberately aligned to the
-      intended preview version; after stable release, `latest` remains on the
+      intended release-candidate version; after stable release, `latest` remains on the
       stable line.
 - [ ] Repository URL and directory.
 - [ ] License and README rendering.

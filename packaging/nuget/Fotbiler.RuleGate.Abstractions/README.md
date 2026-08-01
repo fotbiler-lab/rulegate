@@ -6,14 +6,15 @@ This package contains policy definitions, authorization requests and
 decisions, typed attribute values, requirement evaluation abstractions, and
 diagnostics contracts. Policy-source, reload-result, and snapshot metadata
 contracts and public telemetry source names are also defined here. It does not
-contain the RuleGate authorization engine.
+contain the RuleGate authorization engine. The frozen 1.0 surface also exposes
+stable authorization failure codes used by package consumers and diagnostics.
 
-RuleGate is currently in preview. Public APIs may change before the first
-stable release.
+RuleGate is currently in release candidate. The 1.0 public API is frozen;
+blocking compatibility or security fixes may still be made before stable.
 
 ## Installation
 
-    dotnet add package Fotbiler.RuleGate.Abstractions --version 0.9.0-preview.4
+    dotnet add package Fotbiler.RuleGate.Abstractions --version 1.0.0-rc.1
 
 ## Compatibility
 

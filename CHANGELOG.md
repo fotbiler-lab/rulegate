@@ -6,6 +6,51 @@ The project follows Semantic Versioning. Preview releases may introduce breaking
 
 ## [Unreleased]
 
+## [1.0.0-rc.1] - 2026-08-01
+
+### Added
+
+- Added approved public API snapshots for every supported NuGet target and
+  frontend package surface, with deterministic API-freeze verification in CI.
+- Added `IRuleGateClock` and the system-backed `SystemRuleGateClock` as the
+  portable, host-replaceable ASP.NET Core evaluation-clock contract.
+- Added bounded manifest resource limits, stable load and validation failure
+  codes, requirement-depth protection, and deterministic manifest fuzz tests.
+- Added the [RuleGate 1.0 migration guide](docs/migration-to-1.0.md) for the
+  intentional preview-to-1.0 clock-contract transition.
+
+### Changed
+
+- Froze the candidate RuleGate 1.0 public API for all six NuGet packages and
+  all three npm packages.
+- Replaced the public ASP.NET Core `TimeProvider` dependency with
+  `IRuleGateClock`; applications that customize RuleGate evaluation time must
+  update their registration as described in the migration guide.
+- Adopted the MIT license for RuleGate-owned source and future packages.
+- Removed legacy package dependency choices that required target-framework
+  support-warning suppression while preserving the declared .NET matrix.
+
+### Security
+
+- Hardened YAML loading and validation with bounded document, node, depth,
+  scalar, collection, alias, and policy complexity limits.
+- Preserved fail-closed outcomes when logical requirement nesting exceeds the
+  configured evaluation boundary or malformed input cannot be evaluated
+  reliably.
+- Added automated review of built-in diagnostic surfaces to prevent subject,
+  resource, policy, claim, role, permission, attribute, exception, and stack
+  values from entering safe diagnostics.
+- Added a production-source gate that rejects runtime regular-expression use.
+
+### Verification
+
+- Added byte-for-byte NuGet and npm artifact reproducibility checks from
+  isolated build state.
+- Added package-only current and `0.9.0-preview.4` baseline consumer matrices
+  across .NET Core 3.1, .NET 5–10, and Angular 9–22.
+- Added public API compatibility, sensitive diagnostics, deterministic fuzz,
+  package payload, source commit, and locked dependency verification to CI.
+
 ## [0.9.0-preview.4] - 2026-07-31
 
 ### Added
@@ -644,7 +689,9 @@ The project follows Semantic Versioning. Preview releases may introduce breaking
 - CLI, Angular, and Keycloak integration packages are not yet included.
 - Public APIs may change before the first stable release.
 
-[Unreleased]: https://github.com/fotbiler-lab/rulegate/compare/v0.9.0-preview.3...HEAD
+[Unreleased]: https://github.com/fotbiler-lab/rulegate/compare/v1.0.0-rc.1...HEAD
+[1.0.0-rc.1]: https://github.com/fotbiler-lab/rulegate/compare/v0.9.0-preview.4...v1.0.0-rc.1
+[0.9.0-preview.4]: https://github.com/fotbiler-lab/rulegate/compare/v0.9.0-preview.3...v0.9.0-preview.4
 [0.9.0-preview.3]: https://github.com/fotbiler-lab/rulegate/compare/v0.9.0-preview.2...v0.9.0-preview.3
 [0.9.0-preview.2]: https://github.com/fotbiler-lab/rulegate/compare/v0.9.0-preview.1...v0.9.0-preview.2
 [0.9.0-preview.1]: https://github.com/fotbiler-lab/rulegate/compare/v0.8.0-preview.2...v0.9.0-preview.1

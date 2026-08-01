@@ -1,6 +1,6 @@
 {
   "name": "@fotbiler/rulegate-angular-legacy",
-  "version": "0.9.0-preview.4",
+  "version": "1.0.0-rc.1",
   "description": "NgModule, observable, class guard, and classic directive adapters for legacy Angular RuleGate applications.",
   "keywords": [
     "angular",
@@ -26,7 +26,7 @@
   "peerDependencies": {
     "@angular/core": ">=12.0.0 <20.0.0",
     "@angular/router": ">=12.0.0 <20.0.0",
-    "@fotbiler/rulegate-client": "0.9.0-preview.4",
+    "@fotbiler/rulegate-client": "1.0.0-rc.1",
     "rxjs": "^6.5.0 || ^7.0.0"
   },
   "publishConfig": {

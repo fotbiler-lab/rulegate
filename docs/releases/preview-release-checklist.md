@@ -1,6 +1,7 @@
-# NuGet Preview Release Checklist
+# NuGet Prerelease Checklist
 
-This checklist defines the release process for RuleGate NuGet previews.
+This checklist defines the release process for RuleGate NuGet previews and
+release candidates.
 
 NuGet packages are immutable. A published version must never be overwritten,
 and a published release tag must never be moved or recreated.
@@ -19,7 +20,7 @@ The current release family contains:
 Release verification produces one `.nupkg` and one `.snupkg` for every package
 in the tagged source. Every package in the release family uses the same version
 and is published for every NuGet release, including packages without code
-changes. The current synchronized NuGet version is `0.9.0-preview.4`.
+changes. The current synchronized NuGet version is `1.0.0-rc.1`.
 
 ## Release workflow
 
@@ -100,7 +101,7 @@ Review and update:
 - [ ] This release checklist when the workflow changes.
 - [ ] Every `packaging/nuget/*/README.md` source.
 - [ ] Package tables contain the complete release family.
-- [ ] Installation commands use the intended exact preview version.
+- [ ] Installation commands use the intended exact prerelease version.
 - [ ] Delivered capabilities are not still described as planned.
 - [ ] Local Markdown links resolve.
 - [ ] Markdown code fences are balanced.
@@ -269,7 +270,7 @@ Verify that the run:
 - [ ] Completes successfully.
 - [ ] Uploads one workflow artifact containing six verified `.nupkg` and six
       verified `.snupkg` files.
-- [ ] Publishes every RuleGate NuGet package at `0.9.0-preview.4`.
+- [ ] Publishes every RuleGate NuGet package at `1.0.0-rc.1`.
 
 Record:
 

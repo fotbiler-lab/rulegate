@@ -34,7 +34,7 @@ The Keycloak integrations do not:
 Install the optional package alongside the normal ASP.NET Core integration:
 
 ```bash
-dotnet add package Fotbiler.RuleGate.Keycloak --version 0.9.0-preview.4
+dotnet add package Fotbiler.RuleGate.Keycloak --version 1.0.0-rc.1
 ```
 
 Configure authentication in the host application, preserving Keycloak's claim

@@ -15,7 +15,7 @@ verified only to help existing applications migrate.
 | `Fotbiler.RuleGate.Cli`          | `net8.0`, `net9.0`, `net10.0`                   |
 
 [.NET 8, .NET 9, and .NET 10 are supported by Microsoft](https://dotnet.microsoft.com/en-us/platform/support/policy/dotnet-core)
-as of July 2026.
+as of August 2026.
 .NET Core 3.1 and .NET 5–7 are end-of-life. RuleGate cannot provide runtime or
 framework security maintenance for those releases.
 
@@ -44,7 +44,7 @@ retain the standard ASP.NET Core 3.1 challenge and forbid behavior.
 | 9–11            | `@fotbiler/rulegate-client` in a host-owned service | Legacy-tested |
 
 [Angular 20–22 are supported by Angular](https://angular.dev/reference/releases)
-as of July 2026. Angular 9–19 are end-of-life. See
+as of August 2026. Angular 9–19 are end-of-life. See
 [Frontend compatibility](frontend-compatibility.md) for the adapter APIs and
 installation paths.
 

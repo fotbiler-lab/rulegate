@@ -1,6 +1,6 @@
 {
   "name": "@fotbiler/rulegate-client",
-  "version": "0.9.0-preview.4",
+  "version": "1.0.0-rc.1",
   "description": "Framework-independent, fail-closed authorization state for RuleGate web clients.",
   "keywords": [
     "authorization",

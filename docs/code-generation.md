@@ -7,13 +7,13 @@ turning generated output into an authorization boundary.
 
 ## Prerequisites
 
-Install the current RuleGate CLI preview:
+Install the current RuleGate CLI release candidate:
 
 ```bash
 dotnet tool install \
   --global \
   Fotbiler.RuleGate.Cli \
-  --version 0.9.0-preview.4
+  --version 1.0.0-rc.1
 ```
 
 You need a complete manifest that passes `rulegate validate`:

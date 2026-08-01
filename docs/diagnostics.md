@@ -821,7 +821,7 @@ The current diagnostics surface includes:
 - Built-in low-cardinality counters and duration histograms
 - Cancellation and unexpected-error telemetry
 
-The current preview does not include:
+The current release candidate does not include:
 
 - Persistent diagnostic storage
 - Built-in multi-sink fan-out
@@ -829,7 +829,7 @@ The current preview does not include:
 - Durable compliance audit logging
 - Guaranteed diagnostics for failed or canceled evaluations
 
-See the [roadmap](roadmap.md) for the remaining release-hardening work.
+See the [roadmap](roadmap.md) for post-stable product planning.
 
 ## Next steps
 
