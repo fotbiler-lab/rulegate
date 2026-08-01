@@ -1,0 +1,63 @@
+ASSEMBLY | Fotbiler.RuleGate.Keycloak
+FIELD | Public | static | Fotbiler.RuleGate.Keycloak.Subjects.RuleGateKeycloakSubjectOptions.DefaultPermissionClaimType
+FIELD | Public | static | Fotbiler.RuleGate.Keycloak.Subjects.RuleGateKeycloakSubjectOptions.DefaultRealmAccessClaimType
+FIELD | Public | static | Fotbiler.RuleGate.Keycloak.Subjects.RuleGateKeycloakSubjectOptions.DefaultResourceAccessClaimType
+FIELD | Public | static | Fotbiler.RuleGate.Keycloak.Subjects.RuleGateKeycloakSubjectOptions.DefaultSubjectIdClaimType
+FIELD-SHAPE | Fotbiler.RuleGate.Keycloak.Subjects.RuleGateKeycloakSubjectOptions.DefaultPermissionClaimType | const=True | readonly=False | volatile=False
+FIELD-SHAPE | Fotbiler.RuleGate.Keycloak.Subjects.RuleGateKeycloakSubjectOptions.DefaultRealmAccessClaimType | const=True | readonly=False | volatile=False
+FIELD-SHAPE | Fotbiler.RuleGate.Keycloak.Subjects.RuleGateKeycloakSubjectOptions.DefaultResourceAccessClaimType | const=True | readonly=False | volatile=False
+FIELD-SHAPE | Fotbiler.RuleGate.Keycloak.Subjects.RuleGateKeycloakSubjectOptions.DefaultSubjectIdClaimType | const=True | readonly=False | volatile=False
+FIELD-VALUE | Fotbiler.RuleGate.Keycloak.Subjects.RuleGateKeycloakSubjectOptions.DefaultPermissionClaimType | "permission"
+FIELD-VALUE | Fotbiler.RuleGate.Keycloak.Subjects.RuleGateKeycloakSubjectOptions.DefaultRealmAccessClaimType | "realm_access"
+FIELD-VALUE | Fotbiler.RuleGate.Keycloak.Subjects.RuleGateKeycloakSubjectOptions.DefaultResourceAccessClaimType | "resource_access"
+FIELD-VALUE | Fotbiler.RuleGate.Keycloak.Subjects.RuleGateKeycloakSubjectOptions.DefaultSubjectIdClaimType | "sub"
+METHOD | Public | - | Fotbiler.RuleGate.Keycloak.Subjects.KeycloakRuleGateSubjectFactory.Create(System.Security.Claims.ClaimsPrincipal)
+METHOD | Public | - | Fotbiler.RuleGate.Keycloak.Subjects.KeycloakRuleGateSubjectFactory.KeycloakRuleGateSubjectFactory(Microsoft.Extensions.Options.IOptions<Fotbiler.RuleGate.Keycloak.Subjects.RuleGateKeycloakSubjectOptions>)
+METHOD | Public | - | Fotbiler.RuleGate.Keycloak.Subjects.RuleGateKeycloakSubjectOptions.RuleGateKeycloakSubjectOptions()
+METHOD | Public | static | Fotbiler.RuleGate.Keycloak.DependencyInjection.RuleGateKeycloakBuilderExtensions.UseKeycloakSubjectMapping(Fotbiler.RuleGate.AspNetCore.DependencyInjection.RuleGateBuilder, System.Action<Fotbiler.RuleGate.Keycloak.Subjects.RuleGateKeycloakSubjectOptions>?)
+METHOD | Public | static | Fotbiler.RuleGate.Keycloak.KeycloakRoleNames.ClientRole(string, string)
+METHOD | Public | static | Fotbiler.RuleGate.Keycloak.KeycloakRoleNames.EncodeComponent(string)
+METHOD | Public | static | Fotbiler.RuleGate.Keycloak.KeycloakRoleNames.RealmRole(string)
+METHOD-SHAPE | Fotbiler.RuleGate.Keycloak.DependencyInjection.RuleGateKeycloakBuilderExtensions.UseKeycloakSubjectMapping(Fotbiler.RuleGate.AspNetCore.DependencyInjection.RuleGateBuilder, System.Action<Fotbiler.RuleGate.Keycloak.Subjects.RuleGateKeycloakSubjectOptions>?) | kind=Ordinary | extension=True | returnRef=None
+METHOD-SHAPE | Fotbiler.RuleGate.Keycloak.KeycloakRoleNames.ClientRole(string, string) | kind=Ordinary | extension=False | returnRef=None
+METHOD-SHAPE | Fotbiler.RuleGate.Keycloak.KeycloakRoleNames.EncodeComponent(string) | kind=Ordinary | extension=False | returnRef=None
+METHOD-SHAPE | Fotbiler.RuleGate.Keycloak.KeycloakRoleNames.RealmRole(string) | kind=Ordinary | extension=False | returnRef=None
+METHOD-SHAPE | Fotbiler.RuleGate.Keycloak.Subjects.KeycloakRuleGateSubjectFactory.Create(System.Security.Claims.ClaimsPrincipal) | kind=Ordinary | extension=False | returnRef=None
+METHOD-SHAPE | Fotbiler.RuleGate.Keycloak.Subjects.KeycloakRuleGateSubjectFactory.KeycloakRuleGateSubjectFactory(Microsoft.Extensions.Options.IOptions<Fotbiler.RuleGate.Keycloak.Subjects.RuleGateKeycloakSubjectOptions>) | kind=Constructor | extension=False | returnRef=None
+METHOD-SHAPE | Fotbiler.RuleGate.Keycloak.Subjects.RuleGateKeycloakSubjectOptions.RuleGateKeycloakSubjectOptions() | kind=Constructor | extension=False | returnRef=None
+PARAM | Fotbiler.RuleGate.Keycloak.DependencyInjection.RuleGateKeycloakBuilderExtensions.UseKeycloakSubjectMapping(Fotbiler.RuleGate.AspNetCore.DependencyInjection.RuleGateBuilder, System.Action<Fotbiler.RuleGate.Keycloak.Subjects.RuleGateKeycloakSubjectOptions>?) | 0 | builder | type=Fotbiler.RuleGate.AspNetCore.DependencyInjection.RuleGateBuilder | ref=None | params=False | optional=False
+PARAM | Fotbiler.RuleGate.Keycloak.DependencyInjection.RuleGateKeycloakBuilderExtensions.UseKeycloakSubjectMapping(Fotbiler.RuleGate.AspNetCore.DependencyInjection.RuleGateBuilder, System.Action<Fotbiler.RuleGate.Keycloak.Subjects.RuleGateKeycloakSubjectOptions>?) | 1 | configure | type=System.Action<Fotbiler.RuleGate.Keycloak.Subjects.RuleGateKeycloakSubjectOptions>? | ref=None | params=False | optional=True
+PARAM | Fotbiler.RuleGate.Keycloak.KeycloakRoleNames.ClientRole(string, string) | 0 | clientId | type=string | ref=None | params=False | optional=False
+PARAM | Fotbiler.RuleGate.Keycloak.KeycloakRoleNames.ClientRole(string, string) | 1 | role | type=string | ref=None | params=False | optional=False
+PARAM | Fotbiler.RuleGate.Keycloak.KeycloakRoleNames.EncodeComponent(string) | 0 | value | type=string | ref=None | params=False | optional=False
+PARAM | Fotbiler.RuleGate.Keycloak.KeycloakRoleNames.RealmRole(string) | 0 | role | type=string | ref=None | params=False | optional=False
+PARAM | Fotbiler.RuleGate.Keycloak.Subjects.KeycloakRuleGateSubjectFactory.Create(System.Security.Claims.ClaimsPrincipal) | 0 | principal | type=System.Security.Claims.ClaimsPrincipal | ref=None | params=False | optional=False
+PARAM | Fotbiler.RuleGate.Keycloak.Subjects.KeycloakRuleGateSubjectFactory.KeycloakRuleGateSubjectFactory(Microsoft.Extensions.Options.IOptions<Fotbiler.RuleGate.Keycloak.Subjects.RuleGateKeycloakSubjectOptions>) | 0 | options | type=Microsoft.Extensions.Options.IOptions<Fotbiler.RuleGate.Keycloak.Subjects.RuleGateKeycloakSubjectOptions> | ref=None | params=False | optional=False
+PARAM-DEFAULT | Fotbiler.RuleGate.Keycloak.DependencyInjection.RuleGateKeycloakBuilderExtensions.UseKeycloakSubjectMapping(Fotbiler.RuleGate.AspNetCore.DependencyInjection.RuleGateBuilder, System.Action<Fotbiler.RuleGate.Keycloak.Subjects.RuleGateKeycloakSubjectOptions>?) | 1 | configure | null
+PROPERTY | Public | - | Fotbiler.RuleGate.Keycloak.Subjects.RuleGateKeycloakSubjectOptions.ClientIds
+PROPERTY | Public | - | Fotbiler.RuleGate.Keycloak.Subjects.RuleGateKeycloakSubjectOptions.IncludeRealmRoles
+PROPERTY | Public | - | Fotbiler.RuleGate.Keycloak.Subjects.RuleGateKeycloakSubjectOptions.PermissionClaimTypes
+PROPERTY | Public | - | Fotbiler.RuleGate.Keycloak.Subjects.RuleGateKeycloakSubjectOptions.RealmAccessClaimType
+PROPERTY | Public | - | Fotbiler.RuleGate.Keycloak.Subjects.RuleGateKeycloakSubjectOptions.RequireAuthenticatedPrincipal
+PROPERTY | Public | - | Fotbiler.RuleGate.Keycloak.Subjects.RuleGateKeycloakSubjectOptions.ResourceAccessClaimType
+PROPERTY | Public | - | Fotbiler.RuleGate.Keycloak.Subjects.RuleGateKeycloakSubjectOptions.SubjectIdClaimType
+PROPERTY-ACCESSORS | Fotbiler.RuleGate.Keycloak.Subjects.RuleGateKeycloakSubjectOptions.ClientIds | get=Public | set=- | init=False
+PROPERTY-ACCESSORS | Fotbiler.RuleGate.Keycloak.Subjects.RuleGateKeycloakSubjectOptions.IncludeRealmRoles | get=Public | set=Public | init=False
+PROPERTY-ACCESSORS | Fotbiler.RuleGate.Keycloak.Subjects.RuleGateKeycloakSubjectOptions.PermissionClaimTypes | get=Public | set=- | init=False
+PROPERTY-ACCESSORS | Fotbiler.RuleGate.Keycloak.Subjects.RuleGateKeycloakSubjectOptions.RealmAccessClaimType | get=Public | set=Public | init=False
+PROPERTY-ACCESSORS | Fotbiler.RuleGate.Keycloak.Subjects.RuleGateKeycloakSubjectOptions.RequireAuthenticatedPrincipal | get=Public | set=Public | init=False
+PROPERTY-ACCESSORS | Fotbiler.RuleGate.Keycloak.Subjects.RuleGateKeycloakSubjectOptions.ResourceAccessClaimType | get=Public | set=Public | init=False
+PROPERTY-ACCESSORS | Fotbiler.RuleGate.Keycloak.Subjects.RuleGateKeycloakSubjectOptions.SubjectIdClaimType | get=Public | set=Public | init=False
+TYPE | Public | sealed | Fotbiler.RuleGate.Keycloak.Subjects.KeycloakRuleGateSubjectFactory
+TYPE | Public | sealed | Fotbiler.RuleGate.Keycloak.Subjects.RuleGateKeycloakSubjectOptions
+TYPE | Public | static | Fotbiler.RuleGate.Keycloak.DependencyInjection.RuleGateKeycloakBuilderExtensions
+TYPE | Public | static | Fotbiler.RuleGate.Keycloak.KeycloakRoleNames
+TYPE-BASE | Fotbiler.RuleGate.Keycloak.DependencyInjection.RuleGateKeycloakBuilderExtensions | object
+TYPE-BASE | Fotbiler.RuleGate.Keycloak.KeycloakRoleNames | object
+TYPE-BASE | Fotbiler.RuleGate.Keycloak.Subjects.KeycloakRuleGateSubjectFactory | object
+TYPE-BASE | Fotbiler.RuleGate.Keycloak.Subjects.RuleGateKeycloakSubjectOptions | object
+TYPE-INTERFACE | Fotbiler.RuleGate.Keycloak.Subjects.KeycloakRuleGateSubjectFactory | Fotbiler.RuleGate.AspNetCore.Subjects.IRuleGateSubjectFactory
+TYPE-KIND | Fotbiler.RuleGate.Keycloak.DependencyInjection.RuleGateKeycloakBuilderExtensions | Class | record=False | readonly=False | reflike=False
+TYPE-KIND | Fotbiler.RuleGate.Keycloak.KeycloakRoleNames | Class | record=False | readonly=False | reflike=False
+TYPE-KIND | Fotbiler.RuleGate.Keycloak.Subjects.KeycloakRuleGateSubjectFactory | Class | record=False | readonly=False | reflike=False
+TYPE-KIND | Fotbiler.RuleGate.Keycloak.Subjects.RuleGateKeycloakSubjectOptions | Class | record=False | readonly=False | reflike=False

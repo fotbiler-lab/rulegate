@@ -357,6 +357,62 @@ public sealed class
 
     [Fact]
     public async Task
+        EvaluateAsync_ignores_sink_cancellation()
+    {
+        var engine =
+            CreateEngine(
+                new PermissionRequirementDefinition(
+                    "document.read"),
+                new CancellingDiagnosticsSink());
+
+        var decision =
+            await engine.EvaluateAsync(
+                CreateRequest(
+                    permissions:
+                    [
+                        "document.read"
+                    ]));
+
+        Assert.True(decision.IsAllowed);
+    }
+
+    [Fact]
+    public async Task
+        EvaluateAsync_isolates_final_diagnostic_write_from_request_cancellation()
+    {
+        var sink =
+            new CancellationTokenRecordingDiagnosticsSink();
+
+        var engine =
+            CreateEngine(
+                new PermissionRequirementDefinition(
+                    "document.read"),
+                sink);
+
+        using var cancellation =
+            new CancellationTokenSource();
+
+        Assert.True(
+            cancellation.Token.CanBeCanceled);
+
+        var decision =
+            await engine.EvaluateAsync(
+                CreateRequest(
+                    permissions:
+                    [
+                        "document.read"
+                    ]),
+                cancellation.Token);
+
+        Assert.True(decision.IsAllowed);
+        Assert.Equal(1, sink.WriteCount);
+        Assert.Equal(
+            CancellationToken.None,
+            sink.ObservedCancellationToken);
+    }
+
+    [Fact]
+    public async Task
         EvaluateAsync_does_not_write_when_sink_is_disabled()
     {
         var sink =
@@ -494,6 +550,44 @@ public sealed class
         {
             throw new InvalidOperationException(
                 "Diagnostics failure.");
+        }
+    }
+
+    private sealed class CancellingDiagnosticsSink
+        : IAuthorizationDiagnosticsSink
+    {
+        public bool IsEnabled => true;
+
+        public ValueTask WriteAsync(
+            AuthorizationEvaluationDiagnostic diagnostic,
+            CancellationToken cancellationToken = default)
+        {
+            throw new OperationCanceledException(
+                "Diagnostics cancellation.");
+        }
+    }
+
+    private sealed class
+        CancellationTokenRecordingDiagnosticsSink
+        : IAuthorizationDiagnosticsSink
+    {
+        public bool IsEnabled => true;
+
+        internal int WriteCount { get; private set; }
+
+        internal CancellationToken
+            ObservedCancellationToken
+        { get; private set; }
+
+        public ValueTask WriteAsync(
+            AuthorizationEvaluationDiagnostic diagnostic,
+            CancellationToken cancellationToken = default)
+        {
+            WriteCount++;
+            ObservedCancellationToken =
+                cancellationToken;
+
+            return ValueTask.CompletedTask;
         }
     }
 

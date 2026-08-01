@@ -4,6 +4,7 @@ using Fotbiler.RuleGate.Abstractions.Policies;
 using Fotbiler.RuleGate.AspNetCore.Authorization;
 using Fotbiler.RuleGate.AspNetCore.Enrichment;
 using Fotbiler.RuleGate.AspNetCore.Subjects;
+using Fotbiler.RuleGate.AspNetCore.Time;
 using Fotbiler.RuleGate.Core.Engine;
 using Fotbiler.RuleGate.Core.Evaluation;
 using Fotbiler.RuleGate.Core.Evaluation.Evaluators;
@@ -29,8 +30,8 @@ public static class RuleGateServiceCollectionExtensions
             ClaimsPrincipalRuleGateSubjectFactory>();
 
         services.TryAddSingleton<
-            TimeProvider>(
-                TimeProvider.System);
+            IRuleGateClock>(
+                SystemRuleGateClock.Instance);
 
         services.Replace(
             ServiceDescriptor.Singleton<

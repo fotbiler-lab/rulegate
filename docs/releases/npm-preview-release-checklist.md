@@ -63,7 +63,7 @@ Before tagging, verify:
 - [ ] Package names and repository directories match the release inventory.
 - [ ] `publishConfig.access` is `public`.
 - [ ] Repository URL and directory are correct.
-- [ ] License is `Apache-2.0`.
+- [ ] License is `MIT`.
 - [ ] Modern Angular peer dependencies cover Angular 20–22.
 - [ ] Legacy Angular peer dependencies cover Angular 12–19.
 - [ ] Both Angular adapters require the exact package-family client version.

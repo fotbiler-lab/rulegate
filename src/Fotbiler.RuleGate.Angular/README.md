@@ -148,4 +148,4 @@ for the Angular and ASP.NET Core composition model.
 ## License
 
 Licensed under the
-[Apache License 2.0](https://github.com/fotbiler-lab/rulegate/blob/main/LICENSE).
+[MIT License](https://github.com/fotbiler-lab/rulegate/blob/main/LICENSE).

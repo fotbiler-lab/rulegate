@@ -12,6 +12,9 @@ public sealed class ManifestLoadResult
         Errors = errors;
     }
 
+    [System.Diagnostics.CodeAnalysis.MemberNotNullWhen(
+        true,
+        nameof(Manifest))]
     public bool IsSuccess =>
         Manifest is not null &&
         Errors.Count == 0;

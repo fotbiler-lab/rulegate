@@ -10,6 +10,8 @@ public sealed class RequirementEvaluationDispatcher
     : IRequirementEvaluationDispatcher,
       IRequirementEvaluationDiagnosticsDispatcher
 {
+    private const int MaximumRequirementDepth = 64;
+
     private readonly Dictionary<
         Type,
         IRequirementEvaluator> _evaluators;
@@ -58,24 +60,10 @@ public sealed class RequirementEvaluationDispatcher
             RequirementEvaluationContext context,
             CancellationToken cancellationToken = default)
     {
-        ValidateArguments(
+        return EvaluateAsync(
             requirement,
             context,
-            cancellationToken);
-
-        if (!_evaluators.TryGetValue(
-                requirement.GetType(),
-                out var evaluator))
-        {
-            return ValueTaskCompat.FromResult(
-                CreateEvaluatorNotFoundResult(
-                    requirement));
-        }
-
-        return evaluator.EvaluateAsync(
-            requirement,
-            context,
-            this,
+            depth: 1,
             cancellationToken);
     }
 
@@ -93,6 +81,47 @@ public sealed class RequirementEvaluationDispatcher
             context,
             session,
             parentEvaluationId,
+            depth: 1,
+            cancellationToken);
+    }
+
+    private ValueTask<RequirementEvaluationResult>
+        EvaluateAsync(
+            RequirementDefinition requirement,
+            RequirementEvaluationContext context,
+            int depth,
+            CancellationToken cancellationToken)
+    {
+        ValidateArguments(
+            requirement,
+            context,
+            cancellationToken);
+
+        if (depth > MaximumRequirementDepth)
+        {
+            return ValueTaskCompat.FromResult(
+                CreateRequirementDepthExceededResult(
+                    requirement));
+        }
+
+        if (!_evaluators.TryGetValue(
+                requirement.GetType(),
+                out var evaluator))
+        {
+            return ValueTaskCompat.FromResult(
+                CreateEvaluatorNotFoundResult(
+                    requirement));
+        }
+
+        var childDispatcher =
+            new DepthTrackingChildDispatcher(
+                this,
+                depth + 1);
+
+        return evaluator.EvaluateAsync(
+            requirement,
+            context,
+            childDispatcher,
             cancellationToken);
     }
 
@@ -102,6 +131,7 @@ public sealed class RequirementEvaluationDispatcher
             RequirementEvaluationContext context,
             AuthorizationDiagnosticsSession session,
             Guid? parentEvaluationId,
+            int depth,
             CancellationToken cancellationToken)
     {
         ValidateArguments(
@@ -118,9 +148,15 @@ public sealed class RequirementEvaluationDispatcher
 
         RequirementEvaluationResult result;
 
-        if (!_evaluators.TryGetValue(
-                requirement.GetType(),
-                out var evaluator))
+        if (depth > MaximumRequirementDepth)
+        {
+            result =
+                CreateRequirementDepthExceededResult(
+                    requirement);
+        }
+        else if (!_evaluators.TryGetValue(
+                     requirement.GetType(),
+                     out var evaluator))
         {
             result =
                 CreateEvaluatorNotFoundResult(
@@ -132,7 +168,8 @@ public sealed class RequirementEvaluationDispatcher
                 new DiagnosticsChildDispatcher(
                     this,
                     session,
-                    token.EvaluationId);
+                    token.EvaluationId,
+                    depth + 1);
 
             result =
                 await evaluator.EvaluateAsync(
@@ -142,7 +179,9 @@ public sealed class RequirementEvaluationDispatcher
                     cancellationToken);
         }
 
-        session.Complete(token, result);
+        session.Complete(
+            token,
+            result);
 
         return result;
     }
@@ -170,6 +209,48 @@ public sealed class RequirementEvaluationDispatcher
                     requirement.Id));
     }
 
+    private static RequirementEvaluationResult
+        CreateRequirementDepthExceededResult(
+            RequirementDefinition requirement)
+    {
+        return RequirementEvaluationResult
+            .Indeterminate(
+                new AuthorizationFailure(
+                    AuthorizationFailureCodes
+                        .RequirementDepthExceeded,
+                    requirement.Id));
+    }
+
+    private sealed class DepthTrackingChildDispatcher
+        : IRequirementEvaluationDispatcher
+    {
+        private readonly
+            RequirementEvaluationDispatcher _dispatcher;
+
+        private readonly int _depth;
+
+        internal DepthTrackingChildDispatcher(
+            RequirementEvaluationDispatcher dispatcher,
+            int depth)
+        {
+            _dispatcher = dispatcher;
+            _depth = depth;
+        }
+
+        public ValueTask<RequirementEvaluationResult>
+            EvaluateAsync(
+                RequirementDefinition requirement,
+                RequirementEvaluationContext context,
+                CancellationToken cancellationToken = default)
+        {
+            return _dispatcher.EvaluateAsync(
+                requirement,
+                context,
+                _depth,
+                cancellationToken);
+        }
+    }
+
     private sealed class DiagnosticsChildDispatcher
         : IRequirementEvaluationDispatcher
     {
@@ -181,15 +262,19 @@ public sealed class RequirementEvaluationDispatcher
 
         private readonly Guid _parentEvaluationId;
 
+        private readonly int _depth;
+
         internal DiagnosticsChildDispatcher(
             RequirementEvaluationDispatcher dispatcher,
             AuthorizationDiagnosticsSession session,
-            Guid parentEvaluationId)
+            Guid parentEvaluationId,
+            int depth)
         {
             _dispatcher = dispatcher;
             _session = session;
             _parentEvaluationId =
                 parentEvaluationId;
+            _depth = depth;
         }
 
         public ValueTask<RequirementEvaluationResult>
@@ -204,6 +289,7 @@ public sealed class RequirementEvaluationDispatcher
                     context,
                     _session,
                     _parentEvaluationId,
+                    _depth,
                     cancellationToken);
         }
     }

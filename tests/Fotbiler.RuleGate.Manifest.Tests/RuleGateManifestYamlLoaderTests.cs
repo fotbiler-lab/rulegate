@@ -1,3 +1,4 @@
+using System.Text;
 using Fotbiler.RuleGate.Manifest.Loading;
 
 namespace Fotbiler.RuleGate.Manifest.Tests;
@@ -273,4 +274,173 @@ public sealed class RuleGateManifestYamlLoaderTests
                     "rulegate.yaml",
                     cancellation.Token));
     }
+
+    [Fact]
+    public void
+        LoadFromText_AcceptsContentAtMaximumSize()
+    {
+        var yaml =
+            CreateValidYamlWithUtf8ByteCount(
+                MaximumManifestContentByteCount);
+
+        var result =
+            _loader.LoadFromText(yaml);
+
+        Assert.True(result.IsSuccess);
+    }
+
+    [Fact]
+    public void
+        LoadFromText_RejectsContentAboveMaximumSize()
+    {
+        var yaml =
+            CreateValidYamlWithUtf8ByteCount(
+                MaximumManifestContentByteCount + 1);
+
+        var result =
+            _loader.LoadFromText(yaml);
+
+        Assert.False(result.IsSuccess);
+
+        Assert.Equal(
+            ManifestLoadCodes.ContentTooLarge,
+            Assert.Single(result.Errors).Code);
+    }
+
+    [Fact]
+    public void
+        LoadFromText_UsesUtf8ByteCount()
+    {
+        const string prefix = """
+            schemaVersion: 1
+            application:
+              id: utf8-size
+              name: UTF8 Size
+            policies: []
+            #
+            """;
+
+        var yaml =
+            prefix +
+            new string(
+                '€',
+                350_000);
+
+        Assert.True(
+            yaml.Length <
+            MaximumManifestContentByteCount);
+
+        Assert.True(
+            Encoding.UTF8.GetByteCount(yaml) >
+            MaximumManifestContentByteCount);
+
+        var result =
+            _loader.LoadFromText(yaml);
+
+        Assert.False(result.IsSuccess);
+
+        Assert.Equal(
+            ManifestLoadCodes.ContentTooLarge,
+            Assert.Single(result.Errors).Code);
+    }
+
+    [Fact]
+    public async Task
+        LoadFromFileAsync_AcceptsFileAtMaximumSize()
+    {
+        var path = Path.Combine(
+            Path.GetTempPath(),
+            $"rulegate-limit-{Guid.NewGuid():N}.yaml");
+
+        try
+        {
+            var yaml =
+                CreateValidYamlWithUtf8ByteCount(
+                    MaximumManifestContentByteCount);
+
+            await File.WriteAllTextAsync(
+                path,
+                yaml,
+                new UTF8Encoding(
+                    encoderShouldEmitUTF8Identifier: false));
+
+            var result =
+                await _loader.LoadFromFileAsync(
+                    path);
+
+            Assert.True(result.IsSuccess);
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
+    [Fact]
+    public async Task
+        LoadFromFileAsync_RejectsOversizedFile()
+    {
+        var path = Path.Combine(
+            Path.GetTempPath(),
+            $"rulegate-limit-{Guid.NewGuid():N}.yaml");
+
+        try
+        {
+            await File.WriteAllTextAsync(
+                path,
+                new string(
+                    'a',
+                    MaximumManifestContentByteCount + 1),
+                new UTF8Encoding(
+                    encoderShouldEmitUTF8Identifier: false));
+
+            var result =
+                await _loader.LoadFromFileAsync(
+                    path);
+
+            Assert.False(result.IsSuccess);
+
+            Assert.Equal(
+                ManifestLoadCodes.ContentTooLarge,
+                Assert.Single(result.Errors).Code);
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
+    private const int
+        MaximumManifestContentByteCount =
+            1_048_576;
+
+    private static string
+        CreateValidYamlWithUtf8ByteCount(
+            int byteCount)
+    {
+        const string manifest = """
+            schemaVersion: 1
+            application:
+              id: resource-limit
+              name: Resource Limit
+            policies: []
+            #
+            """;
+
+        var currentByteCount =
+            Encoding.UTF8.GetByteCount(
+                manifest);
+
+        if (currentByteCount > byteCount)
+        {
+            throw new ArgumentOutOfRangeException(
+                nameof(byteCount));
+        }
+
+        return manifest +
+            new string(
+                'x',
+                byteCount - currentByteCount);
+    }
+
 }

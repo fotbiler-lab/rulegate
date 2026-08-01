@@ -187,4 +187,4 @@ Participation in the project is governed by
 ## License
 
 By contributing, you agree that your contributions will be licensed under the
-repository's [Apache License 2.0](LICENSE).
+repository's [MIT License](LICENSE).

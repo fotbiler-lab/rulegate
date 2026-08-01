@@ -567,7 +567,7 @@ Resource type consistency is enforced before the engine is evaluated.
 - Optional context attributes
 
 The default ASP.NET Core handler supplies evaluation time from the registered
-`TimeProvider`.
+`IRuleGateClock`.
 
 It does not automatically map:
 
@@ -622,14 +622,12 @@ For implementation guidance, read the
 
 Time-based authorization depends on a trustworthy clock.
 
-The default ASP.NET Core registration uses:
+The default ASP.NET Core registration uses an internal system-backed
+`IRuleGateClock` implementation whose `GetUtcNow()` result comes from system
+UTC time.
 
-```text
-TimeProvider.System
-```
-
-Applications replacing `TimeProvider` must ensure that production time cannot
-be influenced by an untrusted caller.
+Applications replacing `IRuleGateClock` must ensure that production time
+cannot be influenced by an untrusted caller.
 
 A test clock is useful in automated tests but must not accidentally replace
 the production clock.
@@ -1364,7 +1362,7 @@ implementations must be concurrency-safe:
 - `IRuleGateAuthorizationResourceFactory`
 - `IAuthorizationDiagnosticsSink`
 - `IRuleGateEnrichmentDiagnosticsSink`
-- `TimeProvider`
+- `IRuleGateClock`
 
 Avoid request-specific mutable state in singleton fields.
 
@@ -1469,7 +1467,7 @@ A secure deployment should:
 
 ### Context
 
-- [ ] Time comes from a trusted `TimeProvider`.
+- [ ] Time comes from a trusted `IRuleGateClock`.
 - [ ] Context attributes are server-derived.
 - [ ] Request headers are not trusted without validation.
 - [ ] Custom temporal logic handles time zones explicitly.
@@ -1677,6 +1675,123 @@ The current preview does not provide:
 
 These responsibilities remain with the host application or planned future
 integrations.
+
+## Manifest resource-exhaustion boundaries
+
+RuleGate treats manifest text and programmatically constructed manifest models
+as bounded inputs.
+
+The manifest package enforces:
+
+- at most 1,048,576 bytes for a source file or its decoded UTF-8 content;
+- at most 4,096 policies per manifest;
+- a maximum requirement depth of 64;
+- at most 4,096 requirement nodes per policy;
+- at most 1,024 children in each `all` or `any` requirement;
+- at most 65,536 requirement nodes across one manifest;
+- cycle rejection for programmatically constructed requirement graphs.
+
+The loader rejects oversized input before YAML deserialization completes. The
+validator then runs an iterative, cycle-safe structural preflight before its
+recursive semantic checks. Therefore over-depth and cyclic graphs cannot reach
+the recursive semantic validator.
+
+Every resource-limit outcome is a structured load or validation failure.
+Compilation remains all-or-nothing, and a failed reload cannot activate a
+partial policy set.
+
+The limits are intentionally fixed for the 1.0 contract. They are not a
+substitute for host-level file permissions, trusted policy sources, deployment
+review, or process-level resource controls.
+
+## Runtime requirement-depth boundary
+
+RuleGate limits runtime requirement evaluation to a depth of 64, with the root
+requirement counted as depth one.
+
+A requirement presented at depth 65 is not passed to its registered evaluator.
+The dispatcher returns an `Indeterminate` result containing
+`AuthorizationFailureCodes.RequirementDepthExceeded`. Authorization engines
+map that result to a denial, so exceeding the limit can never grant access.
+
+Depth is carried by private child-dispatcher instances created for each
+evaluation traversal. RuleGate does not use shared mutable counters or
+`AsyncLocal` state for this boundary. Concurrent authorization evaluations on
+the same dispatcher therefore maintain independent depth state.
+
+The same boundary applies to built-in and custom evaluators. In the
+diagnostics-enabled path, the rejected requirement is recorded with an
+`Indeterminate` outcome, but its evaluator is not executed.
+
+Cancellation is checked before producing a depth failure. Custom evaluator
+exceptions below or at the permitted depth retain the normal exception
+contract and are not converted into depth failures.
+
+## Sensitive diagnostics regression boundary
+
+RuleGate diagnostics expose structural decision information, bounded outcomes,
+stable failure codes, durations, and low-cardinality operational metadata.
+Built-in logs and telemetry do not include subject or resource identifiers,
+claim, role, or permission values, authorization attribute names or values,
+credentials, request content, or exception details.
+
+CI maintains an explicit inventory of production diagnostics sinks. A new
+logging, tracing, activity, metric, or console sink fails the gate until its
+privacy and cardinality behavior is reviewed. Existing logging invocations are
+checked for forbidden placeholders and runtime values, and telemetry keys are
+checked for sensitive or high-cardinality dimensions.
+
+The gate also runs the focused telemetry and ASP.NET Core logging privacy tests.
+Its negative self-test proves that subject identifiers, authorization attribute
+values, exception objects, and sensitive telemetry keys are rejected.
+
+Application-defined diagnostics sinks and custom OpenTelemetry enrichment remain
+application-owned security boundaries and require an independent review.
+
+## npm artifact reproducibility boundary
+
+RuleGate's three publishable npm packages are built and packed twice from clean
+frontend output directories. CI requires the resulting `.tgz` artifacts to be
+byte-for-byte identical, including package inventory, entry order, file modes,
+TAR metadata, GZIP metadata, and meaningful file payloads.
+
+The verifier checks package names, versions, public-access and provenance
+settings, lifecycle-script absence, and the absence of development
+dependencies, lockfiles, credential files, symbolic links, special files, and
+machine-local paths in the published tarballs.
+
+The gate also enforces the pnpm build-script allowlist, disallows
+registry-external dependencies other than the three reviewed local workspace
+links, runs production and complete dependency audits, and verifies the frozen
+frontend public API.
+
+## NuGet reproducibility boundary
+
+RuleGate NuGet packages use deterministic compiler and portable PDB settings.
+Two clean builds must produce the same meaningful package payload.
+
+The current NuGet pack container may still vary byte-for-byte because generated
+OPC core-properties paths, relationship identifiers, ZIP entry ordering, and
+archive timestamps are not stable between runs. RuleGate therefore does not
+claim that the raw `.nupkg` and `.snupkg` archive hashes are reproducible.
+
+CI builds all six NuGet packages and six symbol packages twice from clean
+outputs. It canonicalizes only the known volatile OPC core-properties metadata
+and then requires every logical package entry—including assemblies, PDBs,
+nuspec files, documentation, dependencies, and tool payloads—to be byte
+identical. The verifier includes a negative self-test proving that a meaningful
+payload mutation is rejected.
+
+## Production Regex surface
+
+RuleGate 1.0 does not use regular-expression evaluation in production code.
+This avoids unbounded pattern execution and regular-expression denial-of-service
+risks in authorization decisions.
+
+CI scans production source and project files and fails if a Regex API reference
+is introduced. Future Regex-based functionality must define bounded input and
+pattern sizes, explicit execution timeouts, deterministic failure behavior, and
+fail-closed authorization semantics before this restriction can be changed.
 
 ## Next steps
 

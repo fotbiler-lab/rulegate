@@ -90,4 +90,12 @@ Report suspected vulnerabilities through the
 ## License
 
 RuleGate is licensed under the
-[Apache License 2.0](https://github.com/fotbiler-lab/rulegate/blob/main/LICENSE).
+[MIT License](https://github.com/fotbiler-lab/rulegate/blob/main/LICENSE).
+
+## Runtime requirement depth
+
+Runtime requirement evaluation is limited to a depth of 64. A requirement at
+depth 65 is not evaluated and produces an `Indeterminate` result with
+`AuthorizationFailureCodes.RequirementDepthExceeded`. Policy authorization
+maps that result to a denial. The limit is isolated per evaluation traversal
+and applies equally to built-in and custom requirement evaluators.

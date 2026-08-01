@@ -80,4 +80,4 @@ Report suspected vulnerabilities through the
 ## License
 
 RuleGate is licensed under the
-[Apache License 2.0](https://github.com/fotbiler-lab/rulegate/blob/main/LICENSE).
+[MIT License](https://github.com/fotbiler-lab/rulegate/blob/main/LICENSE).

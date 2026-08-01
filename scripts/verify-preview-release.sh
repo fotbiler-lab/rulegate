@@ -35,7 +35,7 @@ EXPECTED_VERSION_SUFFIX="preview.4"
 EXPECTED_VERSION="$EXPECTED_VERSION_PREFIX-$EXPECTED_VERSION_SUFFIX"
 
 EXPECTED_REPOSITORY_URL="https://github.com/fotbiler-lab/rulegate"
-EXPECTED_LICENSE="Apache-2.0"
+EXPECTED_LICENSE="MIT"
 EXPECTED_AUTHOR="Fotbiler"
 EXPECTED_PACKAGE_ICON="rulegate-icon.png"
 EXPECTED_FRAMEWORKS_VALUE="net8.0;net9.0;net10.0"
@@ -651,8 +651,9 @@ done
 
 printf '\n== Run current and legacy package consumers ==\n'
 
-./scripts/test-dotnet-legacy-consumers.sh \
-  --packages-ready
+./scripts/test-dotnet-package-consumer-matrix.sh \
+  1.0.0-rc.1 \
+  0.9.0-preview.4
 
 printf '\n== Run packaged CLI tool smoke test ==\n'
 

@@ -25,4 +25,7 @@
     <Project Path="tests/Fotbiler.RuleGate.Keycloak.Tests/Fotbiler.RuleGate.Keycloak.Tests.csproj" />
     <Project Path="tests/RuleGate.DocumentApproval.Sample.Tests/RuleGate.DocumentApproval.Sample.Tests.csproj" />
   </Folder>
+  <Folder Name="/tools/">
+    <Project Path="tools/Fotbiler.RuleGate.ApiSnapshot/Fotbiler.RuleGate.ApiSnapshot.csproj" />
+  </Folder>
 </Solution>

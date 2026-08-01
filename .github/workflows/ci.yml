@@ -46,11 +46,20 @@ jobs:
       - name: Install Angular SDK dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Audit npm dependency graph
+        run: pnpm audit
+
       - name: Verify Angular SDK formatting
         run: pnpm angular:format:check
 
       - name: Build Angular SDK
         run: pnpm angular:build
+
+      - name: Verify frontend public API freeze
+        run: pnpm api:frontend:check
+
+      - name: Verify npm artifact reproducibility
+        run: ./scripts/verify-npm-artifact-reproducibility.sh
 
       - name: Test Angular SDK
         run: pnpm angular:test
@@ -137,6 +146,18 @@ jobs:
             --configuration Release \
             --no-restore
 
+      - name: Verify production Regex surface
+        run: ./scripts/verify-no-production-regex.sh
+
+      - name: Verify sensitive diagnostics surface
+        run: ./scripts/verify-sensitive-diagnostics-surface.sh 1.0.0-rc.1
+
+      - name: Verify NuGet payload reproducibility
+        run: ./scripts/verify-nuget-payload-reproducibility.sh 1.0.0-rc.1
+
+      - name: Verify .NET public API freeze
+        run: ./scripts/verify-dotnet-api-freeze.sh --no-build
+
       - name: Test
         run: |
           dotnet test \
@@ -152,7 +173,7 @@ jobs:
       - name: Validate benchmark suite
         run: ./scripts/test-benchmarks.sh
 
-      - name: Pack
+      - name: Pack and verify .NET public API compatibility
         run: |
           dotnet pack \
             Fotbiler.RuleGate.slnx \
@@ -161,8 +182,9 @@ jobs:
 
       - name: Test current and legacy NuGet package consumers
         run: |
-          ./scripts/test-dotnet-legacy-consumers.sh \
-            --packages-ready
+          ./scripts/test-dotnet-package-consumer-matrix.sh \
+            1.0.0-rc.1 \
+            0.9.0-preview.4
 
       - name: Test RuleGate CLI tool
         run: |

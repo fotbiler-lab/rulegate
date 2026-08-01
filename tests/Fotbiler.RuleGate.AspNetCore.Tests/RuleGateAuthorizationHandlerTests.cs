@@ -3,6 +3,7 @@ using Fotbiler.RuleGate.Abstractions.Authorization;
 using Fotbiler.RuleGate.AspNetCore.Authorization;
 using Fotbiler.RuleGate.AspNetCore.Enrichment;
 using Fotbiler.RuleGate.AspNetCore.Subjects;
+using Fotbiler.RuleGate.AspNetCore.Time;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using RuleGateAuthorizationFailure =
@@ -301,8 +302,8 @@ public sealed class RuleGateAuthorizationHandlerTests
                     },
                 createSubject: _ => subject,
                 createResource: _ => resource,
-                timeProvider:
-                    new TestTimeProvider(
+                clock:
+                    new TestRuleGateClock(
                         evaluationTime));
 
         var context =
@@ -425,7 +426,7 @@ public sealed class RuleGateAuthorizationHandlerTests
             Func<
                 object?,
                 AuthorizationResource> createResource,
-            TimeProvider? timeProvider = null,
+            IRuleGateClock? clock = null,
             Action<CancellationToken>?
                 observeEngineCancellation = null)
     {
@@ -440,9 +441,10 @@ public sealed class RuleGateAuthorizationHandlerTests
             resourceFactory:
                 new StubResourceFactory(
                     createResource),
-            timeProvider:
-                timeProvider
-                ?? TimeProvider.System,
+            clock:
+                clock
+                ?? new TestRuleGateClock(
+                    DateTimeOffset.UtcNow),
             requestEnricher:
                 new RuleGateAuthorizationRequestEnricher(
                     subjectProviders: [],
@@ -551,18 +553,18 @@ public sealed class RuleGateAuthorizationHandlerTests
         }
     }
 
-    private sealed class TestTimeProvider
-        : TimeProvider
+    private sealed class TestRuleGateClock
+        : IRuleGateClock
     {
         private readonly DateTimeOffset _utcNow;
 
-        public TestTimeProvider(
+        public TestRuleGateClock(
             DateTimeOffset utcNow)
         {
             _utcNow = utcNow;
         }
 
-        public override DateTimeOffset GetUtcNow()
+        public DateTimeOffset GetUtcNow()
         {
             return _utcNow;
         }

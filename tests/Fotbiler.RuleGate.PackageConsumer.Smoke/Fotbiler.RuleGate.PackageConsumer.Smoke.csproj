@@ -3,19 +3,23 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFrameworks>$(RuleGateAspNetCoreTargetFrameworks)</TargetFrameworks>
+    <IsPackable>false</IsPackable>
+    <EnablePackageValidation>false</EnablePackageValidation>
+    <PackageValidationBaselineVersion />
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <RuleGatePackageVersion Condition="'$(RuleGatePackageVersion)' == ''">0.9.0-preview.4</RuleGatePackageVersion>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference
       Include="Fotbiler.RuleGate.AspNetCore"
-      Version="0.9.0-preview.4" />
+      Version="$(RuleGatePackageVersion)" />
 
     <PackageReference
       Include="Fotbiler.RuleGate.Manifest"
-      Version="0.9.0-preview.4" />
+      Version="$(RuleGatePackageVersion)" />
   </ItemGroup>
 
 </Project>

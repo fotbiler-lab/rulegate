@@ -179,7 +179,7 @@ Applications that must refuse startup after an invalid initial source can call
 - Claims-based subject factory
 - HTTP resource factory
 - Scoped authorization request enricher
-- System `TimeProvider`
+- System-backed `IRuleGateClock`
 
 Register in-memory, embedded-resource, structured configuration, or
 application-defined sources when a YAML file is not the appropriate host
@@ -830,28 +830,24 @@ under another domain's policy.
 
 The default ASP.NET Core handler creates an `AuthorizationContext` with:
 
-- Evaluation time from `TimeProvider.GetUtcNow()`
+- Evaluation time from the registered `IRuleGateClock`
 - No additional context attributes
 
-The default provider is:
+The default RuleGate registration uses an internal system-backed
+`IRuleGateClock` implementation that returns `DateTimeOffset.UtcNow`.
 
-```text
-TimeProvider.System
-```
+Applications can register a custom clock before calling `AddRuleGate`:
 
-Applications can register a custom `TimeProvider` before calling
-`AddRuleGate`:
+    using Fotbiler.RuleGate.AspNetCore.Time;
 
-```csharp
-builder.Services.AddSingleton<TimeProvider>(
-    applicationTimeProvider);
+    builder.Services.AddSingleton<IRuleGateClock>(
+        applicationRuleGateClock);
 
-builder.Services
-    .AddRuleGate()
-    .AddPolicies(compilation.Policies);
-```
+    builder.Services
+        .AddRuleGate()
+        .AddPolicies(compilation.Policies);
 
-RuleGate preserves a previously registered `TimeProvider`.
+RuleGate preserves a previously registered `IRuleGateClock`.
 
 ### Context attributes
 
@@ -866,8 +862,8 @@ The direct `IAuthorizationEngine` API provides full control over subject,
 resource, action, and context construction.
 
 First-class `timeWindow` and `dateTimeWindow` policies work with the default
-handler because it supplies evaluation time from `TimeProvider`. Register a
-controlled `TimeProvider` in tests to exercise schedule boundaries
+handler because it supplies evaluation time from `IRuleGateClock`. Register a
+controlled `IRuleGateClock` in tests to exercise schedule boundaries
 deterministically.
 
 `contextAge` and `context` policies require canonical trusted attributes such
@@ -1306,7 +1302,7 @@ The current ASP.NET Core integration includes:
 - Route-value resource-ID mapping
 - Imperative authorization extensions
 - Replaceable subject and resource factories
-- Replaceable `TimeProvider`
+- Replaceable `IRuleGateClock`
 - Local YAML, embedded-resource, configuration, and application-defined policy
   sources
 - Immutable policy snapshots and optional YAML/configuration reload monitoring

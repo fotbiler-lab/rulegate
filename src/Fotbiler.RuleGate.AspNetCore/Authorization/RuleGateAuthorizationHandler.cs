@@ -1,6 +1,7 @@
 using Fotbiler.RuleGate.Abstractions.Authorization;
 using Fotbiler.RuleGate.AspNetCore.Enrichment;
 using Fotbiler.RuleGate.AspNetCore.Subjects;
+using Fotbiler.RuleGate.AspNetCore.Time;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using RuleGateAuthorizationContext =
@@ -22,7 +23,7 @@ public sealed class RuleGateAuthorizationHandler
         IRuleGateAuthorizationResourceFactory
         _resourceFactory;
 
-    private readonly TimeProvider _timeProvider;
+    private readonly IRuleGateClock _clock;
 
     private readonly IRuleGateAuthorizationRequestEnricher
         _requestEnricher;
@@ -32,7 +33,7 @@ public sealed class RuleGateAuthorizationHandler
         IRuleGateSubjectFactory subjectFactory,
         IRuleGateAuthorizationResourceFactory
             resourceFactory,
-        TimeProvider timeProvider,
+        IRuleGateClock clock,
         IRuleGateAuthorizationRequestEnricher
             requestEnricher)
     {
@@ -46,7 +47,7 @@ public sealed class RuleGateAuthorizationHandler
             resourceFactory);
 
         ArgumentNullException.ThrowIfNull(
-            timeProvider);
+            clock);
 
         ArgumentNullException.ThrowIfNull(
             requestEnricher);
@@ -60,8 +61,8 @@ public sealed class RuleGateAuthorizationHandler
         _resourceFactory =
             resourceFactory;
 
-        _timeProvider =
-            timeProvider;
+        _clock =
+            clock;
 
         _requestEnricher =
             requestEnricher;
@@ -115,7 +116,7 @@ public sealed class RuleGateAuthorizationHandler
                 action: requirement.Action,
                 context:
                     new RuleGateAuthorizationContext(
-                        _timeProvider.GetUtcNow()));
+                        _clock.GetUtcNow()));
 
         var cancellationToken =
             context.Resource is HttpContext httpContext
@@ -146,7 +147,7 @@ public sealed class RuleGateAuthorizationHandler
             return;
         }
 
-        request = enrichmentResult.Request!;
+        request = enrichmentResult.Request;
 
         var decision =
             await _authorizationEngine

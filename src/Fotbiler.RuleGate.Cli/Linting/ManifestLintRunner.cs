@@ -77,7 +77,7 @@ internal sealed class ManifestLintRunner
         {
             var validation =
                 _validator.Validate(
-                    loadResult.Manifest!);
+                    loadResult.Manifest);
 
             if (!validation.IsValid)
             {
@@ -104,7 +104,7 @@ internal sealed class ManifestLintRunner
             {
                 var findings =
                     _linter.Analyze(
-                        loadResult.Manifest!);
+                        loadResult.Manifest);
 
                 report =
                     new ManifestLintReport(
@@ -112,7 +112,7 @@ internal sealed class ManifestLintRunner
                         IsClean: findings.Count == 0,
                         Manifest: fullPath,
                         PolicyCount:
-                            loadResult.Manifest!.Policies!.Count,
+                            loadResult.Manifest.Policies!.Count,
                         Errors:
                             Array.Empty<
                                 ManifestLintDiagnostic>(),

@@ -38,6 +38,24 @@ public static class ManifestValidationCodes
     public const string DuplicatePolicyRoute =
         "MANIFEST_DUPLICATE_POLICY_ROUTE";
 
+    public const string PolicyCountExceeded =
+        "MANIFEST_POLICY_COUNT_EXCEEDED";
+
+    public const string RequirementDepthExceeded =
+        "MANIFEST_REQUIREMENT_DEPTH_EXCEEDED";
+
+    public const string RequirementNodeCountExceeded =
+        "MANIFEST_REQUIREMENT_NODE_COUNT_EXCEEDED";
+
+    public const string RequirementChildCountExceeded =
+        "MANIFEST_REQUIREMENT_CHILD_COUNT_EXCEEDED";
+
+    public const string TotalRequirementNodeCountExceeded =
+        "MANIFEST_TOTAL_REQUIREMENT_NODE_COUNT_EXCEEDED";
+
+    public const string RequirementCycleDetected =
+        "MANIFEST_REQUIREMENT_CYCLE_DETECTED";
+
     public const string RequirementIdInvalid =
         "MANIFEST_REQUIREMENT_ID_INVALID";
 
