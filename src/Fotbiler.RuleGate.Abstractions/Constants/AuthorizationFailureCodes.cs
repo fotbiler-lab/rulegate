@@ -14,6 +14,9 @@ public static class AuthorizationFailureCodes
     public const string RequirementEvaluatorNotFound =
         "RULEGATE_REQUIREMENT_EVALUATOR_NOT_FOUND";
 
+    public const string RequirementDepthExceeded =
+        "RULEGATE_REQUIREMENT_DEPTH_EXCEEDED";
+
     public const string NegatedRequirementSatisfied =
         "RULEGATE_NEGATED_REQUIREMENT_SATISFIED";
 

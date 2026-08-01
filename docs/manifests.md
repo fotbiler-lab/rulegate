@@ -1494,3 +1494,52 @@ See the [RuleGate CLI guide](cli.md) for installation, validation, C#
 generation, stale-output detection, automation, CI, and operational details.
 Use the [policy-testing guide](policy-testing.md) to evaluate explicit requests
 against a compiled manifest without starting an application.
+
+## Manifest resource limits
+
+RuleGate applies fixed defensive ceilings before a manifest is mapped into
+runtime policies.
+
+| Boundary                                    |         Maximum |
+| ------------------------------------------- | --------------: |
+| Source file or UTF-8 text content           | 1,048,576 bytes |
+| Policies in one manifest                    |           4,096 |
+| Requirement depth, with the root at depth 1 |              64 |
+| Requirement nodes in one policy             |           4,096 |
+| Children in one `all` or `any` requirement  |           1,024 |
+| Requirement nodes across one manifest       |          65,536 |
+
+File loading stops when the source or decoded UTF-8 content exceeds the
+content limit. Oversized content returns
+`ManifestLoadCodes.ContentTooLarge` before YAML deserialization.
+
+Manifest validation performs an iterative, cycle-safe preflight before the
+normal semantic validator runs. Excessive policy, depth, node, and child
+counts return dedicated `ManifestValidationCodes` values. Cycles in
+programmatically constructed manifest models are also rejected.
+
+These are hard safety limits rather than style recommendations. The CLI linter
+continues to recommend much smaller, easier-to-review policies: a depth of
+eight and 32 nodes per policy.
+
+A limit failure never produces a partial policy collection. Applications with
+very large policy catalogs should split them into multiple independently
+trusted policy sources and retain operational review of the combined catalog.
+
+## YAML security profile
+
+RuleGate manifests use a deliberately restricted YAML profile:
+
+- a manifest file must contain valid UTF-8; an optional UTF-8 BOM is accepted;
+- UTF-16, UTF-32, and malformed UTF-8 files are rejected;
+- exactly one YAML document is allowed;
+- anchors and aliases are rejected;
+- explicit local and global YAML tags are rejected;
+- duplicate mapping keys and unknown model properties are rejected;
+- parser recursion and manifest resource limits remain enforced.
+
+These restrictions avoid alias expansion, object-graph cycles introduced during
+deserialization, ambiguous encoding behavior, type-tag activation, and partial
+multi-document interpretation. Rejected inputs produce
+`ManifestLoadCodes.InvalidYaml`; they are never partially compiled into active
+policies.

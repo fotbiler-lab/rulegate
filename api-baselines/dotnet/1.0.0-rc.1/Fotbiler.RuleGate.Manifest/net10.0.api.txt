@@ -1,0 +1,700 @@
+ASSEMBLY | Fotbiler.RuleGate.Manifest
+FIELD | Public | static | Fotbiler.RuleGate.Manifest.Configuration.RuleGateManifestDefaults.FileName
+FIELD | Public | static | Fotbiler.RuleGate.Manifest.Configuration.RuleGateManifestDefaults.SupportedSchemaVersion
+FIELD | Public | static | Fotbiler.RuleGate.Manifest.Loading.ManifestLoadCodes.ContentTooLarge
+FIELD | Public | static | Fotbiler.RuleGate.Manifest.Loading.ManifestLoadCodes.EmptyContent
+FIELD | Public | static | Fotbiler.RuleGate.Manifest.Loading.ManifestLoadCodes.FileNotFound
+FIELD | Public | static | Fotbiler.RuleGate.Manifest.Loading.ManifestLoadCodes.FileReadFailed
+FIELD | Public | static | Fotbiler.RuleGate.Manifest.Loading.ManifestLoadCodes.InvalidYaml
+FIELD | Public | static | Fotbiler.RuleGate.Manifest.Loading.ManifestLoadCodes.RootRequired
+FIELD | Public | static | Fotbiler.RuleGate.Manifest.PolicySources.ManifestPolicySourceCodes.EmbeddedResourceNotFound
+FIELD | Public | static | Fotbiler.RuleGate.Manifest.PolicySources.ManifestPolicySourceCodes.EmbeddedResourceReadFailed
+FIELD | Public | static | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.ApplicationIdRequired
+FIELD | Public | static | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.ApplicationNameRequired
+FIELD | Public | static | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.ApplicationRequired
+FIELD | Public | static | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.AttributeComparisonLeftRequired
+FIELD | Public | static | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.AttributeComparisonOperandKindInvalid
+FIELD | Public | static | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.AttributeComparisonOperandNameRequired
+FIELD | Public | static | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.AttributeComparisonOperandSourceInvalid
+FIELD | Public | static | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.AttributeComparisonOperandSourceRequired
+FIELD | Public | static | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.AttributeComparisonOperandTypeIncompatible
+FIELD | Public | static | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.AttributeComparisonOperandValueInvalid
+FIELD | Public | static | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.AttributeComparisonOperandValueRequired
+FIELD | Public | static | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.AttributeComparisonOperandValueTypeInvalid
+FIELD | Public | static | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.AttributeComparisonOperandValueTypeRequired
+FIELD | Public | static | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.AttributeComparisonOperatorInvalid
+FIELD | Public | static | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.AttributeComparisonOperatorNotBinary
+FIELD | Public | static | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.AttributeComparisonOperatorRequired
+FIELD | Public | static | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.AttributeComparisonRightRequired
+FIELD | Public | static | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.AttributeComparisonStringComparisonInvalid
+FIELD | Public | static | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.AttributeComparisonStringComparisonNotAllowed
+FIELD | Public | static | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.AttributeNameRequired
+FIELD | Public | static | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.AttributeOperatorInvalid
+FIELD | Public | static | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.AttributeOperatorRequired
+FIELD | Public | static | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.AttributeOperatorValueTypeInvalid
+FIELD | Public | static | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.AttributeSourceInvalid
+FIELD | Public | static | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.AttributeSourceRequired
+FIELD | Public | static | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.AttributeStringComparisonInvalid
+FIELD | Public | static | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.AttributeStringComparisonNotAllowed
+FIELD | Public | static | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.AttributeValueInvalid
+FIELD | Public | static | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.AttributeValueNotAllowed
+FIELD | Public | static | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.AttributeValueRequired
+FIELD | Public | static | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.AttributeValueTypeInvalid
+FIELD | Public | static | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.AttributeValueTypeNotAllowed
+FIELD | Public | static | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.AttributeValueTypeRequired
+FIELD | Public | static | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.ContextAgeMaximumAgeInvalid
+FIELD | Public | static | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.ContextAgeMaximumAgeRequired
+FIELD | Public | static | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.ContextAgeTimestampInvalid
+FIELD | Public | static | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.ContextAgeTimestampRequired
+FIELD | Public | static | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.ContextOperatorInvalid
+FIELD | Public | static | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.ContextOperatorRequired
+FIELD | Public | static | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.ContextPropertyInvalid
+FIELD | Public | static | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.ContextPropertyOperatorValueInvalid
+FIELD | Public | static | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.ContextPropertyRequired
+FIELD | Public | static | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.ContextStringComparisonInvalid
+FIELD | Public | static | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.ContextStringComparisonNotAllowed
+FIELD | Public | static | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.ContextValueInvalid
+FIELD | Public | static | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.ContextValueRequired
+FIELD | Public | static | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.ContextValueTypeInvalid
+FIELD | Public | static | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.ContextValueTypeRequired
+FIELD | Public | static | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.DateTimeWindowBoundaryRequired
+FIELD | Public | static | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.DateTimeWindowEndsAtInvalid
+FIELD | Public | static | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.DateTimeWindowRangeInvalid
+FIELD | Public | static | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.DateTimeWindowStartsAtInvalid
+FIELD | Public | static | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.DuplicatePolicyId
+FIELD | Public | static | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.DuplicatePolicyRoute
+FIELD | Public | static | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.PermissionRequired
+FIELD | Public | static | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.PoliciesRequired
+FIELD | Public | static | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.PolicyActionRequired
+FIELD | Public | static | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.PolicyCountExceeded
+FIELD | Public | static | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.PolicyIdRequired
+FIELD | Public | static | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.PolicyRequired
+FIELD | Public | static | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.PolicyRequirementRequired
+FIELD | Public | static | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.PolicyResourceTypeRequired
+FIELD | Public | static | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.RequirementChildCountExceeded
+FIELD | Public | static | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.RequirementChildrenRequired
+FIELD | Public | static | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.RequirementCycleDetected
+FIELD | Public | static | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.RequirementDepthExceeded
+FIELD | Public | static | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.RequirementIdInvalid
+FIELD | Public | static | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.RequirementKindInvalid
+FIELD | Public | static | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.RequirementNodeCountExceeded
+FIELD | Public | static | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.RequirementRequired
+FIELD | Public | static | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.RoleRequired
+FIELD | Public | static | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.TimeWindowDayDuplicate
+FIELD | Public | static | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.TimeWindowDayInvalid
+FIELD | Public | static | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.TimeWindowDaysRequired
+FIELD | Public | static | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.TimeWindowEndInvalid
+FIELD | Public | static | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.TimeWindowEndRequired
+FIELD | Public | static | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.TimeWindowRangeInvalid
+FIELD | Public | static | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.TimeWindowStartInvalid
+FIELD | Public | static | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.TimeWindowStartRequired
+FIELD | Public | static | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.TimeWindowTimeZoneInvalid
+FIELD | Public | static | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.TimeWindowTimeZoneRequired
+FIELD | Public | static | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.TotalRequirementNodeCountExceeded
+FIELD | Public | static | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.UnsupportedSchemaVersion
+FIELD-SHAPE | Fotbiler.RuleGate.Manifest.Configuration.RuleGateManifestDefaults.FileName | const=True | readonly=False | volatile=False
+FIELD-SHAPE | Fotbiler.RuleGate.Manifest.Configuration.RuleGateManifestDefaults.SupportedSchemaVersion | const=True | readonly=False | volatile=False
+FIELD-SHAPE | Fotbiler.RuleGate.Manifest.Loading.ManifestLoadCodes.ContentTooLarge | const=True | readonly=False | volatile=False
+FIELD-SHAPE | Fotbiler.RuleGate.Manifest.Loading.ManifestLoadCodes.EmptyContent | const=True | readonly=False | volatile=False
+FIELD-SHAPE | Fotbiler.RuleGate.Manifest.Loading.ManifestLoadCodes.FileNotFound | const=True | readonly=False | volatile=False
+FIELD-SHAPE | Fotbiler.RuleGate.Manifest.Loading.ManifestLoadCodes.FileReadFailed | const=True | readonly=False | volatile=False
+FIELD-SHAPE | Fotbiler.RuleGate.Manifest.Loading.ManifestLoadCodes.InvalidYaml | const=True | readonly=False | volatile=False
+FIELD-SHAPE | Fotbiler.RuleGate.Manifest.Loading.ManifestLoadCodes.RootRequired | const=True | readonly=False | volatile=False
+FIELD-SHAPE | Fotbiler.RuleGate.Manifest.PolicySources.ManifestPolicySourceCodes.EmbeddedResourceNotFound | const=True | readonly=False | volatile=False
+FIELD-SHAPE | Fotbiler.RuleGate.Manifest.PolicySources.ManifestPolicySourceCodes.EmbeddedResourceReadFailed | const=True | readonly=False | volatile=False
+FIELD-SHAPE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.ApplicationIdRequired | const=True | readonly=False | volatile=False
+FIELD-SHAPE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.ApplicationNameRequired | const=True | readonly=False | volatile=False
+FIELD-SHAPE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.ApplicationRequired | const=True | readonly=False | volatile=False
+FIELD-SHAPE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.AttributeComparisonLeftRequired | const=True | readonly=False | volatile=False
+FIELD-SHAPE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.AttributeComparisonOperandKindInvalid | const=True | readonly=False | volatile=False
+FIELD-SHAPE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.AttributeComparisonOperandNameRequired | const=True | readonly=False | volatile=False
+FIELD-SHAPE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.AttributeComparisonOperandSourceInvalid | const=True | readonly=False | volatile=False
+FIELD-SHAPE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.AttributeComparisonOperandSourceRequired | const=True | readonly=False | volatile=False
+FIELD-SHAPE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.AttributeComparisonOperandTypeIncompatible | const=True | readonly=False | volatile=False
+FIELD-SHAPE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.AttributeComparisonOperandValueInvalid | const=True | readonly=False | volatile=False
+FIELD-SHAPE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.AttributeComparisonOperandValueRequired | const=True | readonly=False | volatile=False
+FIELD-SHAPE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.AttributeComparisonOperandValueTypeInvalid | const=True | readonly=False | volatile=False
+FIELD-SHAPE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.AttributeComparisonOperandValueTypeRequired | const=True | readonly=False | volatile=False
+FIELD-SHAPE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.AttributeComparisonOperatorInvalid | const=True | readonly=False | volatile=False
+FIELD-SHAPE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.AttributeComparisonOperatorNotBinary | const=True | readonly=False | volatile=False
+FIELD-SHAPE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.AttributeComparisonOperatorRequired | const=True | readonly=False | volatile=False
+FIELD-SHAPE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.AttributeComparisonRightRequired | const=True | readonly=False | volatile=False
+FIELD-SHAPE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.AttributeComparisonStringComparisonInvalid | const=True | readonly=False | volatile=False
+FIELD-SHAPE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.AttributeComparisonStringComparisonNotAllowed | const=True | readonly=False | volatile=False
+FIELD-SHAPE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.AttributeNameRequired | const=True | readonly=False | volatile=False
+FIELD-SHAPE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.AttributeOperatorInvalid | const=True | readonly=False | volatile=False
+FIELD-SHAPE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.AttributeOperatorRequired | const=True | readonly=False | volatile=False
+FIELD-SHAPE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.AttributeOperatorValueTypeInvalid | const=True | readonly=False | volatile=False
+FIELD-SHAPE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.AttributeSourceInvalid | const=True | readonly=False | volatile=False
+FIELD-SHAPE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.AttributeSourceRequired | const=True | readonly=False | volatile=False
+FIELD-SHAPE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.AttributeStringComparisonInvalid | const=True | readonly=False | volatile=False
+FIELD-SHAPE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.AttributeStringComparisonNotAllowed | const=True | readonly=False | volatile=False
+FIELD-SHAPE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.AttributeValueInvalid | const=True | readonly=False | volatile=False
+FIELD-SHAPE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.AttributeValueNotAllowed | const=True | readonly=False | volatile=False
+FIELD-SHAPE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.AttributeValueRequired | const=True | readonly=False | volatile=False
+FIELD-SHAPE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.AttributeValueTypeInvalid | const=True | readonly=False | volatile=False
+FIELD-SHAPE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.AttributeValueTypeNotAllowed | const=True | readonly=False | volatile=False
+FIELD-SHAPE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.AttributeValueTypeRequired | const=True | readonly=False | volatile=False
+FIELD-SHAPE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.ContextAgeMaximumAgeInvalid | const=True | readonly=False | volatile=False
+FIELD-SHAPE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.ContextAgeMaximumAgeRequired | const=True | readonly=False | volatile=False
+FIELD-SHAPE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.ContextAgeTimestampInvalid | const=True | readonly=False | volatile=False
+FIELD-SHAPE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.ContextAgeTimestampRequired | const=True | readonly=False | volatile=False
+FIELD-SHAPE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.ContextOperatorInvalid | const=True | readonly=False | volatile=False
+FIELD-SHAPE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.ContextOperatorRequired | const=True | readonly=False | volatile=False
+FIELD-SHAPE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.ContextPropertyInvalid | const=True | readonly=False | volatile=False
+FIELD-SHAPE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.ContextPropertyOperatorValueInvalid | const=True | readonly=False | volatile=False
+FIELD-SHAPE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.ContextPropertyRequired | const=True | readonly=False | volatile=False
+FIELD-SHAPE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.ContextStringComparisonInvalid | const=True | readonly=False | volatile=False
+FIELD-SHAPE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.ContextStringComparisonNotAllowed | const=True | readonly=False | volatile=False
+FIELD-SHAPE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.ContextValueInvalid | const=True | readonly=False | volatile=False
+FIELD-SHAPE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.ContextValueRequired | const=True | readonly=False | volatile=False
+FIELD-SHAPE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.ContextValueTypeInvalid | const=True | readonly=False | volatile=False
+FIELD-SHAPE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.ContextValueTypeRequired | const=True | readonly=False | volatile=False
+FIELD-SHAPE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.DateTimeWindowBoundaryRequired | const=True | readonly=False | volatile=False
+FIELD-SHAPE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.DateTimeWindowEndsAtInvalid | const=True | readonly=False | volatile=False
+FIELD-SHAPE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.DateTimeWindowRangeInvalid | const=True | readonly=False | volatile=False
+FIELD-SHAPE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.DateTimeWindowStartsAtInvalid | const=True | readonly=False | volatile=False
+FIELD-SHAPE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.DuplicatePolicyId | const=True | readonly=False | volatile=False
+FIELD-SHAPE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.DuplicatePolicyRoute | const=True | readonly=False | volatile=False
+FIELD-SHAPE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.PermissionRequired | const=True | readonly=False | volatile=False
+FIELD-SHAPE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.PoliciesRequired | const=True | readonly=False | volatile=False
+FIELD-SHAPE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.PolicyActionRequired | const=True | readonly=False | volatile=False
+FIELD-SHAPE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.PolicyCountExceeded | const=True | readonly=False | volatile=False
+FIELD-SHAPE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.PolicyIdRequired | const=True | readonly=False | volatile=False
+FIELD-SHAPE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.PolicyRequired | const=True | readonly=False | volatile=False
+FIELD-SHAPE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.PolicyRequirementRequired | const=True | readonly=False | volatile=False
+FIELD-SHAPE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.PolicyResourceTypeRequired | const=True | readonly=False | volatile=False
+FIELD-SHAPE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.RequirementChildCountExceeded | const=True | readonly=False | volatile=False
+FIELD-SHAPE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.RequirementChildrenRequired | const=True | readonly=False | volatile=False
+FIELD-SHAPE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.RequirementCycleDetected | const=True | readonly=False | volatile=False
+FIELD-SHAPE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.RequirementDepthExceeded | const=True | readonly=False | volatile=False
+FIELD-SHAPE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.RequirementIdInvalid | const=True | readonly=False | volatile=False
+FIELD-SHAPE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.RequirementKindInvalid | const=True | readonly=False | volatile=False
+FIELD-SHAPE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.RequirementNodeCountExceeded | const=True | readonly=False | volatile=False
+FIELD-SHAPE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.RequirementRequired | const=True | readonly=False | volatile=False
+FIELD-SHAPE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.RoleRequired | const=True | readonly=False | volatile=False
+FIELD-SHAPE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.TimeWindowDayDuplicate | const=True | readonly=False | volatile=False
+FIELD-SHAPE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.TimeWindowDayInvalid | const=True | readonly=False | volatile=False
+FIELD-SHAPE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.TimeWindowDaysRequired | const=True | readonly=False | volatile=False
+FIELD-SHAPE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.TimeWindowEndInvalid | const=True | readonly=False | volatile=False
+FIELD-SHAPE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.TimeWindowEndRequired | const=True | readonly=False | volatile=False
+FIELD-SHAPE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.TimeWindowRangeInvalid | const=True | readonly=False | volatile=False
+FIELD-SHAPE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.TimeWindowStartInvalid | const=True | readonly=False | volatile=False
+FIELD-SHAPE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.TimeWindowStartRequired | const=True | readonly=False | volatile=False
+FIELD-SHAPE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.TimeWindowTimeZoneInvalid | const=True | readonly=False | volatile=False
+FIELD-SHAPE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.TimeWindowTimeZoneRequired | const=True | readonly=False | volatile=False
+FIELD-SHAPE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.TotalRequirementNodeCountExceeded | const=True | readonly=False | volatile=False
+FIELD-SHAPE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.UnsupportedSchemaVersion | const=True | readonly=False | volatile=False
+FIELD-VALUE | Fotbiler.RuleGate.Manifest.Configuration.RuleGateManifestDefaults.FileName | "rulegate.yaml"
+FIELD-VALUE | Fotbiler.RuleGate.Manifest.Configuration.RuleGateManifestDefaults.SupportedSchemaVersion | 1
+FIELD-VALUE | Fotbiler.RuleGate.Manifest.Loading.ManifestLoadCodes.ContentTooLarge | "MANIFEST_CONTENT_TOO_LARGE"
+FIELD-VALUE | Fotbiler.RuleGate.Manifest.Loading.ManifestLoadCodes.EmptyContent | "MANIFEST_YAML_EMPTY_CONTENT"
+FIELD-VALUE | Fotbiler.RuleGate.Manifest.Loading.ManifestLoadCodes.FileNotFound | "MANIFEST_FILE_NOT_FOUND"
+FIELD-VALUE | Fotbiler.RuleGate.Manifest.Loading.ManifestLoadCodes.FileReadFailed | "MANIFEST_FILE_READ_FAILED"
+FIELD-VALUE | Fotbiler.RuleGate.Manifest.Loading.ManifestLoadCodes.InvalidYaml | "MANIFEST_YAML_INVALID"
+FIELD-VALUE | Fotbiler.RuleGate.Manifest.Loading.ManifestLoadCodes.RootRequired | "MANIFEST_YAML_ROOT_REQUIRED"
+FIELD-VALUE | Fotbiler.RuleGate.Manifest.PolicySources.ManifestPolicySourceCodes.EmbeddedResourceNotFound | "POLICY_SOURCE_EMBEDDED_RESOURCE_NOT_FOUND"
+FIELD-VALUE | Fotbiler.RuleGate.Manifest.PolicySources.ManifestPolicySourceCodes.EmbeddedResourceReadFailed | "POLICY_SOURCE_EMBEDDED_RESOURCE_READ_FAILED"
+FIELD-VALUE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.ApplicationIdRequired | "MANIFEST_APPLICATION_ID_REQUIRED"
+FIELD-VALUE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.ApplicationNameRequired | "MANIFEST_APPLICATION_NAME_REQUIRED"
+FIELD-VALUE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.ApplicationRequired | "MANIFEST_APPLICATION_REQUIRED"
+FIELD-VALUE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.AttributeComparisonLeftRequired | "MANIFEST_ATTRIBUTE_COMPARISON_LEFT_REQUIRED"
+FIELD-VALUE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.AttributeComparisonOperandKindInvalid | "MANIFEST_ATTRIBUTE_COMPARISON_OPERAND_KIND_INVALID"
+FIELD-VALUE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.AttributeComparisonOperandNameRequired | "MANIFEST_ATTRIBUTE_COMPARISON_OPERAND_NAME_REQUIRED"
+FIELD-VALUE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.AttributeComparisonOperandSourceInvalid | "MANIFEST_ATTRIBUTE_COMPARISON_OPERAND_SOURCE_INVALID"
+FIELD-VALUE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.AttributeComparisonOperandSourceRequired | "MANIFEST_ATTRIBUTE_COMPARISON_OPERAND_SOURCE_REQUIRED"
+FIELD-VALUE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.AttributeComparisonOperandTypeIncompatible | "MANIFEST_ATTRIBUTE_COMPARISON_OPERAND_TYPE_INCOMPATIBLE"
+FIELD-VALUE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.AttributeComparisonOperandValueInvalid | "MANIFEST_ATTRIBUTE_COMPARISON_OPERAND_VALUE_INVALID"
+FIELD-VALUE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.AttributeComparisonOperandValueRequired | "MANIFEST_ATTRIBUTE_COMPARISON_OPERAND_VALUE_REQUIRED"
+FIELD-VALUE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.AttributeComparisonOperandValueTypeInvalid | "MANIFEST_ATTRIBUTE_COMPARISON_OPERAND_VALUE_TYPE_INVALID"
+FIELD-VALUE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.AttributeComparisonOperandValueTypeRequired | "MANIFEST_ATTRIBUTE_COMPARISON_OPERAND_VALUE_TYPE_REQUIRED"
+FIELD-VALUE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.AttributeComparisonOperatorInvalid | "MANIFEST_ATTRIBUTE_COMPARISON_OPERATOR_INVALID"
+FIELD-VALUE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.AttributeComparisonOperatorNotBinary | "MANIFEST_ATTRIBUTE_COMPARISON_OPERATOR_NOT_BINARY"
+FIELD-VALUE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.AttributeComparisonOperatorRequired | "MANIFEST_ATTRIBUTE_COMPARISON_OPERATOR_REQUIRED"
+FIELD-VALUE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.AttributeComparisonRightRequired | "MANIFEST_ATTRIBUTE_COMPARISON_RIGHT_REQUIRED"
+FIELD-VALUE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.AttributeComparisonStringComparisonInvalid | "MANIFEST_ATTRIBUTE_COMPARISON_STRING_COMPARISON_INVALID"
+FIELD-VALUE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.AttributeComparisonStringComparisonNotAllowed | "MANIFEST_ATTRIBUTE_COMPARISON_STRING_COMPARISON_NOT_ALLOWED"
+FIELD-VALUE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.AttributeNameRequired | "MANIFEST_ATTRIBUTE_NAME_REQUIRED"
+FIELD-VALUE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.AttributeOperatorInvalid | "MANIFEST_ATTRIBUTE_OPERATOR_INVALID"
+FIELD-VALUE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.AttributeOperatorRequired | "MANIFEST_ATTRIBUTE_OPERATOR_REQUIRED"
+FIELD-VALUE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.AttributeOperatorValueTypeInvalid | "MANIFEST_ATTRIBUTE_OPERATOR_VALUE_TYPE_INVALID"
+FIELD-VALUE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.AttributeSourceInvalid | "MANIFEST_ATTRIBUTE_SOURCE_INVALID"
+FIELD-VALUE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.AttributeSourceRequired | "MANIFEST_ATTRIBUTE_SOURCE_REQUIRED"
+FIELD-VALUE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.AttributeStringComparisonInvalid | "MANIFEST_ATTRIBUTE_STRING_COMPARISON_INVALID"
+FIELD-VALUE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.AttributeStringComparisonNotAllowed | "MANIFEST_ATTRIBUTE_STRING_COMPARISON_NOT_ALLOWED"
+FIELD-VALUE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.AttributeValueInvalid | "MANIFEST_ATTRIBUTE_VALUE_INVALID"
+FIELD-VALUE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.AttributeValueNotAllowed | "MANIFEST_ATTRIBUTE_VALUE_NOT_ALLOWED"
+FIELD-VALUE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.AttributeValueRequired | "MANIFEST_ATTRIBUTE_VALUE_REQUIRED"
+FIELD-VALUE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.AttributeValueTypeInvalid | "MANIFEST_ATTRIBUTE_VALUE_TYPE_INVALID"
+FIELD-VALUE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.AttributeValueTypeNotAllowed | "MANIFEST_ATTRIBUTE_VALUE_TYPE_NOT_ALLOWED"
+FIELD-VALUE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.AttributeValueTypeRequired | "MANIFEST_ATTRIBUTE_VALUE_TYPE_REQUIRED"
+FIELD-VALUE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.ContextAgeMaximumAgeInvalid | "MANIFEST_CONTEXT_AGE_MAXIMUM_AGE_INVALID"
+FIELD-VALUE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.ContextAgeMaximumAgeRequired | "MANIFEST_CONTEXT_AGE_MAXIMUM_AGE_REQUIRED"
+FIELD-VALUE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.ContextAgeTimestampInvalid | "MANIFEST_CONTEXT_AGE_TIMESTAMP_INVALID"
+FIELD-VALUE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.ContextAgeTimestampRequired | "MANIFEST_CONTEXT_AGE_TIMESTAMP_REQUIRED"
+FIELD-VALUE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.ContextOperatorInvalid | "MANIFEST_CONTEXT_OPERATOR_INVALID"
+FIELD-VALUE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.ContextOperatorRequired | "MANIFEST_CONTEXT_OPERATOR_REQUIRED"
+FIELD-VALUE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.ContextPropertyInvalid | "MANIFEST_CONTEXT_PROPERTY_INVALID"
+FIELD-VALUE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.ContextPropertyOperatorValueInvalid | "MANIFEST_CONTEXT_PROPERTY_OPERATOR_VALUE_INVALID"
+FIELD-VALUE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.ContextPropertyRequired | "MANIFEST_CONTEXT_PROPERTY_REQUIRED"
+FIELD-VALUE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.ContextStringComparisonInvalid | "MANIFEST_CONTEXT_STRING_COMPARISON_INVALID"
+FIELD-VALUE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.ContextStringComparisonNotAllowed | "MANIFEST_CONTEXT_STRING_COMPARISON_NOT_ALLOWED"
+FIELD-VALUE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.ContextValueInvalid | "MANIFEST_CONTEXT_VALUE_INVALID"
+FIELD-VALUE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.ContextValueRequired | "MANIFEST_CONTEXT_VALUE_REQUIRED"
+FIELD-VALUE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.ContextValueTypeInvalid | "MANIFEST_CONTEXT_VALUE_TYPE_INVALID"
+FIELD-VALUE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.ContextValueTypeRequired | "MANIFEST_CONTEXT_VALUE_TYPE_REQUIRED"
+FIELD-VALUE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.DateTimeWindowBoundaryRequired | "MANIFEST_DATE_TIME_WINDOW_BOUNDARY_REQUIRED"
+FIELD-VALUE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.DateTimeWindowEndsAtInvalid | "MANIFEST_DATE_TIME_WINDOW_ENDS_AT_INVALID"
+FIELD-VALUE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.DateTimeWindowRangeInvalid | "MANIFEST_DATE_TIME_WINDOW_RANGE_INVALID"
+FIELD-VALUE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.DateTimeWindowStartsAtInvalid | "MANIFEST_DATE_TIME_WINDOW_STARTS_AT_INVALID"
+FIELD-VALUE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.DuplicatePolicyId | "MANIFEST_DUPLICATE_POLICY_ID"
+FIELD-VALUE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.DuplicatePolicyRoute | "MANIFEST_DUPLICATE_POLICY_ROUTE"
+FIELD-VALUE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.PermissionRequired | "MANIFEST_PERMISSION_REQUIRED"
+FIELD-VALUE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.PoliciesRequired | "MANIFEST_POLICIES_REQUIRED"
+FIELD-VALUE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.PolicyActionRequired | "MANIFEST_POLICY_ACTION_REQUIRED"
+FIELD-VALUE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.PolicyCountExceeded | "MANIFEST_POLICY_COUNT_EXCEEDED"
+FIELD-VALUE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.PolicyIdRequired | "MANIFEST_POLICY_ID_REQUIRED"
+FIELD-VALUE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.PolicyRequired | "MANIFEST_POLICY_REQUIRED"
+FIELD-VALUE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.PolicyRequirementRequired | "MANIFEST_POLICY_REQUIREMENT_REQUIRED"
+FIELD-VALUE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.PolicyResourceTypeRequired | "MANIFEST_POLICY_RESOURCE_TYPE_REQUIRED"
+FIELD-VALUE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.RequirementChildCountExceeded | "MANIFEST_REQUIREMENT_CHILD_COUNT_EXCEEDED"
+FIELD-VALUE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.RequirementChildrenRequired | "MANIFEST_REQUIREMENT_CHILDREN_REQUIRED"
+FIELD-VALUE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.RequirementCycleDetected | "MANIFEST_REQUIREMENT_CYCLE_DETECTED"
+FIELD-VALUE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.RequirementDepthExceeded | "MANIFEST_REQUIREMENT_DEPTH_EXCEEDED"
+FIELD-VALUE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.RequirementIdInvalid | "MANIFEST_REQUIREMENT_ID_INVALID"
+FIELD-VALUE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.RequirementKindInvalid | "MANIFEST_REQUIREMENT_KIND_INVALID"
+FIELD-VALUE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.RequirementNodeCountExceeded | "MANIFEST_REQUIREMENT_NODE_COUNT_EXCEEDED"
+FIELD-VALUE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.RequirementRequired | "MANIFEST_REQUIREMENT_REQUIRED"
+FIELD-VALUE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.RoleRequired | "MANIFEST_ROLE_REQUIRED"
+FIELD-VALUE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.TimeWindowDayDuplicate | "MANIFEST_TIME_WINDOW_DAY_DUPLICATE"
+FIELD-VALUE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.TimeWindowDayInvalid | "MANIFEST_TIME_WINDOW_DAY_INVALID"
+FIELD-VALUE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.TimeWindowDaysRequired | "MANIFEST_TIME_WINDOW_DAYS_REQUIRED"
+FIELD-VALUE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.TimeWindowEndInvalid | "MANIFEST_TIME_WINDOW_END_INVALID"
+FIELD-VALUE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.TimeWindowEndRequired | "MANIFEST_TIME_WINDOW_END_REQUIRED"
+FIELD-VALUE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.TimeWindowRangeInvalid | "MANIFEST_TIME_WINDOW_RANGE_INVALID"
+FIELD-VALUE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.TimeWindowStartInvalid | "MANIFEST_TIME_WINDOW_START_INVALID"
+FIELD-VALUE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.TimeWindowStartRequired | "MANIFEST_TIME_WINDOW_START_REQUIRED"
+FIELD-VALUE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.TimeWindowTimeZoneInvalid | "MANIFEST_TIME_WINDOW_TIME_ZONE_INVALID"
+FIELD-VALUE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.TimeWindowTimeZoneRequired | "MANIFEST_TIME_WINDOW_TIME_ZONE_REQUIRED"
+FIELD-VALUE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.TotalRequirementNodeCountExceeded | "MANIFEST_TOTAL_REQUIREMENT_NODE_COUNT_EXCEEDED"
+FIELD-VALUE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes.UnsupportedSchemaVersion | "MANIFEST_UNSUPPORTED_SCHEMA_VERSION"
+MEMBER-ATTR | Fotbiler.RuleGate.Manifest.Loading.ManifestLoadResult.IsSuccess | System.Diagnostics.CodeAnalysis.MemberNotNullWhenAttribute(true, "Manifest")
+MEMBER-ATTR | Fotbiler.RuleGate.Manifest.Models.ManifestAttributeComparisonOperand.HasValue | YamlDotNet.Serialization.YamlIgnoreAttribute()
+MEMBER-ATTR | Fotbiler.RuleGate.Manifest.Models.ManifestAttributeRequirement.HasValue | YamlDotNet.Serialization.YamlIgnoreAttribute()
+MEMBER-ATTR | Fotbiler.RuleGate.Manifest.Models.ManifestContextRequirement.HasValue | YamlDotNet.Serialization.YamlIgnoreAttribute()
+METHOD | Public | - | Fotbiler.RuleGate.Manifest.Compilation.RuleGateManifestCompiler.CompileFromFileAsync(string, System.Threading.CancellationToken)
+METHOD | Public | - | Fotbiler.RuleGate.Manifest.Compilation.RuleGateManifestCompiler.CompileFromManifest(Fotbiler.RuleGate.Manifest.Models.RuleGateManifest)
+METHOD | Public | - | Fotbiler.RuleGate.Manifest.Compilation.RuleGateManifestCompiler.CompileFromText(string)
+METHOD | Public | - | Fotbiler.RuleGate.Manifest.Compilation.RuleGateManifestCompiler.RuleGateManifestCompiler()
+METHOD | Public | - | Fotbiler.RuleGate.Manifest.Compilation.RuleGateManifestCompiler.RuleGateManifestCompiler(Fotbiler.RuleGate.Manifest.Loading.RuleGateManifestYamlLoader, Fotbiler.RuleGate.Manifest.Mapping.RuleGateManifestMapper)
+METHOD | Public | - | Fotbiler.RuleGate.Manifest.Loading.ManifestLoadError.<Clone>$()
+METHOD | Public | - | Fotbiler.RuleGate.Manifest.Loading.ManifestLoadError.Equals(Fotbiler.RuleGate.Manifest.Loading.ManifestLoadError?)
+METHOD | Public | - | Fotbiler.RuleGate.Manifest.Loading.ManifestLoadError.ManifestLoadError(string, string, long?, long?)
+METHOD | Public | - | Fotbiler.RuleGate.Manifest.Loading.RuleGateManifestYamlLoader.LoadFromFileAsync(string, System.Threading.CancellationToken)
+METHOD | Public | - | Fotbiler.RuleGate.Manifest.Loading.RuleGateManifestYamlLoader.LoadFromText(string)
+METHOD | Public | - | Fotbiler.RuleGate.Manifest.Loading.RuleGateManifestYamlLoader.RuleGateManifestYamlLoader()
+METHOD | Public | - | Fotbiler.RuleGate.Manifest.Mapping.RuleGateManifestMapper.Map(Fotbiler.RuleGate.Manifest.Models.RuleGateManifest)
+METHOD | Public | - | Fotbiler.RuleGate.Manifest.Mapping.RuleGateManifestMapper.RuleGateManifestMapper(Fotbiler.RuleGate.Manifest.Validation.RuleGateManifestValidator)
+METHOD | Public | - | Fotbiler.RuleGate.Manifest.Models.ManifestApplication.ManifestApplication()
+METHOD | Public | - | Fotbiler.RuleGate.Manifest.Models.ManifestAttributeComparisonOperand.ManifestAttributeComparisonOperand()
+METHOD | Public | - | Fotbiler.RuleGate.Manifest.Models.ManifestAttributeComparisonRequirement.ManifestAttributeComparisonRequirement()
+METHOD | Public | - | Fotbiler.RuleGate.Manifest.Models.ManifestAttributeRequirement.ManifestAttributeRequirement()
+METHOD | Public | - | Fotbiler.RuleGate.Manifest.Models.ManifestContextAgeRequirement.ManifestContextAgeRequirement()
+METHOD | Public | - | Fotbiler.RuleGate.Manifest.Models.ManifestContextRequirement.ManifestContextRequirement()
+METHOD | Public | - | Fotbiler.RuleGate.Manifest.Models.ManifestDateTimeWindowRequirement.ManifestDateTimeWindowRequirement()
+METHOD | Public | - | Fotbiler.RuleGate.Manifest.Models.ManifestPolicy.ManifestPolicy()
+METHOD | Public | - | Fotbiler.RuleGate.Manifest.Models.ManifestRequirement.ManifestRequirement()
+METHOD | Public | - | Fotbiler.RuleGate.Manifest.Models.ManifestTimeWindowRequirement.ManifestTimeWindowRequirement()
+METHOD | Public | - | Fotbiler.RuleGate.Manifest.Models.RuleGateManifest.RuleGateManifest()
+METHOD | Public | - | Fotbiler.RuleGate.Manifest.PolicySources.EmbeddedResourcePolicySource.EmbeddedResourcePolicySource(System.Reflection.Assembly, string, string?)
+METHOD | Public | - | Fotbiler.RuleGate.Manifest.PolicySources.EmbeddedResourcePolicySource.EmbeddedResourcePolicySource(System.Reflection.Assembly, string, string?, Fotbiler.RuleGate.Manifest.Compilation.RuleGateManifestCompiler)
+METHOD | Public | - | Fotbiler.RuleGate.Manifest.PolicySources.EmbeddedResourcePolicySource.LoadAsync(System.Threading.CancellationToken)
+METHOD | Public | - | Fotbiler.RuleGate.Manifest.PolicySources.YamlFilePolicySource.LoadAsync(System.Threading.CancellationToken)
+METHOD | Public | - | Fotbiler.RuleGate.Manifest.PolicySources.YamlFilePolicySource.YamlFilePolicySource(string, Fotbiler.RuleGate.Manifest.PolicySources.YamlPolicyFileOptions?, string?)
+METHOD | Public | - | Fotbiler.RuleGate.Manifest.PolicySources.YamlFilePolicySource.YamlFilePolicySource(string, Fotbiler.RuleGate.Manifest.PolicySources.YamlPolicyFileOptions?, string?, Fotbiler.RuleGate.Manifest.Compilation.RuleGateManifestCompiler)
+METHOD | Public | - | Fotbiler.RuleGate.Manifest.PolicySources.YamlPolicyFileOptions.YamlPolicyFileOptions()
+METHOD | Public | - | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationError.<Clone>$()
+METHOD | Public | - | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationError.Equals(Fotbiler.RuleGate.Manifest.Validation.ManifestValidationError?)
+METHOD | Public | - | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationError.ManifestValidationError(string, string, string)
+METHOD | Public | - | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationResult.ManifestValidationResult(System.Collections.Generic.IEnumerable<Fotbiler.RuleGate.Manifest.Validation.ManifestValidationError>)
+METHOD | Public | - | Fotbiler.RuleGate.Manifest.Validation.RuleGateManifestValidator.RuleGateManifestValidator()
+METHOD | Public | - | Fotbiler.RuleGate.Manifest.Validation.RuleGateManifestValidator.Validate(Fotbiler.RuleGate.Manifest.Models.RuleGateManifest)
+METHOD | Public | override | Fotbiler.RuleGate.Manifest.Loading.ManifestLoadError.Equals(object?)
+METHOD | Public | override | Fotbiler.RuleGate.Manifest.Loading.ManifestLoadError.GetHashCode()
+METHOD | Public | override | Fotbiler.RuleGate.Manifest.Loading.ManifestLoadError.ToString()
+METHOD | Public | override | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationError.Equals(object?)
+METHOD | Public | override | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationError.GetHashCode()
+METHOD | Public | override | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationError.ToString()
+METHOD | Public | static | Fotbiler.RuleGate.Manifest.Compilation.ManifestCompilationResult.LoadFailure(System.Collections.Generic.IEnumerable<Fotbiler.RuleGate.Manifest.Loading.ManifestLoadError>)
+METHOD | Public | static | Fotbiler.RuleGate.Manifest.Compilation.ManifestCompilationResult.Success(System.Collections.Generic.IEnumerable<Fotbiler.RuleGate.Abstractions.Policies.PolicyDefinition>)
+METHOD | Public | static | Fotbiler.RuleGate.Manifest.Compilation.ManifestCompilationResult.ValidationFailure(System.Collections.Generic.IEnumerable<Fotbiler.RuleGate.Manifest.Validation.ManifestValidationError>)
+METHOD | Public | static | Fotbiler.RuleGate.Manifest.Loading.ManifestLoadError.operator !=(Fotbiler.RuleGate.Manifest.Loading.ManifestLoadError?, Fotbiler.RuleGate.Manifest.Loading.ManifestLoadError?)
+METHOD | Public | static | Fotbiler.RuleGate.Manifest.Loading.ManifestLoadError.operator ==(Fotbiler.RuleGate.Manifest.Loading.ManifestLoadError?, Fotbiler.RuleGate.Manifest.Loading.ManifestLoadError?)
+METHOD | Public | static | Fotbiler.RuleGate.Manifest.Loading.ManifestLoadResult.Failure(params Fotbiler.RuleGate.Manifest.Loading.ManifestLoadError[])
+METHOD | Public | static | Fotbiler.RuleGate.Manifest.Loading.ManifestLoadResult.Success(Fotbiler.RuleGate.Manifest.Models.RuleGateManifest)
+METHOD | Public | static | Fotbiler.RuleGate.Manifest.Mapping.ManifestMappingResult.Failure(System.Collections.Generic.IEnumerable<Fotbiler.RuleGate.Manifest.Validation.ManifestValidationError>)
+METHOD | Public | static | Fotbiler.RuleGate.Manifest.Mapping.ManifestMappingResult.Success(System.Collections.Generic.IEnumerable<Fotbiler.RuleGate.Abstractions.Policies.PolicyDefinition>)
+METHOD | Public | static | Fotbiler.RuleGate.Manifest.PolicySources.ManifestCompilationPolicySourceExtensions.ToPolicySourceLoadResult(Fotbiler.RuleGate.Manifest.Compilation.ManifestCompilationResult)
+METHOD | Public | static | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationError.operator !=(Fotbiler.RuleGate.Manifest.Validation.ManifestValidationError?, Fotbiler.RuleGate.Manifest.Validation.ManifestValidationError?)
+METHOD | Public | static | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationError.operator ==(Fotbiler.RuleGate.Manifest.Validation.ManifestValidationError?, Fotbiler.RuleGate.Manifest.Validation.ManifestValidationError?)
+METHOD-SHAPE | Fotbiler.RuleGate.Manifest.Compilation.ManifestCompilationResult.LoadFailure(System.Collections.Generic.IEnumerable<Fotbiler.RuleGate.Manifest.Loading.ManifestLoadError>) | kind=Ordinary | extension=False | returnRef=None
+METHOD-SHAPE | Fotbiler.RuleGate.Manifest.Compilation.ManifestCompilationResult.Success(System.Collections.Generic.IEnumerable<Fotbiler.RuleGate.Abstractions.Policies.PolicyDefinition>) | kind=Ordinary | extension=False | returnRef=None
+METHOD-SHAPE | Fotbiler.RuleGate.Manifest.Compilation.ManifestCompilationResult.ValidationFailure(System.Collections.Generic.IEnumerable<Fotbiler.RuleGate.Manifest.Validation.ManifestValidationError>) | kind=Ordinary | extension=False | returnRef=None
+METHOD-SHAPE | Fotbiler.RuleGate.Manifest.Compilation.RuleGateManifestCompiler.CompileFromFileAsync(string, System.Threading.CancellationToken) | kind=Ordinary | extension=False | returnRef=None
+METHOD-SHAPE | Fotbiler.RuleGate.Manifest.Compilation.RuleGateManifestCompiler.CompileFromManifest(Fotbiler.RuleGate.Manifest.Models.RuleGateManifest) | kind=Ordinary | extension=False | returnRef=None
+METHOD-SHAPE | Fotbiler.RuleGate.Manifest.Compilation.RuleGateManifestCompiler.CompileFromText(string) | kind=Ordinary | extension=False | returnRef=None
+METHOD-SHAPE | Fotbiler.RuleGate.Manifest.Compilation.RuleGateManifestCompiler.RuleGateManifestCompiler() | kind=Constructor | extension=False | returnRef=None
+METHOD-SHAPE | Fotbiler.RuleGate.Manifest.Compilation.RuleGateManifestCompiler.RuleGateManifestCompiler(Fotbiler.RuleGate.Manifest.Loading.RuleGateManifestYamlLoader, Fotbiler.RuleGate.Manifest.Mapping.RuleGateManifestMapper) | kind=Constructor | extension=False | returnRef=None
+METHOD-SHAPE | Fotbiler.RuleGate.Manifest.Loading.ManifestLoadError.<Clone>$() | kind=Ordinary | extension=False | returnRef=None
+METHOD-SHAPE | Fotbiler.RuleGate.Manifest.Loading.ManifestLoadError.Equals(Fotbiler.RuleGate.Manifest.Loading.ManifestLoadError?) | kind=Ordinary | extension=False | returnRef=None
+METHOD-SHAPE | Fotbiler.RuleGate.Manifest.Loading.ManifestLoadError.Equals(object?) | kind=Ordinary | extension=False | returnRef=None
+METHOD-SHAPE | Fotbiler.RuleGate.Manifest.Loading.ManifestLoadError.GetHashCode() | kind=Ordinary | extension=False | returnRef=None
+METHOD-SHAPE | Fotbiler.RuleGate.Manifest.Loading.ManifestLoadError.ManifestLoadError(string, string, long?, long?) | kind=Constructor | extension=False | returnRef=None
+METHOD-SHAPE | Fotbiler.RuleGate.Manifest.Loading.ManifestLoadError.ToString() | kind=Ordinary | extension=False | returnRef=None
+METHOD-SHAPE | Fotbiler.RuleGate.Manifest.Loading.ManifestLoadError.operator !=(Fotbiler.RuleGate.Manifest.Loading.ManifestLoadError?, Fotbiler.RuleGate.Manifest.Loading.ManifestLoadError?) | kind=UserDefinedOperator | extension=False | returnRef=None
+METHOD-SHAPE | Fotbiler.RuleGate.Manifest.Loading.ManifestLoadError.operator ==(Fotbiler.RuleGate.Manifest.Loading.ManifestLoadError?, Fotbiler.RuleGate.Manifest.Loading.ManifestLoadError?) | kind=UserDefinedOperator | extension=False | returnRef=None
+METHOD-SHAPE | Fotbiler.RuleGate.Manifest.Loading.ManifestLoadResult.Failure(params Fotbiler.RuleGate.Manifest.Loading.ManifestLoadError[]) | kind=Ordinary | extension=False | returnRef=None
+METHOD-SHAPE | Fotbiler.RuleGate.Manifest.Loading.ManifestLoadResult.Success(Fotbiler.RuleGate.Manifest.Models.RuleGateManifest) | kind=Ordinary | extension=False | returnRef=None
+METHOD-SHAPE | Fotbiler.RuleGate.Manifest.Loading.RuleGateManifestYamlLoader.LoadFromFileAsync(string, System.Threading.CancellationToken) | kind=Ordinary | extension=False | returnRef=None
+METHOD-SHAPE | Fotbiler.RuleGate.Manifest.Loading.RuleGateManifestYamlLoader.LoadFromText(string) | kind=Ordinary | extension=False | returnRef=None
+METHOD-SHAPE | Fotbiler.RuleGate.Manifest.Loading.RuleGateManifestYamlLoader.RuleGateManifestYamlLoader() | kind=Constructor | extension=False | returnRef=None
+METHOD-SHAPE | Fotbiler.RuleGate.Manifest.Mapping.ManifestMappingResult.Failure(System.Collections.Generic.IEnumerable<Fotbiler.RuleGate.Manifest.Validation.ManifestValidationError>) | kind=Ordinary | extension=False | returnRef=None
+METHOD-SHAPE | Fotbiler.RuleGate.Manifest.Mapping.ManifestMappingResult.Success(System.Collections.Generic.IEnumerable<Fotbiler.RuleGate.Abstractions.Policies.PolicyDefinition>) | kind=Ordinary | extension=False | returnRef=None
+METHOD-SHAPE | Fotbiler.RuleGate.Manifest.Mapping.RuleGateManifestMapper.Map(Fotbiler.RuleGate.Manifest.Models.RuleGateManifest) | kind=Ordinary | extension=False | returnRef=None
+METHOD-SHAPE | Fotbiler.RuleGate.Manifest.Mapping.RuleGateManifestMapper.RuleGateManifestMapper(Fotbiler.RuleGate.Manifest.Validation.RuleGateManifestValidator) | kind=Constructor | extension=False | returnRef=None
+METHOD-SHAPE | Fotbiler.RuleGate.Manifest.Models.ManifestApplication.ManifestApplication() | kind=Constructor | extension=False | returnRef=None
+METHOD-SHAPE | Fotbiler.RuleGate.Manifest.Models.ManifestAttributeComparisonOperand.ManifestAttributeComparisonOperand() | kind=Constructor | extension=False | returnRef=None
+METHOD-SHAPE | Fotbiler.RuleGate.Manifest.Models.ManifestAttributeComparisonRequirement.ManifestAttributeComparisonRequirement() | kind=Constructor | extension=False | returnRef=None
+METHOD-SHAPE | Fotbiler.RuleGate.Manifest.Models.ManifestAttributeRequirement.ManifestAttributeRequirement() | kind=Constructor | extension=False | returnRef=None
+METHOD-SHAPE | Fotbiler.RuleGate.Manifest.Models.ManifestContextAgeRequirement.ManifestContextAgeRequirement() | kind=Constructor | extension=False | returnRef=None
+METHOD-SHAPE | Fotbiler.RuleGate.Manifest.Models.ManifestContextRequirement.ManifestContextRequirement() | kind=Constructor | extension=False | returnRef=None
+METHOD-SHAPE | Fotbiler.RuleGate.Manifest.Models.ManifestDateTimeWindowRequirement.ManifestDateTimeWindowRequirement() | kind=Constructor | extension=False | returnRef=None
+METHOD-SHAPE | Fotbiler.RuleGate.Manifest.Models.ManifestPolicy.ManifestPolicy() | kind=Constructor | extension=False | returnRef=None
+METHOD-SHAPE | Fotbiler.RuleGate.Manifest.Models.ManifestRequirement.ManifestRequirement() | kind=Constructor | extension=False | returnRef=None
+METHOD-SHAPE | Fotbiler.RuleGate.Manifest.Models.ManifestTimeWindowRequirement.ManifestTimeWindowRequirement() | kind=Constructor | extension=False | returnRef=None
+METHOD-SHAPE | Fotbiler.RuleGate.Manifest.Models.RuleGateManifest.RuleGateManifest() | kind=Constructor | extension=False | returnRef=None
+METHOD-SHAPE | Fotbiler.RuleGate.Manifest.PolicySources.EmbeddedResourcePolicySource.EmbeddedResourcePolicySource(System.Reflection.Assembly, string, string?) | kind=Constructor | extension=False | returnRef=None
+METHOD-SHAPE | Fotbiler.RuleGate.Manifest.PolicySources.EmbeddedResourcePolicySource.EmbeddedResourcePolicySource(System.Reflection.Assembly, string, string?, Fotbiler.RuleGate.Manifest.Compilation.RuleGateManifestCompiler) | kind=Constructor | extension=False | returnRef=None
+METHOD-SHAPE | Fotbiler.RuleGate.Manifest.PolicySources.EmbeddedResourcePolicySource.LoadAsync(System.Threading.CancellationToken) | kind=Ordinary | extension=False | returnRef=None
+METHOD-SHAPE | Fotbiler.RuleGate.Manifest.PolicySources.ManifestCompilationPolicySourceExtensions.ToPolicySourceLoadResult(Fotbiler.RuleGate.Manifest.Compilation.ManifestCompilationResult) | kind=Ordinary | extension=True | returnRef=None
+METHOD-SHAPE | Fotbiler.RuleGate.Manifest.PolicySources.YamlFilePolicySource.LoadAsync(System.Threading.CancellationToken) | kind=Ordinary | extension=False | returnRef=None
+METHOD-SHAPE | Fotbiler.RuleGate.Manifest.PolicySources.YamlFilePolicySource.YamlFilePolicySource(string, Fotbiler.RuleGate.Manifest.PolicySources.YamlPolicyFileOptions?, string?) | kind=Constructor | extension=False | returnRef=None
+METHOD-SHAPE | Fotbiler.RuleGate.Manifest.PolicySources.YamlFilePolicySource.YamlFilePolicySource(string, Fotbiler.RuleGate.Manifest.PolicySources.YamlPolicyFileOptions?, string?, Fotbiler.RuleGate.Manifest.Compilation.RuleGateManifestCompiler) | kind=Constructor | extension=False | returnRef=None
+METHOD-SHAPE | Fotbiler.RuleGate.Manifest.PolicySources.YamlPolicyFileOptions.YamlPolicyFileOptions() | kind=Constructor | extension=False | returnRef=None
+METHOD-SHAPE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationError.<Clone>$() | kind=Ordinary | extension=False | returnRef=None
+METHOD-SHAPE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationError.Equals(Fotbiler.RuleGate.Manifest.Validation.ManifestValidationError?) | kind=Ordinary | extension=False | returnRef=None
+METHOD-SHAPE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationError.Equals(object?) | kind=Ordinary | extension=False | returnRef=None
+METHOD-SHAPE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationError.GetHashCode() | kind=Ordinary | extension=False | returnRef=None
+METHOD-SHAPE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationError.ManifestValidationError(string, string, string) | kind=Constructor | extension=False | returnRef=None
+METHOD-SHAPE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationError.ToString() | kind=Ordinary | extension=False | returnRef=None
+METHOD-SHAPE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationError.operator !=(Fotbiler.RuleGate.Manifest.Validation.ManifestValidationError?, Fotbiler.RuleGate.Manifest.Validation.ManifestValidationError?) | kind=UserDefinedOperator | extension=False | returnRef=None
+METHOD-SHAPE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationError.operator ==(Fotbiler.RuleGate.Manifest.Validation.ManifestValidationError?, Fotbiler.RuleGate.Manifest.Validation.ManifestValidationError?) | kind=UserDefinedOperator | extension=False | returnRef=None
+METHOD-SHAPE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationResult.ManifestValidationResult(System.Collections.Generic.IEnumerable<Fotbiler.RuleGate.Manifest.Validation.ManifestValidationError>) | kind=Constructor | extension=False | returnRef=None
+METHOD-SHAPE | Fotbiler.RuleGate.Manifest.Validation.RuleGateManifestValidator.RuleGateManifestValidator() | kind=Constructor | extension=False | returnRef=None
+METHOD-SHAPE | Fotbiler.RuleGate.Manifest.Validation.RuleGateManifestValidator.Validate(Fotbiler.RuleGate.Manifest.Models.RuleGateManifest) | kind=Ordinary | extension=False | returnRef=None
+PARAM | Fotbiler.RuleGate.Manifest.Compilation.ManifestCompilationResult.LoadFailure(System.Collections.Generic.IEnumerable<Fotbiler.RuleGate.Manifest.Loading.ManifestLoadError>) | 0 | errors | type=System.Collections.Generic.IEnumerable<Fotbiler.RuleGate.Manifest.Loading.ManifestLoadError> | ref=None | params=False | optional=False
+PARAM | Fotbiler.RuleGate.Manifest.Compilation.ManifestCompilationResult.Success(System.Collections.Generic.IEnumerable<Fotbiler.RuleGate.Abstractions.Policies.PolicyDefinition>) | 0 | policies | type=System.Collections.Generic.IEnumerable<Fotbiler.RuleGate.Abstractions.Policies.PolicyDefinition> | ref=None | params=False | optional=False
+PARAM | Fotbiler.RuleGate.Manifest.Compilation.ManifestCompilationResult.ValidationFailure(System.Collections.Generic.IEnumerable<Fotbiler.RuleGate.Manifest.Validation.ManifestValidationError>) | 0 | errors | type=System.Collections.Generic.IEnumerable<Fotbiler.RuleGate.Manifest.Validation.ManifestValidationError> | ref=None | params=False | optional=False
+PARAM | Fotbiler.RuleGate.Manifest.Compilation.RuleGateManifestCompiler.CompileFromFileAsync(string, System.Threading.CancellationToken) | 0 | path | type=string | ref=None | params=False | optional=False
+PARAM | Fotbiler.RuleGate.Manifest.Compilation.RuleGateManifestCompiler.CompileFromFileAsync(string, System.Threading.CancellationToken) | 1 | cancellationToken | type=System.Threading.CancellationToken | ref=None | params=False | optional=True
+PARAM | Fotbiler.RuleGate.Manifest.Compilation.RuleGateManifestCompiler.CompileFromManifest(Fotbiler.RuleGate.Manifest.Models.RuleGateManifest) | 0 | manifest | type=Fotbiler.RuleGate.Manifest.Models.RuleGateManifest | ref=None | params=False | optional=False
+PARAM | Fotbiler.RuleGate.Manifest.Compilation.RuleGateManifestCompiler.CompileFromText(string) | 0 | yaml | type=string | ref=None | params=False | optional=False
+PARAM | Fotbiler.RuleGate.Manifest.Compilation.RuleGateManifestCompiler.RuleGateManifestCompiler(Fotbiler.RuleGate.Manifest.Loading.RuleGateManifestYamlLoader, Fotbiler.RuleGate.Manifest.Mapping.RuleGateManifestMapper) | 0 | loader | type=Fotbiler.RuleGate.Manifest.Loading.RuleGateManifestYamlLoader | ref=None | params=False | optional=False
+PARAM | Fotbiler.RuleGate.Manifest.Compilation.RuleGateManifestCompiler.RuleGateManifestCompiler(Fotbiler.RuleGate.Manifest.Loading.RuleGateManifestYamlLoader, Fotbiler.RuleGate.Manifest.Mapping.RuleGateManifestMapper) | 1 | mapper | type=Fotbiler.RuleGate.Manifest.Mapping.RuleGateManifestMapper | ref=None | params=False | optional=False
+PARAM | Fotbiler.RuleGate.Manifest.Loading.ManifestLoadError.Equals(Fotbiler.RuleGate.Manifest.Loading.ManifestLoadError?) | 0 | other | type=Fotbiler.RuleGate.Manifest.Loading.ManifestLoadError? | ref=None | params=False | optional=False
+PARAM | Fotbiler.RuleGate.Manifest.Loading.ManifestLoadError.Equals(object?) | 0 | obj | type=object? | ref=None | params=False | optional=False
+PARAM | Fotbiler.RuleGate.Manifest.Loading.ManifestLoadError.ManifestLoadError(string, string, long?, long?) | 0 | code | type=string | ref=None | params=False | optional=False
+PARAM | Fotbiler.RuleGate.Manifest.Loading.ManifestLoadError.ManifestLoadError(string, string, long?, long?) | 1 | message | type=string | ref=None | params=False | optional=False
+PARAM | Fotbiler.RuleGate.Manifest.Loading.ManifestLoadError.ManifestLoadError(string, string, long?, long?) | 2 | line | type=long? | ref=None | params=False | optional=True
+PARAM | Fotbiler.RuleGate.Manifest.Loading.ManifestLoadError.ManifestLoadError(string, string, long?, long?) | 3 | column | type=long? | ref=None | params=False | optional=True
+PARAM | Fotbiler.RuleGate.Manifest.Loading.ManifestLoadError.operator !=(Fotbiler.RuleGate.Manifest.Loading.ManifestLoadError?, Fotbiler.RuleGate.Manifest.Loading.ManifestLoadError?) | 0 | left | type=Fotbiler.RuleGate.Manifest.Loading.ManifestLoadError? | ref=None | params=False | optional=False
+PARAM | Fotbiler.RuleGate.Manifest.Loading.ManifestLoadError.operator !=(Fotbiler.RuleGate.Manifest.Loading.ManifestLoadError?, Fotbiler.RuleGate.Manifest.Loading.ManifestLoadError?) | 1 | right | type=Fotbiler.RuleGate.Manifest.Loading.ManifestLoadError? | ref=None | params=False | optional=False
+PARAM | Fotbiler.RuleGate.Manifest.Loading.ManifestLoadError.operator ==(Fotbiler.RuleGate.Manifest.Loading.ManifestLoadError?, Fotbiler.RuleGate.Manifest.Loading.ManifestLoadError?) | 0 | left | type=Fotbiler.RuleGate.Manifest.Loading.ManifestLoadError? | ref=None | params=False | optional=False
+PARAM | Fotbiler.RuleGate.Manifest.Loading.ManifestLoadError.operator ==(Fotbiler.RuleGate.Manifest.Loading.ManifestLoadError?, Fotbiler.RuleGate.Manifest.Loading.ManifestLoadError?) | 1 | right | type=Fotbiler.RuleGate.Manifest.Loading.ManifestLoadError? | ref=None | params=False | optional=False
+PARAM | Fotbiler.RuleGate.Manifest.Loading.ManifestLoadResult.Failure(params Fotbiler.RuleGate.Manifest.Loading.ManifestLoadError[]) | 0 | errors | type=Fotbiler.RuleGate.Manifest.Loading.ManifestLoadError[] | ref=None | params=True | optional=False
+PARAM | Fotbiler.RuleGate.Manifest.Loading.ManifestLoadResult.Success(Fotbiler.RuleGate.Manifest.Models.RuleGateManifest) | 0 | manifest | type=Fotbiler.RuleGate.Manifest.Models.RuleGateManifest | ref=None | params=False | optional=False
+PARAM | Fotbiler.RuleGate.Manifest.Loading.RuleGateManifestYamlLoader.LoadFromFileAsync(string, System.Threading.CancellationToken) | 0 | path | type=string | ref=None | params=False | optional=False
+PARAM | Fotbiler.RuleGate.Manifest.Loading.RuleGateManifestYamlLoader.LoadFromFileAsync(string, System.Threading.CancellationToken) | 1 | cancellationToken | type=System.Threading.CancellationToken | ref=None | params=False | optional=True
+PARAM | Fotbiler.RuleGate.Manifest.Loading.RuleGateManifestYamlLoader.LoadFromText(string) | 0 | yaml | type=string | ref=None | params=False | optional=False
+PARAM | Fotbiler.RuleGate.Manifest.Mapping.ManifestMappingResult.Failure(System.Collections.Generic.IEnumerable<Fotbiler.RuleGate.Manifest.Validation.ManifestValidationError>) | 0 | errors | type=System.Collections.Generic.IEnumerable<Fotbiler.RuleGate.Manifest.Validation.ManifestValidationError> | ref=None | params=False | optional=False
+PARAM | Fotbiler.RuleGate.Manifest.Mapping.ManifestMappingResult.Success(System.Collections.Generic.IEnumerable<Fotbiler.RuleGate.Abstractions.Policies.PolicyDefinition>) | 0 | policies | type=System.Collections.Generic.IEnumerable<Fotbiler.RuleGate.Abstractions.Policies.PolicyDefinition> | ref=None | params=False | optional=False
+PARAM | Fotbiler.RuleGate.Manifest.Mapping.RuleGateManifestMapper.Map(Fotbiler.RuleGate.Manifest.Models.RuleGateManifest) | 0 | manifest | type=Fotbiler.RuleGate.Manifest.Models.RuleGateManifest | ref=None | params=False | optional=False
+PARAM | Fotbiler.RuleGate.Manifest.Mapping.RuleGateManifestMapper.RuleGateManifestMapper(Fotbiler.RuleGate.Manifest.Validation.RuleGateManifestValidator) | 0 | validator | type=Fotbiler.RuleGate.Manifest.Validation.RuleGateManifestValidator | ref=None | params=False | optional=False
+PARAM | Fotbiler.RuleGate.Manifest.PolicySources.EmbeddedResourcePolicySource.EmbeddedResourcePolicySource(System.Reflection.Assembly, string, string?) | 0 | assembly | type=System.Reflection.Assembly | ref=None | params=False | optional=False
+PARAM | Fotbiler.RuleGate.Manifest.PolicySources.EmbeddedResourcePolicySource.EmbeddedResourcePolicySource(System.Reflection.Assembly, string, string?) | 1 | resourceName | type=string | ref=None | params=False | optional=False
+PARAM | Fotbiler.RuleGate.Manifest.PolicySources.EmbeddedResourcePolicySource.EmbeddedResourcePolicySource(System.Reflection.Assembly, string, string?) | 2 | name | type=string? | ref=None | params=False | optional=True
+PARAM | Fotbiler.RuleGate.Manifest.PolicySources.EmbeddedResourcePolicySource.EmbeddedResourcePolicySource(System.Reflection.Assembly, string, string?, Fotbiler.RuleGate.Manifest.Compilation.RuleGateManifestCompiler) | 0 | assembly | type=System.Reflection.Assembly | ref=None | params=False | optional=False
+PARAM | Fotbiler.RuleGate.Manifest.PolicySources.EmbeddedResourcePolicySource.EmbeddedResourcePolicySource(System.Reflection.Assembly, string, string?, Fotbiler.RuleGate.Manifest.Compilation.RuleGateManifestCompiler) | 1 | resourceName | type=string | ref=None | params=False | optional=False
+PARAM | Fotbiler.RuleGate.Manifest.PolicySources.EmbeddedResourcePolicySource.EmbeddedResourcePolicySource(System.Reflection.Assembly, string, string?, Fotbiler.RuleGate.Manifest.Compilation.RuleGateManifestCompiler) | 2 | name | type=string? | ref=None | params=False | optional=False
+PARAM | Fotbiler.RuleGate.Manifest.PolicySources.EmbeddedResourcePolicySource.EmbeddedResourcePolicySource(System.Reflection.Assembly, string, string?, Fotbiler.RuleGate.Manifest.Compilation.RuleGateManifestCompiler) | 3 | compiler | type=Fotbiler.RuleGate.Manifest.Compilation.RuleGateManifestCompiler | ref=None | params=False | optional=False
+PARAM | Fotbiler.RuleGate.Manifest.PolicySources.EmbeddedResourcePolicySource.LoadAsync(System.Threading.CancellationToken) | 0 | cancellationToken | type=System.Threading.CancellationToken | ref=None | params=False | optional=True
+PARAM | Fotbiler.RuleGate.Manifest.PolicySources.ManifestCompilationPolicySourceExtensions.ToPolicySourceLoadResult(Fotbiler.RuleGate.Manifest.Compilation.ManifestCompilationResult) | 0 | compilation | type=Fotbiler.RuleGate.Manifest.Compilation.ManifestCompilationResult | ref=None | params=False | optional=False
+PARAM | Fotbiler.RuleGate.Manifest.PolicySources.YamlFilePolicySource.LoadAsync(System.Threading.CancellationToken) | 0 | cancellationToken | type=System.Threading.CancellationToken | ref=None | params=False | optional=True
+PARAM | Fotbiler.RuleGate.Manifest.PolicySources.YamlFilePolicySource.YamlFilePolicySource(string, Fotbiler.RuleGate.Manifest.PolicySources.YamlPolicyFileOptions?, string?) | 0 | path | type=string | ref=None | params=False | optional=False
+PARAM | Fotbiler.RuleGate.Manifest.PolicySources.YamlFilePolicySource.YamlFilePolicySource(string, Fotbiler.RuleGate.Manifest.PolicySources.YamlPolicyFileOptions?, string?) | 1 | options | type=Fotbiler.RuleGate.Manifest.PolicySources.YamlPolicyFileOptions? | ref=None | params=False | optional=True
+PARAM | Fotbiler.RuleGate.Manifest.PolicySources.YamlFilePolicySource.YamlFilePolicySource(string, Fotbiler.RuleGate.Manifest.PolicySources.YamlPolicyFileOptions?, string?) | 2 | name | type=string? | ref=None | params=False | optional=True
+PARAM | Fotbiler.RuleGate.Manifest.PolicySources.YamlFilePolicySource.YamlFilePolicySource(string, Fotbiler.RuleGate.Manifest.PolicySources.YamlPolicyFileOptions?, string?, Fotbiler.RuleGate.Manifest.Compilation.RuleGateManifestCompiler) | 0 | path | type=string | ref=None | params=False | optional=False
+PARAM | Fotbiler.RuleGate.Manifest.PolicySources.YamlFilePolicySource.YamlFilePolicySource(string, Fotbiler.RuleGate.Manifest.PolicySources.YamlPolicyFileOptions?, string?, Fotbiler.RuleGate.Manifest.Compilation.RuleGateManifestCompiler) | 1 | options | type=Fotbiler.RuleGate.Manifest.PolicySources.YamlPolicyFileOptions? | ref=None | params=False | optional=False
+PARAM | Fotbiler.RuleGate.Manifest.PolicySources.YamlFilePolicySource.YamlFilePolicySource(string, Fotbiler.RuleGate.Manifest.PolicySources.YamlPolicyFileOptions?, string?, Fotbiler.RuleGate.Manifest.Compilation.RuleGateManifestCompiler) | 2 | name | type=string? | ref=None | params=False | optional=False
+PARAM | Fotbiler.RuleGate.Manifest.PolicySources.YamlFilePolicySource.YamlFilePolicySource(string, Fotbiler.RuleGate.Manifest.PolicySources.YamlPolicyFileOptions?, string?, Fotbiler.RuleGate.Manifest.Compilation.RuleGateManifestCompiler) | 3 | compiler | type=Fotbiler.RuleGate.Manifest.Compilation.RuleGateManifestCompiler | ref=None | params=False | optional=False
+PARAM | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationError.Equals(Fotbiler.RuleGate.Manifest.Validation.ManifestValidationError?) | 0 | other | type=Fotbiler.RuleGate.Manifest.Validation.ManifestValidationError? | ref=None | params=False | optional=False
+PARAM | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationError.Equals(object?) | 0 | obj | type=object? | ref=None | params=False | optional=False
+PARAM | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationError.ManifestValidationError(string, string, string) | 0 | code | type=string | ref=None | params=False | optional=False
+PARAM | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationError.ManifestValidationError(string, string, string) | 1 | path | type=string | ref=None | params=False | optional=False
+PARAM | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationError.ManifestValidationError(string, string, string) | 2 | message | type=string | ref=None | params=False | optional=False
+PARAM | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationError.operator !=(Fotbiler.RuleGate.Manifest.Validation.ManifestValidationError?, Fotbiler.RuleGate.Manifest.Validation.ManifestValidationError?) | 0 | left | type=Fotbiler.RuleGate.Manifest.Validation.ManifestValidationError? | ref=None | params=False | optional=False
+PARAM | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationError.operator !=(Fotbiler.RuleGate.Manifest.Validation.ManifestValidationError?, Fotbiler.RuleGate.Manifest.Validation.ManifestValidationError?) | 1 | right | type=Fotbiler.RuleGate.Manifest.Validation.ManifestValidationError? | ref=None | params=False | optional=False
+PARAM | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationError.operator ==(Fotbiler.RuleGate.Manifest.Validation.ManifestValidationError?, Fotbiler.RuleGate.Manifest.Validation.ManifestValidationError?) | 0 | left | type=Fotbiler.RuleGate.Manifest.Validation.ManifestValidationError? | ref=None | params=False | optional=False
+PARAM | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationError.operator ==(Fotbiler.RuleGate.Manifest.Validation.ManifestValidationError?, Fotbiler.RuleGate.Manifest.Validation.ManifestValidationError?) | 1 | right | type=Fotbiler.RuleGate.Manifest.Validation.ManifestValidationError? | ref=None | params=False | optional=False
+PARAM | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationResult.ManifestValidationResult(System.Collections.Generic.IEnumerable<Fotbiler.RuleGate.Manifest.Validation.ManifestValidationError>) | 0 | errors | type=System.Collections.Generic.IEnumerable<Fotbiler.RuleGate.Manifest.Validation.ManifestValidationError> | ref=None | params=False | optional=False
+PARAM | Fotbiler.RuleGate.Manifest.Validation.RuleGateManifestValidator.Validate(Fotbiler.RuleGate.Manifest.Models.RuleGateManifest) | 0 | manifest | type=Fotbiler.RuleGate.Manifest.Models.RuleGateManifest | ref=None | params=False | optional=False
+PARAM-DEFAULT | Fotbiler.RuleGate.Manifest.Compilation.RuleGateManifestCompiler.CompileFromFileAsync(string, System.Threading.CancellationToken) | 1 | cancellationToken | null
+PARAM-DEFAULT | Fotbiler.RuleGate.Manifest.Loading.ManifestLoadError.ManifestLoadError(string, string, long?, long?) | 2 | line | null
+PARAM-DEFAULT | Fotbiler.RuleGate.Manifest.Loading.ManifestLoadError.ManifestLoadError(string, string, long?, long?) | 3 | column | null
+PARAM-DEFAULT | Fotbiler.RuleGate.Manifest.Loading.RuleGateManifestYamlLoader.LoadFromFileAsync(string, System.Threading.CancellationToken) | 1 | cancellationToken | null
+PARAM-DEFAULT | Fotbiler.RuleGate.Manifest.PolicySources.EmbeddedResourcePolicySource.EmbeddedResourcePolicySource(System.Reflection.Assembly, string, string?) | 2 | name | null
+PARAM-DEFAULT | Fotbiler.RuleGate.Manifest.PolicySources.EmbeddedResourcePolicySource.LoadAsync(System.Threading.CancellationToken) | 0 | cancellationToken | null
+PARAM-DEFAULT | Fotbiler.RuleGate.Manifest.PolicySources.YamlFilePolicySource.LoadAsync(System.Threading.CancellationToken) | 0 | cancellationToken | null
+PARAM-DEFAULT | Fotbiler.RuleGate.Manifest.PolicySources.YamlFilePolicySource.YamlFilePolicySource(string, Fotbiler.RuleGate.Manifest.PolicySources.YamlPolicyFileOptions?, string?) | 1 | options | null
+PARAM-DEFAULT | Fotbiler.RuleGate.Manifest.PolicySources.YamlFilePolicySource.YamlFilePolicySource(string, Fotbiler.RuleGate.Manifest.PolicySources.YamlPolicyFileOptions?, string?) | 2 | name | null
+PROPERTY | Public | - | Fotbiler.RuleGate.Manifest.Compilation.ManifestCompilationResult.IsSuccess
+PROPERTY | Public | - | Fotbiler.RuleGate.Manifest.Compilation.ManifestCompilationResult.LoadErrors
+PROPERTY | Public | - | Fotbiler.RuleGate.Manifest.Compilation.ManifestCompilationResult.Policies
+PROPERTY | Public | - | Fotbiler.RuleGate.Manifest.Compilation.ManifestCompilationResult.ValidationErrors
+PROPERTY | Public | - | Fotbiler.RuleGate.Manifest.Loading.ManifestLoadError.Code
+PROPERTY | Public | - | Fotbiler.RuleGate.Manifest.Loading.ManifestLoadError.Column
+PROPERTY | Public | - | Fotbiler.RuleGate.Manifest.Loading.ManifestLoadError.Line
+PROPERTY | Public | - | Fotbiler.RuleGate.Manifest.Loading.ManifestLoadError.Message
+PROPERTY | Public | - | Fotbiler.RuleGate.Manifest.Loading.ManifestLoadResult.Errors
+PROPERTY | Public | - | Fotbiler.RuleGate.Manifest.Loading.ManifestLoadResult.IsSuccess
+PROPERTY | Public | - | Fotbiler.RuleGate.Manifest.Loading.ManifestLoadResult.Manifest
+PROPERTY | Public | - | Fotbiler.RuleGate.Manifest.Mapping.ManifestMappingResult.Errors
+PROPERTY | Public | - | Fotbiler.RuleGate.Manifest.Mapping.ManifestMappingResult.IsSuccess
+PROPERTY | Public | - | Fotbiler.RuleGate.Manifest.Mapping.ManifestMappingResult.Policies
+PROPERTY | Public | - | Fotbiler.RuleGate.Manifest.Models.ManifestApplication.Id
+PROPERTY | Public | - | Fotbiler.RuleGate.Manifest.Models.ManifestApplication.Name
+PROPERTY | Public | - | Fotbiler.RuleGate.Manifest.Models.ManifestAttributeComparisonOperand.HasValue
+PROPERTY | Public | - | Fotbiler.RuleGate.Manifest.Models.ManifestAttributeComparisonOperand.Name
+PROPERTY | Public | - | Fotbiler.RuleGate.Manifest.Models.ManifestAttributeComparisonOperand.Source
+PROPERTY | Public | - | Fotbiler.RuleGate.Manifest.Models.ManifestAttributeComparisonOperand.Value
+PROPERTY | Public | - | Fotbiler.RuleGate.Manifest.Models.ManifestAttributeComparisonOperand.ValueType
+PROPERTY | Public | - | Fotbiler.RuleGate.Manifest.Models.ManifestAttributeComparisonRequirement.Left
+PROPERTY | Public | - | Fotbiler.RuleGate.Manifest.Models.ManifestAttributeComparisonRequirement.Operator
+PROPERTY | Public | - | Fotbiler.RuleGate.Manifest.Models.ManifestAttributeComparisonRequirement.Right
+PROPERTY | Public | - | Fotbiler.RuleGate.Manifest.Models.ManifestAttributeComparisonRequirement.StringComparison
+PROPERTY | Public | - | Fotbiler.RuleGate.Manifest.Models.ManifestAttributeRequirement.HasValue
+PROPERTY | Public | - | Fotbiler.RuleGate.Manifest.Models.ManifestAttributeRequirement.Name
+PROPERTY | Public | - | Fotbiler.RuleGate.Manifest.Models.ManifestAttributeRequirement.Operator
+PROPERTY | Public | - | Fotbiler.RuleGate.Manifest.Models.ManifestAttributeRequirement.Source
+PROPERTY | Public | - | Fotbiler.RuleGate.Manifest.Models.ManifestAttributeRequirement.StringComparison
+PROPERTY | Public | - | Fotbiler.RuleGate.Manifest.Models.ManifestAttributeRequirement.Value
+PROPERTY | Public | - | Fotbiler.RuleGate.Manifest.Models.ManifestAttributeRequirement.ValueType
+PROPERTY | Public | - | Fotbiler.RuleGate.Manifest.Models.ManifestContextAgeRequirement.MaximumAge
+PROPERTY | Public | - | Fotbiler.RuleGate.Manifest.Models.ManifestContextAgeRequirement.Timestamp
+PROPERTY | Public | - | Fotbiler.RuleGate.Manifest.Models.ManifestContextRequirement.HasValue
+PROPERTY | Public | - | Fotbiler.RuleGate.Manifest.Models.ManifestContextRequirement.Operator
+PROPERTY | Public | - | Fotbiler.RuleGate.Manifest.Models.ManifestContextRequirement.Property
+PROPERTY | Public | - | Fotbiler.RuleGate.Manifest.Models.ManifestContextRequirement.StringComparison
+PROPERTY | Public | - | Fotbiler.RuleGate.Manifest.Models.ManifestContextRequirement.Value
+PROPERTY | Public | - | Fotbiler.RuleGate.Manifest.Models.ManifestContextRequirement.ValueType
+PROPERTY | Public | - | Fotbiler.RuleGate.Manifest.Models.ManifestDateTimeWindowRequirement.EndsAt
+PROPERTY | Public | - | Fotbiler.RuleGate.Manifest.Models.ManifestDateTimeWindowRequirement.StartsAt
+PROPERTY | Public | - | Fotbiler.RuleGate.Manifest.Models.ManifestPolicy.Action
+PROPERTY | Public | - | Fotbiler.RuleGate.Manifest.Models.ManifestPolicy.Id
+PROPERTY | Public | - | Fotbiler.RuleGate.Manifest.Models.ManifestPolicy.Requirement
+PROPERTY | Public | - | Fotbiler.RuleGate.Manifest.Models.ManifestPolicy.ResourceType
+PROPERTY | Public | - | Fotbiler.RuleGate.Manifest.Models.ManifestRequirement.All
+PROPERTY | Public | - | Fotbiler.RuleGate.Manifest.Models.ManifestRequirement.Any
+PROPERTY | Public | - | Fotbiler.RuleGate.Manifest.Models.ManifestRequirement.Attribute
+PROPERTY | Public | - | Fotbiler.RuleGate.Manifest.Models.ManifestRequirement.AttributeComparison
+PROPERTY | Public | - | Fotbiler.RuleGate.Manifest.Models.ManifestRequirement.Context
+PROPERTY | Public | - | Fotbiler.RuleGate.Manifest.Models.ManifestRequirement.ContextAge
+PROPERTY | Public | - | Fotbiler.RuleGate.Manifest.Models.ManifestRequirement.DateTimeWindow
+PROPERTY | Public | - | Fotbiler.RuleGate.Manifest.Models.ManifestRequirement.Id
+PROPERTY | Public | - | Fotbiler.RuleGate.Manifest.Models.ManifestRequirement.Not
+PROPERTY | Public | - | Fotbiler.RuleGate.Manifest.Models.ManifestRequirement.Permission
+PROPERTY | Public | - | Fotbiler.RuleGate.Manifest.Models.ManifestRequirement.Role
+PROPERTY | Public | - | Fotbiler.RuleGate.Manifest.Models.ManifestRequirement.TimeWindow
+PROPERTY | Public | - | Fotbiler.RuleGate.Manifest.Models.ManifestTimeWindowRequirement.Days
+PROPERTY | Public | - | Fotbiler.RuleGate.Manifest.Models.ManifestTimeWindowRequirement.End
+PROPERTY | Public | - | Fotbiler.RuleGate.Manifest.Models.ManifestTimeWindowRequirement.Start
+PROPERTY | Public | - | Fotbiler.RuleGate.Manifest.Models.ManifestTimeWindowRequirement.TimeZone
+PROPERTY | Public | - | Fotbiler.RuleGate.Manifest.Models.RuleGateManifest.Application
+PROPERTY | Public | - | Fotbiler.RuleGate.Manifest.Models.RuleGateManifest.Policies
+PROPERTY | Public | - | Fotbiler.RuleGate.Manifest.Models.RuleGateManifest.SchemaVersion
+PROPERTY | Public | - | Fotbiler.RuleGate.Manifest.PolicySources.EmbeddedResourcePolicySource.Name
+PROPERTY | Public | - | Fotbiler.RuleGate.Manifest.PolicySources.YamlFilePolicySource.FullPath
+PROPERTY | Public | - | Fotbiler.RuleGate.Manifest.PolicySources.YamlFilePolicySource.Name
+PROPERTY | Public | - | Fotbiler.RuleGate.Manifest.PolicySources.YamlFilePolicySource.ReloadOnChange
+PROPERTY | Public | - | Fotbiler.RuleGate.Manifest.PolicySources.YamlPolicyFileOptions.ReloadOnChange
+PROPERTY | Public | - | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationError.Code
+PROPERTY | Public | - | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationError.Message
+PROPERTY | Public | - | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationError.Path
+PROPERTY | Public | - | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationResult.Errors
+PROPERTY | Public | - | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationResult.IsValid
+PROPERTY-ACCESSORS | Fotbiler.RuleGate.Manifest.Compilation.ManifestCompilationResult.IsSuccess | get=Public | set=- | init=False
+PROPERTY-ACCESSORS | Fotbiler.RuleGate.Manifest.Compilation.ManifestCompilationResult.LoadErrors | get=Public | set=- | init=False
+PROPERTY-ACCESSORS | Fotbiler.RuleGate.Manifest.Compilation.ManifestCompilationResult.Policies | get=Public | set=- | init=False
+PROPERTY-ACCESSORS | Fotbiler.RuleGate.Manifest.Compilation.ManifestCompilationResult.ValidationErrors | get=Public | set=- | init=False
+PROPERTY-ACCESSORS | Fotbiler.RuleGate.Manifest.Loading.ManifestLoadError.Code | get=Public | set=- | init=False
+PROPERTY-ACCESSORS | Fotbiler.RuleGate.Manifest.Loading.ManifestLoadError.Column | get=Public | set=- | init=False
+PROPERTY-ACCESSORS | Fotbiler.RuleGate.Manifest.Loading.ManifestLoadError.Line | get=Public | set=- | init=False
+PROPERTY-ACCESSORS | Fotbiler.RuleGate.Manifest.Loading.ManifestLoadError.Message | get=Public | set=- | init=False
+PROPERTY-ACCESSORS | Fotbiler.RuleGate.Manifest.Loading.ManifestLoadResult.Errors | get=Public | set=- | init=False
+PROPERTY-ACCESSORS | Fotbiler.RuleGate.Manifest.Loading.ManifestLoadResult.IsSuccess | get=Public | set=- | init=False
+PROPERTY-ACCESSORS | Fotbiler.RuleGate.Manifest.Loading.ManifestLoadResult.Manifest | get=Public | set=- | init=False
+PROPERTY-ACCESSORS | Fotbiler.RuleGate.Manifest.Mapping.ManifestMappingResult.Errors | get=Public | set=- | init=False
+PROPERTY-ACCESSORS | Fotbiler.RuleGate.Manifest.Mapping.ManifestMappingResult.IsSuccess | get=Public | set=- | init=False
+PROPERTY-ACCESSORS | Fotbiler.RuleGate.Manifest.Mapping.ManifestMappingResult.Policies | get=Public | set=- | init=False
+PROPERTY-ACCESSORS | Fotbiler.RuleGate.Manifest.Models.ManifestApplication.Id | get=Public | set=Public | init=False
+PROPERTY-ACCESSORS | Fotbiler.RuleGate.Manifest.Models.ManifestApplication.Name | get=Public | set=Public | init=False
+PROPERTY-ACCESSORS | Fotbiler.RuleGate.Manifest.Models.ManifestAttributeComparisonOperand.HasValue | get=Public | set=- | init=False
+PROPERTY-ACCESSORS | Fotbiler.RuleGate.Manifest.Models.ManifestAttributeComparisonOperand.Name | get=Public | set=Public | init=False
+PROPERTY-ACCESSORS | Fotbiler.RuleGate.Manifest.Models.ManifestAttributeComparisonOperand.Source | get=Public | set=Public | init=False
+PROPERTY-ACCESSORS | Fotbiler.RuleGate.Manifest.Models.ManifestAttributeComparisonOperand.Value | get=Public | set=Public | init=False
+PROPERTY-ACCESSORS | Fotbiler.RuleGate.Manifest.Models.ManifestAttributeComparisonOperand.ValueType | get=Public | set=Public | init=False
+PROPERTY-ACCESSORS | Fotbiler.RuleGate.Manifest.Models.ManifestAttributeComparisonRequirement.Left | get=Public | set=Public | init=False
+PROPERTY-ACCESSORS | Fotbiler.RuleGate.Manifest.Models.ManifestAttributeComparisonRequirement.Operator | get=Public | set=Public | init=False
+PROPERTY-ACCESSORS | Fotbiler.RuleGate.Manifest.Models.ManifestAttributeComparisonRequirement.Right | get=Public | set=Public | init=False
+PROPERTY-ACCESSORS | Fotbiler.RuleGate.Manifest.Models.ManifestAttributeComparisonRequirement.StringComparison | get=Public | set=Public | init=False
+PROPERTY-ACCESSORS | Fotbiler.RuleGate.Manifest.Models.ManifestAttributeRequirement.HasValue | get=Public | set=- | init=False
+PROPERTY-ACCESSORS | Fotbiler.RuleGate.Manifest.Models.ManifestAttributeRequirement.Name | get=Public | set=Public | init=False
+PROPERTY-ACCESSORS | Fotbiler.RuleGate.Manifest.Models.ManifestAttributeRequirement.Operator | get=Public | set=Public | init=False
+PROPERTY-ACCESSORS | Fotbiler.RuleGate.Manifest.Models.ManifestAttributeRequirement.Source | get=Public | set=Public | init=False
+PROPERTY-ACCESSORS | Fotbiler.RuleGate.Manifest.Models.ManifestAttributeRequirement.StringComparison | get=Public | set=Public | init=False
+PROPERTY-ACCESSORS | Fotbiler.RuleGate.Manifest.Models.ManifestAttributeRequirement.Value | get=Public | set=Public | init=False
+PROPERTY-ACCESSORS | Fotbiler.RuleGate.Manifest.Models.ManifestAttributeRequirement.ValueType | get=Public | set=Public | init=False
+PROPERTY-ACCESSORS | Fotbiler.RuleGate.Manifest.Models.ManifestContextAgeRequirement.MaximumAge | get=Public | set=Public | init=False
+PROPERTY-ACCESSORS | Fotbiler.RuleGate.Manifest.Models.ManifestContextAgeRequirement.Timestamp | get=Public | set=Public | init=False
+PROPERTY-ACCESSORS | Fotbiler.RuleGate.Manifest.Models.ManifestContextRequirement.HasValue | get=Public | set=- | init=False
+PROPERTY-ACCESSORS | Fotbiler.RuleGate.Manifest.Models.ManifestContextRequirement.Operator | get=Public | set=Public | init=False
+PROPERTY-ACCESSORS | Fotbiler.RuleGate.Manifest.Models.ManifestContextRequirement.Property | get=Public | set=Public | init=False
+PROPERTY-ACCESSORS | Fotbiler.RuleGate.Manifest.Models.ManifestContextRequirement.StringComparison | get=Public | set=Public | init=False
+PROPERTY-ACCESSORS | Fotbiler.RuleGate.Manifest.Models.ManifestContextRequirement.Value | get=Public | set=Public | init=False
+PROPERTY-ACCESSORS | Fotbiler.RuleGate.Manifest.Models.ManifestContextRequirement.ValueType | get=Public | set=Public | init=False
+PROPERTY-ACCESSORS | Fotbiler.RuleGate.Manifest.Models.ManifestDateTimeWindowRequirement.EndsAt | get=Public | set=Public | init=False
+PROPERTY-ACCESSORS | Fotbiler.RuleGate.Manifest.Models.ManifestDateTimeWindowRequirement.StartsAt | get=Public | set=Public | init=False
+PROPERTY-ACCESSORS | Fotbiler.RuleGate.Manifest.Models.ManifestPolicy.Action | get=Public | set=Public | init=False
+PROPERTY-ACCESSORS | Fotbiler.RuleGate.Manifest.Models.ManifestPolicy.Id | get=Public | set=Public | init=False
+PROPERTY-ACCESSORS | Fotbiler.RuleGate.Manifest.Models.ManifestPolicy.Requirement | get=Public | set=Public | init=False
+PROPERTY-ACCESSORS | Fotbiler.RuleGate.Manifest.Models.ManifestPolicy.ResourceType | get=Public | set=Public | init=False
+PROPERTY-ACCESSORS | Fotbiler.RuleGate.Manifest.Models.ManifestRequirement.All | get=Public | set=Public | init=False
+PROPERTY-ACCESSORS | Fotbiler.RuleGate.Manifest.Models.ManifestRequirement.Any | get=Public | set=Public | init=False
+PROPERTY-ACCESSORS | Fotbiler.RuleGate.Manifest.Models.ManifestRequirement.Attribute | get=Public | set=Public | init=False
+PROPERTY-ACCESSORS | Fotbiler.RuleGate.Manifest.Models.ManifestRequirement.AttributeComparison | get=Public | set=Public | init=False
+PROPERTY-ACCESSORS | Fotbiler.RuleGate.Manifest.Models.ManifestRequirement.Context | get=Public | set=Public | init=False
+PROPERTY-ACCESSORS | Fotbiler.RuleGate.Manifest.Models.ManifestRequirement.ContextAge | get=Public | set=Public | init=False
+PROPERTY-ACCESSORS | Fotbiler.RuleGate.Manifest.Models.ManifestRequirement.DateTimeWindow | get=Public | set=Public | init=False
+PROPERTY-ACCESSORS | Fotbiler.RuleGate.Manifest.Models.ManifestRequirement.Id | get=Public | set=Public | init=False
+PROPERTY-ACCESSORS | Fotbiler.RuleGate.Manifest.Models.ManifestRequirement.Not | get=Public | set=Public | init=False
+PROPERTY-ACCESSORS | Fotbiler.RuleGate.Manifest.Models.ManifestRequirement.Permission | get=Public | set=Public | init=False
+PROPERTY-ACCESSORS | Fotbiler.RuleGate.Manifest.Models.ManifestRequirement.Role | get=Public | set=Public | init=False
+PROPERTY-ACCESSORS | Fotbiler.RuleGate.Manifest.Models.ManifestRequirement.TimeWindow | get=Public | set=Public | init=False
+PROPERTY-ACCESSORS | Fotbiler.RuleGate.Manifest.Models.ManifestTimeWindowRequirement.Days | get=Public | set=Public | init=False
+PROPERTY-ACCESSORS | Fotbiler.RuleGate.Manifest.Models.ManifestTimeWindowRequirement.End | get=Public | set=Public | init=False
+PROPERTY-ACCESSORS | Fotbiler.RuleGate.Manifest.Models.ManifestTimeWindowRequirement.Start | get=Public | set=Public | init=False
+PROPERTY-ACCESSORS | Fotbiler.RuleGate.Manifest.Models.ManifestTimeWindowRequirement.TimeZone | get=Public | set=Public | init=False
+PROPERTY-ACCESSORS | Fotbiler.RuleGate.Manifest.Models.RuleGateManifest.Application | get=Public | set=Public | init=False
+PROPERTY-ACCESSORS | Fotbiler.RuleGate.Manifest.Models.RuleGateManifest.Policies | get=Public | set=Public | init=False
+PROPERTY-ACCESSORS | Fotbiler.RuleGate.Manifest.Models.RuleGateManifest.SchemaVersion | get=Public | set=Public | init=False
+PROPERTY-ACCESSORS | Fotbiler.RuleGate.Manifest.PolicySources.EmbeddedResourcePolicySource.Name | get=Public | set=- | init=False
+PROPERTY-ACCESSORS | Fotbiler.RuleGate.Manifest.PolicySources.YamlFilePolicySource.FullPath | get=Public | set=- | init=False
+PROPERTY-ACCESSORS | Fotbiler.RuleGate.Manifest.PolicySources.YamlFilePolicySource.Name | get=Public | set=- | init=False
+PROPERTY-ACCESSORS | Fotbiler.RuleGate.Manifest.PolicySources.YamlFilePolicySource.ReloadOnChange | get=Public | set=- | init=False
+PROPERTY-ACCESSORS | Fotbiler.RuleGate.Manifest.PolicySources.YamlPolicyFileOptions.ReloadOnChange | get=Public | set=Public | init=False
+PROPERTY-ACCESSORS | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationError.Code | get=Public | set=- | init=False
+PROPERTY-ACCESSORS | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationError.Message | get=Public | set=- | init=False
+PROPERTY-ACCESSORS | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationError.Path | get=Public | set=- | init=False
+PROPERTY-ACCESSORS | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationResult.Errors | get=Public | set=- | init=False
+PROPERTY-ACCESSORS | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationResult.IsValid | get=Public | set=- | init=False
+TYPE | Public | sealed | Fotbiler.RuleGate.Manifest.Compilation.ManifestCompilationResult
+TYPE | Public | sealed | Fotbiler.RuleGate.Manifest.Compilation.RuleGateManifestCompiler
+TYPE | Public | sealed | Fotbiler.RuleGate.Manifest.Loading.ManifestLoadError
+TYPE | Public | sealed | Fotbiler.RuleGate.Manifest.Loading.ManifestLoadResult
+TYPE | Public | sealed | Fotbiler.RuleGate.Manifest.Loading.RuleGateManifestYamlLoader
+TYPE | Public | sealed | Fotbiler.RuleGate.Manifest.Mapping.ManifestMappingResult
+TYPE | Public | sealed | Fotbiler.RuleGate.Manifest.Mapping.RuleGateManifestMapper
+TYPE | Public | sealed | Fotbiler.RuleGate.Manifest.Models.ManifestApplication
+TYPE | Public | sealed | Fotbiler.RuleGate.Manifest.Models.ManifestAttributeComparisonOperand
+TYPE | Public | sealed | Fotbiler.RuleGate.Manifest.Models.ManifestAttributeComparisonRequirement
+TYPE | Public | sealed | Fotbiler.RuleGate.Manifest.Models.ManifestAttributeRequirement
+TYPE | Public | sealed | Fotbiler.RuleGate.Manifest.Models.ManifestContextAgeRequirement
+TYPE | Public | sealed | Fotbiler.RuleGate.Manifest.Models.ManifestContextRequirement
+TYPE | Public | sealed | Fotbiler.RuleGate.Manifest.Models.ManifestDateTimeWindowRequirement
+TYPE | Public | sealed | Fotbiler.RuleGate.Manifest.Models.ManifestPolicy
+TYPE | Public | sealed | Fotbiler.RuleGate.Manifest.Models.ManifestRequirement
+TYPE | Public | sealed | Fotbiler.RuleGate.Manifest.Models.ManifestTimeWindowRequirement
+TYPE | Public | sealed | Fotbiler.RuleGate.Manifest.Models.RuleGateManifest
+TYPE | Public | sealed | Fotbiler.RuleGate.Manifest.PolicySources.EmbeddedResourcePolicySource
+TYPE | Public | sealed | Fotbiler.RuleGate.Manifest.PolicySources.YamlFilePolicySource
+TYPE | Public | sealed | Fotbiler.RuleGate.Manifest.PolicySources.YamlPolicyFileOptions
+TYPE | Public | sealed | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationError
+TYPE | Public | sealed | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationResult
+TYPE | Public | sealed | Fotbiler.RuleGate.Manifest.Validation.RuleGateManifestValidator
+TYPE | Public | static | Fotbiler.RuleGate.Manifest.Configuration.RuleGateManifestDefaults
+TYPE | Public | static | Fotbiler.RuleGate.Manifest.Loading.ManifestLoadCodes
+TYPE | Public | static | Fotbiler.RuleGate.Manifest.PolicySources.ManifestCompilationPolicySourceExtensions
+TYPE | Public | static | Fotbiler.RuleGate.Manifest.PolicySources.ManifestPolicySourceCodes
+TYPE | Public | static | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes
+TYPE-BASE | Fotbiler.RuleGate.Manifest.Compilation.ManifestCompilationResult | object
+TYPE-BASE | Fotbiler.RuleGate.Manifest.Compilation.RuleGateManifestCompiler | object
+TYPE-BASE | Fotbiler.RuleGate.Manifest.Configuration.RuleGateManifestDefaults | object
+TYPE-BASE | Fotbiler.RuleGate.Manifest.Loading.ManifestLoadCodes | object
+TYPE-BASE | Fotbiler.RuleGate.Manifest.Loading.ManifestLoadError | object
+TYPE-BASE | Fotbiler.RuleGate.Manifest.Loading.ManifestLoadResult | object
+TYPE-BASE | Fotbiler.RuleGate.Manifest.Loading.RuleGateManifestYamlLoader | object
+TYPE-BASE | Fotbiler.RuleGate.Manifest.Mapping.ManifestMappingResult | object
+TYPE-BASE | Fotbiler.RuleGate.Manifest.Mapping.RuleGateManifestMapper | object
+TYPE-BASE | Fotbiler.RuleGate.Manifest.Models.ManifestApplication | object
+TYPE-BASE | Fotbiler.RuleGate.Manifest.Models.ManifestAttributeComparisonOperand | object
+TYPE-BASE | Fotbiler.RuleGate.Manifest.Models.ManifestAttributeComparisonRequirement | object
+TYPE-BASE | Fotbiler.RuleGate.Manifest.Models.ManifestAttributeRequirement | object
+TYPE-BASE | Fotbiler.RuleGate.Manifest.Models.ManifestContextAgeRequirement | object
+TYPE-BASE | Fotbiler.RuleGate.Manifest.Models.ManifestContextRequirement | object
+TYPE-BASE | Fotbiler.RuleGate.Manifest.Models.ManifestDateTimeWindowRequirement | object
+TYPE-BASE | Fotbiler.RuleGate.Manifest.Models.ManifestPolicy | object
+TYPE-BASE | Fotbiler.RuleGate.Manifest.Models.ManifestRequirement | object
+TYPE-BASE | Fotbiler.RuleGate.Manifest.Models.ManifestTimeWindowRequirement | object
+TYPE-BASE | Fotbiler.RuleGate.Manifest.Models.RuleGateManifest | object
+TYPE-BASE | Fotbiler.RuleGate.Manifest.PolicySources.EmbeddedResourcePolicySource | object
+TYPE-BASE | Fotbiler.RuleGate.Manifest.PolicySources.ManifestCompilationPolicySourceExtensions | object
+TYPE-BASE | Fotbiler.RuleGate.Manifest.PolicySources.ManifestPolicySourceCodes | object
+TYPE-BASE | Fotbiler.RuleGate.Manifest.PolicySources.YamlFilePolicySource | object
+TYPE-BASE | Fotbiler.RuleGate.Manifest.PolicySources.YamlPolicyFileOptions | object
+TYPE-BASE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes | object
+TYPE-BASE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationError | object
+TYPE-BASE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationResult | object
+TYPE-BASE | Fotbiler.RuleGate.Manifest.Validation.RuleGateManifestValidator | object
+TYPE-INTERFACE | Fotbiler.RuleGate.Manifest.Loading.ManifestLoadError | System.IEquatable<Fotbiler.RuleGate.Manifest.Loading.ManifestLoadError>
+TYPE-INTERFACE | Fotbiler.RuleGate.Manifest.PolicySources.EmbeddedResourcePolicySource | Fotbiler.RuleGate.Abstractions.Policies.IPolicySource
+TYPE-INTERFACE | Fotbiler.RuleGate.Manifest.PolicySources.YamlFilePolicySource | Fotbiler.RuleGate.Abstractions.Policies.IPolicySource
+TYPE-INTERFACE | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationError | System.IEquatable<Fotbiler.RuleGate.Manifest.Validation.ManifestValidationError>
+TYPE-KIND | Fotbiler.RuleGate.Manifest.Compilation.ManifestCompilationResult | Class | record=False | readonly=False | reflike=False
+TYPE-KIND | Fotbiler.RuleGate.Manifest.Compilation.RuleGateManifestCompiler | Class | record=False | readonly=False | reflike=False
+TYPE-KIND | Fotbiler.RuleGate.Manifest.Configuration.RuleGateManifestDefaults | Class | record=False | readonly=False | reflike=False
+TYPE-KIND | Fotbiler.RuleGate.Manifest.Loading.ManifestLoadCodes | Class | record=False | readonly=False | reflike=False
+TYPE-KIND | Fotbiler.RuleGate.Manifest.Loading.ManifestLoadError | Class | record=True | readonly=False | reflike=False
+TYPE-KIND | Fotbiler.RuleGate.Manifest.Loading.ManifestLoadResult | Class | record=False | readonly=False | reflike=False
+TYPE-KIND | Fotbiler.RuleGate.Manifest.Loading.RuleGateManifestYamlLoader | Class | record=False | readonly=False | reflike=False
+TYPE-KIND | Fotbiler.RuleGate.Manifest.Mapping.ManifestMappingResult | Class | record=False | readonly=False | reflike=False
+TYPE-KIND | Fotbiler.RuleGate.Manifest.Mapping.RuleGateManifestMapper | Class | record=False | readonly=False | reflike=False
+TYPE-KIND | Fotbiler.RuleGate.Manifest.Models.ManifestApplication | Class | record=False | readonly=False | reflike=False
+TYPE-KIND | Fotbiler.RuleGate.Manifest.Models.ManifestAttributeComparisonOperand | Class | record=False | readonly=False | reflike=False
+TYPE-KIND | Fotbiler.RuleGate.Manifest.Models.ManifestAttributeComparisonRequirement | Class | record=False | readonly=False | reflike=False
+TYPE-KIND | Fotbiler.RuleGate.Manifest.Models.ManifestAttributeRequirement | Class | record=False | readonly=False | reflike=False
+TYPE-KIND | Fotbiler.RuleGate.Manifest.Models.ManifestContextAgeRequirement | Class | record=False | readonly=False | reflike=False
+TYPE-KIND | Fotbiler.RuleGate.Manifest.Models.ManifestContextRequirement | Class | record=False | readonly=False | reflike=False
+TYPE-KIND | Fotbiler.RuleGate.Manifest.Models.ManifestDateTimeWindowRequirement | Class | record=False | readonly=False | reflike=False
+TYPE-KIND | Fotbiler.RuleGate.Manifest.Models.ManifestPolicy | Class | record=False | readonly=False | reflike=False
+TYPE-KIND | Fotbiler.RuleGate.Manifest.Models.ManifestRequirement | Class | record=False | readonly=False | reflike=False
+TYPE-KIND | Fotbiler.RuleGate.Manifest.Models.ManifestTimeWindowRequirement | Class | record=False | readonly=False | reflike=False
+TYPE-KIND | Fotbiler.RuleGate.Manifest.Models.RuleGateManifest | Class | record=False | readonly=False | reflike=False
+TYPE-KIND | Fotbiler.RuleGate.Manifest.PolicySources.EmbeddedResourcePolicySource | Class | record=False | readonly=False | reflike=False
+TYPE-KIND | Fotbiler.RuleGate.Manifest.PolicySources.ManifestCompilationPolicySourceExtensions | Class | record=False | readonly=False | reflike=False
+TYPE-KIND | Fotbiler.RuleGate.Manifest.PolicySources.ManifestPolicySourceCodes | Class | record=False | readonly=False | reflike=False
+TYPE-KIND | Fotbiler.RuleGate.Manifest.PolicySources.YamlFilePolicySource | Class | record=False | readonly=False | reflike=False
+TYPE-KIND | Fotbiler.RuleGate.Manifest.PolicySources.YamlPolicyFileOptions | Class | record=False | readonly=False | reflike=False
+TYPE-KIND | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationCodes | Class | record=False | readonly=False | reflike=False
+TYPE-KIND | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationError | Class | record=True | readonly=False | reflike=False
+TYPE-KIND | Fotbiler.RuleGate.Manifest.Validation.ManifestValidationResult | Class | record=False | readonly=False | reflike=False
+TYPE-KIND | Fotbiler.RuleGate.Manifest.Validation.RuleGateManifestValidator | Class | record=False | readonly=False | reflike=False

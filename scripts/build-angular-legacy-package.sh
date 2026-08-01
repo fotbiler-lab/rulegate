@@ -12,6 +12,15 @@ REPOSITORY_ROOT="$(
   pwd
 )"
 
+LEGACY_BUILDER_DIRECTORY="$REPOSITORY_ROOT/compatibility/angular-legacy-builder"
+
+cleanup()
+{
+  rm -f "$LEGACY_BUILDER_DIRECTORY/package.json"
+}
+
+trap cleanup EXIT
+
 cd "$REPOSITORY_ROOT"
 
 "$REPOSITORY_ROOT/scripts/build-client-package.sh"
@@ -19,8 +28,10 @@ cd "$REPOSITORY_ROOT"
 node \
   "$REPOSITORY_ROOT/scripts/prepare-angular-legacy-build.mjs"
 
+test -f "$LEGACY_BUILDER_DIRECTORY/package.json"
+
 pnpm \
-  --dir compatibility/angular-legacy-builder \
+  --dir "$LEGACY_BUILDER_DIRECTORY" \
   install \
   --config.node-linker=hoisted \
   --frozen-lockfile=false
@@ -30,7 +41,7 @@ docker run \
   --user "$(id -u):$(id -g)" \
   --tmpfs /tmp \
   --volume "$REPOSITORY_ROOT:$REPOSITORY_ROOT" \
-  --workdir "$REPOSITORY_ROOT/compatibility/angular-legacy-builder" \
+  --workdir "$LEGACY_BUILDER_DIRECTORY" \
   node:14.21.3 \
   ./node_modules/.bin/ng-packagr \
   --project .work/ng-package.json \
@@ -40,4 +51,4 @@ cp \
   "$REPOSITORY_ROOT/LICENSE" \
   "$REPOSITORY_ROOT/dist/rulegate-angular-legacy/LICENSE"
 
-echo "Built @fotbiler/rulegate-angular-legacy with its Apache-2.0 license."
+echo "Built @fotbiler/rulegate-angular-legacy with its MIT license."

@@ -18,7 +18,7 @@
     <Authors>Fotbiler</Authors>
     <Company>Fotbiler</Company>
     <Product>RuleGate</Product>
-    <Copyright>Copyright © 2026 Fotbiler</Copyright>
+    <Copyright>Copyright © 2026 Eren Gaygusuz</Copyright>
 
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/fotbiler-lab/rulegate</RepositoryUrl>
@@ -27,7 +27,7 @@
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
 
-    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageIcon>rulegate-icon.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
@@ -39,6 +39,9 @@
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
 
     <EnablePackageValidation>true</EnablePackageValidation>
+    <PackageValidationBaselineVersion>0.9.0-preview.4</PackageValidationBaselineVersion>
+    <ApiCompatPermitUnnecessarySuppressions>false</ApiCompatPermitUnnecessarySuppressions>
+    <ApiCompatPreserveUnnecessarySuppressions>false</ApiCompatPreserveUnnecessarySuppressions>
 
     <PackageOutputPath>$(MSBuildThisFileDirectory)artifacts/packages</PackageOutputPath>
 
@@ -50,11 +53,6 @@
                  '$(TargetFramework)' == 'net5.0' Or
                  '$(TargetFramework)' == 'net6.0' Or
                  '$(TargetFramework)' == 'net7.0'">false</CheckEolTargetFramework>
-    <SuppressTfmSupportBuildWarnings
-      Condition="'$(TargetFramework)' == 'netcoreapp3.1' Or
-                 '$(TargetFramework)' == 'net5.0' Or
-                 '$(TargetFramework)' == 'net6.0' Or
-                 '$(TargetFramework)' == 'net7.0'">true</SuppressTfmSupportBuildWarnings>
     <MeziantouPolyfill_ExcludedPolyfills
       Condition="'$(TargetFramework)' == 'netcoreapp3.1' Or
                  '$(TargetFramework)' == 'net5.0' Or

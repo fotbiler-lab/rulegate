@@ -121,4 +121,30 @@ Report suspected vulnerabilities through the
 ## License
 
 RuleGate is licensed under the
-[Apache License 2.0](https://github.com/fotbiler-lab/rulegate/blob/main/LICENSE).
+[MIT License](https://github.com/fotbiler-lab/rulegate/blob/main/LICENSE).
+
+## Defensive manifest limits
+
+The manifest loader and validator fail closed for oversized or structurally
+excessive input. A manifest is limited to 1 MiB of source content, 4,096
+policies, requirement depth 64, 4,096 nodes per policy, 1,024 children per
+logical requirement, and 65,536 total requirement nodes. Programmatically
+constructed requirement cycles are rejected before semantic validation.
+
+## YAML security profile
+
+RuleGate manifests use a deliberately restricted YAML profile:
+
+- a manifest file must contain valid UTF-8; an optional UTF-8 BOM is accepted;
+- UTF-16, UTF-32, and malformed UTF-8 files are rejected;
+- exactly one YAML document is allowed;
+- anchors and aliases are rejected;
+- explicit local and global YAML tags are rejected;
+- duplicate mapping keys and unknown model properties are rejected;
+- parser recursion and manifest resource limits remain enforced.
+
+These restrictions avoid alias expansion, object-graph cycles introduced during
+deserialization, ambiguous encoding behavior, type-tag activation, and partial
+multi-document interpretation. Rejected inputs produce
+`ManifestLoadCodes.InvalidYaml`; they are never partially compiled into active
+policies.

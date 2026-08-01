@@ -167,7 +167,7 @@ if (manifest.version !== expectedVersion) {
   throw new Error(`Unexpected package version: ${manifest.version}`);
 }
 
-if (manifest.license !== 'Apache-2.0') {
+if (manifest.license !== 'MIT') {
   throw new Error(`Unexpected package license: ${manifest.license}`);
 }
 

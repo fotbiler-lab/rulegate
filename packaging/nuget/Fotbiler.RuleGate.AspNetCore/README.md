@@ -11,7 +11,7 @@ results. Exporter-neutral RuleGate activities automatically correlate with the
 current ASP.NET Core request activity when the host registers the public
 RuleGate activity source and meter.
 The default handler supplies deterministic evaluation time through the
-registered `TimeProvider`; trusted context values remain application-owned.
+registered `IRuleGateClock`; trusted context values remain application-owned.
 
 RuleGate is currently in preview. Public APIs may change before the first
 stable release.
@@ -43,6 +43,22 @@ complete validation; failed reloads preserve the last valid snapshot.
 
 The application must configure ASP.NET Core authentication and authorization
 using its trusted identity provider and claim model.
+
+## Customize evaluation time
+
+`AddRuleGate()` registers a system-backed `IRuleGateClock` by default.
+Applications that need a controlled trusted clock can register their own
+implementation before RuleGate:
+
+    using Fotbiler.RuleGate.AspNetCore.Time;
+
+    builder.Services.AddSingleton<IRuleGateClock>(
+        applicationRuleGateClock);
+
+    builder.Services.AddRuleGate();
+
+RuleGate preserves the application registration. Custom production clocks must
+not derive authorization time from caller-controlled input.
 
 ## Add trusted attribute providers
 
@@ -97,6 +113,7 @@ Dynamic policy names use this form:
 ## Documentation
 
 - [ASP.NET Core integration](https://github.com/fotbiler-lab/rulegate/blob/main/docs/aspnetcore.md)
+- [Migrating to RuleGate 1.0](https://github.com/fotbiler-lab/rulegate/blob/main/docs/migration-to-1.0.md)
 - [ASP.NET Core enrichment](https://github.com/fotbiler-lab/rulegate/blob/main/docs/enrichment.md)
 - [Getting started](https://github.com/fotbiler-lab/rulegate/blob/main/docs/getting-started.md)
 - [Diagnostics](https://github.com/fotbiler-lab/rulegate/blob/main/docs/diagnostics.md)
@@ -121,4 +138,4 @@ Report suspected vulnerabilities through the
 ## License
 
 RuleGate is licensed under the
-[Apache License 2.0](https://github.com/fotbiler-lab/rulegate/blob/main/LICENSE).
+[MIT License](https://github.com/fotbiler-lab/rulegate/blob/main/LICENSE).

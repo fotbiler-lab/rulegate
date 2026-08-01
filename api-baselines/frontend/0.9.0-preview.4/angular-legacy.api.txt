@@ -1,0 +1,70 @@
+===== fotbiler-rulegate-angular-legacy.d.ts =====
+export * from './public-api';
+
+===== lib/rule-gate-legacy-authorization-client.d.ts =====
+import { RuleGateAuthorizationRequirement, RuleGateAuthorizationSnapshot } from '@fotbiler/rulegate-client';
+import { Observable } from 'rxjs';
+import * as i0 from "@angular/core";
+export declare class RuleGateLegacyAuthorizationClient {
+    readonly snapshot$: Observable<RuleGateAuthorizationSnapshot>;
+    get isReady(): boolean;
+    get snapshot(): RuleGateAuthorizationSnapshot;
+    replaceSnapshot(snapshot: RuleGateAuthorizationSnapshot): boolean;
+    clear(): void;
+    hasPermission(permission: string): boolean;
+    hasPolicy(policy: string): boolean;
+    hasRole(role: string): boolean;
+    isGranted(requirement: RuleGateAuthorizationRequirement | null | undefined): boolean;
+}
+
+===== lib/rule-gate-legacy-can.directive.d.ts =====
+import { OnDestroy, TemplateRef, ViewContainerRef } from '@angular/core';
+import { RuleGateAuthorizationRequirement } from '@fotbiler/rulegate-client';
+import { RuleGateLegacyAuthorizationClient } from './rule-gate-legacy-authorization-client';
+import * as i0 from "@angular/core";
+export declare class RuleGateLegacyCanDirective implements OnDestroy {
+    set ruleGateLegacyCan(requirement: RuleGateAuthorizationRequirement | null);
+    set ruleGateLegacyCanElse(template: TemplateRef<unknown> | null);
+    constructor(authorization: RuleGateLegacyAuthorizationClient, template: TemplateRef<unknown>, viewContainer: ViewContainerRef);
+    ngOnDestroy(): void;
+}
+
+===== lib/rule-gate-legacy-disable.directive.d.ts =====
+import { ElementRef, OnDestroy, Renderer2 } from '@angular/core';
+import { RuleGateAuthorizationRequirement } from '@fotbiler/rulegate-client';
+import { RuleGateLegacyAuthorizationClient } from './rule-gate-legacy-authorization-client';
+import * as i0 from "@angular/core";
+export declare class RuleGateLegacyDisableDirective implements OnDestroy {
+    set ruleGateLegacyDisable(requirement: RuleGateAuthorizationRequirement | null);
+    constructor(authorization: RuleGateLegacyAuthorizationClient, element: ElementRef<HTMLElement>, renderer: Renderer2);
+    ngOnDestroy(): void;
+}
+
+===== lib/rule-gate-legacy.guard.d.ts =====
+import { ActivatedRouteSnapshot, CanActivate, RouterStateSnapshot } from '@angular/router';
+import { RuleGateAuthorizationRequirement } from '@fotbiler/rulegate-client';
+import { RuleGateLegacyAuthorizationClient } from './rule-gate-legacy-authorization-client';
+import * as i0 from "@angular/core";
+export declare const RULE_GATE_LEGACY_ROUTE_DATA_KEY = "ruleGate";
+export declare class RuleGateLegacyGuard implements CanActivate {
+    constructor(authorization: RuleGateLegacyAuthorizationClient);
+    canActivate(route: ActivatedRouteSnapshot, _state: RouterStateSnapshot): boolean;
+}
+export declare function ruleGateLegacyRouteData(requirement: RuleGateAuthorizationRequirement): {
+    readonly ruleGate: RuleGateAuthorizationRequirement;
+};
+
+===== lib/rule-gate-legacy.module.d.ts =====
+import * as i0 from "@angular/core";
+import * as i1 from "./rule-gate-legacy-can.directive";
+import * as i2 from "./rule-gate-legacy-disable.directive";
+export declare class RuleGateLegacyModule {
+}
+
+===== public-api.d.ts =====
+export * from './lib/rule-gate-legacy-authorization-client';
+export * from './lib/rule-gate-legacy-can.directive';
+export * from './lib/rule-gate-legacy-disable.directive';
+export * from './lib/rule-gate-legacy.guard';
+export * from './lib/rule-gate-legacy.module';
+export * from '@fotbiler/rulegate-client';

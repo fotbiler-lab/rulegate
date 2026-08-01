@@ -5,7 +5,7 @@ is assigned by NuGet.org. It is not package metadata and cannot be enabled in a
 project file or publishing workflow.
 
 RuleGate package metadata already uses a consistent `Fotbiler` author, the
-Apache-2.0 license expression, repository URL, and an embedded 128×128 PNG
+MIT license expression, repository URL, and an embedded 128×128 PNG
 package icon. Every package-verification run checks the icon file and `<icon>`
 metadata before publication.
 
@@ -44,7 +44,7 @@ Requested prefix: Fotbiler.RuleGate
 Project repository: https://github.com/fotbiler-lab/rulegate
 
 The owner publishes the RuleGate package family under this prefix. The
-packages use consistent Fotbiler author metadata, an Apache-2.0 license
+packages use consistent Fotbiler author metadata, an MIT license
 expression, an embedded RuleGate icon, and the same source repository.
 
 Current packages:

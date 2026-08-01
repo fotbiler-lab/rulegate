@@ -2,6 +2,7 @@ using Fotbiler.RuleGate.Abstractions.Authorization;
 using Fotbiler.RuleGate.AspNetCore.Authorization;
 using Fotbiler.RuleGate.AspNetCore.DependencyInjection;
 using Fotbiler.RuleGate.AspNetCore.Enrichment;
+using Fotbiler.RuleGate.AspNetCore.Time;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -67,21 +68,22 @@ public sealed class
                 RuleGateAuthorizationRequestEnricher),
             enricherDescriptor.ImplementationType);
 
-        var timeProviderDescriptor =
+        var clockDescriptor =
             Assert.Single(
                 services,
                 descriptor =>
                     descriptor.ServiceType ==
-                    typeof(TimeProvider));
+                    typeof(IRuleGateClock));
 
         Assert.Equal(
             ServiceLifetime.Singleton,
-            timeProviderDescriptor.Lifetime);
+            clockDescriptor.Lifetime);
 
-        Assert.Same(
-            TimeProvider.System,
-            timeProviderDescriptor
-                .ImplementationInstance);
+        var defaultClock =
+            Assert.IsAssignableFrom<
+                IRuleGateClock>(
+                    clockDescriptor
+                        .ImplementationInstance);
 
         using var serviceProvider =
             services.BuildServiceProvider(
@@ -114,10 +116,10 @@ public sealed class
                         IRuleGateAuthorizationRequestEnricher>());
 
         Assert.Same(
-            TimeProvider.System,
+            defaultClock,
             serviceProvider
                 .GetRequiredService<
-                    TimeProvider>());
+                    IRuleGateClock>());
     }
 
     [Fact]
@@ -140,7 +142,7 @@ public sealed class
             services,
             descriptor =>
                 descriptor.ServiceType ==
-                typeof(TimeProvider));
+                typeof(IRuleGateClock));
 
         Assert.Single(
             services,
@@ -185,16 +187,17 @@ public sealed class
     }
 
     [Fact]
-    public void AddRuleGate_PreservesPreRegisteredTimeProvider()
+    public void AddRuleGate_PreservesPreRegisteredClock()
     {
         var services =
             new ServiceCollection();
 
         var expected =
-            new StubTimeProvider();
+            new StubRuleGateClock();
 
-        services.AddSingleton<TimeProvider>(
-            expected);
+        services.AddSingleton<
+            IRuleGateClock>(
+                expected);
 
         services.AddRuleGate();
 
@@ -203,7 +206,7 @@ public sealed class
 
         var actual =
             serviceProvider.GetRequiredService<
-                TimeProvider>();
+                IRuleGateClock>();
 
         Assert.Same(expected, actual);
     }
@@ -219,6 +222,12 @@ public sealed class
         }
     }
 
-    private sealed class StubTimeProvider
-        : TimeProvider;
+    private sealed class StubRuleGateClock
+        : IRuleGateClock
+    {
+        public DateTimeOffset GetUtcNow()
+        {
+            return DateTimeOffset.UnixEpoch;
+        }
+    }
 }

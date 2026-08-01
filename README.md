@@ -581,4 +581,4 @@ See the [roadmap](docs/roadmap.md) for the complete release path.
 ## License
 
 RuleGate is licensed under the
-[Apache License 2.0](LICENSE).
+[MIT License](LICENSE).

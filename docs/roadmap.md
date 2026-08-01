@@ -64,6 +64,10 @@ NuGet release, including packages without code changes. npm packages are
 versioned independently from NuGet and remain aligned within the npm package
 family.
 
+NuGet and npm release numbers may normally differ from each other. The stable
+RuleGate 1.0 milestone is intentionally coordinated: all six NuGet packages
+and all three npm packages must be published as exactly `1.0.0`.
+
 ## Current platform support
 
 The repository package and consumer matrix verifies:
@@ -322,6 +326,193 @@ RuleGate 1.0 is intended to provide:
 - OpenTelemetry integration and documented performance/concurrency behavior;
 - official backend, frontend, full-stack, and compatibility samples;
 - stable public APIs and security documentation.
+
+## Post-stable product roadmap
+
+The following work begins only after the stable `1.0.0` release is published
+and its release verification is closed. These phases intentionally have no
+assigned version numbers yet. Each phase will receive its own scoped milestone
+before implementation begins.
+
+### Focused reference applications and case studies
+
+The reference-application portfolio will demonstrate RuleGate across modern
+and legacy stacks without turning the repository into a collection of large
+sample products.
+
+Each application will:
+
+- implement one small, understandable domain case instead of an entire
+  business application;
+- consume stable RuleGate packages rather than preview or release-candidate
+  packages;
+- emphasize a detailed, realistic `rulegate.yaml`;
+- include only enough backend, frontend, authentication, tests, and generated
+  code to explain the authorization case;
+- demonstrate that UI framework, identity provider, application generation,
+  and domain do not change RuleGate policy semantics.
+
+Planned domains include:
+
+- document approval and EBYS/DYS workflows;
+- HBYS and patient-record access;
+- student information and grade publication;
+- fintech payment or transaction approval;
+- B2B partner-specific resource access;
+- ERP purchase-order approval;
+- e-commerce merchant and order ownership;
+- CRM lead and customer ownership, sales hierarchy, region scope, and
+  restricted-field updates.
+
+The portfolio will include both modern and legacy consumers, including:
+
+- the existing modern ASP.NET Core and Angular document-approval application;
+- an ASP.NET Core MVC 3.1 application;
+- a legacy Angular and legacy .NET application;
+- current and older compatible PrimeNG generations where appropriate.
+
+UI technology will deliberately vary between applications. Candidate
+open-source and freely usable stacks include:
+
+- Bootstrap;
+- current and legacy PrimeNG;
+- Angular Material;
+- Tailwind CSS;
+- NG-ZORRO or another established free component library.
+
+Commercial or licensing-sensitive UI packages will not be required by public
+samples unless their terms are explicitly suitable for an open-source
+reference application.
+
+Authentication and identity approaches will also vary. The complete portfolio
+will not depend only on Keycloak. Cases may use:
+
+- Keycloak;
+- ASP.NET Core Identity;
+- legacy IdentityServer integration;
+- OpenIddict or another standards-based OIDC provider;
+- an application-owned or custom JWT authentication implementation.
+
+Authentication remains host-owned in every sample. RuleGate receives trusted
+subject, resource, action, and context data and remains independent from the
+selected identity product.
+
+### Book-style documentation and GitHub Wiki
+
+After the case-study portfolio is available, the documentation will be
+reorganized into a beginner-to-advanced learning path.
+
+A reader with no previous RuleGate experience should be able to:
+
+- understand authentication and authorization boundaries;
+- install the correct packages;
+- write and validate `rulegate.yaml`;
+- integrate ASP.NET Core and a supported frontend;
+- connect an existing identity system;
+- diagnose denied or indeterminate decisions;
+- implement custom providers, requirements, evaluators, and adapters;
+- apply RuleGate safely in a production application.
+
+Repository Markdown under `docs/` will remain the canonical source of truth.
+The same documentation will be published to the GitHub Wiki through a
+repeatable synchronization process rather than maintained manually in two
+places.
+
+The documentation publishing workflow will:
+
+- generate the Wiki `Home` page and `_Sidebar`;
+- preserve usable navigation in both repository Markdown and the Wiki;
+- validate local links;
+- validate commands and important code examples where practical;
+- prevent repository and Wiki documentation from drifting.
+
+The documentation set will include:
+
+- getting started and the first working policy;
+- authentication versus authorization;
+- RBAC, permission, ABAC, CBAC, resource, and context concepts;
+- a complete `rulegate.yaml` guide;
+- ASP.NET Core, MVC, Minimal API, modern Angular, and legacy Angular
+  integration;
+- identity-provider integration patterns;
+- recipes for common authorization problems;
+- domain case studies based on the reference applications;
+- security boundaries and fail-closed behavior;
+- troubleshooting and diagnostics;
+- migration and versioning;
+- advanced extensibility.
+
+Case-study and recipe chapters should normally follow this teaching order:
+
+1. problem;
+2. authorization reasoning;
+3. `rulegate.yaml`;
+4. backend integration;
+5. frontend integration when applicable;
+6. tests;
+7. common mistakes and security considerations.
+
+### Java and PHP package families
+
+After the stable samples and documentation foundation, RuleGate will expand to
+native Java and PHP packages.
+
+The ports must preserve:
+
+- the same `rulegate.yaml` schema;
+- equivalent authorization outcomes and fail-closed semantics;
+- the same subject, resource, action, context, policy, and requirement model;
+- provider independence;
+- compatibility and package-consumer verification appropriate to each
+  ecosystem.
+
+The Java plan includes:
+
+- a framework-independent Java core;
+- an idiomatic Spring Boot starter and integration layer;
+- native Java extension points;
+- publication through Maven Central;
+- Java-specific samples and documentation.
+
+The PHP plan includes:
+
+- a framework-independent Composer package;
+- optional Laravel and Symfony adapters;
+- native PHP extension points;
+- publication through Packagist;
+- PHP-specific samples and documentation.
+
+Java and PHP implementations must not require an application to call a hidden
+.NET service. They are native ecosystem implementations of the shared RuleGate
+authorization model.
+
+### React and Vue integrations
+
+After the Java and PHP foundations, the frontend family will expand beyond
+Angular.
+
+Both integrations should reuse the framework-independent RuleGate client where
+possible while remaining idiomatic to their own frameworks.
+
+The React integration is expected to include:
+
+- provider and context integration;
+- authorization hooks;
+- conditional-rendering components;
+- route and navigation patterns;
+- generated policy-constant consumption.
+
+The Vue integration is expected to include:
+
+- an installable Vue plugin;
+- composables;
+- directives;
+- router-guard patterns;
+- generated policy-constant consumption.
+
+Angular, React, and Vue integrations remain user-experience projections.
+Backend authorization is always the security boundary, and every frontend
+adapter must preserve fail-closed client-state behavior.
 
 ## Compatibility track
 

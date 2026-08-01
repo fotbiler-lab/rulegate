@@ -371,6 +371,308 @@ public sealed class RuleGateManifestValidatorTests
             () => _validator.Validate(null!));
     }
 
+    [Fact]
+    public void Validate_RejectsPolicyCountAboveLimit()
+    {
+        var manifest = CreateValidManifest();
+
+        manifest.Policies =
+            Enumerable.Range(
+                    0,
+                    4_097)
+                .Select(
+                    static index =>
+                        (ManifestPolicy?)
+                            CreateResourceLimitPolicy(
+                                index,
+                                CreatePermissionRequirement(
+                                    index)))
+                .ToList();
+
+        var error = Assert.Single(
+            _validator.Validate(manifest).Errors);
+
+        Assert.Equal(
+            ManifestValidationCodes
+                .PolicyCountExceeded,
+            error.Code);
+
+        Assert.Equal(
+            "policies",
+            error.Path);
+    }
+
+    [Fact]
+    public void Validate_AllowsRequirementAtMaximumDepth()
+    {
+        var manifest = CreateValidManifest();
+
+        manifest.Policies![0]!.Requirement =
+            CreateNotChain(
+                nodeCount: 64);
+
+        var result =
+            _validator.Validate(manifest);
+
+        Assert.True(result.IsValid);
+    }
+
+    [Fact]
+    public void Validate_RejectsRequirementAboveMaximumDepth()
+    {
+        var manifest = CreateValidManifest();
+
+        manifest.Policies![0]!.Requirement =
+            CreateNotChain(
+                nodeCount: 65);
+
+        var error = Assert.Single(
+            _validator.Validate(manifest).Errors);
+
+        Assert.Equal(
+            ManifestValidationCodes
+                .RequirementDepthExceeded,
+            error.Code);
+    }
+
+    [Fact]
+    public void Validate_AllowsMaximumCompositeChildCount()
+    {
+        var manifest = CreateValidManifest();
+
+        manifest.Policies![0]!.Requirement =
+            new ManifestRequirement
+            {
+                All =
+                    CreatePermissionRequirements(
+                        count: 1_024)
+            };
+
+        var result =
+            _validator.Validate(manifest);
+
+        Assert.True(result.IsValid);
+    }
+
+    [Fact]
+    public void Validate_RejectsCompositeAboveMaximumChildCount()
+    {
+        var manifest = CreateValidManifest();
+
+        manifest.Policies![0]!.Requirement =
+            new ManifestRequirement
+            {
+                All =
+                    CreatePermissionRequirements(
+                        count: 1_025)
+            };
+
+        var error = Assert.Single(
+            _validator.Validate(manifest).Errors);
+
+        Assert.Equal(
+            ManifestValidationCodes
+                .RequirementChildCountExceeded,
+            error.Code);
+
+        Assert.Equal(
+            "policies[0].requirement.all",
+            error.Path);
+    }
+
+    [Fact]
+    public void Validate_RejectsPolicyRequirementAboveNodeLimit()
+    {
+        var manifest = CreateValidManifest();
+
+        manifest.Policies![0]!.Requirement =
+            CreateRequirementAbovePolicyNodeLimit();
+
+        var error = Assert.Single(
+            _validator.Validate(manifest).Errors);
+
+        Assert.Equal(
+            ManifestValidationCodes
+                .RequirementNodeCountExceeded,
+            error.Code);
+    }
+
+    [Fact]
+    public void Validate_RejectsManifestAboveTotalNodeLimit()
+    {
+        var manifest = CreateValidManifest();
+
+        manifest.Policies =
+            Enumerable.Range(
+                    0,
+                    32)
+                .Select(
+                    static index =>
+                        (ManifestPolicy?)
+                            CreateResourceLimitPolicy(
+                                index,
+                                CreateTwoLevelRequirementTree()))
+                .ToList();
+
+        var error = Assert.Single(
+            _validator.Validate(manifest).Errors);
+
+        Assert.Equal(
+            ManifestValidationCodes
+                .TotalRequirementNodeCountExceeded,
+            error.Code);
+
+        Assert.Equal(
+            "policies",
+            error.Path);
+    }
+
+    [Fact]
+    public void Validate_RejectsRequirementCycle()
+    {
+        var manifest = CreateValidManifest();
+
+        var requirement =
+            new ManifestRequirement();
+
+        requirement.Not = requirement;
+
+        manifest.Policies![0]!.Requirement =
+            requirement;
+
+        var error = Assert.Single(
+            _validator.Validate(manifest).Errors);
+
+        Assert.Equal(
+            ManifestValidationCodes
+                .RequirementCycleDetected,
+            error.Code);
+    }
+
+    private static ManifestRequirement
+        CreateNotChain(
+            int nodeCount)
+    {
+        if (nodeCount < 1)
+        {
+            throw new ArgumentOutOfRangeException(
+                nameof(nodeCount));
+        }
+
+        ManifestRequirement current =
+            new()
+            {
+                Permission = "sample.read"
+            };
+
+        for (var index = 1;
+             index < nodeCount;
+             index++)
+        {
+            current =
+                new ManifestRequirement
+                {
+                    Not = current
+                };
+        }
+
+        return current;
+    }
+
+    private static List<ManifestRequirement?>
+        CreatePermissionRequirements(
+            int count)
+    {
+        return Enumerable.Range(
+                0,
+                count)
+            .Select(
+                static index =>
+                    (ManifestRequirement?)
+                        CreatePermissionRequirement(
+                            index))
+            .ToList();
+    }
+
+    private static ManifestRequirement
+        CreateRequirementAbovePolicyNodeLimit()
+    {
+        return new ManifestRequirement
+        {
+            All =
+                Enumerable.Range(
+                        0,
+                        1_024)
+                    .Select(
+                        static groupIndex =>
+                            (ManifestRequirement?)
+                                new ManifestRequirement
+                                {
+                                    All =
+                                        Enumerable.Range(
+                                                0,
+                                                4)
+                                            .Select(
+                                                childIndex =>
+                                                    (ManifestRequirement?)
+                                                        CreatePermissionRequirement(
+                                                            groupIndex *
+                                                                4 +
+                                                            childIndex))
+                                            .ToList()
+                                })
+                    .ToList()
+        };
+    }
+
+    private static ManifestRequirement
+        CreateTwoLevelRequirementTree()
+    {
+        return new ManifestRequirement
+        {
+            All =
+                Enumerable.Range(
+                        0,
+                        1_024)
+                    .Select(
+                        static index =>
+                            (ManifestRequirement?)
+                                new ManifestRequirement
+                                {
+                                    Not =
+                                        CreatePermissionRequirement(
+                                            index)
+                                })
+                    .ToList()
+        };
+    }
+
+    private static ManifestRequirement
+        CreatePermissionRequirement(
+            int index)
+    {
+        return new ManifestRequirement
+        {
+            Permission =
+                $"sample.permission.{index}"
+        };
+    }
+
+    private static ManifestPolicy
+        CreateResourceLimitPolicy(
+            int index,
+            ManifestRequirement requirement)
+    {
+        return new ManifestPolicy
+        {
+            Id = $"resource-limit-{index}",
+            ResourceType =
+                $"resource-limit-{index}",
+            Action = "read",
+            Requirement = requirement
+        };
+    }
+
     private static RuleGateManifest CreateValidManifest()
     {
         return new RuleGateManifest

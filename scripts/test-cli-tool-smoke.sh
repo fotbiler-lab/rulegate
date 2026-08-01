@@ -262,12 +262,171 @@ do
 
   printf '\n== Verify root help ==\n'
 
-  "$CLI" \
-    --help \
-    >"$TEMP_DIRECTORY/help-$framework.out" \
-    2>"$TEMP_DIRECTORY/help-$framework.err"
+  HELP_STDOUT="$TEMP_DIRECTORY/help-$framework.out"
+  HELP_STDERR="$TEMP_DIRECTORY/help-$framework.err"
+  HOST_TRACE="$TEMP_DIRECTORY/host-$framework.trace"
 
-  test ! -s "$TEMP_DIRECTORY/help-$framework.err"
+  HOST_TRACE_ENV=()
+
+  if [[ "$framework" == "net10.0" ]]
+  then
+    HOST_TRACE_ENV=(
+      "DOTNET_HOST_TRACE=1"
+      "DOTNET_HOST_TRACEFILE=$HOST_TRACE"
+      "DOTNET_HOST_TRACE_VERBOSITY=4"
+    )
+  else
+    HOST_TRACE_ENV=(
+      "COREHOST_TRACE=1"
+      "COREHOST_TRACEFILE=$HOST_TRACE"
+      "COREHOST_TRACE_VERBOSITY=4"
+    )
+  fi
+
+  set +e
+
+  env \
+    "${HOST_TRACE_ENV[@]}" \
+    "$CLI" \
+    --help \
+    >"$HELP_STDOUT" \
+    2>"$HELP_STDERR"
+
+  ROOT_HELP_EXIT_CODE="$?"
+
+  set -e
+
+  if [[ "$ROOT_HELP_EXIT_CODE" -ne 0 ]]
+  then
+    printf '\nERROR: installed CLI root help failed.\n' >&2
+    printf 'Framework: %s\n' "$framework" >&2
+    printf 'Exit code: %s\n' "$ROOT_HELP_EXIT_CODE" >&2
+    printf 'CLI path : %s\n' "$CLI" >&2
+
+    printf '\n===== Operating system =====\n' >&2
+    uname -a >&2 || true
+
+    if [[ -f /etc/os-release ]]
+    then
+      cat /etc/os-release >&2
+    fi
+
+    printf '\n===== Relevant environment =====\n' >&2
+
+    env |
+      sort |
+      grep -E \
+        '^(COREHOST_|DOTNET_|COMPlus_|LD_|Image|RUNNER_|PATH=)' \
+      >&2 ||
+      true
+
+    printf '\n===== Resource state =====\n' >&2
+
+    if command -v free >/dev/null
+    then
+      free -h >&2 || true
+    fi
+
+    df -h >&2 || true
+
+    printf '\n===== Process limits =====\n' >&2
+    ulimit -a >&2 || true
+
+    printf '\n===== .NET information =====\n' >&2
+    dotnet --info >&2 || true
+
+    printf '\n===== Installed SDKs =====\n' >&2
+    dotnet --list-sdks >&2 || true
+
+    printf '\n===== Installed runtimes =====\n' >&2
+    dotnet --list-runtimes >&2 || true
+
+    printf '\n===== Installed CLI shim =====\n' >&2
+
+    if command -v file >/dev/null
+    then
+      file "$CLI" >&2 || true
+    fi
+
+    if command -v ldd >/dev/null
+    then
+      ldd "$CLI" >&2 || true
+    fi
+
+    printf '\n===== Root-help stdout =====\n' >&2
+
+    if [[ -s "$HELP_STDOUT" ]]
+    then
+      cat "$HELP_STDOUT" >&2
+    else
+      printf '<empty>\n' >&2
+    fi
+
+    printf '\n===== Root-help stderr =====\n' >&2
+
+    if [[ -s "$HELP_STDERR" ]]
+    then
+      cat "$HELP_STDERR" >&2
+    else
+      printf '<empty>\n' >&2
+    fi
+
+    printf '\n===== Host trace =====\n' >&2
+
+    if [[ -s "$HOST_TRACE" ]]
+    then
+      cat "$HOST_TRACE" >&2
+    else
+      printf '<empty>\n' >&2
+    fi
+
+    TOOL_DLL="$(
+      find         "$TOOL_DIRECTORY/.store"         -type f         -path         "*/tools/$framework/any/Fotbiler.RuleGate.Cli.dll"         -print         -quit
+    )"
+
+    if [[ -n "$TOOL_DLL" ]]
+    then
+      DIRECT_STDOUT="$TEMP_DIRECTORY/direct-help-$framework.out"
+      DIRECT_STDERR="$TEMP_DIRECTORY/direct-help-$framework.err"
+
+      printf '\n===== Direct managed DLL invocation =====\n' >&2
+      printf 'DLL path: %s\n' "$TOOL_DLL" >&2
+
+      set +e
+
+      dotnet "$TOOL_DLL"         --help         >"$DIRECT_STDOUT"         2>"$DIRECT_STDERR"
+
+      DIRECT_EXIT_CODE="$?"
+
+      set -e
+
+      printf 'Direct exit code: %s\n'         "$DIRECT_EXIT_CODE"         >&2
+
+      printf '\nDirect stdout:\n' >&2
+
+      if [[ -s "$DIRECT_STDOUT" ]]
+      then
+        cat "$DIRECT_STDOUT" >&2
+      else
+        printf '<empty>\n' >&2
+      fi
+
+      printf '\nDirect stderr:\n' >&2
+
+      if [[ -s "$DIRECT_STDERR" ]]
+      then
+        cat "$DIRECT_STDERR" >&2
+      else
+        printf '<empty>\n' >&2
+      fi
+    else
+      printf '\nManaged CLI DLL was not found in tool store.\n' >&2
+    fi
+
+    exit "$ROOT_HELP_EXIT_CODE"
+  fi
+
+  test ! -s "$HELP_STDERR"
 
   grep -F \
     'validate' \

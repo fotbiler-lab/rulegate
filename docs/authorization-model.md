@@ -459,8 +459,9 @@ At least one boundary is required. `startsAt` is inclusive, `endsAt` is
 exclusive, and both require an explicit UTC marker or numeric offset.
 
 Both requirements evaluate `AuthorizationContext.EvaluationTime`. ASP.NET
-Core creates it from the registered `TimeProvider`, which keeps tests
-deterministic without introducing a separate RuleGate clock abstraction.
+Core creates it from the registered `IRuleGateClock`. The default registration
+uses system UTC time, while applications and tests can replace the clock
+through the RuleGate-owned interface for deterministic boundary verification.
 
 ### Context age
 

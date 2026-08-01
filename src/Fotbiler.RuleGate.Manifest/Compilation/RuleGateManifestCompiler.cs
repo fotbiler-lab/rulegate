@@ -70,7 +70,7 @@ public sealed class RuleGateManifestCompiler
         }
 
         var mappingResult =
-            _mapper.Map(loadResult.Manifest!);
+            _mapper.Map(loadResult.Manifest);
 
         if (!mappingResult.IsSuccess)
         {

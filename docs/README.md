@@ -24,6 +24,7 @@ rules, authentication and MFA age, and canonical trusted request context.
 | Export telemetry and verify performance or concurrency              | [Telemetry, performance, and concurrency](telemetry-performance-concurrency.md) |
 | Generate C# constants and detect stale output                       | [C# code generation](code-generation.md)                                        |
 | Integrate RuleGate with ASP.NET Core                                | [ASP.NET Core integration](aspnetcore.md)                                       |
+| Migrate a 0.9 preview application to the 1.0 release line           | [Migrating to RuleGate 1.0](migration-to-1.0.md)                                |
 | Supply trusted subject, resource, and context attributes            | [ASP.NET Core enrichment](enrichment.md)                                        |
 | Add permission, policy, and role checks to Angular                  | [Angular SDK](angular.md)                                                       |
 | Select the correct frontend package for Angular 9–22                | [Frontend compatibility](frontend-compatibility.md)                             |
@@ -101,7 +102,9 @@ After completing that guide:
 13. Run the [reference applications](reference-applications.md) to see the
     packages composed in minimal and full-stack hosts.
 14. Review the [security model](security.md) before production integration.
-15. Use the root [README](../README.md) for the repository overview and current
+15. If upgrading from the 0.9 preview family, follow
+    [Migrating to RuleGate 1.0](migration-to-1.0.md).
+16. Use the root [README](../README.md) for the repository overview and current
     package status.
 
 ## Documentation principles

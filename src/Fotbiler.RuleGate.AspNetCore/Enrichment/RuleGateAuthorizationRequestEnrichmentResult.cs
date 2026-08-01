@@ -11,6 +11,9 @@ public sealed class
         Request = request;
     }
 
+    [System.Diagnostics.CodeAnalysis.MemberNotNullWhen(
+        true,
+        nameof(Request))]
     public bool IsSuccessful => Request is not null;
 
     public AuthorizationRequest? Request { get; }

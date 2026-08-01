@@ -1,0 +1,1 @@
+ASSEMBLY | Fotbiler.RuleGate.Cli

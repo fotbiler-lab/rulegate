@@ -1,0 +1,45 @@
+===== index.d.ts =====
+export * from './models.js';
+export * from './rule-gate-authorization-store.js';
+
+===== models.d.ts =====
+export interface RuleGateAuthorizationSnapshot {
+    readonly permissions?: readonly string[];
+    readonly policies?: readonly string[];
+    readonly roles?: readonly string[];
+}
+export interface RuleGatePermissionRequirement {
+    readonly permission: string;
+    readonly policy?: never;
+    readonly role?: never;
+}
+export interface RuleGatePolicyRequirement {
+    readonly permission?: never;
+    readonly policy: string;
+    readonly role?: never;
+}
+export interface RuleGateRoleRequirement {
+    readonly permission?: never;
+    readonly policy?: never;
+    readonly role: string;
+}
+
+export type RuleGateAuthorizationRequirement = RuleGatePermissionRequirement | RuleGatePolicyRequirement | RuleGateRoleRequirement;
+
+export declare function isRuleGateAuthorizationRequirement(requirement: unknown): requirement is RuleGateAuthorizationRequirement;
+
+export declare function isRuleGateIdentifier(identifier: unknown): identifier is string;
+
+===== rule-gate-authorization-store.d.ts =====
+import { RuleGateAuthorizationRequirement, RuleGateAuthorizationSnapshot } from './models.js';
+
+export declare class RuleGateAuthorizationStore {
+    get isReady(): boolean;
+    get snapshot(): RuleGateAuthorizationSnapshot;
+    replaceSnapshot(snapshot: RuleGateAuthorizationSnapshot): boolean;
+    clear(): void;
+    hasPermission(permission: string): boolean;
+    hasPolicy(policy: string): boolean;
+    hasRole(role: string): boolean;
+    isGranted(requirement: RuleGateAuthorizationRequirement | null | undefined): boolean;
+}

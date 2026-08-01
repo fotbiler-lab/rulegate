@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using Fotbiler.RuleGate.Manifest.Configuration;
 using Fotbiler.RuleGate.Manifest.Models;
 using Fotbiler.RuleGate.Manifest.Parsing;
@@ -14,6 +15,14 @@ public sealed class RuleGateManifestValidator
         var errors =
             new List<ManifestValidationError>();
 
+        if (!ValidateResourceLimits(
+                manifest,
+                errors))
+        {
+            return new ManifestValidationResult(
+                errors);
+        }
+
         ValidateSchemaVersion(
             manifest.SchemaVersion,
             errors);
@@ -27,6 +36,252 @@ public sealed class RuleGateManifestValidator
             errors);
 
         return new ManifestValidationResult(errors);
+    }
+
+    private static bool ValidateResourceLimits(
+        RuleGateManifest manifest,
+        ICollection<ManifestValidationError> errors)
+    {
+        var policies = manifest.Policies;
+
+        if (policies is null)
+        {
+            return true;
+        }
+
+        if (policies.Count >
+            RuleGateManifestResourceLimits
+                .MaximumPolicyCount)
+        {
+            errors.Add(
+                new ManifestValidationError(
+                    ManifestValidationCodes
+                        .PolicyCountExceeded,
+                    "policies",
+                    $"A manifest cannot contain more than {RuleGateManifestResourceLimits.MaximumPolicyCount} policies."));
+
+            return false;
+        }
+
+        var totalRequirementNodeCount = 0;
+
+        for (var index = 0;
+             index < policies.Count;
+             index++)
+        {
+            var policy = policies[index];
+
+            if (policy?.Requirement is not
+                { } requirement)
+            {
+                continue;
+            }
+
+            if (!ValidateRequirementResourceLimits(
+                    requirement,
+                    $"policies[{index}].requirement",
+                    ref totalRequirementNodeCount,
+                    errors))
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private static bool
+        ValidateRequirementResourceLimits(
+            ManifestRequirement root,
+            string rootPath,
+            ref int totalRequirementNodeCount,
+            ICollection<ManifestValidationError> errors)
+    {
+        var activeRequirements =
+            new HashSet<ManifestRequirement>(
+                ManifestRequirementReferenceComparer
+                    .Instance);
+
+        var stack =
+            new Stack<RequirementTraversalFrame>();
+
+        stack.Push(
+            new RequirementTraversalFrame(
+                root,
+                rootPath,
+                Depth: 1,
+                IsExit: false));
+
+        var policyRequirementNodeCount = 0;
+
+        while (stack.Count > 0)
+        {
+            var frame = stack.Pop();
+
+            if (frame.IsExit)
+            {
+                activeRequirements.Remove(
+                    frame.Requirement);
+
+                continue;
+            }
+
+            if (!activeRequirements.Add(
+                    frame.Requirement))
+            {
+                errors.Add(
+                    new ManifestValidationError(
+                        ManifestValidationCodes
+                            .RequirementCycleDetected,
+                        frame.Path,
+                        "Requirement graph contains a cycle."));
+
+                return false;
+            }
+
+            policyRequirementNodeCount++;
+            totalRequirementNodeCount++;
+
+            if (frame.Depth >
+                RuleGateManifestResourceLimits
+                    .MaximumRequirementDepth)
+            {
+                errors.Add(
+                    new ManifestValidationError(
+                        ManifestValidationCodes
+                            .RequirementDepthExceeded,
+                        frame.Path,
+                        $"Requirement depth {frame.Depth} exceeds the maximum of {RuleGateManifestResourceLimits.MaximumRequirementDepth}."));
+
+                return false;
+            }
+
+            if (policyRequirementNodeCount >
+                RuleGateManifestResourceLimits
+                    .MaximumRequirementNodeCountPerPolicy)
+            {
+                errors.Add(
+                    new ManifestValidationError(
+                        ManifestValidationCodes
+                            .RequirementNodeCountExceeded,
+                        rootPath,
+                        $"A policy requirement cannot contain more than {RuleGateManifestResourceLimits.MaximumRequirementNodeCountPerPolicy} nodes."));
+
+                return false;
+            }
+
+            if (totalRequirementNodeCount >
+                RuleGateManifestResourceLimits
+                    .MaximumTotalRequirementNodeCount)
+            {
+                errors.Add(
+                    new ManifestValidationError(
+                        ManifestValidationCodes
+                            .TotalRequirementNodeCountExceeded,
+                        "policies",
+                        $"A manifest cannot contain more than {RuleGateManifestResourceLimits.MaximumTotalRequirementNodeCount} requirement nodes."));
+
+                return false;
+            }
+
+            if (!ValidateCompositeChildCount(
+                    frame.Requirement.All,
+                    $"{frame.Path}.all",
+                    errors) ||
+                !ValidateCompositeChildCount(
+                    frame.Requirement.Any,
+                    $"{frame.Path}.any",
+                    errors))
+            {
+                return false;
+            }
+
+            stack.Push(
+                new RequirementTraversalFrame(
+                    frame.Requirement,
+                    frame.Path,
+                    frame.Depth,
+                    IsExit: true));
+
+            if (frame.Requirement.Not is
+                { } notRequirement)
+            {
+                stack.Push(
+                    new RequirementTraversalFrame(
+                        notRequirement,
+                        $"{frame.Path}.not",
+                        frame.Depth + 1,
+                        IsExit: false));
+            }
+
+            PushRequirementCollection(
+                stack,
+                frame.Requirement.Any,
+                $"{frame.Path}.any",
+                frame.Depth + 1);
+
+            PushRequirementCollection(
+                stack,
+                frame.Requirement.All,
+                $"{frame.Path}.all",
+                frame.Depth + 1);
+        }
+
+        return true;
+    }
+
+    private static bool ValidateCompositeChildCount(
+        IReadOnlyList<ManifestRequirement?>? requirements,
+        string path,
+        ICollection<ManifestValidationError> errors)
+    {
+        if (requirements is null ||
+            requirements.Count <=
+            RuleGateManifestResourceLimits
+                .MaximumCompositeChildCount)
+        {
+            return true;
+        }
+
+        errors.Add(
+            new ManifestValidationError(
+                ManifestValidationCodes
+                    .RequirementChildCountExceeded,
+                path,
+                $"A logical requirement cannot contain more than {RuleGateManifestResourceLimits.MaximumCompositeChildCount} child requirements."));
+
+        return false;
+    }
+
+    private static void PushRequirementCollection(
+        Stack<RequirementTraversalFrame> stack,
+        IReadOnlyList<ManifestRequirement?>? requirements,
+        string path,
+        int depth)
+    {
+        if (requirements is null)
+        {
+            return;
+        }
+
+        for (var index = requirements.Count - 1;
+             index >= 0;
+             index--)
+        {
+            var child = requirements[index];
+
+            if (child is null)
+            {
+                continue;
+            }
+
+            stack.Push(
+                new RequirementTraversalFrame(
+                    child,
+                    $"{path}[{index}]",
+                    depth,
+                    IsExit: false));
+        }
     }
 
     private static void ValidateSchemaVersion(
@@ -1423,6 +1678,43 @@ public sealed class RuleGateManifestValidator
                 child,
                 childPath,
                 errors);
+        }
+    }
+
+    private readonly record struct
+        RequirementTraversalFrame(
+            ManifestRequirement Requirement,
+            string Path,
+            int Depth,
+            bool IsExit);
+
+    private sealed class
+        ManifestRequirementReferenceComparer
+        : IEqualityComparer<ManifestRequirement>
+    {
+        internal static
+            ManifestRequirementReferenceComparer
+            Instance
+        { get; } =
+                new();
+
+        public bool Equals(
+            ManifestRequirement? left,
+            ManifestRequirement? right)
+        {
+            return ReferenceEquals(
+                left,
+                right);
+        }
+
+        public int GetHashCode(
+            ManifestRequirement requirement)
+        {
+            ArgumentNullException.ThrowIfNull(
+                requirement);
+
+            return RuntimeHelpers.GetHashCode(
+                requirement);
         }
     }
 
