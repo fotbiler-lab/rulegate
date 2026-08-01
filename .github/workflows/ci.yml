@@ -155,6 +155,17 @@ jobs:
       - name: Verify NuGet payload reproducibility
         run: ./scripts/verify-nuget-payload-reproducibility.sh 1.0.0-rc.1
 
+      - name: Restore default-version build state
+        run: |
+          dotnet restore \
+            Fotbiler.RuleGate.slnx \
+            --locked-mode
+
+          dotnet build \
+            Fotbiler.RuleGate.slnx \
+            --configuration Release \
+            --no-restore
+
       - name: Verify .NET public API freeze
         run: ./scripts/verify-dotnet-api-freeze.sh --no-build
 

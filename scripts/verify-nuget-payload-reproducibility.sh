@@ -33,7 +33,6 @@ PACKAGE_IDS=(
 test -x "$PYTHON_SCRIPT"
 
 TMP_DIR="$(mktemp -d)"
-trap 'rm -rf "$TMP_DIR"' EXIT
 
 RUN_ONE="$TMP_DIR/run-one"
 RUN_TWO="$TMP_DIR/run-two"
@@ -50,6 +49,14 @@ clean_production_outputs()
     -prune \
     -exec rm -rf {} +
 }
+
+cleanup()
+{
+  clean_production_outputs
+  rm -rf "$TMP_DIR"
+}
+
+trap cleanup EXIT
 
 restore_solution()
 {
@@ -97,5 +104,22 @@ python3 \
   "$VERSION" \
   "${PACKAGE_IDS[@]}"
 
-rm -rf "$TMP_DIR"
+cleanup
 trap - EXIT
+
+if find src \
+  -type d \
+  \( \
+    -name bin \
+    -o \
+    -name obj \
+  \) \
+  -print \
+  -quit |
+grep -q .
+then
+  echo 'Production build outputs remain after cleanup.' >&2
+  exit 1
+fi
+
+echo 'NUGET_REPRODUCIBILITY_BUILD_STATE_CLEANED'
