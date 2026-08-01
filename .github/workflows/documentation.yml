@@ -5,6 +5,7 @@ on:
     paths:
       - '**/*.md'
       - 'scripts/build-wiki.mjs'
+      - 'scripts/verify-release-state.mjs'
       - 'scripts/verify-documentation.mjs'
       - '.github/workflows/documentation.yml'
   push:
@@ -13,6 +14,7 @@ on:
     paths:
       - '**/*.md'
       - 'scripts/build-wiki.mjs'
+      - 'scripts/verify-release-state.mjs'
       - 'scripts/verify-documentation.mjs'
       - '.github/workflows/documentation.yml'
   workflow_dispatch:
@@ -27,21 +29,24 @@ jobs:
 
     steps:
       - name: Check out repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
 
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
         with:
           node-version: 22
 
       - name: Verify Markdown links and guide inventory
         run: node scripts/verify-documentation.mjs
 
+      - name: Verify release-state documentation
+        run: node scripts/verify-release-state.mjs
+
       - name: Build GitHub Wiki edition
         run: node scripts/build-wiki.mjs
 
       - name: Upload generated Wiki
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
         with:
           name: rulegate-wiki
           path: artifacts/wiki

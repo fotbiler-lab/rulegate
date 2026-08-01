@@ -1,6 +1,8 @@
 # RuleGate Support
 
-RuleGate is currently a preview project maintained on a best-effort basis.
+RuleGate 1.0 is a stable open-source project maintained on a best-effort,
+community basis. Stable describes the public API and package line; it does not
+imply a service-level agreement or guaranteed response time.
 
 ## Usage questions
 
@@ -55,7 +57,9 @@ Do not report vulnerabilities publicly.
 
 Follow [SECURITY.md](SECURITY.md).
 
-## Commercial support
+## Support model
 
-RuleGate does not currently provide a commercial support plan, service-level
-agreement, or guaranteed response time.
+RuleGate does not provide paid or commercial support, a service-level
+agreement, or a guaranteed response time. Community questions, bug reports,
+documentation improvements, and focused contributions are welcome through the
+public repository processes above.

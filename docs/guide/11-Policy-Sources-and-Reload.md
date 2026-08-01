@@ -17,6 +17,40 @@ complete combined set is valid.
 RuleGate does not require a database or remote authorization server. Custom
 sources still load into the local process.
 
+## Code-first policies without YAML
+
+YAML is optional. Applications can construct policies directly in C# and do
+not need the Manifest package or CLI for this path:
+
+```csharp
+using Fotbiler.RuleGate.Abstractions.Policies;
+using Fotbiler.RuleGate.AspNetCore.DependencyInjection;
+
+builder.Services
+    .AddRuleGate()
+    .AddPolicy(
+        new PolicyDefinition(
+            id: "invoice-approve",
+            resourceType: "invoice",
+            action: "approve",
+            requirement: new AllRequirementDefinition(
+            [
+                new PermissionRequirementDefinition("INVOICE.APPROVE"),
+                new RoleRequirementDefinition("FINANCE.APPROVER"),
+            ])));
+```
+
+Use `AddPolicies` when definitions are assembled in an application module.
+Code-first policies use the same engine, fail-closed behavior, diagnostics,
+enrichment, and ASP.NET Core enforcement as compiled manifests. They are a
+good fit when policies change only with application deployments or when an
+existing code-based authorization system is being migrated incrementally.
+
+YAML becomes useful when policies need independent review, CLI validation,
+deterministic tests, identifier generation, or safe local reload. Choose the
+source according to ownership and deployment needs; neither representation is
+more trusted merely because of its format.
+
 ## Reloadable YAML file
 
 ```csharp

@@ -76,6 +76,14 @@ identity, application, resource, and request data.
   the CLI; load and atomically reload local policy sources; observe safe logs
   and OpenTelemetry signals.
 
+## Choose your path
+
+| Goal                                             | Start here                                                                                                               |
+| ------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------ |
+| Protect an ASP.NET Core endpoint in five minutes | [Start in five minutes](#start-in-five-minutes)                                                                          |
+| Move from built-in role or permission policies   | [ASP.NET Core migration path](docs/guide/05-ASP.NET-Core-Integration.md#migrate-from-built-in-aspnet-core-authorization) |
+| Define policies in C# without YAML               | [Code-first policies without YAML](docs/guide/11-Policy-Sources-and-Reload.md#code-first-policies-without-yaml)          |
+
 ## A real policy
 
 This policy requires a capability and role, checks document state,

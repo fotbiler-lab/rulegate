@@ -7,6 +7,7 @@ on:
     paths:
       - 'docs/guide/**'
       - 'scripts/build-wiki.mjs'
+      - 'scripts/verify-release-state.mjs'
       - 'scripts/verify-documentation.mjs'
       - '.github/workflows/publish-wiki.yml'
   workflow_dispatch:
@@ -25,15 +26,18 @@ jobs:
 
     steps:
       - name: Check out repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
 
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
         with:
           node-version: 22
 
       - name: Verify documentation
         run: node scripts/verify-documentation.mjs
+
+      - name: Verify release-state documentation
+        run: node scripts/verify-release-state.mjs
 
       - name: Build Wiki edition
         run: node scripts/build-wiki.mjs
