@@ -27,11 +27,15 @@ Before production deployment, review the
 
 ## Supported frameworks
 
-The current RuleGate preview supports:
+The current RuleGate release candidate is supported on:
 
 - .NET 8
 - .NET 9
 - .NET 10
+
+The package also targets .NET Core 3.1 and .NET 5–7 for legacy compatibility
+verification. Those runtimes are end-of-life and do not receive vendor
+security support. See [Platform compatibility](platform-compatibility.md).
 
 ## Install the packages
 
@@ -40,7 +44,7 @@ Install the ASP.NET Core integration:
 ```bash
 dotnet add package \
   Fotbiler.RuleGate.AspNetCore \
-  --version 0.9.0-preview.4
+  --version 1.0.0-rc.1
 ```
 
 `Fotbiler.RuleGate.AspNetCore` references the RuleGate core, abstractions, and
@@ -734,7 +738,7 @@ It does not automatically:
 - Map route values other than the configured identifier
 
 Automatic domain loading from route identifiers is outside the current
-preview scope.
+built-in integration scope.
 
 ## Custom resource mapping
 

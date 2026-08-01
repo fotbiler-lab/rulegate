@@ -49,15 +49,16 @@ Development through 1.0 preserves five product properties:
 | Policy Sources and Atomic Reload             | ✅ Available |
 | OpenTelemetry, Benchmarks, and Concurrency   | ✅ Available |
 | .NET and Angular Compatibility Track         | ✅ Available |
-| API Freeze and Security Hardening            | ⏳ Planned   |
+| API Freeze and Security Hardening            | ✅ Available |
 | Stable Release                               | ⏳ Planned   |
 
-The latest RuleGate NuGet preview is `0.9.0-preview.4`. The three-package npm
-family is also published at `0.9.0-preview.4` for this compatibility release.
+The latest RuleGate NuGet prerelease is `1.0.0-rc.1`. The three-package npm
+family is also published at `1.0.0-rc.1` for this coordinated release
+candidate.
 Official Reference Applications, Policy Testing, Explain and Lint, Policy
 Sources and Atomic Reload, OpenTelemetry, Benchmarks and Concurrency, and the
-compatibility track are available. The next milestone is API Freeze and
-Security Hardening in `1.0.0-rc.1`.
+compatibility track are available. API Freeze and Security Hardening are
+delivered in `1.0.0-rc.1`; the next milestone is the stable `1.0.0` release.
 
 All NuGet packages share one version and are published together for every
 NuGet release, including packages without code changes. npm packages are
@@ -81,8 +82,9 @@ The repository package and consumer matrix verifies:
 | Legacy Angular adapter                | Angular 12 through Angular 19                  |
 | Framework-independent frontend client | Angular 9 through Angular 22 consumers         |
 
-The `0.9.0-preview.4` NuGet and npm package families publish this expanded
-compatibility matrix after package-only consumer and release verification.
+The `1.0.0-rc.1` NuGet and npm package families preserve this expanded
+compatibility matrix and add release-candidate API, security, reproducibility,
+and package-only consumer gates.
 
 Support levels are:
 
@@ -95,7 +97,7 @@ Support levels are:
 RuleGate cannot extend vendor security support for end-of-life runtimes. Legacy
 verification describes compatibility only.
 
-## Published previews
+## Published prereleases
 
 ### `0.1.0-preview.1` — Authorization Core Foundation
 
@@ -289,15 +291,10 @@ hosting and Angular patterns.
 - Packed `.nupkg` and `.tgz` consumer verification across the compatibility matrix
 - Unified `0.9.0-preview.4` preview numbering across the NuGet and npm package families
 
-## Planned previews
-
-The compatibility track runs alongside these feature milestones and becomes a
-release criterion at `1.0.0-rc.1`.
-
 ### `1.0.0-rc.1` — API Freeze and Security Hardening
 
-No major feature is added during the release-candidate phase. Exit criteria
-include:
+No major feature is added during the release-candidate phase. Delivered scope
+includes:
 
 - public API, naming, nullability, cancellation, exception, and thread-safety
   review;
@@ -308,6 +305,8 @@ include:
 - reproducible package builds and sensitive-diagnostics review;
 - completed current and legacy package-only consumer matrices;
 - published compatibility and support policy.
+
+## Planned release
 
 ### `1.0.0` — Stable Release
 

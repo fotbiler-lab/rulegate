@@ -7,14 +7,15 @@ logical requirements, typed attribute evaluators, requirement dispatch,
 in-memory policy storage and sources, immutable atomic policy snapshots, and
 opt-in authorization diagnostics. It emits exporter-neutral OpenTelemetry
 activities and low-cardinality metrics through the standard .NET diagnostics
-APIs.
+APIs. Logical requirement traversal is bounded and remains fail-closed when a
+tree exceeds the supported evaluation depth.
 
-RuleGate is currently in preview. Public APIs may change before the first
-stable release.
+RuleGate is currently in release candidate. The 1.0 public API is frozen;
+blocking compatibility or security fixes may still be made before stable.
 
 ## Installation
 
-    dotnet add package Fotbiler.RuleGate.Core --version 0.9.0-preview.4
+    dotnet add package Fotbiler.RuleGate.Core --version 1.0.0-rc.1
 
 ## Compatibility
 

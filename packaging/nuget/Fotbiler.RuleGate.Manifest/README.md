@@ -6,13 +6,16 @@ Manifest converts `rulegate.yaml` documents into immutable RuleGate policy
 definitions. Loading and validation failures are structured, and failed
 compilation does not return a partial policy collection. YAML files and
 embedded YAML resources can be used directly as reloadable policy sources.
+Bounded document, node, depth, scalar, collection, alias, and policy limits
+protect the loader and validator from resource-exhaustion input.
 
-RuleGate is currently in preview. Public APIs and the manifest schema may
-change before the first stable release.
+RuleGate is currently in release candidate. The 1.0 public API and manifest
+schema are frozen; blocking compatibility or security fixes may still be made
+before stable.
 
 ## Installation
 
-    dotnet add package Fotbiler.RuleGate.Manifest --version 0.9.0-preview.4
+    dotnet add package Fotbiler.RuleGate.Manifest --version 1.0.0-rc.1
 
 ## Compatibility
 
