@@ -197,7 +197,6 @@ function collectHeadingAnchors(markdown) {
     }
 
     const base = match[1]
-      .replace(/<[^>]*>/gu, '')
       .replace(/[`*_~]/gu, '')
       .toLowerCase()
       .replace(/[^\p{Letter}\p{Number}\s-]/gu, '')
