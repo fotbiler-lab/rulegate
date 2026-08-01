@@ -35,7 +35,7 @@ jobs:
 
     steps:
       - name: Check out release tag
-        uses: actions/checkout@v6
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
           ref: ${{ inputs.tag }}
           fetch-depth: 0
@@ -80,13 +80,16 @@ jobs:
             exit 1
           fi
 
+      - name: Verify release-state documentation
+        run: node scripts/verify-release-state.mjs
+
       - name: Set up pnpm
-        uses: pnpm/action-setup@v6
+        uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6
         with:
           version: 11.3.0
 
       - name: Set up Node.js
-        uses: actions/setup-node@v7
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
         with:
           node-version: 22.22.3
           registry-url: https://registry.npmjs.org
@@ -104,7 +107,7 @@ jobs:
         run: ./scripts/verify-npm-preview-release.sh --check-registry-availability
 
       - name: Upload verified npm packages
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
         with:
           name: rulegate-${{ inputs.tag }}-npm-package
           path: artifacts/npm/*.tgz

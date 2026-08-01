@@ -16,11 +16,16 @@ the compatibility guarantees of a stable major release.
   reload, extensibility, real-world recipes, and production review.
 - Added deterministic documentation-link verification and generated GitHub
   Wiki Home, sidebar, footer, and chapter publishing workflows.
+- Added automated stable release-state verification, dependency review, and
+  Dependabot coverage for GitHub Actions, NuGet, and npm dependencies.
 
 ### Changed
 
 - Simplified the root README into a product overview with a realistic policy,
   package selection, capability summary, and direct handbook/reference links.
+- Clarified the stable community support model and added direct migration and
+  YAML-free code-first entry paths.
+- Pinned third-party GitHub Actions to reviewed commit SHAs.
 
 ## [1.0.0] - 2026-08-01
 

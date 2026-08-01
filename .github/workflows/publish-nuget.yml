@@ -41,7 +41,7 @@ jobs:
 
     steps:
       - name: Check out release tag
-        uses: actions/checkout@v6
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
           ref: ${{ inputs.tag }}
           fetch-depth: 0
@@ -97,8 +97,11 @@ jobs:
             exit 1
           fi
 
+      - name: Verify release-state documentation
+        run: node scripts/verify-release-state.mjs
+
       - name: Set up .NET
-        uses: actions/setup-dotnet@v5
+        uses: actions/setup-dotnet@26b0ec14cb23fa6904739307f278c14f94c95bf1 # v5
         with:
           dotnet-version: |
             8.0.x
@@ -153,7 +156,7 @@ jobs:
           done
 
       - name: Upload verified NuGet packages
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
         with:
           name: rulegate-${{ inputs.tag }}-packages
           path: |
@@ -164,7 +167,7 @@ jobs:
 
       - name: NuGet login
         id: login
-        uses: NuGet/login@v1
+        uses: NuGet/login@8d196754b4036150537f80ac539e15c2f1028841 # v1
         with:
           user: fotbiler
 
