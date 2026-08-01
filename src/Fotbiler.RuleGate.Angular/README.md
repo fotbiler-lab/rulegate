@@ -16,6 +16,10 @@ pnpm add @fotbiler/rulegate-angular@1.0.0 @fotbiler/rulegate-client@1.0.0
 The package supports Angular 20–22. Older applications should follow the
 [frontend compatibility guide](https://github.com/fotbiler-lab/rulegate/blob/main/docs/frontend-compatibility.md).
 
+For a complete route, directive, generated-identifier, snapshot, backend
+boundary, legacy, and Keycloak walkthrough, read the
+[frontend integration chapter](https://github.com/fotbiler-lab/rulegate/blob/main/docs/guide/08-Frontend-Integration.md).
+
 ## Supply authorization state
 
 Load the current user's frontend authorization projection through application

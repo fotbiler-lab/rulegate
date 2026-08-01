@@ -1,154 +1,74 @@
 # RuleGate Documentation
 
-Welcome to the RuleGate documentation.
+The documentation has two connected layers:
 
-RuleGate is a local-first and provider-independent authorization framework for
-.NET and Angular applications. It supports permission, role, attribute,
-contextual, and resource-based authorization through one composable policy
-model.
+1. **The guide** teaches RuleGate from first principles through production in
+   one ordered path.
+2. **Reference documents** provide exhaustive contracts, operators, failure
+   behavior, compatibility, and maintainer procedures.
 
-The policy model includes explicit-time-zone schedules, bounded date-time
-rules, authentication and MFA age, and canonical trusted request context.
+Repository Markdown is the canonical source. The GitHub Wiki edition is built
+from the guide so the two forms do not drift.
 
-## Start here
+## Start with the guide
 
-| Goal                                                                | Document                                                                        |
-| ------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
-| Make your first authorization decision                              | [Getting started](getting-started.md)                                           |
-| Understand subjects, resources, actions, policies, and requirements | [Authorization model](authorization-model.md)                                   |
-| Define and validate `rulegate.yaml` policies                        | [Manifest guide](manifests.md)                                                  |
-| Validate manifests locally or in CI                                 | [RuleGate CLI](cli.md)                                                          |
-| Test policy outcomes without starting an application                | [Policy testing](policy-testing.md)                                             |
-| Explain decisions and lint policy structure safely                  | [Explain and Lint](explain-and-lint.md)                                         |
-| Load and atomically replace local policy sources                    | [Policy sources](policy-sources.md)                                             |
-| Export telemetry and verify performance or concurrency              | [Telemetry, performance, and concurrency](telemetry-performance-concurrency.md) |
-| Generate C# constants and detect stale output                       | [C# code generation](code-generation.md)                                        |
-| Integrate RuleGate with ASP.NET Core                                | [ASP.NET Core integration](aspnetcore.md)                                       |
-| Migrate a 0.9 preview application to the 1.0 release line           | [Migrating to RuleGate 1.0](migration-to-1.0.md)                                |
-| Supply trusted subject, resource, and context attributes            | [ASP.NET Core enrichment](enrichment.md)                                        |
-| Add permission, policy, and role checks to Angular                  | [Angular SDK](angular.md)                                                       |
-| Select the correct frontend package for Angular 9–22                | [Frontend compatibility](frontend-compatibility.md)                             |
-| Review current and legacy-tested platform support                   | [Platform compatibility](platform-compatibility.md)                             |
-| Map Keycloak roles on ASP.NET Core and Angular                      | [Keycloak integration](keycloak.md)                                             |
-| Run the official package-consuming samples                          | [Reference applications](reference-applications.md)                             |
-| Operate authorization diagnostics safely                            | [Diagnostics](diagnostics.md)                                                   |
-| Understand runtime and integration security                         | [Security model](security.md)                                                   |
-| Understand current and planned capabilities                         | [Roadmap](roadmap.md)                                                           |
-| Prepare and verify a NuGet release                                  | [NuGet release checklist](releases/preview-release-checklist.md)                |
-| Apply for the NuGet package ID prefix badge                         | [NuGet prefix reservation](releases/nuget-prefix-reservation.md)                |
-| Prepare and verify an npm release                                   | [npm release checklist](releases/npm-preview-release-checklist.md)              |
+[Open The RuleGate Guide](guide/README.md)
 
-## Published packages
+| Stage               | Chapters                                                                                                                                             |
+| ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Learn               | [Foundations](guide/01-Authorization-Foundations.md) · [Packages](guide/02-Packages-and-Installation.md)                                             |
+| Build               | [First API](guide/03-First-Protected-API.md) · [Policy language](guide/04-Policy-Language.md) · [ASP.NET Core](guide/05-ASP.NET-Core-Integration.md) |
+| Supply trusted data | [Attributes and context](guide/06-Trusted-Attributes-and-Context.md) · [Identity and Keycloak](guide/07-Identity-and-Keycloak.md)                    |
+| Add frontend        | [Frontend integration](guide/08-Frontend-Integration.md)                                                                                             |
+| Automate            | [CLI lifecycle](guide/09-CLI-and-Policy-Lifecycle.md) · [Testing and diagnostics](guide/10-Testing-and-Diagnostics.md)                               |
+| Operate and extend  | [Policy sources](guide/11-Policy-Sources-and-Reload.md) · [Extensibility](guide/12-Extensibility.md)                                                 |
+| Apply               | [Real-world recipes](guide/13-Real-World-Recipes.md) · [Production checklist](guide/14-Production-Checklist.md)                                      |
 
-The latest published stable RuleGate release is
-[`1.0.0`](https://github.com/fotbiler-lab/rulegate/releases/tag/v1.0.0).
+Use the [glossary](guide/Glossary.md) whenever an authorization term is
+unfamiliar.
 
-| Package                                                                                                | Purpose                                                                                      |
-| ------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------- |
-| [`Fotbiler.RuleGate.Abstractions`](https://www.nuget.org/packages/Fotbiler.RuleGate.Abstractions)      | Public authorization, policy-source, reload, telemetry-name, and extension contracts         |
-| [`Fotbiler.RuleGate.Core`](https://www.nuget.org/packages/Fotbiler.RuleGate.Core)                      | Local fail-closed engine, built-in evaluators, immutable snapshots, and telemetry            |
-| [`Fotbiler.RuleGate.Manifest`](https://www.nuget.org/packages/Fotbiler.RuleGate.Manifest)              | YAML loading, validation, compilation, file sources, and embedded-resource sources           |
-| [`Fotbiler.RuleGate.AspNetCore`](https://www.nuget.org/packages/Fotbiler.RuleGate.AspNetCore)          | ASP.NET Core integration, configuration sources, atomic reload, and trusted enrichment       |
-| [`Fotbiler.RuleGate.Cli`](https://www.nuget.org/packages/Fotbiler.RuleGate.Cli)                        | .NET tool for validation, testing, explanation, linting, deterministic C# generation, and CI |
-| [`Fotbiler.RuleGate.Keycloak`](https://www.nuget.org/packages/Fotbiler.RuleGate.Keycloak)              | Optional Keycloak claim normalization and RuleGate subject mapping                           |
-| [`@fotbiler/rulegate-client`](https://www.npmjs.com/package/@fotbiler/rulegate-client)                 | Framework-independent fail-closed frontend authorization state                               |
-| [`@fotbiler/rulegate-angular`](https://www.npmjs.com/package/@fotbiler/rulegate-angular)               | Modern Angular authorization client, route guards, UI directives, and TypeScript generation  |
-| [`@fotbiler/rulegate-angular-legacy`](https://www.npmjs.com/package/@fotbiler/rulegate-angular-legacy) | Angular 12–19 observable, NgModule, directive, and class-guard adapter                       |
+## Reference library
 
-All six published RuleGate NuGet packages and the three-package npm family
-are `1.0.0`. The npm package family remains independently versioned from
-NuGet even though both ecosystems are aligned for this stable release.
+| Need                                                       | Reference                                                         |
+| ---------------------------------------------------------- | ----------------------------------------------------------------- |
+| Complete subject/resource/action/context model             | [Authorization model](authorization-model.md)                     |
+| Every YAML member, operator, type, and validation rule     | [Manifest reference](manifests.md)                                |
+| Minimal API, MVC, imperative, HTTP, and engine integration | [ASP.NET Core reference](aspnetcore.md)                           |
+| Subject, resource, and context providers                   | [Enrichment reference](enrichment.md)                             |
+| Modern Angular guards, directives, and generation          | [Angular reference](angular.md)                                   |
+| Angular 9–22 package selection                             | [Frontend compatibility](frontend-compatibility.md)               |
+| Keycloak backend and frontend mapping                      | [Keycloak reference](keycloak.md)                                 |
+| CLI commands and exit codes                                | [CLI reference](cli.md)                                           |
+| Deterministic policy fixtures                              | [Policy testing](policy-testing.md)                               |
+| Decision explanation and manifest linting                  | [Explain and lint](explain-and-lint.md)                           |
+| Deterministic C# constants                                 | [C# generation](code-generation.md)                               |
+| Local sources and atomic reload                            | [Policy sources](policy-sources.md)                               |
+| Logging and custom sinks                                   | [Diagnostics](diagnostics.md)                                     |
+| Activities, metrics, benchmarks, and concurrency           | [Telemetry and performance](telemetry-performance-concurrency.md) |
+| Full trust and failure boundaries                          | [Security model](security.md)                                     |
+| .NET and Angular support matrix                            | [Platform compatibility](platform-compatibility.md)               |
+| Runnable package-consuming applications                    | [Reference applications](reference-applications.md)               |
+| Preview-to-stable upgrade                                  | [Migration to 1.0](migration-to-1.0.md)                           |
+| Released and planned capabilities                          | [Roadmap](roadmap.md)                                             |
 
-## Recommended learning path
+## Published package families
 
-New users should begin with
-[Getting started](getting-started.md).
+All six NuGet packages and all three npm packages have a stable `1.0.0`
+release. Use the [package selection chapter](guide/02-Packages-and-Installation.md)
+for package links, dependency roles, install commands, and framework ranges.
 
-That guide introduces the smallest complete RuleGate flow:
+## Samples
 
-1. Install the packages.
-2. Create a YAML policy manifest.
-3. Compile and validate the manifest.
-4. Register RuleGate.
-5. Build an authorization request.
-6. Evaluate an allowed decision.
-7. Observe fail-closed denial behavior.
-
-After completing that guide:
-
-1. Read the [authorization model](authorization-model.md) to understand the
-   concepts behind each decision.
-2. Use the [manifest guide](manifests.md) to define and validate policies.
-3. Add deterministic allow, deny, and indeterminate expectations with the
-   [policy-testing guide](policy-testing.md).
-4. Use [Explain and Lint](explain-and-lint.md) to inspect a decision safely and
-   enforce maintainable policy structure in CI.
-5. Use the [C# code-generation guide](code-generation.md) when application code
-   should consume manifest identifiers as constants.
-6. Use [Policy sources](policy-sources.md) to load local policies and preserve
-   the last valid immutable snapshot during reload.
-7. Use [Telemetry, performance, and concurrency](telemetry-performance-concurrency.md)
-   to register OpenTelemetry signals and run benchmarks or stress checks.
-8. Follow the [ASP.NET Core integration](aspnetcore.md) guide to protect HTTP
-   endpoints and map authenticated identities.
-9. Add the [ASP.NET Core enrichment pipeline](enrichment.md) when trusted
-   authorization attributes come from application services.
-10. Use the [Angular SDK guide](angular.md) for route and template visibility
-    after backend authorization is in place.
-11. Follow the [Keycloak integration](keycloak.md) guide when Keycloak supplies
-    the authenticated identity.
-12. Use the [diagnostics guide](diagnostics.md) to configure logging and custom
-    observability safely.
-13. Run the [reference applications](reference-applications.md) to see the
-    packages composed in minimal and full-stack hosts.
-14. Review the [security model](security.md) before production integration.
-15. If upgrading from the 0.9 preview family, follow
-    [Migrating to RuleGate 1.0](migration-to-1.0.md).
-16. Use the root [README](../README.md) for the repository overview and current
-    package status.
-
-## Documentation principles
-
-RuleGate documentation follows these principles:
-
-- Examples must use public package APIs.
-- Primary examples must represent tested behavior.
-- Every guide must state its outcome and prerequisites.
-- Security-relevant behavior must be explicit.
-- Fail-closed outcomes must be documented alongside successful outcomes.
-- Guides explain workflows; reference documents describe complete API or
-  manifest surfaces.
-- Information should have one authoritative location instead of being copied
-  across multiple documents.
+- [Minimal ASP.NET Core](../samples/aspnetcore-minimal/README.md)
+- [Document approval](../samples/document-approval/README.md)
+- [Document approval verification](../samples/document-approval/verification.md)
+- [All samples](../samples/README.md)
 
 ## Maintainer documentation
 
-Documents under [`releases`](releases/) describe release preparation,
-verification, publication, and post-release checks. They are intended for
-project maintainers rather than package consumers.
+- [NuGet release checklist](releases/preview-release-checklist.md)
+- [npm release checklist](releases/npm-preview-release-checklist.md)
+- [NuGet prefix reservation](releases/nuget-prefix-reservation.md)
 
-## Command-line interface
-
-- [RuleGate CLI](cli.md) — install or run the `rulegate` .NET tool,
-  validate manifests, inspect tool information, and use the stable process
-  exit-code contract.
-- [Policy testing](policy-testing.md) — evaluate deterministic authorization
-  fixtures, assert outcomes and failure codes, and filter CI test runs.
-- [Explain and Lint](explain-and-lint.md) — produce redacted structural
-  decision explanations and enforce deterministic manifest-quality findings.
-- [C# code generation](code-generation.md) — generate deterministic constants,
-  enforce stale-output checks in CI, and understand identifier diagnostics.
-
-## Angular SDK
-
-- [Angular SDK](angular.md) — supply frontend authorization state, protect
-  routes, control template visibility, and preserve the backend security
-  boundary.
-- [Frontend compatibility](frontend-compatibility.md) — choose the modern,
-  legacy, or framework-independent package and understand its support level.
-
-## Identity-provider integrations
-
-- [Keycloak integration](keycloak.md) — normalize effective realm and selected
-  client roles into the same provider-independent RuleGate model on ASP.NET
-  Core and Angular.
+Maintainer release procedures are intentionally outside the beginner learning
+path.

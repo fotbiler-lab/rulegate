@@ -1,0 +1,48 @@
+name: Documentation
+
+on:
+  pull_request:
+    paths:
+      - '**/*.md'
+      - 'scripts/build-wiki.mjs'
+      - 'scripts/verify-documentation.mjs'
+      - '.github/workflows/documentation.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - '**/*.md'
+      - 'scripts/build-wiki.mjs'
+      - 'scripts/verify-documentation.mjs'
+      - '.github/workflows/documentation.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: Verify and build documentation
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Verify Markdown links and guide inventory
+        run: node scripts/verify-documentation.mjs
+
+      - name: Build GitHub Wiki edition
+        run: node scripts/build-wiki.mjs
+
+      - name: Upload generated Wiki
+        uses: actions/upload-artifact@v4
+        with:
+          name: rulegate-wiki
+          path: artifacts/wiki
+          if-no-files-found: error

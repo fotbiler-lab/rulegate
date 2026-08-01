@@ -67,6 +67,8 @@ authorization inputs cannot grant access.
 
 ## Documentation
 
+- [Complete RuleGate guide](https://github.com/fotbiler-lab/rulegate/blob/main/docs/guide/README.md)
+- [Authorization foundations chapter](https://github.com/fotbiler-lab/rulegate/blob/main/docs/guide/01-Authorization-Foundations.md)
 - [Getting started](https://github.com/fotbiler-lab/rulegate/blob/main/docs/getting-started.md)
 - [Authorization model](https://github.com/fotbiler-lab/rulegate/blob/main/docs/authorization-model.md)
 - [Diagnostics](https://github.com/fotbiler-lab/rulegate/blob/main/docs/diagnostics.md)

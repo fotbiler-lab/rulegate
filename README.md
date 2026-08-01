@@ -22,7 +22,9 @@
 </p>
 
 <p align="center">
-  <a href="docs/getting-started.md">Getting started</a>
+  <a href="docs/guide/README.md">Complete guide</a>
+  ·
+  <a href="docs/README.md">Documentation</a>
   ·
   <a href="#packages">Packages</a>
   ·
@@ -30,557 +32,202 @@
   ·
   <a href="docs/roadmap.md">Roadmap</a>
   ·
-  <a href="#security-behavior">Security</a>
-  ·
-  <a href="https://github.com/fotbiler-lab/rulegate/releases">Releases</a>
+  <a href="https://github.com/fotbiler-lab/rulegate/releases/latest">Latest release</a>
 </p>
 
-> [!NOTE]
-> RuleGate 1.0 is the first stable release. Review the
-> [security model](docs/security.md), platform support policy, and migration
-> guide before production adoption.
+RuleGate answers one question inside your application:
 
-## Authorization, not authentication
+> May this subject perform this action on this resource in the current
+> context?
 
-RuleGate does not authenticate users, issue tokens, or manage identities. The
-host application validates an identity and supplies trusted subject, resource,
-and request-context data. RuleGate then decides whether that subject may
-perform an action on a resource.
+It combines permissions, roles, typed attributes, ownership, organization,
+resource state, request context, MFA age, and time rules in one local,
+fail-closed policy engine.
 
 ```mermaid
 flowchart LR
-    IdP[Identity provider] -->|Validated identity| Host[Host application]
-    Data[Application data] -->|Trusted attributes| Host
-    Host --> Subject[Subject]
-    Host --> Resource[Resource]
-    Host --> Context[Context]
-    Subject --> Engine[RuleGate policy engine]
-    Resource --> Engine
-    Context --> Engine
-    Engine --> Decision[Allow or deny]
-    Decision --> API[ASP.NET Core enforcement]
-    Host -. Frontend authorization snapshot .-> UI[Angular UX projection]
+    A[Validated identity] --> B[Subject]
+    C[Application data] --> D[Resource]
+    E[Trusted request facts] --> F[Context]
+    B --> G[RuleGate policy]
+    D --> G
+    F --> G
+    G --> H{Allow or deny}
+    H --> I[ASP.NET Core enforcement]
+    B -. UI projection .-> J[Angular experience]
 ```
+
+RuleGate performs authorization, not authentication. Your authentication
+system validates the caller. RuleGate evaluates local policies against trusted
+identity, application, resource, and request data.
 
 ## Why RuleGate?
 
-RuleGate provides a unified authorization model for applications that need
-more than framework-level roles or ad hoc permission checks.
+- **Local-first:** decisions stay inside the application process.
+- **Provider-independent:** use Keycloak or another identity provider without
+  coupling the core policy model to it.
+- **Composable:** combine RBAC, permissions, ABAC, CBAC, resources, time, and
+  logical `all`, `any`, and `not` requirements.
+- **Fail-closed:** missing policies, missing data, invalid types, provider
+  failures, and indeterminate evaluation deny access.
+- **Full-stack:** enforce in ASP.NET Core and project limited grants into
+  modern Angular, legacy Angular, or a framework-independent TypeScript client.
+- **Operational:** validate, test, explain, lint, and generate identifiers with
+  the CLI; load and atomically reload local policy sources; observe safe logs
+  and OpenTelemetry signals.
 
-- **Local-first:** Policy evaluation happens inside the application process.
-- **Provider-independent:** The authorization engine is not coupled to an
-  identity provider, database, or remote policy service.
-- **Policy-driven:** Permissions, roles, attributes, resources, and contextual
-  rules use one composable requirement model.
-- **Fail-closed:** Missing, malformed, unsupported, and indeterminate
-  authorization inputs deny access.
-- **Framework-ready:** ASP.NET Core applications can use dynamic policies,
-  endpoint helpers, controller attributes, ordered attribute enrichment,
-  diagnostics, OpenTelemetry signals, and safe HTTP result mapping.
-- **Manifest-enabled:** YAML policies can be loaded, validated, and compiled
-  from files, embedded resources, configuration, or application-defined
-  sources into atomically replaceable immutable runtime snapshots.
-- **CLI-ready:** manifests can be validated and linted, deterministic fixtures
-  can be tested and explained safely, and C# policy, resource-type, and action
-  constants can be generated locally or in CI with stable process exit codes.
-- **Angular-ready:** a fail-closed frontend projection, declarative route
-  authorization, template composition, disabled state, and generated
-  TypeScript identifiers keep frontend behavior aligned with RuleGate.
-- **Provider integrations:** optional adapters normalize provider claims
-  without coupling the RuleGate engine or primary Angular entrypoint to an
-  identity provider.
+## A real policy
 
-One policy can combine several authorization styles without moving evaluation
-to a remote service:
-
-| Style                          | Typical RuleGate input                                   |
-| ------------------------------ | -------------------------------------------------------- |
-| Permission-based authorization | Exact application permissions such as `document.update`  |
-| Role-based authorization       | Effective roles such as `finance.approver`               |
-| Attribute-based authorization  | Department, clearance, classification, or workflow state |
-| Context-based authorization    | Time, network zone, request channel, or trusted device   |
-| Resource-based authorization   | Ownership, organization scope, state, or resource value  |
-
-## Which package should I install?
-
-| Need                                                      | Start with                          |
-| --------------------------------------------------------- | ----------------------------------- |
-| ASP.NET Core application                                  | `Fotbiler.RuleGate.AspNetCore`      |
-| Framework-independent authorization engine                | `Fotbiler.RuleGate.Core`            |
-| Custom contracts or evaluators                            | `Fotbiler.RuleGate.Abstractions`    |
-| YAML policy loading and compilation                       | `Fotbiler.RuleGate.Manifest`        |
-| Keycloak claim normalization                              | `Fotbiler.RuleGate.Keycloak`        |
-| Validation, testing, explanation, linting, and generation | `Fotbiler.RuleGate.Cli`             |
-| Angular 20–22 route and template projection               | `@fotbiler/rulegate-angular`        |
-| Angular 12–19 route and template projection               | `@fotbiler/rulegate-angular-legacy` |
-| Framework-independent frontend state or Angular 9–11      | `@fotbiler/rulegate-client`         |
-
-## Packages
-
-| Package                                                                                                | Purpose                                                                                                                                 |
-| ------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------- |
-| [`Fotbiler.RuleGate.Abstractions`](https://www.nuget.org/packages/Fotbiler.RuleGate.Abstractions)      | Authorization contracts, policy definitions, source/reload contracts, telemetry names, requests, decisions, and evaluation abstractions |
-| [`Fotbiler.RuleGate.Core`](https://www.nuget.org/packages/Fotbiler.RuleGate.Core)                      | Policy engine, built-in evaluators, atomic immutable snapshots, and exporter-neutral telemetry                                          |
-| [`Fotbiler.RuleGate.Manifest`](https://www.nuget.org/packages/Fotbiler.RuleGate.Manifest)              | YAML loading, validation, compilation, file sources, embedded-resource sources, and domain mapping                                      |
-| [`Fotbiler.RuleGate.AspNetCore`](https://www.nuget.org/packages/Fotbiler.RuleGate.AspNetCore)          | ASP.NET Core integration, configuration policy sources, atomic reload hosting, enrichment, dynamic policies, and endpoint helpers       |
-| [`Fotbiler.RuleGate.Cli`](https://www.nuget.org/packages/Fotbiler.RuleGate.Cli)                        | .NET tool for validation, testing, redacted explanations, linting, deterministic C# generation, stale-output checks, and CI             |
-| [`Fotbiler.RuleGate.Keycloak`](https://www.nuget.org/packages/Fotbiler.RuleGate.Keycloak)              | Optional Keycloak claim normalization and RuleGate subject mapping                                                                      |
-| [`@fotbiler/rulegate-client`](https://www.npmjs.com/package/@fotbiler/rulegate-client)                 | Framework-independent, fail-closed frontend authorization state                                                                         |
-| [`@fotbiler/rulegate-angular`](https://www.npmjs.com/package/@fotbiler/rulegate-angular)               | Angular 20–22 signals, declarative route guards, UI directives, and TypeScript identifier generation                                    |
-| [`@fotbiler/rulegate-angular-legacy`](https://www.npmjs.com/package/@fotbiler/rulegate-angular-legacy) | Angular 12–19 observable, NgModule, classic directive, and class-guard adapter                                                          |
-
-## Supported .NET and Angular versions
-
-| Package                             | Repository compatibility targets                 | Support level                                    |
-| ----------------------------------- | ------------------------------------------------ | ------------------------------------------------ |
-| Abstractions, Core, Manifest        | `.NET Standard 2.0`, .NET 8, 9, and 10           | Current and portable                             |
-| ASP.NET Core and Keycloak           | .NET Core 3.1 and .NET 5–10                      | .NET 8–10 current; older targets legacy-tested   |
-| RuleGate CLI                        | .NET 8, 9, and 10                                | Current                                          |
-| `@fotbiler/rulegate-angular`        | Angular 20–22                                    | Current                                          |
-| `@fotbiler/rulegate-angular-legacy` | Angular 12–19                                    | Legacy-tested                                    |
-| `@fotbiler/rulegate-client`         | Angular 9–22 and framework-independent consumers | Current or legacy-tested with the host framework |
-
-RuleGate 1.0 carries the compatibility matrix established in
-`0.9.0-preview.4` and hardened through `1.0.0-rc.1` across the backend and
-frontend package families. See the
-[platform compatibility policy](docs/platform-compatibility.md) and
-[frontend compatibility guide](docs/frontend-compatibility.md) for package
-selection and the distinction between vendor support and legacy verification.
-
-## Current capabilities
-
-RuleGate currently provides:
-
-- Permission and role-based authorization
-- Subject, resource, and context attribute requirements
-- Advanced string, collection, presence, and null attribute operators
-- Attribute-to-attribute comparisons for ownership and organization scope
-- Explicit-time-zone workday and overnight time-window requirements
-- Before, after, and bounded date-time requirements
-- Authentication-age, MFA-age, and canonical trusted-context requirements
-- Composable `all`, `any`, and `not` requirements
-- Default-deny and fail-closed evaluation
-- Ordinal string matching with explicit case-insensitive opt-in
-- Homogeneous attribute collections with a 256-element safety limit
-- Immutable in-memory policy registration
-- YAML manifest loading, validation, and compilation
-- In-memory, YAML file, embedded-resource, configuration, and
-  application-defined policy sources
-- Complete-source validation, immutable snapshots, and atomic policy reload
-- Last-valid-snapshot preservation with deterministic reload diagnostics
-- ASP.NET Core dependency injection and dynamic policies
-- Minimal API and controller authorization
-- Configurable claims-to-subject mapping
-- Ordered asynchronous subject, resource, and context attribute enrichment
-- Explicit fail, keep-existing, and replace-existing collision behavior
-- Resource-based authorization
-- Opt-in safe HTTP authorization results
-- Opt-in structured authorization diagnostics
-- Exporter-neutral OpenTelemetry activities and low-cardinality metrics
-- Decision, failure-category, latency, policy-lookup, source-load, and reload
-  instrumentation without policy or identity values
-- BenchmarkDotNet requirement and policy-lookup suites
-- Parallel evaluation/reload tests and configurable concurrency stress
-- Deterministic CLI manifest validation with text and JSON output
-- Host-independent policy fixtures with allow, deny, indeterminate, and
-  failure-code expectations
-- Redacted structural decision explanations using the runtime evaluator path
-- Deterministic manifest linting with stable rule codes and CI exit behavior
-- Manifest-derived C# policy, resource-type, and action constants
-- Atomic generated-file writes and byte-exact stale-output checks
-- Generated-code compilation smoke coverage on .NET 8, .NET 9, and .NET 10
-- Signal-backed Angular frontend authorization state
-- Angular permission, policy, and role route guards
-- Declarative Angular route metadata and denied-navigation handling
-- Angular visibility, fallback-template, and disabled-state directives
-- Manifest-derived TypeScript policy, permission, role, resource-type, and action
-  constants
-- Optional Keycloak realm-role and selected client-role normalization for
-  ASP.NET Core and Angular
-- Package-only Angular npm tarball verification
-- Package-consuming minimal ASP.NET Core and full-stack Angular reference
-  applications
-- Portable .NET Standard 2.0 libraries, ASP.NET Core/Keycloak support from .NET Core 3.1 through .NET 10, and package-only legacy consumer verification
-
-See the [roadmap](docs/roadmap.md) for published milestones and post-stable
-product direction.
-
-## Documentation
-
-| Goal                                             | Guide                                                                  |
-| ------------------------------------------------ | ---------------------------------------------------------------------- |
-| Make the first authorization decision            | [Getting started](docs/getting-started.md)                             |
-| Understand the authorization model               | [Authorization model](docs/authorization-model.md)                     |
-| Define `rulegate.yaml` policies                  | [Manifest guide](docs/manifests.md)                                    |
-| Protect ASP.NET Core applications                | [ASP.NET Core integration](docs/aspnetcore.md)                         |
-| Supply trusted authorization attributes          | [ASP.NET Core enrichment](docs/enrichment.md)                          |
-| Configure logs and diagnostic sinks              | [Diagnostics](docs/diagnostics.md)                                     |
-| Configure telemetry and run performance tests    | [Telemetry and performance](docs/telemetry-performance-concurrency.md) |
-| Review trust boundaries and production controls  | [Security model](docs/security.md)                                     |
-| Use the RuleGate command-line tool               | [CLI guide](docs/cli.md)                                               |
-| Test policies without starting an application    | [Policy testing](docs/policy-testing.md)                               |
-| Explain decisions and lint policy structure      | [Explain and Lint](docs/explain-and-lint.md)                           |
-| Load and atomically reload local policy sources  | [Policy sources](docs/policy-sources.md)                               |
-| Generate deterministic C# constants              | [C# code generation](docs/code-generation.md)                          |
-| Add frontend permission, policy, and role checks | [Angular SDK](docs/angular.md)                                         |
-| Map Keycloak roles without coupling the engine   | [Keycloak integration](docs/keycloak.md)                               |
-| Run package-consuming reference applications     | [Reference applications](docs/reference-applications.md)               |
-| Browse all documentation                         | [Documentation index](docs/README.md)                                  |
-| Review current and planned capabilities          | [Roadmap](docs/roadmap.md)                                             |
-
-## Installation
-
-Install the ASP.NET Core package:
-
-```bash
-dotnet add package Fotbiler.RuleGate.AspNetCore --version 1.0.0
-```
-
-`Fotbiler.RuleGate.AspNetCore` references the core engine, abstractions, and
-manifest packages.
-
-Applications using only RuleGate contracts may reference the abstractions
-package directly:
-
-```bash
-dotnet add package Fotbiler.RuleGate.Abstractions --version 1.0.0
-```
-
-Install the Angular SDK:
-
-```bash
-pnpm add @fotbiler/rulegate-angular@1.0.0 @fotbiler/rulegate-client@1.0.0
-```
-
-Install the optional Keycloak integration when Keycloak supplies the identity:
-
-```bash
-dotnet add package Fotbiler.RuleGate.Keycloak --version 1.0.0
-```
-
-## Use the RuleGate CLI
-
-Install the RuleGate command-line tool:
-
-```bash
-dotnet tool install \
-  --global \
-  Fotbiler.RuleGate.Cli \
-  --version 1.0.0
-```
-
-Validate the default `rulegate.yaml` in the current directory:
-
-```bash
-rulegate validate
-```
-
-Validate an explicit manifest or request pure JSON output:
-
-```bash
-rulegate validate ./policies/rulegate.yaml
-rulegate validate --format json
-```
-
-The `1.0.0` tool evaluates and safely explains deterministic
-authorization requests against a manifest without starting the host
-application:
-
-```bash
-rulegate test ./policies/authorization.tests.yaml
-rulegate test ./policies/authorization.tests.yaml --format json
-```
-
-Explain one fixture decision without exposing request values, then lint the
-manifest for structural risks:
-
-```bash
-rulegate explain \
-  ./policies/authorization.tests.yaml \
-  --test confidential-document-denied
-
-rulegate lint ./policies/rulegate.yaml --format json
-```
-
-Use `rulegate --help`, `rulegate --version`, and `rulegate info` to inspect the
-installed tool.
-
-The installed tool also provides deterministic C# generation:
-
-```bash
-rulegate generate csharp \
-  ./rulegate.yaml \
-  --namespace Sample.Authorization \
-  --output Generated/RuleGate.g.cs
-```
-
-Verify in CI that the committed generated file is current without modifying it:
-
-```bash
-rulegate generate csharp \
-  ./rulegate.yaml \
-  --namespace Sample.Authorization \
-  --output Generated/RuleGate.g.cs \
-  --check
-```
-
-See the [RuleGate CLI guide](docs/cli.md) for the command reference, the
-[policy-testing guide](docs/policy-testing.md) for deterministic fixtures, and
-the [C# code-generation guide](docs/code-generation.md) for generated output,
-stale checks, identifier rules, and CI usage.
-
-## Quick start
-
-The following example compiles a manifest, registers RuleGate, and evaluates
-an authorization request.
-
-### 1. Define a policy
-
-Create `rulegate.yaml`:
+This policy requires a capability and role, checks document state,
+organization, amount, separation of duties, network, device, MFA age, and
+business hours:
 
 ```yaml
-schemaVersion: 1
-
-application:
-  id: sample-application
-  name: Sample Application
-
-policies:
-  - id: sample-resource-read
-    resourceType: sample-resource
-    action: read
-    requirement:
-      all:
-        - id: required-permission
-          permission: sample.read
-
-        - id: accepted-role
-          any:
-            - role: sample.editor
-            - role: sample.administrator
-```
-
-Even a small real-world rule can combine a permission, resource ownership,
-workflow state, and trusted request context:
-
-```yaml
-- id: document-update
+- id: document-approve
   resourceType: document
-  action: update
+  action: approve
   requirement:
     all:
-      - permission: document.update
-      - attributeComparison:
-          left:
-            source: resource
-            name: ownerId
-          operator: equal
-          right:
-            source: subject
-            name: id
+      - permission: DOC.APPROVE
+      - role: DOCUMENT.APPROVER
       - attribute:
           source: resource
           name: status
+          operator: equal
+          valueType: string
+          value: submitted
+      - attributeComparison:
+          left: { source: subject, name: organizationId }
+          operator: equal
+          right: { source: resource, name: organizationId }
+      - attributeComparison:
+          left: { source: resource, name: totalAmount }
+          operator: lessThanOrEqual
+          right: { source: subject, name: approvalLimit }
+      - not:
+          attributeComparison:
+            left: { source: subject, name: userId }
+            operator: equal
+            right: { source: resource, name: ownerId }
+      - context:
+          property: networkZone
           operator: in
           valueType: stringCollection
-          value: [draft, returned]
-      - context:
-          property: trustedDevice
-          operator: equal
-          valueType: boolean
-          value: true
+          value: [internal, vpn]
+      - contextAge:
+          timestamp: mfa
+          maximumAge: '00:15:00'
+      - timeWindow:
+          days: [monday, tuesday, wednesday, thursday, friday]
+          start: '08:00'
+          end: '18:00'
+          timeZone: Europe/Istanbul
 ```
 
-The host must derive `ownerId`, `status`, and `trustedDevice` from trusted
-application sources. Missing or incompatible input denies access.
+The host supplies every attribute from a trusted server-side source. The
+browser cannot grant itself access.
 
-### 2. Validate the complete manifest
+## Packages
+
+| Package                                                                                                | Purpose                                                   | Guide                                                           |
+| ------------------------------------------------------------------------------------------------------ | --------------------------------------------------------- | --------------------------------------------------------------- |
+| [`Fotbiler.RuleGate.Abstractions`](https://www.nuget.org/packages/Fotbiler.RuleGate.Abstractions)      | Public authorization and extension contracts              | [Packages](docs/guide/02-Packages-and-Installation.md)          |
+| [`Fotbiler.RuleGate.Core`](https://www.nuget.org/packages/Fotbiler.RuleGate.Core)                      | Fail-closed engine and built-in evaluators                | [Foundations](docs/guide/01-Authorization-Foundations.md)       |
+| [`Fotbiler.RuleGate.Manifest`](https://www.nuget.org/packages/Fotbiler.RuleGate.Manifest)              | YAML loading, validation, and compilation                 | [Policy language](docs/guide/04-Policy-Language.md)             |
+| [`Fotbiler.RuleGate.AspNetCore`](https://www.nuget.org/packages/Fotbiler.RuleGate.AspNetCore)          | ASP.NET Core enforcement, mapping, and enrichment         | [ASP.NET Core](docs/guide/05-ASP.NET-Core-Integration.md)       |
+| [`Fotbiler.RuleGate.Cli`](https://www.nuget.org/packages/Fotbiler.RuleGate.Cli)                        | Validation, testing, explanation, linting, and generation | [CLI lifecycle](docs/guide/09-CLI-and-Policy-Lifecycle.md)      |
+| [`Fotbiler.RuleGate.Keycloak`](https://www.nuget.org/packages/Fotbiler.RuleGate.Keycloak)              | Optional Keycloak subject mapping                         | [Identity and Keycloak](docs/guide/07-Identity-and-Keycloak.md) |
+| [`@fotbiler/rulegate-client`](https://www.npmjs.com/package/@fotbiler/rulegate-client)                 | Framework-independent frontend state                      | [Frontend](docs/guide/08-Frontend-Integration.md)               |
+| [`@fotbiler/rulegate-angular`](https://www.npmjs.com/package/@fotbiler/rulegate-angular)               | Angular 20–22 guards, directives, and generation          | [Frontend](docs/guide/08-Frontend-Integration.md)               |
+| [`@fotbiler/rulegate-angular-legacy`](https://www.npmjs.com/package/@fotbiler/rulegate-angular-legacy) | Angular 12–19 legacy adapter                              | [Frontend](docs/guide/08-Frontend-Integration.md)               |
+
+## Start in five minutes
 
 ```bash
-rulegate validate rulegate.yaml
-rulegate lint rulegate.yaml
+dotnet add package Fotbiler.RuleGate.AspNetCore --version 1.0.0
+dotnet tool install Fotbiler.RuleGate.Cli --version 1.0.0 \
+  --create-manifest-if-needed
+dotnet tool run rulegate validate rulegate.yaml
 ```
 
-A failed validation returns no partial policy collection.
-
-The [manifest guide](docs/manifests.md) documents structured load and
-validation errors.
-
-### 3. Register RuleGate
+Register a reloadable local manifest:
 
 ```csharp
-using Fotbiler.RuleGate.AspNetCore.DependencyInjection;
+builder.Services.AddAuthentication().AddJwtBearer();
+builder.Services.AddAuthorization();
 
 builder.Services
     .AddRuleGate()
+    .AddHttpAuthorizationResultMapping()
     .AddYamlPolicyFile(
         "rulegate.yaml",
-        options =>
-            options.ReloadOnChange = true);
+        options => options.ReloadOnChange = true);
 ```
 
-RuleGate activates the complete manifest as one immutable snapshot. A failed
-reload preserves the last valid snapshot. See
-[Policy sources and atomic reload](docs/policy-sources.md) for in-memory,
-embedded-resource, configuration, and application-defined sources.
-
-### 4. Evaluate a request
+Protect a Minimal API endpoint:
 
 ```csharp
-using Fotbiler.RuleGate.Abstractions.Authorization;
-using Fotbiler.RuleGate.Abstractions.Evaluation;
-
-var engine =
-    app.Services.GetRequiredService<
-        IAuthorizationEngine>();
-
-var request =
-    new AuthorizationRequest(
-        new AuthorizationSubject(
-            "user-42",
-            roles:
-            [
-                "sample.editor"
-            ],
-            permissions:
-            [
-                "sample.read"
-            ]),
-
-        new AuthorizationResource(
-            "sample-resource",
-            "resource-42"),
-
-        "read",
-
-        new AuthorizationContext(
-            DateTimeOffset.UtcNow));
-
-var decision =
-    await engine.EvaluateAsync(
-        request);
-
-if (!decision.IsAllowed)
-{
-    return Results.Forbid();
-}
+app.MapGet("/documents/{id}", GetDocumentAsync)
+    .RequireRuleGate("document", "read", "id");
 ```
 
-RuleGate grants access only when a matching policy exists and the root
-requirement is satisfied.
+Continue with the
+[first protected API chapter](docs/guide/03-First-Protected-API.md), then follow
+the [complete RuleGate guide](docs/guide/README.md) from foundations through
+production deployment.
 
-## Protect ASP.NET Core endpoints
+## Capabilities
 
-After configuring ASP.NET Core authentication and authorization, protect a
-Minimal API endpoint:
-
-```csharp
-using Fotbiler.RuleGate.AspNetCore.Endpoints;
-
-app.MapGet(
-        "/sample-resources/{id}",
-        (string id) =>
-        {
-            return Results.Ok(
-                new
-                {
-                    id,
-                });
-        })
-    .RequireRuleGate(
-        resourceType: "sample-resource",
-        action: "read",
-        resourceIdRouteValue: "id");
-```
-
-Protect a controller or action:
-
-```csharp
-using Fotbiler.RuleGate.AspNetCore.Authorization;
-
-[RuleGateAuthorize(
-    "sample-resource",
-    "read",
-    "id")]
-public IActionResult Get(
-    string id)
-{
-    return Ok(
-        new
-        {
-            id,
-        });
-}
-```
-
-Dynamic policy names use:
-
-```text
-RuleGate:<resource-type>:<action>
-```
-
-The [ASP.NET Core integration guide](docs/aspnetcore.md) covers authentication,
-claims mapping, domain resources, imperative authorization, endpoint metadata,
-controllers, diagnostics, and HTTP result mapping. The dedicated
-[enrichment guide](docs/enrichment.md) covers ordered trusted subject,
-resource, and context attribute providers.
-
-The [telemetry, performance, and concurrency guide](docs/telemetry-performance-concurrency.md)
-documents OpenTelemetry registration, bounded metrics and activities,
-benchmarks, stress tests, and thread-safety contracts.
+| Area             | Included                                                                                                                                            |
+| ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Policy model     | permissions, roles, typed attributes, cross-attribute comparison, time/date windows, authentication/MFA age, canonical context, logical composition |
+| ASP.NET Core     | dynamic policies, Minimal API helpers, MVC attributes, imperative authorization, trusted enrichment, safe HTTP results                              |
+| Frontend         | framework-independent store, modern/legacy Angular guards and directives, Keycloak adapter, TypeScript generation                                   |
+| Policy lifecycle | YAML, CLI validation/test/explain/lint, C#/TypeScript generation, file/embedded/config/custom sources, atomic reload                                |
+| Operations       | safe diagnostics, OpenTelemetry activities/metrics, benchmarks, concurrency and package-consumer verification                                       |
+| Security         | default deny, fail closed, bounded manifests/collections/depth, last-valid snapshot, non-sensitive public errors                                    |
 
 ## Reference applications
 
-The repository includes a
-[minimal ASP.NET Core sample](samples/aspnetcore-minimal/README.md) and a
-[full-stack document-approval sample](samples/document-approval/README.md).
-The full-stack sample is also the Angular reference and combines PrimeNG,
-Keycloak, SQLite, generated identifiers, guards, directives, and backend
-resource authorization without source-project shortcuts.
+- [Minimal ASP.NET Core](samples/aspnetcore-minimal/README.md) — compact
+  package-only host with a comprehensive manifest and deterministic fixtures.
+- [Document approval](samples/document-approval/README.md) — Keycloak,
+  ASP.NET Core, SQLite, modern Angular, trusted providers, resource filtering,
+  approval workflow, and verification scenarios.
 
-The document-approval sample requires an accessible Keycloak instance, the
-[documented realm and client configuration](samples/document-approval/keycloak/README.md),
-and a [local PrimeUI license](samples/document-approval/README.md#prerequisites).
-Its checked-in Docker Compose file builds the API and web application only; it
-does not provision Keycloak, import a realm, create test users, or supply a UI
-license.
+## Documentation
 
-## Security behavior
+- [The RuleGate Guide](docs/guide/README.md) — connected beginner-to-advanced
+  handbook with concepts, integrations, recipes, tests, and production review.
+- [Documentation index](docs/README.md) — guide chapters and exhaustive
+  references.
+- [Security model](docs/security.md) — complete trust, failure, and privacy
+  boundaries.
+- [Roadmap](docs/roadmap.md) — released capabilities and planned work.
+- [GitHub Wiki](https://github.com/fotbiler-lab/rulegate/wiki) — wiki edition
+  generated from the canonical repository guide.
 
-RuleGate defaults to deny.
+## Compatibility
 
-Missing policies, failed requirements, unsupported values, ambiguous identity,
-and indeterminate evaluations cannot grant access.
+- portable libraries: .NET Standard 2.0 and .NET 8–10;
+- ASP.NET Core and Keycloak: .NET Core 3.1 and .NET 5–10;
+- modern Angular: 20–22;
+- legacy Angular adapter: 12–19;
+- framework-independent client: Angular 9–11 and other TypeScript hosts.
 
-The protected backend operation remains the security boundary. Subject,
-resource, and context data must be derived from trusted application sources.
-Angular guards and template directives improve user experience only and cannot
-protect an API.
+See [platform compatibility](docs/platform-compatibility.md) for current and
+legacy-tested support definitions.
+
+## Security
 
 Read the [security model](docs/security.md) before production integration.
+Report vulnerabilities through the process in [SECURITY.md](SECURITY.md), not
+through a public issue.
 
-## Project status
+## Community and license
 
-The latest stable RuleGate release is
-[`1.0.0`](https://github.com/fotbiler-lab/rulegate/releases/tag/v1.0.0).
-It promotes the frozen release-candidate API after manifest resource limits,
-deterministic fuzz coverage, sensitive-diagnostics review, package
-reproducibility checks, and complete package-only compatibility gates.
+Contributions follow [CONTRIBUTING.md](CONTRIBUTING.md) and the
+[Code of Conduct](CODE_OF_CONDUCT.md). Support guidance is in
+[SUPPORT.md](SUPPORT.md).
 
-All six NuGet packages and the three-package npm family are
-`1.0.0` for this coordinated stable release. npm remains independently
-versioned from NuGet even when the two ecosystems are intentionally aligned.
-
-See the [roadmap](docs/roadmap.md) for the complete release path.
-
-## Community
-
-- [Contributing](CONTRIBUTING.md)
-- [Support](SUPPORT.md)
-- [Security policy](SECURITY.md)
-- [Code of Conduct](CODE_OF_CONDUCT.md)
-
-## License
-
-RuleGate is licensed under the
-[MIT License](LICENSE).
+RuleGate is licensed under the [MIT License](LICENSE).

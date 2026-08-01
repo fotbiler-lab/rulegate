@@ -111,6 +111,9 @@ Dynamic policy names use this form:
 
 ## Documentation
 
+- [Complete RuleGate guide](https://github.com/fotbiler-lab/rulegate/blob/main/docs/guide/README.md)
+- [ASP.NET Core chapter](https://github.com/fotbiler-lab/rulegate/blob/main/docs/guide/05-ASP.NET-Core-Integration.md)
+- [Trusted attributes and context chapter](https://github.com/fotbiler-lab/rulegate/blob/main/docs/guide/06-Trusted-Attributes-and-Context.md)
 - [ASP.NET Core integration](https://github.com/fotbiler-lab/rulegate/blob/main/docs/aspnetcore.md)
 - [Migrating to RuleGate 1.0](https://github.com/fotbiler-lab/rulegate/blob/main/docs/migration-to-1.0.md)
 - [ASP.NET Core enrichment](https://github.com/fotbiler-lab/rulegate/blob/main/docs/enrichment.md)

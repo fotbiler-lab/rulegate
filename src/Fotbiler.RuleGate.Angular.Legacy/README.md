@@ -16,3 +16,7 @@ Frontend checks improve user experience only. The backend remains the security
 boundary. See the
 [frontend compatibility guide](https://github.com/fotbiler-lab/rulegate/blob/main/docs/frontend-compatibility.md)
 for installation and support details.
+
+The [frontend integration chapter](https://github.com/fotbiler-lab/rulegate/blob/main/docs/guide/08-Frontend-Integration.md)
+connects the legacy client, class guard, NgModule directives, backend security
+boundary, modern adapter, and framework-independent client in one guide.
