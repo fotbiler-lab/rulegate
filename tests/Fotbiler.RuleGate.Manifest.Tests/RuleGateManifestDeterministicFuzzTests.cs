@@ -82,9 +82,7 @@ public sealed class
             new Random(seed);
 
         var path =
-            Path.Combine(
-                Path.GetTempPath(),
-                $"rulegate-fuzz-{seed}-{Guid.NewGuid():N}.yaml");
+            Path.GetTempFileName();
 
         try
         {
@@ -104,27 +102,83 @@ public sealed class
                     path,
                     bytes);
 
-                try
+                var exception =
+                    await Record.ExceptionAsync(
+                        async () =>
+                        {
+                            var firstLoad =
+                                await _loader
+                                    .LoadFromFileAsync(
+                                        path);
+
+                            var firstCompilation =
+                                await _compiler
+                                    .CompileFromFileAsync(
+                                        path);
+
+                            var secondLoad =
+                                await _loader
+                                    .LoadFromFileAsync(
+                                        path);
+
+                            var secondCompilation =
+                                await _compiler
+                                    .CompileFromFileAsync(
+                                        path);
+
+                            AssertLoadResultsEqual(
+                                firstLoad,
+                                secondLoad);
+
+                            AssertCompilationResultsEqual(
+                                firstCompilation,
+                                secondCompilation);
+
+                            AssertFailClosed(
+                                firstLoad,
+                                firstCompilation);
+                        });
+
+                if (exception is not null)
+                {
+                    throw CreateFuzzFailure(
+                        seed,
+                        caseIndex,
+                        "random-file-bytes",
+                        exception);
+                }
+            }
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
+    private void AssertTextCase(
+        string yaml,
+        int seed,
+        int caseIndex)
+    {
+        var exception =
+            Record.Exception(
+                () =>
                 {
                     var firstLoad =
-                        await _loader
-                            .LoadFromFileAsync(
-                                path);
+                        _loader.LoadFromText(
+                            yaml);
 
                     var firstCompilation =
-                        await _compiler
-                            .CompileFromFileAsync(
-                                path);
+                        _compiler.CompileFromText(
+                            yaml);
 
                     var secondLoad =
-                        await _loader
-                            .LoadFromFileAsync(
-                                path);
+                        _loader.LoadFromText(
+                            yaml);
 
                     var secondCompilation =
-                        await _compiler
-                            .CompileFromFileAsync(
-                                path);
+                        _compiler.CompileFromText(
+                            yaml);
 
                     AssertLoadResultsEqual(
                         firstLoad,
@@ -137,62 +191,9 @@ public sealed class
                     AssertFailClosed(
                         firstLoad,
                         firstCompilation);
-                }
-                catch (Exception exception)
-                {
-                    throw CreateFuzzFailure(
-                        seed,
-                        caseIndex,
-                        "random-file-bytes",
-                        exception);
-                }
-            }
-        }
-        finally
-        {
-            if (File.Exists(path))
-            {
-                File.Delete(path);
-            }
-        }
-    }
+                });
 
-    private void AssertTextCase(
-        string yaml,
-        int seed,
-        int caseIndex)
-    {
-        try
-        {
-            var firstLoad =
-                _loader.LoadFromText(
-                    yaml);
-
-            var firstCompilation =
-                _compiler.CompileFromText(
-                    yaml);
-
-            var secondLoad =
-                _loader.LoadFromText(
-                    yaml);
-
-            var secondCompilation =
-                _compiler.CompileFromText(
-                    yaml);
-
-            AssertLoadResultsEqual(
-                firstLoad,
-                secondLoad);
-
-            AssertCompilationResultsEqual(
-                firstCompilation,
-                secondCompilation);
-
-            AssertFailClosed(
-                firstLoad,
-                firstCompilation);
-        }
-        catch (Exception exception)
+        if (exception is not null)
         {
             throw CreateFuzzFailure(
                 seed,
@@ -563,25 +564,21 @@ public sealed class
         builder.AppendLine(
             "    requirement:");
 
-        var indentation =
-            "      ";
-
         for (var index = 0;
              index < depth;
              index++)
         {
             builder.Append(
-                indentation);
+                ' ',
+                6 + (index * 2));
 
             builder.AppendLine(
                 "not:");
-
-            indentation +=
-                "  ";
         }
 
         builder.Append(
-            indentation);
+            ' ',
+            6 + (depth * 2));
 
         builder.AppendLine(
             "permission: sample.read");

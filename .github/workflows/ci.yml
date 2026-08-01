@@ -65,7 +65,7 @@ jobs:
         run: pnpm angular:test
 
       - name: Test npm package consumer
-        run: ./scripts/test-angular-package-smoke.sh --package-ready
+        run: ./scripts/test-angular-package-smoke.sh
 
       - name: Verify reference Angular application
         run: |

@@ -348,9 +348,8 @@ public sealed class RuleGateManifestYamlLoaderTests
     public async Task
         LoadFromFileAsync_AcceptsFileAtMaximumSize()
     {
-        var path = Path.Combine(
-            Path.GetTempPath(),
-            $"rulegate-limit-{Guid.NewGuid():N}.yaml");
+        var path =
+            Path.GetTempFileName();
 
         try
         {
@@ -380,9 +379,8 @@ public sealed class RuleGateManifestYamlLoaderTests
     public async Task
         LoadFromFileAsync_RejectsOversizedFile()
     {
-        var path = Path.Combine(
-            Path.GetTempPath(),
-            $"rulegate-limit-{Guid.NewGuid():N}.yaml");
+        var path =
+            Path.GetTempFileName();
 
         try
         {

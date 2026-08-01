@@ -368,9 +368,7 @@ public sealed class RuleGateManifestYamlSecurityTests
 
     private static string CreateTemporaryPath()
     {
-        return Path.Combine(
-            Path.GetTempPath(),
-            $"rulegate-yaml-security-{Guid.NewGuid():N}.yaml");
+        return Path.GetTempFileName();
     }
 
     private static void DeleteIfExists(
