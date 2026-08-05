@@ -18,6 +18,8 @@ the compatibility guarantees of a stable major release.
   Wiki Home, sidebar, footer, and chapter publishing workflows.
 - Added automated stable release-state verification, dependency review, and
   Dependabot coverage for GitHub Actions, NuGet, and npm dependencies.
+- Added a canonical multi-domain and multi-stack sample portfolio with planned
+  domain, platform, identity, persistence, authorization, and delivery coverage.
 
 ### Changed
 
@@ -26,6 +28,11 @@ the compatibility guarantees of a stable major release.
 - Clarified the stable community support model and added direct migration and
   YAML-free code-first entry paths.
 - Pinned third-party GitHub Actions to reviewed commit SHAs.
+- Separated unversioned documentation and sample-portfolio initiatives from
+  versioned product milestones and renumbered Java, PHP, React, and Vue product
+  work as `1.1.0` through `1.4.0`.
+- Updated the runnable reference applications from preview RuleGate
+  dependencies to the published stable `1.0.0` package families.
 
 ## [1.0.0] - 2026-08-01
 

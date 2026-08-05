@@ -195,13 +195,16 @@ production deployment.
 | Operations       | safe diagnostics, OpenTelemetry activities/metrics, benchmarks, concurrency and package-consumer verification                                       |
 | Security         | default deny, fail closed, bounded manifests/collections/depth, last-valid snapshot, non-sensitive public errors                                    |
 
-## Reference applications
+## Reference applications and sample portfolio
 
 - [Minimal ASP.NET Core](samples/aspnetcore-minimal/README.md) — compact
   package-only host with a comprehensive manifest and deterministic fixtures.
 - [Document approval](samples/document-approval/README.md) — Keycloak,
   ASP.NET Core, SQLite, modern Angular, trusted providers, resource filtering,
   approval workflow, and verification scenarios.
+- [Multi-domain and multi-stack sample portfolio](samples/README.md) — current
+  applications, planned domains, platform baselines, authorization coverage,
+  compatibility goals, and sample acceptance rules.
 
 ## Documentation
 

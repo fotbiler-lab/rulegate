@@ -6,8 +6,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Fotbiler.RuleGate.AspNetCore" Version="0.7.0-preview.2" />
-    <PackageReference Include="Fotbiler.RuleGate.Manifest" Version="0.7.0-preview.2" />
+    <PackageReference Include="Fotbiler.RuleGate.AspNetCore" Version="1.0.0" />
+    <PackageReference Include="Fotbiler.RuleGate.Manifest" Version="1.0.0" />
   </ItemGroup>
 
   <ItemGroup>

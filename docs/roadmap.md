@@ -1,8 +1,9 @@
 # RuleGate Roadmap
 
-This document records the delivered path through RuleGate 1.0 and outlines the
-post-stable product direction. Future scope may change as security boundaries,
-package structure, and package-only consumer feedback evolve.
+This document records the delivered path through RuleGate 1.0 and outlines
+post-stable repository initiatives and versioned product development. Future
+scope may change as security boundaries, package structure, sample feedback,
+and package-only consumer feedback evolve.
 
 ## Product direction
 
@@ -26,38 +27,37 @@ RuleGate 1.0 preserves five product properties:
 
 ## Current status
 
-| Capability                                   | Status       |
-| -------------------------------------------- | ------------ |
-| Authorization engine                         | ✅ Available |
-| Permission- and role-based authorization     | ✅ Available |
-| Logical `all`, `any`, and `not` requirements | ✅ Available |
-| Typed scalar attribute comparison            | ✅ Available |
-| Subject, resource, and context attributes    | ✅ Available |
-| YAML manifest compilation                    | ✅ Available |
-| ASP.NET Core integration                     | ✅ Available |
-| Authorization diagnostics and logging        | ✅ Available |
-| CLI validation and deterministic generation  | ✅ Available |
-| Angular SDK and TypeScript generation        | ✅ Available |
-| Optional Keycloak helpers                    | ✅ Available |
-| Advanced Attribute Operators                 | ✅ Available |
-| Attribute-to-Attribute Comparison            | ✅ Available |
-| First-Class Time and Context Policies        | ✅ Available |
-| ASP.NET Core Enrichment Pipeline             | ✅ Available |
-| Official Reference Applications              | ✅ Available |
-| Policy Testing CLI                           | ✅ Available |
-| Explain and Lint                             | ✅ Available |
-| Policy Sources and Atomic Reload             | ✅ Available |
-| OpenTelemetry, Benchmarks, and Concurrency   | ✅ Available |
-| .NET and Angular Compatibility Track         | ✅ Available |
-| API Freeze and Security Hardening            | ✅ Available |
-| Stable Release                               | ✅ Available |
-| Book-Style Documentation and GitHub Wiki     | ✅ Available |
-| Focused Domain Reference Applications        | ⏳ Planned   |
-| Expanded Domain and Compatibility Portfolio  | ⏳ Planned   |
-| Native Java Package Family                   | ⏳ Planned   |
-| Native PHP Package Family                    | ⏳ Planned   |
-| React Integration                            | ⏳ Planned   |
-| Vue Integration                              | ⏳ Planned   |
+| Capability                                    | Status       |
+| --------------------------------------------- | ------------ |
+| Authorization engine                          | ✅ Available |
+| Permission- and role-based authorization      | ✅ Available |
+| Logical `all`, `any`, and `not` requirements  | ✅ Available |
+| Typed scalar attribute comparison             | ✅ Available |
+| Subject, resource, and context attributes     | ✅ Available |
+| YAML manifest compilation                     | ✅ Available |
+| ASP.NET Core integration                      | ✅ Available |
+| Authorization diagnostics and logging         | ✅ Available |
+| CLI validation and deterministic generation   | ✅ Available |
+| Angular SDK and TypeScript generation         | ✅ Available |
+| Optional Keycloak helpers                     | ✅ Available |
+| Advanced Attribute Operators                  | ✅ Available |
+| Attribute-to-Attribute Comparison             | ✅ Available |
+| First-Class Time and Context Policies         | ✅ Available |
+| ASP.NET Core Enrichment Pipeline              | ✅ Available |
+| Official Reference Applications               | ✅ Available |
+| Policy Testing CLI                            | ✅ Available |
+| Explain and Lint                              | ✅ Available |
+| Policy Sources and Atomic Reload              | ✅ Available |
+| OpenTelemetry, Benchmarks, and Concurrency    | ✅ Available |
+| .NET and Angular Compatibility Track          | ✅ Available |
+| API Freeze and Security Hardening             | ✅ Available |
+| Stable Release                                | ✅ Available |
+| Book-Style Documentation and GitHub Wiki      | ✅ Available |
+| Multi-Domain and Multi-Stack Sample Portfolio | 🚧 Active    |
+| Native Java Package Family                    | ⏳ Planned   |
+| Native PHP Package Family                     | ⏳ Planned   |
+| React Integration                             | ⏳ Planned   |
+| Vue Integration                               | ⏳ Planned   |
 
 The latest stable RuleGate NuGet release is `1.0.0`. The three-package npm
 family is also published at `1.0.0` for this coordinated stable release.
@@ -330,74 +330,104 @@ RuleGate 1.0 provides:
 - official backend, frontend, full-stack, and compatibility samples;
 - stable public APIs and security documentation.
 
-## Post-stable product roadmap
+## Post-stable roadmap
 
-The numbered milestones below define the intended post-stable delivery order.
+Post-stable work is tracked in two separate lanes:
 
-### `1.1.0` — Book-Style Documentation and GitHub Wiki
+- **repository initiatives** improve documentation, samples, adoption,
+  demonstrations, and project assets without creating a RuleGate package
+  version by themselves;
+- **versioned product milestones** change published packages, public APIs,
+  runtime behavior, integration contracts, or compatibility guarantees.
+
+Repository initiatives may be delivered incrementally on `main`. A semantic
+version is assigned only when a published RuleGate product contract changes.
+
+### Repository initiatives
+
+#### Book-Style Documentation and GitHub Wiki — Available
 
 - Connected fourteen-chapter beginner-to-production guide and glossary
 - Complete NuGet, npm, manifest, backend, frontend, CLI, testing, diagnostics,
   reload, extensibility, and production guidance
 - Real-world recipes with YAML, backend, frontend, tests, and security context
-- Mermaid decision/lifecycle diagrams and focused comparison tables
+- Mermaid decision and lifecycle diagrams with focused comparison tables
 - Concise product README and package-level documentation links
-- Generated eighteen-page GitHub Wiki with shared navigation
+- Generated GitHub Wiki with shared navigation
 - Automated local-link, heading-anchor, and Wiki-build verification
 - Repeatable main-branch Wiki synchronization
 
-### `1.2.0` — Focused Domain Reference Applications
+Documentation and Wiki maintenance continue as repository work. They do not
+receive a standalone RuleGate package version.
 
-- Small package-consuming examples with realistic manifests and tests
-- Current and legacy project types tied to real authorization problems
-- HBYS patient records and student grade publication
-- Fintech transactions and ERP purchase-order approval
-- B2B partner, e-commerce merchant/order, and CRM ownership scenarios
-- Varied open-source UI stacks and host-owned authentication systems
-- Matching case-study documentation for every sample
+#### Multi-Domain and Multi-Stack Sample Portfolio — Active
 
-### `1.3.0` — Expanded Domain and Compatibility Portfolio
+- Expand the existing minimal ASP.NET Core and document-approval applications
+  with focused domain and compatibility samples
+- Cover healthcare, student information, fintech, ERP, B2B, e-commerce, CRM,
+  and additional domains when they demonstrate distinct authorization problems
+- Use different backend styles, frontend frameworks, UI libraries, identity
+  providers, persistence technologies, and supported platform generations
+- Demonstrate RBAC, permission-based authorization, ABAC, CBAC, ownership,
+  tenant and organization scope, workflow state, separation of duties, time
+  rules, trusted-device context, MFA age, and break-glass scenarios
+- Consume published RuleGate packages instead of source-project references
+- Include deterministic manifests, policy tests, allow and deny scenarios,
+  security boundaries, and package-only verification
+- Provide explicit vendor end-of-life and security guidance for legacy stacks
+- Keep an open-source and reproducible default execution path for new samples
 
-- ASP.NET Core MVC 3.1 domain application
-- Combined legacy Angular and legacy .NET application
-- Current and compatible legacy PrimeNG generations
-- Legacy IdentityServer authentication-boundary example
-- Stable package-only builds and runtime authorization scenarios
-- Explicit vendor end-of-life and security guidance for legacy stacks
+The sample portfolio is a continuous repository initiative. Adding or
+expanding a sample does not create a RuleGate package version by itself.
 
-### `1.4.0` — Native Java Package Family
+When sample development identifies a required public API, runtime, package, or
+compatibility change, that product change is planned and released separately
+under Semantic Versioning.
 
-- Framework-independent Java core
+The canonical domain, technology, version, authorization-pattern, and delivery
+matrix is maintained in
+[`samples/README.md`](../samples/README.md).
+
+### Versioned product roadmap
+
+The numbered milestones below define the intended delivery order for published
+RuleGate product families and integrations.
+
+#### `1.1.0` — Native Java Package Family
+
+- Framework-independent Java authorization core
 - Spring Boot starter and integration layer
 - Native Java extension points
 - Maven Central publishing
 - Package-consumer verification, samples, and documentation
+- Shared manifest semantics and equivalent fail-closed behavior
 
-### `1.5.0` — Native PHP Package Family
+#### `1.2.0` — Native PHP Package Family
 
 - Framework-independent Composer package
 - Optional Laravel and Symfony adapters
 - Native PHP extension points
 - Packagist publishing
 - Package-consumer verification, samples, and documentation
-- Shared manifest model and equivalent fail-closed behavior across native ports
+- Shared manifest semantics and equivalent fail-closed behavior
 
-### `1.6.0` — React Integration
+#### `1.3.0` — React Integration
 
 - Provider and context integration
 - Authorization hooks and conditional-rendering components
 - Route and navigation patterns
 - Fail-closed loading, denied, and stale-state behavior
 - Generated identifier consumption
+- Backend-enforced authorization boundary
 
-### `1.7.0` — Vue Integration
+#### `1.4.0` — Vue Integration
 
 - Installable Vue plugin
 - Authorization composables and directives
 - Router-guard patterns
 - Fail-closed loading, denied, and stale-state behavior
 - Generated identifier consumption
-- Backend-enforced security boundary shared with Angular and React
+- Backend-enforced authorization boundary shared with Angular and React
 
 ## Compatibility track
 
@@ -442,4 +472,7 @@ All roadmap work must preserve these principles:
 - Public APIs are tested through package-only consumers.
 - Diagnostics and telemetry do not expose sensitive inputs by default.
 - Generated output is deterministic.
+- Repository initiatives do not imply package-version changes.
+- Samples consume published packages and keep backend authorization as the
+  security boundary.
 - Legacy compatibility never weakens current-runtime security guarantees.
