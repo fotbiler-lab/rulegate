@@ -30,9 +30,7 @@ export interface RuleGateRoleRequirement {
 
 /** A single permission, policy, or role check used by RuleGate UI helpers. */
 export type RuleGateAuthorizationRequirement =
-  | RuleGatePermissionRequirement
-  | RuleGatePolicyRequirement
-  | RuleGateRoleRequirement;
+  RuleGatePermissionRequirement | RuleGatePolicyRequirement | RuleGateRoleRequirement;
 
 /** Returns whether a runtime value is one valid RuleGate UI requirement. */
 export function isRuleGateAuthorizationRequirement(

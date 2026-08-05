@@ -10,7 +10,7 @@
     "generate:check": "rulegate-angular generate ../api/rulegate.yaml --output src/app/generated/rulegate.ts --check"
   },
   "dependencies": {
-    "@angular/cdk": "22.0.0",
+    "@angular/cdk": "22.0.6",
     "@angular/common": "22.0.8",
     "@angular/core": "22.0.8",
     "@angular/forms": "22.0.8",
@@ -27,10 +27,10 @@
     "tslib": "2.8.1"
   },
   "devDependencies": {
-    "@angular/build": "22.0.8",
-    "@angular/cli": "22.0.8",
+    "@angular/build": "22.0.9",
+    "@angular/cli": "22.0.9",
     "@angular/compiler-cli": "22.0.8",
-    "prettier": "3.6.2",
+    "prettier": "3.9.6",
     "typescript": "6.0.3"
   }
 }
