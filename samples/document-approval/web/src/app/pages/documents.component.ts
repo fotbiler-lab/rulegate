@@ -275,9 +275,7 @@ export class DocumentsComponent implements OnInit {
 
   classificationSeverity(classification: string): 'info' | 'warn' | 'danger' {
     return { public: 'info', internal: 'warn', confidential: 'danger' }[classification] as
-      | 'info'
-      | 'warn'
-      | 'danger';
+      'info' | 'warn' | 'danger';
   }
 
   private load(): void {
