@@ -6,9 +6,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Fotbiler.RuleGate.AspNetCore" Version="0.7.0-preview.2" />
-    <PackageReference Include="Fotbiler.RuleGate.Keycloak" Version="0.7.0-preview.2" />
-    <PackageReference Include="Fotbiler.RuleGate.Manifest" Version="0.7.0-preview.2" />
+    <PackageReference Include="Fotbiler.RuleGate.AspNetCore" Version="1.0.0" />
+    <PackageReference Include="Fotbiler.RuleGate.Keycloak" Version="1.0.0" />
+    <PackageReference Include="Fotbiler.RuleGate.Manifest" Version="1.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.7" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.7" />
     <PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="2.1.12" />

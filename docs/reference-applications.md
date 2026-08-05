@@ -3,6 +3,14 @@
 RuleGate includes package-consuming applications that can be built and run
 without referencing framework source projects.
 
+The current runnable applications are documented below. The continuously
+expanding domain, technology, version, and compatibility plan is maintained in
+the [sample portfolio](../samples/README.md).
+
+Sample additions are repository initiatives. They do not create a RuleGate
+package version unless they require a published package, API, runtime,
+integration, or compatibility-contract change.
+
 ## Minimal ASP.NET Core
 
 [`samples/aspnetcore-minimal`](../samples/aspnetcore-minimal/README.md) is the
@@ -68,11 +76,26 @@ import a realm, create identities, or inject the local UI license. Use an
 untracked deployment-specific configuration or run the licensed web
 application locally.
 
+## Portfolio expansion
+
+The sample portfolio intentionally combines different domains, backend styles,
+frontend frameworks, UI libraries, identity boundaries, data stores, and
+current or legacy platform generations.
+
+Planned applications include healthcare patient access, student grade
+publication, ERP purchase-order approval, fintech transactions, e-commerce
+merchant operations, CRM ownership, and B2B partner administration.
+
+See the [canonical sample portfolio matrix](../samples/README.md) for project
+names, platform baselines, authorization coverage, delivery dependencies, and
+sample acceptance rules.
+
 ## Package-only verification
 
-The .NET projects reference published NuGet versions. The Angular workspace
-sets `linkWorkspacePackages: false`, so the application installs the published
-npm package even though the SDK source is present in the same repository.
+The .NET projects reference the published stable `1.0.0` NuGet packages.
+The Angular workspace sets `linkWorkspacePackages: false`, so the application
+installs the published stable `1.0.0` npm packages even though the SDK source
+is present in the same repository.
 
 CI verifies:
 
