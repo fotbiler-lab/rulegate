@@ -10,12 +10,12 @@
     "generate:check": "rulegate-angular generate ../api/rulegate.yaml --output src/app/generated/rulegate.ts --check"
   },
   "dependencies": {
-    "@angular/cdk": "22.0.6",
-    "@angular/common": "22.0.8",
-    "@angular/core": "22.0.8",
-    "@angular/forms": "22.0.8",
-    "@angular/platform-browser": "22.0.8",
-    "@angular/router": "22.0.8",
+    "@angular/cdk": "22.1.1",
+    "@angular/common": "22.1.0",
+    "@angular/core": "22.1.0",
+    "@angular/forms": "22.1.0",
+    "@angular/platform-browser": "22.1.0",
+    "@angular/router": "22.1.0",
     "@fotbiler/rulegate-angular": "1.0.0",
     "@fotbiler/rulegate-client": "1.0.0",
     "@primeuix/themes": "3.0.0",
@@ -27,10 +27,10 @@
     "tslib": "2.8.1"
   },
   "devDependencies": {
-    "@angular/build": "22.0.9",
-    "@angular/cli": "22.0.9",
-    "@angular/compiler-cli": "22.0.8",
+    "@angular/build": "22.1.3",
+    "@angular/cli": "22.1.3",
+    "@angular/compiler-cli": "22.1.0",
     "prettier": "3.9.6",
-    "typescript": "6.0.3"
+    "typescript": "7.0.2"
   }
 }
