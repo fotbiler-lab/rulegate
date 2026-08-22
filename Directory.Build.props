@@ -82,7 +82,7 @@
                         '$(TargetFramework)' == 'net7.0'">
     <PackageReference
       Include="Meziantou.Polyfill"
-      Version="1.0.57"
+      Version="1.0.161"
       PrivateAssets="all" />
   </ItemGroup>
 
